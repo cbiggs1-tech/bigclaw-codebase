@@ -268,12 +268,18 @@ if __name__ == "__main__":
     parser.add_argument("--json", action="store_true", help="Output as JSON")
     args = parser.parse_args()
 
-    results = []
-    for ticker in args.tickers:
-        print(f"Analyzing {ticker.upper()}...", file=sys.stderr)
-        results.append(analyze_ticker(ticker))
+    try:
+        results = []
+        for ticker in args.tickers:
+            print(f"Analyzing {ticker.upper()}...", file=sys.stderr)
+            results.append(analyze_ticker(ticker))
 
-    if args.json:
-        print(json.dumps(results, indent=2))
-    else:
-        print(format_output(results))
+        if args.json:
+            print(json.dumps(results, indent=2))
+        else:
+            print(format_output(results))
+    except Exception as e:
+        error_out = {"error": "Sentiment fetch failed", "reason": str(e), "tickers": args.tickers}
+        print(json.dumps(error_out, indent=2), file=sys.stderr)
+        print(f"ERROR: Sentiment analysis failed — {e}")
+        sys.exit(1)
