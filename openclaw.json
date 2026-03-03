@@ -1,0 +1,132 @@
+{
+  "meta": {
+    "lastTouchedVersion": "2026.2.25",
+    "lastTouchedAt": "2026-02-28T18:19:07.376Z"
+  },
+  "env": {
+    "ANTHROPIC_API_KEY": "REDACTED",
+    "BRAVE_API_KEY": "REDACTED",
+    "OPENROUTER_API_KEY": "REDACTED",
+    "XAI_API_KEY": "REDACTED"
+  },
+  "wizard": {
+    "lastRunAt": "2026-02-28T18:19:07.323Z",
+    "lastRunVersion": "2026.2.25",
+    "lastRunCommand": "doctor",
+    "lastRunMode": "local"
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "xai/grok-4",
+        "fallbacks": [
+          "xai/grok-4-1-fast-reasoning",
+          "openrouter/x-ai/grok-4.1-fast",
+          "openrouter/x-ai/grok-code-fast-1"
+        ]
+      },
+      "models": {
+        "xai/grok-4": {
+          "params": {
+            "temperature": 1.0,
+            "maxTokens": 16384,
+            "top_p": 0.92,
+            "presence_penalty": 0.4,
+            "cacheRetention": "long"
+          }
+        },
+        "xai/grok-4-0709": {},
+        "xai/grok-4-1-fast-reasoning": {},
+        "xai/grok-4-1-fast-non-reasoning": {},
+        "openrouter/x-ai/grok-4.1-fast": {},
+        "openrouter/x-ai/grok-code-fast-1": {},
+        "anthropic/claude-sonnet-4-6": {
+          "params": {
+            "cacheRetention": "long"
+          }
+        },
+        "anthropic/claude-haiku-4-5": {},
+        "openrouter/qwen/qwen3.5-35b-a3b": {},
+        "openrouter/qwen/qwen3-coder": {},
+        "openrouter/qwen/qwen3-coder:free": {},
+        "openrouter/google/gemini-flash-1.5": {},
+        "openrouter/meta-llama/llama-3.1-8b-instruct": {},
+        "openrouter/anthropic/claude-3-5-haiku": {},
+        "openrouter/google/gemini-2.0-flash-001": {},
+        "openrouter/google/gemini-2.0-flash-lite-001": {}
+      },
+      "workspace": "/home/cbiggs90/.openclaw/workspace",
+      "contextPruning": {
+        "mode": "cache-ttl",
+        "ttl": "1h"
+      },
+      "compaction": {
+        "mode": "safeguard"
+      },
+      "heartbeat": {
+        "every": "55m"
+      },
+      "maxConcurrent": 4,
+      "subagents": {
+        "maxConcurrent": 8
+      }
+    }
+  },
+  "messages": {
+    "ackReactionScope": "group-mentions"
+  },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto",
+    "restart": true,
+    "ownerDisplay": "raw"
+  },
+  "channels": {
+    "discord": {
+      "enabled": true,
+      "token": "REDACTED",
+      "groupPolicy": "allowlist",
+      "streaming": "off"
+    },
+    "slack": {
+      "name": "BigClaw Agent",
+      "mode": "socket",
+      "webhookPath": "/slack/events",
+      "enabled": true,
+      "botToken": "REDACTED",
+      "appToken": "REDACTED",
+      "userTokenReadOnly": true,
+      "groupPolicy": "allowlist",
+      "streaming": "off",
+      "nativeStreaming": false
+    }
+  },
+  "gateway": {
+    "port": 18789,
+    "mode": "local",
+    "bind": "loopback",
+    "auth": {
+      "mode": "token",
+      "token": "REDACTED"
+    },
+    "tailscale": {
+      "mode": "off",
+      "resetOnExit": false
+    }
+  },
+  "skills": {
+    "install": {
+      "nodeManager": "npm"
+    }
+  },
+  "plugins": {
+    "entries": {
+      "slack": {
+        "enabled": true
+      },
+      "discord": {
+        "enabled": true
+      }
+    }
+  }
+}

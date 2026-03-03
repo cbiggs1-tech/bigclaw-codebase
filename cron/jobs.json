@@ -1,0 +1,397 @@
+{
+  "version": 1,
+  "jobs": [
+    {
+      "id": "8c7788f7-d960-4419-95d4-671a0998eb54",
+      "agentId": "main",
+      "name": "Morning Market Analysis",
+      "enabled": true,
+      "createdAtMs": 1770927690610,
+      "updatedAtMs": 1772546548793,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 9 * * 1-5",
+        "tz": "America/New_York"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Run the morning market analysis. Steps:\n\n1. Run: `python3 ~/.openclaw/workspace/scripts/weather.py` for weather\n2. Run: `python3 ~/.openclaw/workspace/scripts/calendar_check.py --days 2` for today's calendar\n3. Run: `python3 ~/.openclaw/workspace/scripts/gmail_check.py` for important unread emails\n4. Run: `source ~/.env_secrets && python3 ~/.openclaw/workspace/scripts/portfolio_report.py --report`\n5. Run: `python3 ~/.openclaw/workspace/scripts/polymarket.py --market-movers --limit 5`\n6. Check market sentiment for key holdings using web_search\n7. Post a morning briefing to Slack channel D0ADHLUJ400 combining:\n   - Weather for Alvarado, TX\n   - Calendar events for today/tomorrow\n   - Important email summary (skip junk, just flag anything that needs attention)\n   - Portfolio snapshot (values, returns, top movers)\n   - Key sentiment/news for holdings\n   - Polymarket predictions\n   - Any trade recommendations or watches\n8. Run: `source ~/.env_secrets && cd ~/bigclaw-ai/src && python3 -c \"from export_dashboard import export_dashboard; export_dashboard()\"` to update website\n9. Git commit and push: `cd ~/bigclaw-ai && git add docs/data/ && git commit -m 'Morning dashboard update' && git push`\n\nKeep it concise and actionable. Include the standard disclaimer.",
+        "timeoutSeconds": 360,
+        "model": "xai/grok-4"
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "slack",
+        "to": "D0ADHLUJ400",
+        "bestEffort": true
+      },
+      "state": {
+        "nextRunAtMs": 1772632800000,
+        "lastRunAtMs": 1772546400040,
+        "lastStatus": "ok",
+        "lastDurationMs": 148753,
+        "consecutiveErrors": 0,
+        "lastRunStatus": "ok",
+        "lastDelivered": true,
+        "lastDeliveryStatus": "delivered"
+      }
+    },
+    {
+      "id": "89a41e4e-a92a-43f3-95cd-e754f38deb9a",
+      "agentId": "main",
+      "name": "Afternoon Portfolio Report",
+      "enabled": true,
+      "createdAtMs": 1770927690668,
+      "updatedAtMs": 1772487237797,
+      "schedule": {
+        "kind": "cron",
+        "expr": "30 16 * * 1-5",
+        "tz": "America/New_York"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Run the afternoon portfolio report.\n\n1. Run: `source ~/.env_secrets && python3 ~/.openclaw/workspace/scripts/portfolio_report.py --report --snapshot`\n2. Format a clean daily report for each portfolio showing: total value, return %, top movers, any triggered orders\n3. Run: `source ~/.env_secrets && cd ~/bigclaw-ai/src && python3 -c \"from export_dashboard import export_dashboard; export_dashboard()\"` to update the website\n4. Also generate and save portfolio_analysis.json if possible\n5. Git commit and push: `cd ~/bigclaw-ai && git add docs/data/ && git commit -m 'Update dashboard data' && git push`\n\nReturn a clean markdown summary of the report. The announce delivery will post it to Slack automatically — do NOT call the message tool directly.\n\nInclude the standard disclaimer at the end.",
+        "timeoutSeconds": 300,
+        "model": "xai/grok-4"
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "slack",
+        "to": "D0ADHLUJ400",
+        "bestEffort": true
+      },
+      "state": {
+        "nextRunAtMs": 1772573400000,
+        "lastRunAtMs": 1772487000049,
+        "lastStatus": "ok",
+        "lastDurationMs": 237748,
+        "consecutiveErrors": 0,
+        "lastRunStatus": "ok",
+        "lastDelivered": true,
+        "lastDeliveryStatus": "delivered"
+      }
+    },
+    {
+      "id": "f236149f-45c7-40c8-b3f1-b4a6f61faaa8",
+      "agentId": "main",
+      "name": "healthcheck:security-audit",
+      "enabled": true,
+      "createdAtMs": 1770992666596,
+      "updatedAtMs": 1772539261412,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 6 * * *",
+        "tz": "America/Chicago"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Run a daily security audit on the Pi. Execute these commands and report any issues:\n\n1. `openclaw security audit --deep`\n2. `sudo ufw status`\n3. `sudo fail2ban-client status sshd` (report any banned IPs)\n4. `ss -ltnp` (check for unexpected listening ports)\n5. `openclaw update status` (check for updates)\n6. Check disk usage: `df -h /`\n7. Check memory/CPU: `free -h && uptime`\n8. Check Pi temperature: `vcgencmd measure_temp`\n\nOnly post to Slack if there are issues, new bans, or an update is available. If everything looks clean, just say '✅ Daily security audit — all clear' in one line.\n\nPost results to Slack channel D0ADHLUJ400.",
+        "timeoutSeconds": 120,
+        "model": "openrouter/google/gemini-2.0-flash-001"
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "slack",
+        "to": "D0ADHLUJ400",
+        "bestEffort": true
+      },
+      "state": {
+        "nextRunAtMs": 1772625600000,
+        "lastRunAtMs": 1772539200021,
+        "lastStatus": "error",
+        "lastDurationMs": 61391,
+        "consecutiveErrors": 3,
+        "lastRunStatus": "error",
+        "lastDelivered": true,
+        "lastDeliveryStatus": "delivered",
+        "lastError": "⚠️ ✉️ Message failed"
+      }
+    },
+    {
+      "id": "7711ebb0-18e4-4eb9-9681-b88aee1070c0",
+      "agentId": "main",
+      "name": "Email Check: fixit@grandpapa.net",
+      "enabled": true,
+      "createdAtMs": 1770997098541,
+      "updatedAtMs": 1772546570329,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 8 * * *"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Check the fixit@grandpapa.net email inbox for new/unread messages.\n\nRun: `himalaya envelope list -a fixit` to see the inbox.\n\nIf there are new unread messages (no 'R' flag):\n1. Read each with `himalaya message read <id> -a fixit`\n2. Summarize what they're about\n3. If it's a game question about grandpapa.net, draft a helpful reply\n4. Post a summary to Slack channel D0ADHLUJ400\n5. DO NOT send any replies without Curtis's approval — just draft them\n\nIf no new messages, reply with just 'No new emails' (this will be suppressed).\n\nContext: fixit@grandpapa.net handles support questions for the games at grandpapa.net.",
+        "timeoutSeconds": 120,
+        "model": "openrouter/google/gemini-2.0-flash-001"
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "slack",
+        "to": "D0ADHLUJ400",
+        "bestEffort": true
+      },
+      "state": {
+        "nextRunAtMs": 1772632800000,
+        "lastRunAtMs": 1772546548793,
+        "lastStatus": "ok",
+        "lastDurationMs": 21536,
+        "consecutiveErrors": 0,
+        "lastRunStatus": "ok",
+        "lastDelivered": true,
+        "lastDeliveryStatus": "delivered"
+      }
+    },
+    {
+      "id": "ea375c7d-3cf2-4c42-a0ac-54929bc8bc4c",
+      "name": "Friday ARK ITK Summary",
+      "enabled": true,
+      "createdAtMs": 1771246956964,
+      "updatedAtMs": 1772312478133,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 17 * * 5",
+        "tz": "America/New_York"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Run: cd ~/.openclaw/workspace/scripts && python3 ark_itk_tracker.py. Post the full markdown summary to Slack DM D0ADHLUJ400.",
+        "model": "openrouter/google/gemini-2.0-flash-lite-001"
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "slack",
+        "to": "D0ADHLUJ400",
+        "bestEffort": true
+      },
+      "state": {
+        "nextRunAtMs": 1772834400000,
+        "lastRunAtMs": 1772312429993,
+        "lastStatus": "ok",
+        "lastDurationMs": 48140,
+        "consecutiveErrors": 0,
+        "lastRunStatus": "ok",
+        "lastDelivered": true,
+        "lastDeliveryStatus": "delivered"
+      }
+    },
+    {
+      "id": "87375a92-7e2b-49ad-a3c2-3a37c37dc535",
+      "agentId": "main",
+      "name": "Tuesday Trading Execution",
+      "enabled": false,
+      "deleteAfterRun": true,
+      "createdAtMs": 1771338655332,
+      "updatedAtMs": 1771340490551,
+      "schedule": {
+        "kind": "at",
+        "at": "2026-02-17T15:00:00.000Z"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "TRADING EXECUTION TIME — 10:00 AM ET. Execute ALL trades using decision engine signals as the filter. Source ~/.env_secrets first.\n\nRULE: Only buy tickers with score >= +1. Skip any ticker with score <= 0. Hold cash for skipped positions.\n\n**1. ACTIVE PORTFOLIOS (1-3) — Sell signals:**\nRun: cd ~/.openclaw/workspace && source ~/.env_secrets && python3 scripts/trade_executor.py --signals\nThis sells: RBLX (-5, 100%), V (-4, 100%), CRSP (-3, trim 50%), MSFT (-3, trim 50%), QBTS (-3, trim 50%)\n\n**2. INCOME DIVIDENDS (#4) — Initial buys (signal-filtered):**\nBUY: VZ (+2), O (+5), XOM (+2), ED (+6), DUK (0→SKIP), PG (+1), IBM (0→SKIP), JNJ (+5)\nSKIP: T (score -1, overbought RSI 81), DUK (score 0), IBM (score 0)\nUse limit orders at Friday close prices. Shares per research/new-portfolios-2026-02-14.md\n\n**3. MOMENTUM GROWTH (#5) — Initial buys:**\nBUY ALL: DECK (+5), GE (+2), ANET (+5), LLY (+1), AVGO (+1)\nAll signals positive. Use limit orders at Friday close.\n\n**4. NUCLEAR RENAISSANCE (#6) — Initial buys (signal-filtered):**\nBUY: GEV (+5), CCJ (+3), BWXT (+2), TLN (+2)\nSKIP: CEG (-5, death cross), VST (-5, death cross)\nHold ~$55K cash for CEG/VST entry when technicals improve.\n\n**5. AI DEFENSE (#7) — Initial buys (signal-filtered):**\nBUY: NOC (+4), TXT (+4), RTX (+3), LMT (+3), KTOS (+1, reduced size)\nSKIP: BAH (-5, death cross), AVAV (-2)\nAlso skip: PLTR (+1 but -1 watch, borderline — buy at half size), LHX (+1, buy), GD (+1, buy), LDOS (0→SKIP)\n\nFor ALL buys: limit orders at previous close price. Log everything to logs/trades.log.\nAfter execution: run export_dashboard.py, export_signals.py, git push.\nPost full execution summary to Slack DM D0ADHLUJ400.",
+        "timeoutSeconds": 900,
+        "model": "anthropic/claude-sonnet-4-6"
+      },
+      "delivery": {
+        "mode": "announce"
+      },
+      "state": {
+        "lastRunAtMs": 1771340400022,
+        "lastStatus": "error",
+        "lastDurationMs": 90529,
+        "lastError": "cron announce delivery failed",
+        "consecutiveErrors": 1
+      }
+    },
+    {
+      "id": "726867a0-a914-4ce6-bde1-80ec1c1a9810",
+      "agentId": "main",
+      "name": "Weekly Network Security Scan",
+      "enabled": true,
+      "createdAtMs": 1771419840332,
+      "updatedAtMs": 1772370018966,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 7 * * 0",
+        "tz": "America/Chicago"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Run the weekly network security scan. Execute: sudo python3 ~/.openclaw/workspace/scripts/network_scan.py\n\nIf any NEW unknown devices are found, alert Curtis in Slack DM D0ADHLUJ400 with the details.\nIf all clear, just post a brief '✅ Weekly network scan: X devices, no changes' to Slack.\nAlso check if the TP-Link RE450 still has SSH open (port 22): sudo nmap -p 22 192.168.1.209",
+        "timeoutSeconds": 120,
+        "model": "openrouter/google/gemini-2.0-flash-lite-001"
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "slack",
+        "to": "D0ADHLUJ400"
+      },
+      "state": {
+        "nextRunAtMs": 1772971200000,
+        "lastRunAtMs": 1772370000042,
+        "lastStatus": "ok",
+        "lastDurationMs": 18924,
+        "consecutiveErrors": 0,
+        "lastRunStatus": "ok",
+        "lastDelivered": true,
+        "lastDeliveryStatus": "delivered"
+      }
+    },
+    {
+      "id": "d951827a-d96c-4aee-ab3f-8de8b431b123",
+      "agentId": "main",
+      "name": "Good Morning Curtis",
+      "enabled": true,
+      "createdAtMs": 1771437190787,
+      "updatedAtMs": 1772539298575,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 6 * * *",
+        "tz": "America/Chicago"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Good morning routine for Curtis. Do these steps:\n1. Try to take a camera snapshot: `ffmpeg -f v4l2 -i /dev/video0 -frames:v 1 -update 1 -y /tmp/morning_snap.jpg` — if it works, analyze the image briefly (lighting, anyone visible). If it fails, just note camera is offline.\n2. Get today's weather for Alvarado, TX using the weather skill or `python3 ~/.openclaw/workspace/scripts/weather.py`\n3. Check Google Calendar for today's events: `python3 ~/.openclaw/workspace/scripts/calendar_check.py`\n4. Check email (fixit@grandpapa.net): `himalaya envelope list -s 5`\n5. Check Gmail for anything urgent: `python3 ~/.openclaw/workspace/scripts/gmail_check.py`\n6. Compose a friendly, concise good morning message to Curtis with: camera status, weather summary, today's calendar, any urgent emails. Keep it warm but brief. Send to Slack DM D0ADHLUJ400.",
+        "model": "openrouter/google/gemini-2.0-flash-001",
+        "timeoutSeconds": 120
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "slack",
+        "to": "D0ADHLUJ400",
+        "bestEffort": true
+      },
+      "state": {
+        "nextRunAtMs": 1772625600000,
+        "lastRunAtMs": 1772539261412,
+        "lastStatus": "ok",
+        "lastDurationMs": 37163,
+        "consecutiveErrors": 0,
+        "lastRunStatus": "ok",
+        "lastDelivered": true,
+        "lastDeliveryStatus": "delivered"
+      }
+    },
+    {
+      "id": "f76958fc-00c5-41df-855b-3be5addb4a42",
+      "agentId": "main",
+      "name": "Price Refresh (2hr)",
+      "enabled": true,
+      "createdAtMs": 1771445904845,
+      "updatedAtMs": 1772568013582,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 9-16/2 * * 1-5",
+        "tz": "America/New_York"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Run the price refresh script by executing this exact shell command and nothing else:\\n\\ncd /home/cbiggs90/.openclaw/workspace/scripts && source /home/cbiggs90/.env_secrets && python3 price_refresh.py\\n\\nReport the output. Do not do anything else.",
+        "model": "openrouter/google/gemini-2.0-flash-lite-001"
+      },
+      "delivery": {
+        "mode": "none"
+      },
+      "state": {
+        "nextRunAtMs": 1772632800000,
+        "lastRunAtMs": 1772568000043,
+        "lastStatus": "ok",
+        "lastDurationMs": 13539,
+        "consecutiveErrors": 0,
+        "lastRunStatus": "ok",
+        "lastDelivered": false,
+        "lastDeliveryStatus": "not-delivered"
+      }
+    },
+    {
+      "id": "562b6fa6-dceb-4f83-ac5f-f93c4f860c2d",
+      "agentId": "main",
+      "name": "Weekly OpenClaw & Model Version Check",
+      "enabled": true,
+      "createdAtMs": 1771531203969,
+      "updatedAtMs": 1772377243098,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 9 * * 0",
+        "tz": "America/Chicago"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "You are BigClaw running a weekly maintenance task. Steps:\n\n1. Run: openclaw update status --json\n   Get: current version, whether an update is available (availability.available).\n\n2. If OpenClaw update IS available:\n   - Run: openclaw update --yes (wait for completion)\n   - Run: openclaw --version to get the new version\n   - Note the update for the Slack summary\n\n3. Check for latest Sonnet and Haiku model versions:\n   - Run: openclaw models list --all 2>&1 | grep -i \"haiku\\|sonnet\" | grep \"yes\" | grep \"anthropic/\"\n   - Compare available models vs what is configured in ~/.openclaw/openclaw.json (agents.defaults.models)\n   - Currently configured: anthropic/claude-sonnet-4-6, anthropic/claude-haiku-4-5, anthropic/claude-3-5-haiku-latest\n   - Look for any newer versions (e.g., claude-sonnet-5, claude-haiku-5, or newer dated variants) that are auth-ready (yes) but NOT in the config\n\n4. Build a Slack summary and send to D0ADHLUJ400:\n\n   If OpenClaw was updated AND models need updating:\n   🦀 *Weekly Version Check*\n   *OpenClaw:* [old] → [new] ✅ Updated\n   *Models:* New versions available — action needed ⚠️\n   [list new model IDs found]\n   Curtis — you may want to update the model config and restart me.\n\n   If OpenClaw was updated, models are current:\n   🦀 *Weekly Version Check*\n   *OpenClaw:* [old] → [new] ✅ Updated\n   *Models:* Sonnet & Haiku up to date ✅\n\n   If OpenClaw is current, models need updating:\n   🦀 *Weekly Version Check*\n   *OpenClaw:* [version] — already up to date ✅\n   *Models:* New versions available — action needed ⚠️\n   [list new model IDs found]\n   Curtis — you may want to update the model config and restart me.\n\n   If everything is current:\n   🦀 *Weekly Version Check*\n   *OpenClaw:* [version] — up to date ✅\n   *Models:* Sonnet & Haiku up to date ✅\n\nAlways send the Slack message. Keep it brief and clear.",
+        "model": "openrouter/google/gemini-2.0-flash-lite-001",
+        "timeoutSeconds": 120
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "slack",
+        "to": "D0ADHLUJ400"
+      },
+      "state": {
+        "nextRunAtMs": 1772978400000,
+        "lastRunAtMs": 1772377200016,
+        "lastStatus": "error",
+        "lastDurationMs": 43082,
+        "consecutiveErrors": 1,
+        "lastRunStatus": "error",
+        "lastDelivered": true,
+        "lastDeliveryStatus": "delivered",
+        "lastError": "⚠️ ✉️ Message: `D0ADHLUJ400` failed"
+      }
+    },
+    {
+      "id": "0dd60614-d507-4f81-b611-792b46a87f8a",
+      "agentId": "main",
+      "name": "Weekly Research Session",
+      "enabled": true,
+      "createdAtMs": 1771698042607,
+      "updatedAtMs": 1772312379295,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 8 * * 6",
+        "tz": "America/Chicago"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "You are BigClaw running a weekly autonomous research session. Your mission is to research and synthesize knowledge that helps Curtis Biggs understand the economic and philosophical challenges coming from AI disruption, so he can prepare his family.\n\nCheck the research directory at ~/.openclaw/workspace/memory/research/ to see what's already been covered. Then research the NEXT topic in the rotation (check README.md for the planned sequence).\n\nResearch rigorously, synthesize ruthlessly, and write a well-structured markdown document to the research directory. Aim for practical insight over academic depth. Write for an intelligent non-expert who wants to act on the information.\n\nAfter writing, send a brief Slack message to D0ADHLUJ400 with: the topic covered, the 3 most important findings, and what's coming next week.",
+        "model": "xai/grok-4",
+        "timeoutSeconds": 300
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "last"
+      },
+      "state": {
+        "nextRunAtMs": 1772892000000,
+        "lastRunAtMs": 1772287208010,
+        "lastRunStatus": "ok",
+        "lastStatus": "ok",
+        "lastDurationMs": 135857,
+        "lastDelivered": true,
+        "lastDeliveryStatus": "delivered",
+        "consecutiveErrors": 0
+      }
+    }
+  ]
+}

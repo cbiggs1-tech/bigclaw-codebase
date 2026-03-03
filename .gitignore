@@ -1,0 +1,23 @@
+# Secrets
+*.env
+.env_secrets
+google_credentials.json
+google_token.json
+auth.json
+auth-profiles.json
+credentials/
+
+# Data files
+*.db
+*.sqlite
+*.jpg
+*.png
+
+# Runtime
+__pycache__/
+*.pyc
+logs/
+runs/
+delivery-queue/
+*.bak
+*.bak.*
