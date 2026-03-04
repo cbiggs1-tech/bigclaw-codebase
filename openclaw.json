@@ -30,7 +30,7 @@
           "params": {
             "temperature": 0.85,
             "maxTokens": 16384,
-            "top_p": 0.92,
+            "top_p": 0.95,
             "presence_penalty": 0.4,
             "cacheRetention": "long",
             "frequency_penalty": 0.2
@@ -56,6 +56,7 @@
         "openrouter/google/gemini-2.0-flash-001": {},
         "openrouter/google/gemini-2.0-flash-lite-001": {}
       },
+      "prompt_prefix": "ABSOLUTE DATA INTEGRITY OVERRIDE is active. Run stock_quote.py for every ticker in ALL modes, including Deep Think.",
       "workspace": "/home/cbiggs90/.openclaw/workspace",
       "contextPruning": {
         "mode": "cache-ttl",
