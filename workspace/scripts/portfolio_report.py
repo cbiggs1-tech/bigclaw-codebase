@@ -89,7 +89,17 @@ def generate_report():
         
         for pos in sorted(val['positions'], key=lambda x: x['value'], reverse=True):
             g = "🟢" if pos['gain'] >= 0 else "🔴"
-            print(f"  {g} {pos['ticker']}: {pos['shares']:.1f} sh @ ${pos['current_price']:.2f} = ${pos['value']:,.0f} ({pos['gain_pct']:+.1f}%)")
+            since_str = ''
+            if pos.get('first_bought_at'):
+                try:
+                    from datetime import datetime
+                    bought = pos['first_bought_at']
+                    if isinstance(bought, str):
+                        bought = datetime.fromisoformat(bought.replace(' ', 'T'))
+                    since_str = f" since {bought.strftime('%b %-d')}"
+                except Exception:
+                    pass
+            print(f"  {g} {pos['ticker']}: {pos['shares']:.1f} sh @ ${pos['current_price']:.2f} = ${pos['value']:,.0f} ({pos['gain_pct']:+.1f}%{since_str})")
     
     print("\n" + "=" * 60)
     return prices

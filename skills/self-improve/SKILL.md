@@ -1,6 +1,6 @@
 ---
 name: self-improve
-description: Analyze and fix your own configs, prompts, or response quality using Grok 4 reasoning. Use when Curtis says "fix yourself", "improve response", "debug config", "why so factual", "why not analytical", "tune yourself", "you can do better", or any feedback about response quality, personality, analytical depth, or config issues.
+description: Analyze and fix your own configs, prompts, or response quality. Use when Curtis says "fix yourself", "improve response", "debug config", "why so factual", "why not analytical", "tune yourself", "you can do better", or any feedback about response quality, personality, analytical depth, or config issues.
 ---
 
 # Self-Improve
@@ -43,11 +43,11 @@ python3 -c "
 import json
 with open('$HOME/.openclaw/openclaw.json') as f:
     d = json.load(f)
-params = d.get('agents',{}).get('defaults',{}).get('models',{}).get('xai/grok-4',{}).get('params',{})
+params = d.get('agents',{}).get('defaults',{}).get('models',{}).get('anthropic/claude-sonnet-4-6',{}).get('params',{})
 model = d.get('agents',{}).get('defaults',{}).get('model',{})
 print('Primary model:', model.get('primary'))
 print('Fallbacks:', model.get('fallbacks'))
-print('Grok-4 params:', json.dumps(params, indent=2))
+print('Sonnet params:', json.dumps(params, indent=2))
 "
 
 # Auth issues
@@ -81,8 +81,8 @@ For each issue found, output:
 Example format:
 ```
 DIAGNOSIS: Temperature at 0.7 producing overly safe token selection
-CAUSE: Grok 4 defaults to conservative phrasing at lower temps
-FIX: Edit ~/.openclaw/openclaw.json → xai/grok-4 params → temperature: 0.9
+CAUSE: Lower temps produce conservative phrasing
+FIX: Edit ~/.openclaw/openclaw.json → anthropic/claude-sonnet-4-6 params → temperature: 0.9
 RISK: Slight increase in creative phrasing, negligible hallucination risk at 0.9
 ```
 
@@ -95,7 +95,7 @@ python3 -c "
 import json
 path = '$HOME/.openclaw/openclaw.json'
 with open(path) as f: d = json.load(f)
-d['agents']['defaults']['models']['xai/grok-4']['params']['temperature'] = 0.9
+d['agents']['defaults']['models']['anthropic/claude-sonnet-4-6']['params']['temperature'] = 0.9
 with open(path, 'w') as f: json.dump(d, f, indent=2)
 print('Updated temperature to 0.9')
 "
@@ -157,11 +157,8 @@ grep "extraParams\|streamFn\|temperature\|maxTokens" /tmp/openclaw/openclaw-$(da
 
 | Param | Effect | Range | Current |
 |-------|--------|-------|---------|
-| `temperature` | Creativity vs safety | 0.0–2.0 | 0.9 |
-| `maxTokens` | Response length cap | 1K–128K | 16384 |
-| `top_p` | Token diversity | 0.0–1.0 | 0.92 |
-| `presence_penalty` | Anti-repetition | -2.0–2.0 | 0.3 |
-| `frequency_penalty` | Anti-word-repeat | -2.0–2.0 | not set |
+| `temperature` | Creativity vs safety | 0.0–1.0 | 0.9 |
+| `maxTokens` | Response length cap | 1K–128K | 8192 |
 
 **Rules of thumb:**
 - Too factual/robotic → raise temperature (0.85–1.0)

@@ -7,7 +7,7 @@
       "name": "Morning Market Analysis",
       "enabled": true,
       "createdAtMs": 1770927690610,
-      "updatedAtMs": 1772546548793,
+      "updatedAtMs": 1772721037975,
       "schedule": {
         "kind": "cron",
         "expr": "0 9 * * 1-5",
@@ -17,9 +17,9 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Run the morning market analysis. Steps:\n\n1. Run: `python3 ~/.openclaw/workspace/scripts/weather.py` for weather\n2. Run: `python3 ~/.openclaw/workspace/scripts/calendar_check.py --days 2` for today's calendar\n3. Run: `python3 ~/.openclaw/workspace/scripts/gmail_check.py` for important unread emails\n4. Run: `source ~/.env_secrets && python3 ~/.openclaw/workspace/scripts/portfolio_report.py --report`\n5. Run: `python3 ~/.openclaw/workspace/scripts/polymarket.py --market-movers --limit 5`\n6. Check market sentiment for key holdings using web_search\n7. Post a morning briefing to Slack channel D0ADHLUJ400 combining:\n   - Weather for Alvarado, TX\n   - Calendar events for today/tomorrow\n   - Important email summary (skip junk, just flag anything that needs attention)\n   - Portfolio snapshot (values, returns, top movers)\n   - Key sentiment/news for holdings\n   - Polymarket predictions\n   - Any trade recommendations or watches\n8. Run: `source ~/.env_secrets && cd ~/bigclaw-ai/src && python3 -c \"from export_dashboard import export_dashboard; export_dashboard()\"` to update website\n9. Git commit and push: `cd ~/bigclaw-ai && git add docs/data/ && git commit -m 'Morning dashboard update' && git push`\n\nKeep it concise and actionable. Include the standard disclaimer.",
+        "message": "Run the morning market analysis. Steps:\n\n1. Run: `python3 ~/.openclaw/workspace/scripts/weather.py` for weather\n2. Run: `source ~/.env_secrets && python3 ~/.openclaw/workspace/scripts/calendar_check.py --days 2` for today's calendar\n3. Run: `source ~/.env_secrets && python3 ~/.openclaw/workspace/scripts/gmail_check.py` for important unread emails\n4. Run: `source ~/.env_secrets && python3 ~/.openclaw/workspace/scripts/portfolio_report.py --report`\n5. Run: `python3 ~/.openclaw/workspace/scripts/polymarket.py --market-movers --limit 5`\n6. Check market sentiment for key holdings using web_search\n7. Post a morning briefing to Slack channel D0ADHLUJ400 combining:\n   - Weather for Alvarado, TX\n   - Calendar events for today/tomorrow\n   - Important email summary (skip junk, just flag anything that needs attention)\n   - Portfolio snapshot (values, returns, top movers)\n   - Key sentiment/news for holdings\n   - Polymarket predictions\n   - Any trade recommendations or watches\n8. Run: `source ~/.env_secrets && cd ~/bigclaw-ai/src && python3 -c \"from export_dashboard import export_dashboard; export_dashboard()\"` to update website\n9. Git commit and push: `cd ~/bigclaw-ai && git add docs/data/ && git commit -m 'Morning dashboard update' && git push`\n\nKeep it concise and actionable. Include the standard disclaimer.",
         "timeoutSeconds": 360,
-        "model": "xai/grok-4"
+        "model": "anthropic/claude-sonnet-4-6"
       },
       "delivery": {
         "mode": "announce",
@@ -28,10 +28,10 @@
         "bestEffort": true
       },
       "state": {
-        "nextRunAtMs": 1772632800000,
-        "lastRunAtMs": 1772546400040,
+        "nextRunAtMs": 1772805600000,
+        "lastRunAtMs": 1772720835970,
         "lastStatus": "ok",
-        "lastDurationMs": 148753,
+        "lastDurationMs": 202005,
         "consecutiveErrors": 0,
         "lastRunStatus": "ok",
         "lastDelivered": true,
@@ -44,7 +44,7 @@
       "name": "Afternoon Portfolio Report",
       "enabled": true,
       "createdAtMs": 1770927690668,
-      "updatedAtMs": 1772487237797,
+      "updatedAtMs": 1772659915658,
       "schedule": {
         "kind": "cron",
         "expr": "30 16 * * 1-5",
@@ -56,7 +56,7 @@
         "kind": "agentTurn",
         "message": "Run the afternoon portfolio report.\n\n1. Run: `source ~/.env_secrets && python3 ~/.openclaw/workspace/scripts/portfolio_report.py --report --snapshot`\n2. Format a clean daily report for each portfolio showing: total value, return %, top movers, any triggered orders\n3. Run: `source ~/.env_secrets && cd ~/bigclaw-ai/src && python3 -c \"from export_dashboard import export_dashboard; export_dashboard()\"` to update the website\n4. Also generate and save portfolio_analysis.json if possible\n5. Git commit and push: `cd ~/bigclaw-ai && git add docs/data/ && git commit -m 'Update dashboard data' && git push`\n\nReturn a clean markdown summary of the report. The announce delivery will post it to Slack automatically — do NOT call the message tool directly.\n\nInclude the standard disclaimer at the end.",
         "timeoutSeconds": 300,
-        "model": "xai/grok-4"
+        "model": "anthropic/claude-sonnet-4-6"
       },
       "delivery": {
         "mode": "announce",
@@ -65,10 +65,10 @@
         "bestEffort": true
       },
       "state": {
-        "nextRunAtMs": 1772573400000,
-        "lastRunAtMs": 1772487000049,
+        "nextRunAtMs": 1772746200000,
+        "lastRunAtMs": 1772659800036,
         "lastStatus": "ok",
-        "lastDurationMs": 237748,
+        "lastDurationMs": 115622,
         "consecutiveErrors": 0,
         "lastRunStatus": "ok",
         "lastDelivered": true,
@@ -81,7 +81,7 @@
       "name": "healthcheck:security-audit",
       "enabled": true,
       "createdAtMs": 1770992666596,
-      "updatedAtMs": 1772539261412,
+      "updatedAtMs": 1772721231265,
       "schedule": {
         "kind": "cron",
         "expr": "0 6 * * *",
@@ -91,7 +91,7 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Run a daily security audit on the Pi. Execute these commands and report any issues:\n\n1. `openclaw security audit --deep`\n2. `sudo ufw status`\n3. `sudo fail2ban-client status sshd` (report any banned IPs)\n4. `ss -ltnp` (check for unexpected listening ports)\n5. `openclaw update status` (check for updates)\n6. Check disk usage: `df -h /`\n7. Check memory/CPU: `free -h && uptime`\n8. Check Pi temperature: `vcgencmd measure_temp`\n\nOnly post to Slack if there are issues, new bans, or an update is available. If everything looks clean, just say '✅ Daily security audit — all clear' in one line.\n\nPost results to Slack channel D0ADHLUJ400.",
+        "message": "Run a daily security audit on the Pi. Execute these commands and report any issues:\n\n1. `openclaw security audit --deep`\n2. `sudo ufw status`\n3. `sudo fail2ban-client status sshd` (report any banned IPs)\n4. `ss -ltnp` (check for unexpected listening ports)\n5. `openclaw update status` (check for updates)\n6. Check disk usage: `df -h /`\n7. Check memory/CPU: `free -h && uptime`\n8. Check Pi temperature: `vcgencmd measure_temp`\n\nReturn a summary of the results. If everything looks clean, just say '✅ Daily security audit — all clear'. If there are issues, list them clearly. Do NOT call the message tool — the announce delivery handles Slack posting automatically.",
         "timeoutSeconds": 120,
         "model": "openrouter/google/gemini-2.0-flash-001"
       },
@@ -102,15 +102,14 @@
         "bestEffort": true
       },
       "state": {
-        "nextRunAtMs": 1772625600000,
-        "lastRunAtMs": 1772539200021,
-        "lastStatus": "error",
-        "lastDurationMs": 61391,
-        "consecutiveErrors": 3,
-        "lastRunStatus": "error",
+        "nextRunAtMs": 1772798400000,
+        "lastRunAtMs": 1772721204589,
+        "lastStatus": "ok",
+        "lastDurationMs": 26676,
+        "consecutiveErrors": 0,
+        "lastRunStatus": "ok",
         "lastDelivered": true,
-        "lastDeliveryStatus": "delivered",
-        "lastError": "⚠️ ✉️ Message failed"
+        "lastDeliveryStatus": "delivered"
       }
     },
     {
@@ -119,7 +118,7 @@
       "name": "Email Check: fixit@grandpapa.net",
       "enabled": true,
       "createdAtMs": 1770997098541,
-      "updatedAtMs": 1772546570329,
+      "updatedAtMs": 1772721197354,
       "schedule": {
         "kind": "cron",
         "expr": "0 8 * * *"
@@ -139,10 +138,10 @@
         "bestEffort": true
       },
       "state": {
-        "nextRunAtMs": 1772632800000,
-        "lastRunAtMs": 1772546548793,
+        "nextRunAtMs": 1772805600000,
+        "lastRunAtMs": 1772721191290,
         "lastStatus": "ok",
-        "lastDurationMs": 21536,
+        "lastDurationMs": 6064,
         "consecutiveErrors": 0,
         "lastRunStatus": "ok",
         "lastDelivered": true,
@@ -257,7 +256,7 @@
       "name": "Good Morning Curtis",
       "enabled": true,
       "createdAtMs": 1771437190787,
-      "updatedAtMs": 1772539298575,
+      "updatedAtMs": 1772721184581,
       "schedule": {
         "kind": "cron",
         "expr": "0 6 * * *",
@@ -267,7 +266,7 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Good morning routine for Curtis. Do these steps:\n1. Try to take a camera snapshot: `ffmpeg -f v4l2 -i /dev/video0 -frames:v 1 -update 1 -y /tmp/morning_snap.jpg` — if it works, analyze the image briefly (lighting, anyone visible). If it fails, just note camera is offline.\n2. Get today's weather for Alvarado, TX using the weather skill or `python3 ~/.openclaw/workspace/scripts/weather.py`\n3. Check Google Calendar for today's events: `python3 ~/.openclaw/workspace/scripts/calendar_check.py`\n4. Check email (fixit@grandpapa.net): `himalaya envelope list -s 5`\n5. Check Gmail for anything urgent: `python3 ~/.openclaw/workspace/scripts/gmail_check.py`\n6. Compose a friendly, concise good morning message to Curtis with: camera status, weather summary, today's calendar, any urgent emails. Keep it warm but brief. Send to Slack DM D0ADHLUJ400.",
+        "message": "Good morning routine for Curtis. Do these steps:\n1. Try to take a camera snapshot: `ffmpeg -f v4l2 -i /dev/video0 -frames:v 1 -update 1 -y /tmp/morning_snap.jpg` — if it works, analyze the image briefly (lighting, anyone visible). If it fails, just note camera is offline.\n2. Get today's weather for Alvarado, TX using the weather skill or `python3 ~/.openclaw/workspace/scripts/weather.py`\n3. Check Google Calendar for today's events: `source ~/.env_secrets && python3 ~/.openclaw/workspace/scripts/calendar_check.py`\n4. Check email (fixit@grandpapa.net): `himalaya envelope list -s 5`\n5. Check Gmail for anything urgent: `source ~/.env_secrets && python3 ~/.openclaw/workspace/scripts/gmail_check.py`\n6. Compose a friendly, concise good morning message to Curtis with: camera status, weather summary, today's calendar, any urgent emails. Keep it warm but brief. Send to Slack DM D0ADHLUJ400.",
         "model": "openrouter/google/gemini-2.0-flash-001",
         "timeoutSeconds": 120
       },
@@ -278,14 +277,14 @@
         "bestEffort": true
       },
       "state": {
-        "nextRunAtMs": 1772625600000,
-        "lastRunAtMs": 1772539261412,
+        "nextRunAtMs": 1772798400000,
+        "lastRunAtMs": 1772721154415,
         "lastStatus": "ok",
-        "lastDurationMs": 37163,
+        "lastDurationMs": 30166,
         "consecutiveErrors": 0,
         "lastRunStatus": "ok",
-        "lastDelivered": true,
-        "lastDeliveryStatus": "delivered"
+        "lastDeliveryStatus": "delivered",
+        "lastDelivered": true
       }
     },
     {
@@ -294,7 +293,7 @@
       "name": "Price Refresh (2hr)",
       "enabled": true,
       "createdAtMs": 1771445904845,
-      "updatedAtMs": 1772568013582,
+      "updatedAtMs": 1772719558406,
       "schedule": {
         "kind": "cron",
         "expr": "0 9-16/2 * * 1-5",
@@ -311,10 +310,10 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1772632800000,
-        "lastRunAtMs": 1772568000043,
+        "nextRunAtMs": 1772726400000,
+        "lastRunAtMs": 1772719475822,
         "lastStatus": "ok",
-        "lastDurationMs": 13539,
+        "lastDurationMs": 82584,
         "consecutiveErrors": 0,
         "lastRunStatus": "ok",
         "lastDelivered": false,
@@ -375,7 +374,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "You are BigClaw running a weekly autonomous research session. Your mission is to research and synthesize knowledge that helps Curtis Biggs understand the economic and philosophical challenges coming from AI disruption, so he can prepare his family.\n\nCheck the research directory at ~/.openclaw/workspace/memory/research/ to see what's already been covered. Then research the NEXT topic in the rotation (check README.md for the planned sequence).\n\nResearch rigorously, synthesize ruthlessly, and write a well-structured markdown document to the research directory. Aim for practical insight over academic depth. Write for an intelligent non-expert who wants to act on the information.\n\nAfter writing, send a brief Slack message to D0ADHLUJ400 with: the topic covered, the 3 most important findings, and what's coming next week.",
-        "model": "xai/grok-4",
+        "model": "anthropic/claude-sonnet-4-6",
         "timeoutSeconds": 300
       },
       "delivery": {
