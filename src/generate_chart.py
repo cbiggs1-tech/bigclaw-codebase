@@ -169,7 +169,7 @@ def generate_chart(daily_values):
     # Styling
     ax.set_xlabel('Date', fontsize=11, color='#e5e5e5')
     ax.set_ylabel('Return (%)', fontsize=11, color='#e5e5e5')
-    ax.set_title('Portfolio Performance Comparison (Since Feb 3, 2026)', fontsize=14, fontweight='bold', color='white', pad=15)
+    ax.set_title('Portfolio Performance Comparison (Since Mar 20, 2026)', fontsize=14, fontweight='bold', color='white', pad=15)
 
     # Add zero line
     ax.axhline(y=0, color='#4a4a6a', linestyle='--', linewidth=1, alpha=0.7)
@@ -201,8 +201,8 @@ def generate_chart(daily_values):
 
 
 def main():
-    # Date range: Feb 3, 2026 to today
-    start_date = '2026-02-03'
+    # Date range: Mar 20, 2026 (paper trade reset) to today
+    start_date = '2026-03-20'
     end_date = datetime.now().strftime('%Y-%m-%d')
 
     print(f"Generating chart for {start_date} to {end_date}")
