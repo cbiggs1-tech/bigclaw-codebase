@@ -118,6 +118,25 @@ def init_database():
         )
     """)
 
+    # Trailing stops — style-specific stop-loss tracking
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS trailing_stops (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            portfolio_id INTEGER NOT NULL,
+            ticker TEXT NOT NULL,
+            high_water_mark REAL NOT NULL,
+            hwm_date TEXT NOT NULL,
+            trail_pct REAL NOT NULL,
+            trigger_price REAL NOT NULL,
+            status TEXT DEFAULT 'active',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            triggered_at TIMESTAMP,
+            FOREIGN KEY (portfolio_id) REFERENCES portfolios(id),
+            UNIQUE(portfolio_id, ticker)
+        )
+    """)
+
     conn.commit()
     conn.close()
     logger.info("Portfolio database initialized")

@@ -115,11 +115,11 @@ def gather_portfolio_data(portfolio, holding_tickers: list[str] = None) -> str:
     # Determine candidate stocks based on investment style (always included)
     style_lower = portfolio.investment_style.lower()
     if "cathie" in style_lower or "ark" in style_lower or "innovation" in style_lower:
-        candidates = ["TSLA", "ROKU", "COIN", "PATH", "PLTR", "CRSP", "SHOP"]
+        candidates = ["TSLA", "ROKU", "COIN", "PATH", "PLTR", "CRSP", "SHOP", "IONQ", "ARM", "SMCI", "HOOD", "SOFI"]
     elif "value" in style_lower or "buffett" in style_lower:
         candidates = ["BRK-B", "AAPL", "BAC", "KO", "CVX", "JPM", "PG"]
     elif "momentum" in style_lower:
-        candidates = ["NVDA", "AVGO", "GE", "LLY", "DECK", "META", "ANET"]
+        candidates = ["NVDA", "AVGO", "GE", "LLY", "DECK", "META", "ANET", "VST", "CEG", "NFLX", "UBER", "NOW"]
     elif "nuclear" in style_lower:
         candidates = ["CCJ", "GEV", "BWXT", "TLN", "CEG", "SMR", "LEU"]
     elif "defense" in style_lower or "ai defense" in style_lower:
