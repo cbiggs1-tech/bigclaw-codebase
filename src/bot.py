@@ -50,14 +50,16 @@ if ANTHROPIC_API_KEY:
         import anthropic
         from agent import BigClawAgent
         from memory import get_memory
-        from scheduler import init_scheduler
+        # DISABLED: trading now handled by autonomous_trader.py (openclaw cron)
+        # from scheduler import init_scheduler
 
         anthropic_client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
         agent = BigClawAgent(anthropic_client)
         memory = get_memory()
 
         # Initialize trading scheduler (will be started later)
-        trading_scheduler = init_scheduler(anthropic_client, app)
+        # trading_scheduler = init_scheduler(anthropic_client, app)
+        trading_scheduler = None
 
         print("BigClaw Agent initialized with tool support and conversation memory!")
     except ImportError as e:
