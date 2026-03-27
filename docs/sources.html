@@ -780,6 +780,12 @@
                     <td><div class="cron-publishes"><span>portfolios.json</span><span>market.json</span><span>signals.json</span></div></td>
                 </tr>
                 <tr>
+                    <td><div class="cron-name"><span class="cron-icon">🦈</span> Options Intelligence</div></td>
+                    <td><div class="cron-schedule">Every 2 hrs<br>9:05 AM – 3:05 PM ET<br>Mon – Fri</div></td>
+                    <td><div class="cron-desc">Pulls max pain, IV rank, bullish/bearish premium for all portfolio holdings, sector ETF options flow, and dark pool blocks from Unusual Whales. Publishes to dashboard and flat file for data gathers.</div></td>
+                    <td><div class="cron-publishes"><span>options_flow.json</span></div></td>
+                </tr>
+                <tr>
                     <td><div class="cron-name"><span class="cron-icon">🤖</span> Daily Autonomous Trading</div></td>
                     <td><div class="cron-schedule">10:30 AM ET<br>Mon – Fri</div></td>
                     <td><div class="cron-desc">Runs full decision engine with rescreen, executes sells first (trims, stops, swaps), then buys. Monthly rebalance on first trading day. Posts execution summary to Slack.</div></td>
