@@ -8,8 +8,8 @@
   "rates": {
     "fed_funds": "4.25\u20134.50%",
     "ten_year": 4.44,
-    "two_year": 3.796,
-    "yield_spread": 0.644,
+    "two_year": 4.07,
+    "yield_spread": 0.37,
     "inverted": false
   },
   "market": {
@@ -208,35 +208,30 @@
   },
   "bond_signals": {
     "yield_curve": {
-      "two_year": 3.96,
-      "ten_year": 4.42,
-      "spread": 0.46,
-      "spread_1mo_ago": 0.6,
-      "spread_change": -0.14,
-      "date": "2026-03-26",
-      "assessment": "Flat \u2014 neutral"
+      "two_year": 4.07,
+      "ten_year": 4.44,
+      "spread": 0.37,
+      "date": "2026-03-27",
+      "assessment": "Normal & steepening \u2014 bullish"
     },
     "credit_spreads": {
-      "current_bps": 321.0,
-      "raw_value": 3.21,
-      "prev_value": 2.98,
-      "change": 0.23,
-      "date": "2026-03-26",
-      "assessment": "Tight (321bps) \u2014 bullish"
+      "current_bps": 292.0,
+      "date": "2026-03-27",
+      "assessment": "Tight (292bps) \u2014 bullish"
     },
     "ten_year": {
-      "current": 4.42,
-      "prev": 4.05,
-      "change_bps": 37.0,
-      "date": "2026-03-26",
-      "assessment": "High/rising \u2014 bearish"
+      "current": 4.44,
+      "prev": 4.334,
+      "change_bps": 10.6,
+      "date": "2026-03-27",
+      "assessment": "Elevated \u2014 bearish"
     },
     "scores": {
-      "yield_curve": 0,
+      "yield_curve": 1,
       "credit_spreads": 1,
       "ten_year_level": -1
     },
-    "combined_score": 0
+    "combined_score": 1
   },
   "economic": {
     "links": {
