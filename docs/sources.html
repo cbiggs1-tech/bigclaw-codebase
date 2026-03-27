@@ -762,50 +762,86 @@
             </thead>
             <tbody>
                 <tr>
+                    <td><div class="cron-name"><span class="cron-icon">📋</span> Morning Data Gather</div></td>
+                    <td><div class="cron-schedule">8:55 AM ET<br>Mon – Fri</div></td>
+                    <td><div class="cron-desc">Pure-Python data collection — prices, fundamentals, sentiment, macro indicators. Writes raw data to flat file for LLM analysis. No AI tokens consumed.</div></td>
+                    <td><div class="cron-publishes"><span>/tmp/bigclaw_morning_data.txt</span></div></td>
+                </tr>
+                <tr>
                     <td><div class="cron-name"><span class="cron-icon">🌅</span> Morning Market Analysis</div></td>
                     <td><div class="cron-schedule">9:00 AM ET<br>Mon – Fri</div></td>
-                    <td><div class="cron-desc">Macro scan, sector rotation check, bond market signals, consumer sentiment, risk-on/off verdict, and AI-written narrative summary.</div></td>
-                    <td><div class="cron-publishes"><span>analysis.json</span></div></td>
+                    <td><div class="cron-desc">LLM reads the morning data file and produces macro scan, sector rotation check, bond market signals, consumer sentiment, risk-on/off verdict, and narrative summary.</div></td>
+                    <td><div class="cron-publishes"><span>analysis.json</span><span>Slack report</span></div></td>
+                </tr>
+                <tr>
+                    <td><div class="cron-name"><span class="cron-icon">🔄</span> Price Refresh</div></td>
+                    <td><div class="cron-schedule">Every 2 hrs<br>9 AM – 3 PM ET<br>Mon – Fri</div></td>
+                    <td><div class="cron-desc">Intraday price fetch for all holdings and major indices. Ratchets trailing stops, checks position concentration limits, and pushes updated data to the dashboard.</div></td>
+                    <td><div class="cron-publishes"><span>portfolios.json</span><span>market.json</span><span>signals.json</span></div></td>
+                </tr>
+                <tr>
+                    <td><div class="cron-name"><span class="cron-icon">🤖</span> Daily Autonomous Trading</div></td>
+                    <td><div class="cron-schedule">10:30 AM ET<br>Mon – Fri</div></td>
+                    <td><div class="cron-desc">Runs full decision engine with rescreen, executes sells first (trims, stops, swaps), then buys. Monthly rebalance on first trading day. Posts execution summary to Slack.</div></td>
+                    <td><div class="cron-publishes"><span>trades.json</span><span>Slack report</span></div></td>
+                </tr>
+                <tr>
+                    <td><div class="cron-name"><span class="cron-icon">📋</span> Afternoon Data Gather</div></td>
+                    <td><div class="cron-schedule">4:25 PM ET<br>Mon – Fri</div></td>
+                    <td><div class="cron-desc">End-of-day data collection — closing prices, daily performance, sentiment scores, news digest. Writes raw data to flat file for LLM analysis.</div></td>
+                    <td><div class="cron-publishes"><span>/tmp/bigclaw_afternoon_data.txt</span></div></td>
                 </tr>
                 <tr>
                     <td><div class="cron-name"><span class="cron-icon">📊</span> Afternoon Portfolio Report</div></td>
                     <td><div class="cron-schedule">4:30 PM ET<br>Mon – Fri</div></td>
-                    <td><div class="cron-desc">Full portfolio valuation, trading signals across all holdings, sentiment scores, news digest, and portfolio-level analysis. Primary daily update.</div></td>
+                    <td><div class="cron-desc">LLM reads afternoon data file and produces full portfolio valuation, trading signals, sentiment scores, news digest, and portfolio-level analysis. Primary daily update.</div></td>
                     <td><div class="cron-publishes"><span>portfolios.json</span><span>signals.json</span><span>sentiment.json</span><span>news.json</span><span>portfolio_analysis.json</span><span>metadata.json</span></div></td>
                 </tr>
                 <tr>
-                    <td><div class="cron-name"><span class="cron-icon">🔄</span> Price Refresh</div></td>
-                    <td><div class="cron-schedule">Every 30 min<br>9 AM – 4 PM ET<br>Mon – Fri</div></td>
-                    <td><div class="cron-desc">Lightweight intraday price fetch for all holdings and major indices. Keeps portfolio cards and market pulse current throughout the trading day.</div></td>
-                    <td><div class="cron-publishes"><span>portfolios.json</span><span>market.json</span></div></td>
-                </tr>
-                <tr>
-                    <td><div class="cron-name"><span class="cron-icon">🚀</span> ARK ITK Weekly Summary</div></td>
-                    <td><div class="cron-schedule">5:00 PM ET<br>Fridays</div></td>
-                    <td><div class="cron-desc">Fetches ARK daily trade data, discovers the latest ARK "In the Know" YouTube episode, transcribes it, and delivers a weekly thesis summary.</div></td>
-                    <td><div class="cron-publishes"><span>Slack report</span></div></td>
-                </tr>
-                <tr>
-                    <td><div class="cron-name"><span class="cron-icon">🔒</span> Security Audit</div></td>
-                    <td><div class="cron-schedule">6:00 AM CST<br>Daily</div></td>
-                    <td><div class="cron-desc">Checks firewall status, SSH configuration, fail2ban bans, unattended-upgrade health, and open ports on the Pi. Alerts on anomalies.</div></td>
+                    <td><div class="cron-name"><span class="cron-icon">⏱️</span> Trailing Stop Monitor</div></td>
+                    <td><div class="cron-schedule">Every 15 min<br>9 AM – 3 PM CT<br>Mon – Fri</div></td>
+                    <td><div class="cron-desc">Lightweight intraday stop check — fetches prices for all held tickers, ratchets high-water marks, triggers market sells if stop price is breached. Zero LLM cost.</div></td>
                     <td><div class="cron-publishes"><span>Slack alert</span></div></td>
                 </tr>
                 <tr>
-                    <td><div class="cron-name"><span class="cron-icon">📬</span> Email Check</div></td>
-                    <td><div class="cron-schedule">8 AM · 12 PM · 5 PM CST<br>Daily</div></td>
-                    <td><div class="cron-desc">Checks fixit@grandpapa.net inbox for game support inquiries. Drafts replies for approval — never sends autonomously.</div></td>
-                    <td><div class="cron-publishes"><span>Slack summary</span></div></td>
-                </tr>
-                <tr>
                     <td><div class="cron-name"><span class="cron-icon">🦈</span> TSLA Options Watchdog</div></td>
-                    <td><div class="cron-schedule">Every 2 hrs<br>9 AM – 4 PM ET<br>Mon – Fri</div></td>
+                    <td><div class="cron-schedule">Every 15 min<br>2 – 9 PM CT<br>Mon – Fri</div></td>
                     <td><div class="cron-desc">Polls Unusual Whales for large TSLA options sweeps, dark pool prints, and market-wide flow alerts. Flags unusual call/put activity with premium, volume, and sweep count.</div></td>
                     <td><div class="cron-publishes"><span>Slack alert</span></div></td>
                 </tr>
                 <tr>
+                    <td><div class="cron-name"><span class="cron-icon">🚀</span> ARK ITK Weekly Summary</div></td>
+                    <td><div class="cron-schedule">8:00 AM CT<br>Saturdays</div></td>
+                    <td><div class="cron-desc">Fetches ARK daily trade data, discovers the latest ARK "In the Know" YouTube episode, transcribes it, and delivers a weekly thesis summary.</div></td>
+                    <td><div class="cron-publishes"><span>Slack report</span></div></td>
+                </tr>
+                <tr>
+                    <td><div class="cron-name"><span class="cron-icon">🔬</span> Weekly Research Session</div></td>
+                    <td><div class="cron-schedule">8:00 AM CT<br>Saturdays</div></td>
+                    <td><div class="cron-desc">Autonomous deep research into market themes and opportunities using Claude Sonnet for high-reasoning analysis.</div></td>
+                    <td><div class="cron-publishes"><span>Slack report</span></div></td>
+                </tr>
+                <tr>
+                    <td><div class="cron-name"><span class="cron-icon">📐</span> Weekly Style Compliance Audit</div></td>
+                    <td><div class="cron-schedule">9:00 AM CT<br>Saturdays</div></td>
+                    <td><div class="cron-desc">Audits each portfolio for style drift — verifies holdings match their portfolio's investment philosophy and flags violations.</div></td>
+                    <td><div class="cron-publishes"><span>Slack report</span></div></td>
+                </tr>
+                <tr>
+                    <td><div class="cron-name"><span class="cron-icon">🔒</span> Good Morning + Security Check</div></td>
+                    <td><div class="cron-schedule">7:00 AM CT<br>Daily</div></td>
+                    <td><div class="cron-desc">System health check — firewall status, SSH configuration, fail2ban bans, unattended-upgrade health, and open ports. Alerts on anomalies.</div></td>
+                    <td><div class="cron-publishes"><span>Slack alert</span></div></td>
+                </tr>
+                <tr>
+                    <td><div class="cron-name"><span class="cron-icon">🔒</span> Weekly Network Security Scan</div></td>
+                    <td><div class="cron-schedule">7:00 AM CT<br>Sundays</div></td>
+                    <td><div class="cron-desc">Comprehensive network security scan of the Pi — deeper than the daily check.</div></td>
+                    <td><div class="cron-publishes"><span>Slack alert</span></div></td>
+                </tr>
+                <tr>
                     <td><div class="cron-name"><span class="cron-icon">🦀</span> OpenClaw Version Check</div></td>
-                    <td><div class="cron-schedule">9:00 AM CST<br>Sundays</div></td>
+                    <td><div class="cron-schedule">9:00 AM CT<br>Sundays</div></td>
                     <td><div class="cron-desc">Checks npm registry for new OpenClaw releases. Auto-updates and restarts the gateway if a new stable version is available.</div></td>
                     <td><div class="cron-publishes"><span>Slack notice</span></div></td>
                 </tr>
