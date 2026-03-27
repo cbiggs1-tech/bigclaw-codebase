@@ -14,6 +14,68 @@
 
 ---
 
+## Table of Contents
+
+1. [System Description](#1-system-description)
+2. [Hardware Platform](#2-hardware-platform)
+   - 2.1 Hardware Specifications
+   - 2.2 Development Access
+3. [Software Architecture](#3-software-architecture)
+   - 3.1 System Diagram
+   - 3.2 Codebase
+   - 3.3 Services
+4. [Database Schema](#4-database-schema)
+   - 4.1 Tables
+5. [Portfolio Management Philosophy](#5-portfolio-management-philosophy)
+   - 5.1 Portfolio Definitions
+   - 5.2 Portfolio Parameters
+6. [Decision Engine & Scoring System](#6-decision-engine--scoring-system)
+   - 6.1 Signal Dimensions
+   - 6.2 Style-Specific Signal Weights
+   - 6.3 Score-to-Label Mapping
+   - 6.4 Special Rules
+7. [Autonomous Trading Logic & Execution](#7-autonomous-trading-logic--execution)
+   - 7.1 Execution Flow
+   - 7.2 Position Sizing
+   - 7.3 Safety Rules
+8. [Risk Management — Trailing Stops](#8-risk-management--trailing-stops)
+   - 8.1 Trail Percentages by Portfolio
+   - 8.2 Stop Lifecycle
+   - 8.3 Intraday Stop Monitor
+9. [Scheduled Operations & Automation](#9-scheduled-operations--automation)
+   - 9.1 OpenClaw Cron Jobs (Weekday)
+   - 9.2 OpenClaw Cron Jobs (Weekly)
+   - 9.3 OpenClaw Cron Jobs (Daily)
+   - 9.4 System Crontab Jobs
+   - 9.5 Disabled Jobs
+10. [Data Integrity & Anti-Hallucination Pipeline](#10-data-integrity--anti-hallucination-pipeline)
+11. [Data Feeds & External APIs](#11-data-feeds--external-apis)
+    - 11.1 Market Data & Pricing
+    - 11.2 Options Flow & Institutional Intelligence
+    - 11.3 Sentiment & Social
+    - 11.4 News & Research
+    - 11.5 ARK Invest Tracking
+    - 11.6 Economic Calendar & Macro
+    - 11.7 Weather & Environment
+    - 11.8 Website Frontend
+    - 11.9 LLM Providers
+    - 11.10 Communication
+    - 11.11 Technical Analysis Libraries
+12. [User Interfaces](#12-user-interfaces)
+    - 12.1 Slack — Primary Interactive Channel
+    - 12.2 GitHub Pages Dashboard
+    - 12.3 Dashboard Data Files
+13. [Logging, Monitoring & Security](#13-logging-monitoring--security)
+    - 13.1 Application Logs
+    - 13.2 Trade Logs
+    - 13.3 Intraday Stop Check Logs
+    - 13.4 API Retry
+    - 13.5 Configuration Files
+    - 13.6 Security
+14. [Key Design Principles](#14-key-design-principles-guidance-for-anyone-who-comes-after)
+
+---
+
 ## 1. System Description
 
 BigClaw AI is a fully autonomous investment research agent and paper-trading portfolio manager that runs 24/7 on a single Raspberry Pi 4 Model B. Its purpose is simple and unchanging: gather, synthesize, and analyze market data from every available source — price action, technicals, fundamentals, sentiment, insider activity, and macro signals — then act on that intelligence to manage seven distinct style-specific paper portfolios.
@@ -375,7 +437,8 @@ Trading is orchestrated once per day at 10:30 AM ET by `autonomous_trader.py` (a
    - Score >= 3 required to buy (normal mode)
    - Score >= 2 if portfolio is > 60% cash (deployment mode)
    - Score >= 1 if part of a swap recommendation
-7. **Summary** — Post execution report to Slack
+7. **Post-trade sync** — Re-compare DB positions against Alpaca after all trades complete. Only mismatches that persist after execution are reported. This eliminates false alerts from pre-trade discrepancies that the trades themselves resolve.
+8. **Summary** — Post execution report to Slack
 
 ### 7.2 Position Sizing
 
