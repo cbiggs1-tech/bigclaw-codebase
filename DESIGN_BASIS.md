@@ -538,7 +538,8 @@ These jobs run via the Pi's system crontab — pure Python, zero LLM cost.
 | Schedule | Script | Purpose |
 |----------|--------|---------|
 | 7:30 AM CT, weekdays | `daily_export.sh` | Pre-market full export: sector heatmap, calendar, trades (last 2 days), analysis, news, performance chart, all per-ticker charts. Alerts Slack on failure. |
-| 9:00, 10:00, 12:00, 2:00, 4:30 PM CT, weekdays | `refresh_all.sh` | Signals + prices + charts refresh: runs decision engine (`export_signals.py`), macro scanner, price refresh (`price_refresh.py`), and per-ticker chart export (`export_charts.py`). Commits and pushes to GitHub Pages. Alerts Slack on failure. |
+| 9:00, 10:00, 12:00, 2:00, 4:30 PM CT, weekdays | `refresh_all.sh` | Signals + prices + charts refresh: runs decision engine with rescreen (`export_signals.py`), macro scanner, price refresh (`price_refresh.py`), and per-ticker chart export (`export_charts.py`). Enriches each signal with portfolio holding context and swap recommendations. Commits and pushes to GitHub Pages. Alerts Slack on failure. |
+| 9:30 AM CT (10:30 AM ET), weekdays | `autonomous_trader.py` | Autonomous trade execution: syncs DB with Alpaca, runs decision engine with rescreen, executes sells/swaps/buys, post-trade sync check. The 9:00 AM signal refresh provides a 30-minute supervisory window before trades execute. |
 | Every 15 min, 9 AM–3 PM CT, weekdays | `stop_check.py` | Intraday trailing stop monitor (zero LLM cost) |
 | Every 15 min, 2–9 PM CT, weekdays | `tsla_watchdog.py` | TSLA dark pool / options flow monitor |
 
@@ -705,7 +706,7 @@ Both scripts alert Slack on failure so stale data is never silent.
 | Home | `index.html` | Market overview, portfolio summary cards |
 | Dashboard | `dashboard.html` | **Today's Planned Actions** (sells and strong buys only), portfolio cards, sector rotation heatmap, upcoming events, recent trades, market analysis |
 | Portfolio | `portfolio.html` | Individual portfolio deep dive — holdings table, metrics, P&L |
-| Signals | `signals.html` | **Single source of truth** for all signal categories: action required, watch/caution, opportunities, hold. Also: macro overview, sentiment, bond market, alerts & warnings |
+| Signals | `signals.html` | **Supervisory display** and single source of truth for all signal categories: action required, watch/caution, opportunities, hold. Each signal shows portfolio holding tags (shares, position %, capacity status) and pending swap recommendations with score differentials. Also: macro overview, sentiment, bond market, alerts & warnings |
 | Ticker | `ticker.html` | Individual ticker detail with candlestick, MACD, RSI, Monte Carlo charts + signal context |
 | Chart Detail | `chart-detail.html` | Portfolio performance comparison chart |
 | Sources | `sources.html` | Data source documentation, cron schedule reference |
@@ -713,7 +714,7 @@ Both scripts alert Slack on failure so stale data is never silent.
 | Nav | `nav.html` | Shared navigation component |
 | Styles | `styles.html` | Shared CSS |
 
-**Design rule**: The dashboard shows only actionable items (planned trades). All detailed signal analysis lives on the signals page. This avoids redundancy and ensures the signals page is authoritative.
+**Design rule**: The dashboard shows only actionable items (planned trades). All detailed signal analysis lives on the signals page. This avoids redundancy and ensures the signals page is authoritative. The signals page serves as the supervisory display — like Tesla FSD (Supervised), the autonomous trader makes all decisions but the human sees the same data and reasoning, with a 30-minute window before trade execution to intervene if needed.
 
 ### 12.3 Dashboard Data Files
 
@@ -721,7 +722,7 @@ All JSON data in `docs/data/` is auto-refreshed and pushed to GitHub Pages:
 
 | File | Contents | Refresh |
 |------|----------|---------|
-| `signals.json` | Decision engine output: scores, labels, reasons for all held tickers | 5×/day |
+| `signals.json` | Decision engine output with rescreen: scores, labels, reasons, portfolio holding context (shares, position %, capacity), swap recommendations with score differentials | 5×/day |
 | `portfolios.json` | All 7 portfolios with holdings, current prices, returns | 5×/day |
 | `market.json` | S&P 500, Dow, NASDAQ, VIX + sector rotation heatmap (11 GICS sectors) | 5×/day (indices), 1×/day (sectors) |
 | `macro.json` | Macro indicators, bond yields, sentiment, sector performance, VIX, verdict | 5×/day |
