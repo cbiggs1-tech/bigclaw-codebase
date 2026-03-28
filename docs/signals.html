@@ -161,6 +161,19 @@
         .reasons-detail li.bearish::before { color: var(--loss); }
         .reasons-detail li.neutral::before { color: var(--text-muted); }
 
+        /* Swap recommendation tags */
+        .swap-tag {
+            display: inline-flex; align-items: center; gap: 0.25rem;
+            font-size: 0.62rem; padding: 0.15rem 0.45rem; border-radius: 3px;
+            white-space: nowrap; font-weight: 600;
+        }
+        .swap-tag.swap-out {
+            background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.25);
+        }
+        .swap-tag.swap-in {
+            background: rgba(0,196,140,0.1); color: #00c48c; border: 1px solid rgba(0,196,140,0.25);
+        }
+
         /* Portfolio holding tags */
         .holding-tags { display: flex; gap: 0.35rem; flex-wrap: wrap; }
         .holding-tag {
@@ -407,6 +420,19 @@
                     holdingDiv.appendChild(tag);
                 }
 
+                // Swap recommendation tags
+                if (s.pending_swaps && s.pending_swaps.length > 0) {
+                    s.pending_swaps.forEach(sw => {
+                        const tag = el('span', 'swap-tag ' + (sw.action === 'SWAP OUT' ? 'swap-out' : 'swap-in'));
+                        if (sw.action === 'SWAP OUT') {
+                            tag.textContent = 'SWAP OUT for ' + sw.buy + ' (+' + sw.buy_score + ') in ' + sw.portfolio;
+                        } else {
+                            tag.textContent = 'SWAP IN replacing ' + sw.sell + ' (' + sw.sell_score + ') in ' + sw.portfolio;
+                        }
+                        holdingDiv.appendChild(tag);
+                    });
+                }
+
                 const summary = el('span', 'ticker-reasons', (s.reasons || []).slice(0, 3).join(' · '));
                 const hint = el('span', 'expand-hint', '▶ details');
 
@@ -434,6 +460,23 @@
                     holdInfo.innerHTML = lines.join('<br>');
                     detail.appendChild(holdInfo);
                 }
+                // Show swap recommendations
+                if (s.pending_swaps && s.pending_swaps.length > 0) {
+                    const swapInfo = el('div', '', '');
+                    swapInfo.style.cssText = 'margin-bottom: 0.5rem; padding: 0.4rem 0.6rem; border-radius: 4px; font-size: 0.72rem;';
+                    const lines = s.pending_swaps.map(sw => {
+                        if (sw.action === 'SWAP OUT') {
+                            return '<span style="color:#ef4444">SWAP OUT</span> ' + sw.portfolio + ': sell ' + sw.sell + ' (score ' + sw.sell_score + ') to buy ' + sw.buy + ' (score ' + sw.buy_score + ') -- differential: +' + sw.score_diff;
+                        } else {
+                            return '<span style="color:#00c48c">SWAP IN</span> ' + sw.portfolio + ': replacing ' + sw.sell + ' (score ' + sw.sell_score + ') -- differential: +' + sw.score_diff;
+                        }
+                    });
+                    swapInfo.style.background = 'rgba(240,185,11,0.06)';
+                    swapInfo.style.color = '#f0b90b';
+                    swapInfo.innerHTML = lines.join('<br>');
+                    detail.appendChild(swapInfo);
+                }
+
                 const ul = document.createElement('ul');
                 (s.reasons || []).forEach(r => {
                     const li = document.createElement('li');
