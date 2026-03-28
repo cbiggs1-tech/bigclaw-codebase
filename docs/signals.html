@@ -161,6 +161,21 @@
         .reasons-detail li.bearish::before { color: var(--loss); }
         .reasons-detail li.neutral::before { color: var(--text-muted); }
 
+        /* Portfolio holding tags */
+        .holding-tags { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+        .holding-tag {
+            display: inline-flex; align-items: center; gap: 0.25rem;
+            font-size: 0.62rem; padding: 0.15rem 0.45rem; border-radius: 3px;
+            background: rgba(59,130,246,0.1); color: #6ba3f7; border: 1px solid rgba(59,130,246,0.25);
+            white-space: nowrap;
+        }
+        .holding-tag.at-cap {
+            background: rgba(240,185,11,0.1); color: #f0b90b; border: 1px solid rgba(240,185,11,0.25);
+        }
+        .holding-tag.not-held {
+            background: rgba(139,149,168,0.05); color: var(--text-muted); border: 1px solid rgba(139,149,168,0.15);
+        }
+
         /* Dimension scores */
         .dim-scores {
             display: flex; gap: 0.35rem; flex-wrap: wrap; margin-top: 0.25rem;
@@ -374,12 +389,31 @@
                     (s.score >= 0 ? '+' : '') + s.score);
                 const badge = el('span', 'badge badge-' + scoreClass(s.score), s.label || scoreEmoji(s.score));
                 const price = el('span', 'ticker-price', s.price ? '$' + s.price.toFixed(2) : '');
+                // Portfolio holding context tags
+                const holdingDiv = el('span', 'holding-tags');
+                if (s.held_in && s.held_in.length > 0) {
+                    s.held_in.forEach(h => {
+                        const atCap = h.at_max_position || h.at_max_holdings;
+                        const tag = el('span', 'holding-tag' + (atCap ? ' at-cap' : ''));
+                        let text = h.portfolio + ' (' + h.position_pct + '%)';
+                        if (h.at_max_position) text += ' \u2718 MAX POS';
+                        else if (h.at_max_holdings) text += ' \u2718 FULL';
+                        tag.textContent = text;
+                        holdingDiv.appendChild(tag);
+                    });
+                } else {
+                    const tag = el('span', 'holding-tag not-held');
+                    tag.textContent = 'Not held';
+                    holdingDiv.appendChild(tag);
+                }
+
                 const summary = el('span', 'ticker-reasons', (s.reasons || []).slice(0, 3).join(' · '));
                 const hint = el('span', 'expand-hint', '▶ details');
 
                 row.appendChild(sym);
                 row.appendChild(sc);
                 row.appendChild(badge);
+                row.appendChild(holdingDiv);
                 row.appendChild(price);
                 row.appendChild(summary);
                 row.appendChild(hint);
@@ -387,6 +421,19 @@
 
                 // Expandable reasons detail panel
                 const detail = el('div', 'reasons-detail');
+                // Show holding detail at top of expanded section
+                if (s.held_in && s.held_in.length > 0) {
+                    const holdInfo = el('div', '', '');
+                    holdInfo.style.cssText = 'margin-bottom: 0.5rem; padding: 0.4rem 0.6rem; background: rgba(59,130,246,0.06); border-radius: 4px; font-size: 0.72rem; color: #6ba3f7;';
+                    const lines = s.held_in.map(h => {
+                        let line = h.portfolio + ': ' + h.shares + ' shares (' + h.position_pct + '% of portfolio)';
+                        if (h.at_max_position) line += ' -- AT MAX POSITION (20%)';
+                        if (h.at_max_holdings) line += ' -- PORTFOLIO FULL (10 holdings)';
+                        return line;
+                    });
+                    holdInfo.innerHTML = lines.join('<br>');
+                    detail.appendChild(holdInfo);
+                }
                 const ul = document.createElement('ul');
                 (s.reasons || []).forEach(r => {
                     const li = document.createElement('li');
