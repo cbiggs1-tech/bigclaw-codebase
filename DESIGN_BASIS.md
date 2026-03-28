@@ -5,8 +5,8 @@
 | Field | Detail |
 |-------|--------|
 | System Name | BigClaw AI |
-| Document No. | DBD-AI-001 Rev. 0 |
-| Version | March 27, 2026 |
+| Document No. | DBD-AI-001 Rev. 1 |
+| Version | March 28, 2026 |
 | Author | Curtis Biggs |
 | Hostname | BigClaw |
 | Dashboard | https://bigclaw.grandpapa.net |
@@ -533,8 +533,12 @@ All times Eastern unless noted.
 
 ### 9.4 System Crontab Jobs
 
+These jobs run via the Pi's system crontab — pure Python, zero LLM cost.
+
 | Schedule | Script | Purpose |
 |----------|--------|---------|
+| 7:30 AM CT, weekdays | `daily_export.sh` | Pre-market full export: sector heatmap, calendar, trades (last 2 days), analysis, news, performance chart, all per-ticker charts. Alerts Slack on failure. |
+| 9:00, 10:00, 12:00, 2:00, 4:30 PM CT, weekdays | `refresh_all.sh` | Signals + prices + charts refresh: runs decision engine (`export_signals.py`), macro scanner, price refresh (`price_refresh.py`), and per-ticker chart export (`export_charts.py`). Commits and pushes to GitHub Pages. Alerts Slack on failure. |
 | Every 15 min, 9 AM–3 PM CT, weekdays | `stop_check.py` | Intraday trailing stop monitor (zero LLM cost) |
 | Every 15 min, 2–9 PM CT, weekdays | `tsla_watchdog.py` | TSLA dark pool / options flow monitor |
 
@@ -689,41 +693,48 @@ The Slack bot runs as `bigclaw.service` and exposes 36 interactive tools that th
 
 ### 12.2 GitHub Pages Dashboard
 
-Hosted on GitHub Pages at **bigclaw.grandpapa.net**. JSON data files are refreshed every two hours and pushed automatically.
+Hosted on GitHub Pages at **bigclaw.grandpapa.net** behind Cloudflare Access. Data is refreshed on two schedules:
+
+- **5× daily** (9 AM, 10 AM, 12 PM, 2 PM, 4:30 PM CT) via `refresh_all.sh`: signals, prices, macro, charts
+- **1× daily pre-market** (7:30 AM CT) via `daily_export.sh`: sector heatmap, calendar, trades, analysis, news, performance chart
+
+Both scripts alert Slack on failure so stale data is never silent.
 
 | Page | File | Purpose |
 |------|------|---------|
 | Home | `index.html` | Market overview, portfolio summary cards |
-| Dashboard | `dashboard.html` | Detailed portfolio analytics, performance charts |
-| Portfolio | `portfolio.html` | Individual portfolio deep dive |
-| Signals | `signals.html` | Decision engine signals — buy/sell/hold for all tracked tickers |
-| Ticker | `ticker.html` | Individual ticker detail with TradingView embedded chart |
-| Chart Detail | `chart-detail.html` | Full-screen chart view |
+| Dashboard | `dashboard.html` | **Today's Planned Actions** (sells and strong buys only), portfolio cards, sector rotation heatmap, upcoming events, recent trades, market analysis |
+| Portfolio | `portfolio.html` | Individual portfolio deep dive — holdings table, metrics, P&L |
+| Signals | `signals.html` | **Single source of truth** for all signal categories: action required, watch/caution, opportunities, hold. Also: macro overview, sentiment, bond market, alerts & warnings |
+| Ticker | `ticker.html` | Individual ticker detail with candlestick, MACD, RSI, Monte Carlo charts + signal context |
+| Chart Detail | `chart-detail.html` | Portfolio performance comparison chart |
 | Sources | `sources.html` | Data source documentation, cron schedule reference |
 | Privacy | `privacy.html` | Privacy policy |
 | Nav | `nav.html` | Shared navigation component |
 | Styles | `styles.html` | Shared CSS |
 
+**Design rule**: The dashboard shows only actionable items (planned trades). All detailed signal analysis lives on the signals page. This avoids redundancy and ensures the signals page is authoritative.
+
 ### 12.3 Dashboard Data Files
 
-All JSON data in `docs/data/` is auto-refreshed every 2 hours by `price_refresh.py` and committed to GitHub:
+All JSON data in `docs/data/` is auto-refreshed and pushed to GitHub Pages:
 
-| File | Contents |
-|------|----------|
-| `portfolios.json` | All 7 portfolios with holdings, current prices, returns |
-| `market.json` | S&P 500, Dow, NASDAQ, VIX — current values and daily change |
-| `signals.json` | Decision engine output: scores, labels, reasons for ~105 tickers |
-| `sentiment.json` | Market sentiment summary |
-| `macro.json` | Macro indicators, bond yields, sector performance |
-| `news.json` | Financial news headlines |
-| `trades.json` | Recent trade history |
-| `analysis.json` | Portfolio analysis and risk metrics |
-| `portfolio_analysis.json` | Detailed per-portfolio analytics |
-| `calendar.json` | Upcoming earnings dates |
-| `options_flow.json` | Per-ticker max pain, IV rank, bullish/bearish premium; sector ETF flow; dark pool blocks; signals |
-| `metadata.json` | Last update timestamps, export status |
+| File | Contents | Refresh |
+|------|----------|---------|
+| `signals.json` | Decision engine output: scores, labels, reasons for all held tickers | 5×/day |
+| `portfolios.json` | All 7 portfolios with holdings, current prices, returns | 5×/day |
+| `market.json` | S&P 500, Dow, NASDAQ, VIX + sector rotation heatmap (11 GICS sectors) | 5×/day (indices), 1×/day (sectors) |
+| `macro.json` | Macro indicators, bond yields, sentiment, sector performance, VIX, verdict | 5×/day |
+| `charts/*.json` | Per-ticker OHLCV, MACD, RSI, Monte Carlo for ~50 held tickers | 5×/day |
+| `trades.json` | Recent trade history (last 2 trading days) | 1×/day |
+| `calendar.json` | Upcoming economic events (FOMC, CPI, NFP) | 1×/day |
+| `analysis.json` | Macro market scanner report (markdown) | 1×/day |
+| `news.json` | Financial news headlines (Motley Fool RSS) | 1×/day |
+| `options_flow.json` | Per-ticker max pain, IV rank, bullish/bearish premium; sector ETF flow; dark pool blocks | Via options_intelligence.py |
+| `metadata.json` | Last update timestamps, export status | Every refresh |
+| `performance_chart.png` | Portfolio performance comparison chart | 1×/day |
 
-Additionally, `docs/data/charts/` contains per-ticker JSON chart data for ~100 tickers.
+**Note**: `price_refresh.py` preserves sector data in `market.json` when refreshing index prices — it merges rather than overwrites.
 
 ---
 
