@@ -557,7 +557,7 @@
                 <div class="source-name">Finviz</div>
                 <a href="https://finviz.com" target="_blank" class="source-link">finviz.com ↗</a>
             </div>
-            <div class="source-desc">Stock fundamentals, screener data, analyst ratings, and price targets for holdings and watchlist stocks.</div>
+            <div class="source-desc">Stock fundamentals, screener data, analyst ratings, and price targets. Powers the weekly candidate screener — Finviz filters discover new stocks for each portfolio's style.</div>
             <div class="source-tags">
                 <span class="tag tag-free">Free</span>
                 <span class="tag tag-lib">finvizfinance</span>
@@ -687,6 +687,45 @@
             <div class="source-tags">
                 <span class="tag tag-free">Free / No Auth</span>
                 <span class="tag tag-api">REST API</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Style Intelligence -->
+    <div class="section-label">
+        <span class="icon">🎯</span>
+        <h2>Style Intelligence & AI Reasoning</h2>
+        <div class="line"></div>
+    </div>
+    <div class="source-grid">
+        <div class="source-card">
+            <div class="source-card-top">
+                <div class="source-name">Style Gate Engine</div>
+            </div>
+            <div class="source-desc">Hard pre-buy filters per portfolio — sector gates, fundamental thresholds (P/E, ROE, PEG, dividend yield), and entity-type awareness (REITs, MLPs, banks). Runs before scoring to prevent portfolio convergence.</div>
+            <div class="source-tags">
+                <span class="tag tag-lib">style_gates.py</span>
+                <span class="tag tag-free">Zero Cost</span>
+            </div>
+        </div>
+        <div class="source-card">
+            <div class="source-card-top">
+                <div class="source-name">AI Gate Reasoning</div>
+            </div>
+            <div class="source-desc">Borderline gate failures escalate to Claude Opus 4.6 for AI judgment. Sends gate failure + style rules + earnings analysis + fundamentals. Returns BLOCK/ALLOW with reasoning. ~$0.02/call.</div>
+            <div class="source-tags">
+                <span class="tag tag-api">Anthropic API</span>
+                <span class="tag tag-lib">gate_reasoning.py</span>
+            </div>
+        </div>
+        <div class="source-card">
+            <div class="source-card-top">
+                <div class="source-name">Candidate Discovery Screener</div>
+            </div>
+            <div class="source-desc">Weekly Finviz screening with portfolio-specific filters, style gate filtering, and AI reasoning for near-misses. Discovers fresh candidates and updates portfolio universes automatically.</div>
+            <div class="source-tags">
+                <span class="tag tag-lib">candidate_screener.py</span>
+                <span class="tag tag-free">Saturday 9 AM CT</span>
             </div>
         </div>
     </div>
@@ -828,9 +867,15 @@
                     <td><div class="cron-publishes"><span>Slack report</span></div></td>
                 </tr>
                 <tr>
+                    <td><div class="cron-name"><span class="cron-icon">🔍</span> Candidate Discovery Screener</div></td>
+                    <td><div class="cron-schedule">9:00 AM CT<br>Saturdays</div></td>
+                    <td><div class="cron-desc">Discovers new candidate stocks via Finviz screening, filters through style gates + AI reasoning for borderline cases, and updates portfolio_universes.json. Daily rescreen compares candidates to holdings.</div></td>
+                    <td><div class="cron-publishes"><span>portfolio_universes.json</span></div></td>
+                </tr>
+                <tr>
                     <td><div class="cron-name"><span class="cron-icon">📐</span> Weekly Style Compliance Audit</div></td>
                     <td><div class="cron-schedule">9:00 AM CT<br>Saturdays</div></td>
-                    <td><div class="cron-desc">Audits each portfolio for style drift — verifies holdings match their portfolio's investment philosophy and flags violations.</div></td>
+                    <td><div class="cron-desc">Audits each portfolio for style drift — verifies holdings pass style gates with AI reasoning for borderline cases and flags violations.</div></td>
                     <td><div class="cron-publishes"><span>Slack report</span></div></td>
                 </tr>
                 <tr>

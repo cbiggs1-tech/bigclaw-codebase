@@ -30,10 +30,13 @@
    - 5.1 Portfolio Definitions
    - 5.2 Portfolio Parameters
 6. [Decision Engine & Scoring System](#6-decision-engine--scoring-system)
-   - 6.1 Signal Dimensions
+   - 6.1 Signal Dimensions (20)
    - 6.2 Style-Specific Signal Weights
    - 6.3 Score-to-Label Mapping
    - 6.4 Special Rules
+   - 6.5 Style Gate Checks
+   - 6.6 AI Gate Reasoning
+   - 6.7 Candidate Discovery Screener
 7. [Autonomous Trading Logic & Execution](#7-autonomous-trading-logic--execution)
    - 7.1 Execution Flow
    - 7.2 Position Sizing
@@ -201,7 +204,7 @@ The core application is the always-on Slack bot, the portfolio database, and the
 
 The automation layer runs as `openclaw-gateway.service` under systemd. It provides the cron engine that drives all scheduled operations, 30+ standalone Python scripts for data gathering and trading, modular agent skills, and the `SOUL.md` personality file.
 
-**Scripts (`scripts/`)** — 30+ standalone Python scripts that handle everything the LLM should not be trusted to do on its own: data gathering (`morning_data_gather.py`, `afternoon_data_gather.py`), price refresh and dashboard updates (`price_refresh.py`), autonomous trading (`autonomous_trader.py`), decision engine scoring (`decision_engine.py`), options intelligence (`options_intelligence.py`), trailing stop management (`trailing_stop_manager.py`, `stop_check.py`), TSLA watchdog (`tsla_watchdog.py`), ARK tracking (`ark_itk_tracker.py`), and portfolio reconciliation. All scripts source credentials from `~/.env_secrets` and log via `bigclaw_logging.py`.
+**Scripts (`scripts/`)** — 30+ standalone Python scripts that handle everything the LLM should not be trusted to do on its own: data gathering (`morning_data_gather.py`, `afternoon_data_gather.py`), price refresh and dashboard updates (`price_refresh.py`), autonomous trading (`autonomous_trader.py`), decision engine scoring (`decision_engine.py`, 20 signal dimensions), style gate enforcement (`style_gates.py`), AI gate reasoning (`gate_reasoning.py`), weekly candidate discovery (`candidate_screener.py`), style compliance auditing (`style_compliance.py`), options intelligence (`options_intelligence.py`), trailing stop management (`trailing_stop_manager.py`, `stop_check.py`), TSLA watchdog (`tsla_watchdog.py`), ARK tracking (`ark_itk_tracker.py`), and portfolio reconciliation. All scripts source credentials from `~/.env_secrets` and log via `bigclaw_logging.py`.
 
 **Configuration (`config/`):**
 - `portfolio_universes.json` — Per-portfolio allowed ticker lists (holdings + candidates)
@@ -307,11 +310,11 @@ BigClaw manages seven independent paper portfolios. Each is permanently tied to 
 
 | # | Portfolio | Investment Style | Modeled After |
 |---|-----------|-----------------|---------------|
-| 1 | Value Picks | Deep Value Investing | Benjamin Graham |
+| 1 | Value Picks | Quality Value Investing | Buffett / Graham |
 | 2 | Innovation Fund | Disruptive Innovation | Cathie Wood / ARK |
 | 3 | Growth Value | Growth at Reasonable Price (GARP) | Peter Lynch |
 | 4 | Income Dividends | Income / Dividend Growth | Dividend Aristocrats |
-| 5 | Momentum Growth | Momentum / Aggressive Growth | Quantitative Momentum |
+| 5 | Momentum Growth | CANSLIM Momentum | William O'Neil |
 | 6 | Nuclear Renaissance | Nuclear Energy / Domain Expertise | Thematic Structural |
 | 7 | AI Defense & Autonomous | AI Defense / Autonomous Systems | Pentagon Spending Theme |
 
@@ -353,7 +356,9 @@ Universe files can be updated without touching core code. The decision engine's 
 
 ## 6. Decision Engine & Scoring System
 
-The analytical heart of BigClaw is `decision_engine.py`. It evaluates every candidate ticker across 14 signal dimensions (technical, fundamental, sentiment, macro, and override factors) and then multiplies those raw signals by a style-specific weight matrix (0 = ignore, 1 = normal, 2 = double emphasis). The result is a composite score that is mapped to clear action labels.
+The analytical heart of BigClaw is `decision_engine.py`. It evaluates every candidate ticker across 20 signal dimensions (technical, fundamental, quality, sentiment, macro, and override factors) and then multiplies those raw signals by a style-specific weight matrix (0 = ignore, 1 = normal, 2 = double emphasis). The result is a composite score that is mapped to clear action labels.
+
+Before a ticker even reaches the scoring engine, it must pass through **style gate checks** (see Section 6.5) — hard pre-buy filters that ensure only eligible stocks enter a portfolio's scoring pipeline. Gates are the bouncer; weights are the judge.
 
 This weighted, multi-factor approach is why BigClaw stays true to each portfolio's thesis instead of chasing the same momentum names across every style.
 
@@ -376,10 +381,17 @@ This weighted, multi-factor approach is why BigClaw stays true to each portfolio
 | 13 | BondMkt | Bond market signal (fed funds, yield curve) | Variable |
 | 14 | ValueOverride | Analyst target discount, RSI oversold, P/B < 1, capitulation volume, expert overrides | 0 to +5 |
 | 15 | DividendYield | Dividend yield level | -1 to +1 |
+| 16 | PEG | P/E ÷ earnings growth (Lynch's key metric). Uses best of forward/trailing PEG. | -1 to +1 |
+| 17 | ROE | Return on equity (Buffett's #1). ≥20% excellent, ≥15% good, <10% weak. | -1 to +1 |
+| 18 | FCF | Free cash flow positive/negative + FCF yield context if >5%. | -1 to +1 |
+| 19 | GrossMargin | Gross margin width: ≥40% wide moat, ≥30% decent, <30% thin. | -1 to +1 |
+| 20 | PayoutSafety | Dividend payout ratio: <60% safe, <80% moderate, >80% stretched. Skips non-dividend stocks. | -1 to +1 |
+
+Signals 1–6 are **Technical**, 7–10 are **Fundamental**, 16–20 are **Quality Fundamentals** (new), and 11–15 are **Sentiment / Macro / Override**.
 
 ### 6.2 Style-Specific Signal Weights
 
-Each portfolio multiplies signal categories differently. Weight 0 = ignore, 1 = normal, 2 = double emphasis.
+Each portfolio multiplies signal categories differently. Weight 0 = ignore, 1 = normal, 2 = double emphasis. The 5 new quality dimensions (PEG, ROE, FCF, GrossMargin, PayoutSafety) allow portfolios to differentiate on fundamental quality rather than relying solely on price-action and binary earnings signals.
 
 | Signal | Value | Innovation | Growth | Income | Momentum | Nuclear | Defense |
 |--------|-------|-----------|--------|--------|----------|---------|---------|
@@ -389,15 +401,27 @@ Each portfolio multiplies signal categories differently. Weight 0 = ignore, 1 = 
 | SMA200 | 0.5 | 0.5 | 1 | 0.5 | 1.5 | 1 | 1 |
 | Cross | 0 | 1 | 0.5 | 0 | **2** | 1 | 1 |
 | RelStrength | 0 | **1.5** | 1 | 0 | **2** | 1.5 | 1.5 |
-| EarningsGrowth | 1 | 0.5 | **2** | 1 | 0.5 | 1 | 1 |
-| RevenueGrowth | 0.5 | **2** | 1.5 | 0.5 | 0.5 | 1.5 | **2** |
-| PE | **2** | 0 | 1.5 | 1 | 0 | 0.5 | 0.5 |
-| DebtEquity | **2** | 0.5 | 1 | 1.5 | 0 | 1 | 1 |
-| ShortInterest | 1 | 0.5 | 1 | 0.5 | 1 | 1 | 1 |
-| Insider | **2** | 0.5 | 1.5 | 1 | 0.5 | 1.5 | 1.5 |
-| BondMkt | 1 | 0.5 | 0.5 | **2** | 0 | 0.5 | 0.5 |
+| EarningsGrowth | 1 | 0.5 | 1 | 1 | **1.5** | 1 | 1 |
+| RevenueGrowth | 0.5 | **2** | 1 | 0.5 | 0.5 | 1.5 | **2** |
+| PE | 1.5 | 0 | 0.5 | 1 | 0 | 0.5 | 0.5 |
+| DebtEquity | 1.5 | 0.5 | 1 | 1.5 | 0 | 1 | 1 |
+| ShortInterest | 0.5 | 0.5 | 1 | 0.5 | 1 | 1 | 1 |
+| Insider | 1.5 | 0.5 | 1.5 | 1 | 0.5 | 1.5 | 1.5 |
+| BondMkt | 0.5 | 0.5 | 0.5 | **2** | 0 | 0.5 | 0.5 |
 | ValueOverride | **2** | 0 | 1 | 1 | 0 | 1 | 0.5 |
-| DividendYield | 1.5 | 0 | 0.5 | **2** | 0 | 0 | 0 |
+| DividendYield | 1 | 0 | 0.5 | **2** | 0 | 0 | 0 |
+| PEG | 0.5 | 0 | **2** | 0 | 0 | 0 | 0 |
+| ROE | **2** | 0 | 1 | 0.5 | 1 | 0.5 | 0.5 |
+| FCF | **2** | 0 | 1 | 1.5 | 0 | 1 | 0.5 |
+| GrossMargin | 1.5 | 0 | 0.5 | 0 | 0 | 0 | 0 |
+| PayoutSafety | 0 | 0 | 0 | **2** | 0 | 0 | 0 |
+
+Key design choices in the weight matrix:
+- **Value Picks**: ROE=2, FCF=2, GrossMargin=1.5 — quality is the defining characteristic.
+- **Growth Value**: PEG=2 — Lynch's single most important metric, replaces separate PE + EarningsGrowth dependency.
+- **Income Dividends**: PayoutSafety=2, BondMkt=2, DividendYield=2 — sustainable income over yield-chasing.
+- **Momentum Growth**: EarningsGrowth=1.5 — O'Neil requires earnings-confirmed momentum, not pure price.
+- **Innovation Fund**: All quality signals zeroed — irrelevant for pre-revenue/high-growth disruptors.
 
 ### 6.3 Score-to-Label Mapping
 
@@ -417,6 +441,63 @@ Special rules baked into the engine enforce discipline:
 - **Value override cap**: If raw technical score <= -5 and value override is < 3, the override is prevented from rescuing the ticker above -3 (still flagged as sell/trim).
 - **Rescreen mode**: When run with `--rescreen`, the engine also scores candidate tickers from portfolio universes and generates swap recommendations (candidate must outscore weakest holding by >= 3 points).
 
+### 6.5 Style Gate Checks (`style_gates.py`)
+
+Style gates are hard pre-buy filters that run **before** the scoring engine. A ticker that fails a gate is blocked from the portfolio regardless of how high it might score. This is the primary mechanism preventing portfolio convergence — it ensures a pure AI company never enters Nuclear Renaissance, and a zero-dividend growth stock never enters Income Dividends.
+
+**Three severity levels:**
+
+| Severity | Meaning | AI Reasoning? |
+|----------|---------|---------------|
+| `pass` | Allowed into scoring pipeline | No |
+| `gate` | Borderline — close to failing | Yes (escalated to Opus) |
+| `reject` | Hard block, no exceptions | No |
+
+**Per-portfolio gate rules:**
+
+| Portfolio | Gate Checks |
+|-----------|-------------|
+| Value Picks | P/E < 35, ROE > 10%, positive earnings. Hard reject: P/E > 60. |
+| Growth Value | PEG < 3.0 (best of forward/trailing). Hard reject: P/E > 80. |
+| Income Dividends | Dividend yield ≥ 1.5%. REITs/MLPs/ETFs exempt from payout check. |
+| Innovation Fund | Must connect to 1 of 5 platforms (AI, genomics, fintech, energy, space). Legacy industries rejected. |
+| Momentum Growth | Earnings growth, ROE, institutional ownership gates (O'Neil CANSLIM). |
+| Nuclear Renaissance | Sector gate: only nuclear-related tickers. Blocks 82% of raw utility screens. |
+| AI Defense & Autonomous | Sector gate: defense-related only. Blocks 69% of raw tech screens. |
+
+**Entity-type awareness:** REITs, MLPs, and ETFs are exempt from payout ratio checks. Banks are exempt from FCF checks. Companies with negative book equity (aggressive buybacks like LOW) are exempt from ROE checks.
+
+### 6.6 AI Gate Reasoning (`gate_reasoning.py`)
+
+When a ticker receives a `gate` severity (borderline failure), the decision is escalated to Claude Opus 4.6 for AI reasoning. The model receives:
+
+1. The specific gate failure reason
+2. The portfolio's style rules (from `PORTFOLIO_STYLES.md`)
+3. Full earnings analysis output (from `earnings_analyzer.py`)
+4. Key yfinance metrics (20+ fundamentals)
+
+Opus returns a `BLOCK` or `ALLOW` decision with a 1–3 sentence rationale. This handles data artifacts that pure rules cannot — one-quarter EPS blips, REIT payout ratios that look broken under GAAP, negative equity from buybacks, etc.
+
+**Three contexts where AI reasoning fires:**
+- `pre_buy` — Before the autonomous trader executes a buy
+- `holding_audit` — During the weekly style compliance audit
+- `candidate_screen` — During the weekly candidate screener discovery
+
+**Cost:** ~$0.02/call, 2–5 calls/day typical, ~$20–30/year. A session cache prevents duplicate calls for the same ticker+portfolio+context combination.
+
+### 6.7 Candidate Discovery Screener (`candidate_screener.py`)
+
+The candidate screener is a weekly pipeline that discovers new stocks for each portfolio. It runs every Saturday at 9:00 AM CT and follows this flow:
+
+1. **Screen** — Finviz screener with portfolio-specific filters (2–3 filter sets per portfolio)
+2. **Gate** — Style gate checks filter raw results. Hard rejects are dropped.
+3. **AI Reason** — Borderline near-misses are escalated to Opus for judgment
+4. **Update** — Survivors are added to `portfolio_universes.json` as candidates (max 20 per portfolio)
+5. **Compare** — The daily rescreen (`decision_engine --rescreen`) scores new candidates against holdings
+6. **Swap** — If a candidate outscores the weakest holding by ≥ 3 points (`SWAP_THRESHOLD`), the swap fires: sell incumbent, buy challenger
+
+This closes the loop on candidate freshness — the portfolio universes are no longer static hand-curated lists but are refreshed weekly with market-wide discovery.
+
 ---
 
 ## 7. Autonomous Trading Logic & Execution
@@ -434,6 +515,7 @@ Trading is orchestrated once per day at 10:30 AM ET by `autonomous_trader.py` (a
    - Swap recommendation: SELL ALL (replace with stronger candidate)
 5. **Trailing stop check** — Execute any triggered trailing stops (between sells and buys)
 6. **Buys** — Deploy available cash:
+   - **Style gate check first** — every buy candidate must pass `passes_style_gate()` before execution. Blocked tickers are logged and skipped.
    - Score >= 3 required to buy (normal mode)
    - Score >= 2 if portfolio is > 60% cash (deployment mode)
    - Score >= 1 if part of a swap recommendation
@@ -521,7 +603,8 @@ All times Eastern unless noted.
 |----------|-----|-------|---------|
 | Saturday 8:00 AM CT | ARK ITK Summary | Gemini Flash Lite | Runs `ark_itk_tracker.py`, tracks ARK Invest transactions |
 | Saturday 8:00 AM CT | Weekly Research Session | Claude Sonnet | Autonomous deep research into market themes and opportunities |
-| Saturday 9:00 AM CT | Weekly Style Compliance Audit | Gemini Flash Lite | Audits each portfolio for style drift |
+| Saturday 9:00 AM CT | Candidate Screener | Python (zero LLM) + Opus 4.6 (borderline) | Discovers new candidate stocks via Finviz, filters through style gates + AI reasoning, updates `portfolio_universes.json` |
+| Saturday 9:00 AM CT | Weekly Style Compliance Audit | Gemini Flash Lite + Opus 4.6 (borderline) | Audits holdings against style gates with AI reasoning for borderline cases |
 | Sunday 7:00 AM CT | Weekly Network Security Scan | Gemini Flash Lite | Runs security scan of the Pi |
 | Sunday 9:00 AM CT | Weekly OpenClaw Version Check | Gemini Flash Lite | Checks for OpenClaw updates and model version changes |
 
@@ -656,7 +739,7 @@ ARK tracking feeds the Innovation Fund portfolio directly and is summarized week
 
 | Provider | Models Used | Purpose | Cost Model |
 |----------|-----------|---------|------------|
-| Anthropic (direct) | Claude Opus 4.6 | Interactive development via Claude Code | Pro subscription |
+| Anthropic (direct) | Claude Opus 4.6 | Interactive development via Claude Code; style gate AI reasoning for borderline decisions | Pro subscription + API (~$20–30/yr for gates) |
 | Anthropic (direct) | Claude Sonnet | Interactive Slack conversations | Pro subscription |
 | OpenRouter | Claude Sonnet 4.6 | Morning analysis, weekly research (high reasoning) | ~$0.20/call |
 | OpenRouter | Gemini 3.1 Flash Lite | Data gather, price refresh, trading (low cost) | ~$0.01/call |
@@ -773,7 +856,7 @@ All external API calls use `bigclaw_retry.py` for automatic retries on transient
 | `~/.env_secrets` | All API keys: Alpaca, Anthropic, Slack, Discord, X/Twitter (Apify), OpenRouter |
 | `~/.openclaw/openclaw.json` | Agent runtime config: models, channels, gateway settings |
 | `~/.openclaw/cron/jobs.json` | All 14 scheduled job definitions with schedules, models, prompts |
-| `~/.openclaw/workspace/config/portfolio_universes.json` | Per-portfolio allowed ticker lists (holdings + candidates) |
+| `~/.openclaw/workspace/config/portfolio_universes.json` | Per-portfolio allowed ticker lists (holdings + candidates), refreshed weekly by candidate screener |
 | `~/.openclaw/workspace/config/expert_overrides.json` | Manual conviction score overrides for specific tickers |
 | `~/.openclaw/workspace/SOUL.md` | Agent personality, analytical mandate, behavioral rules |
 | `/etc/systemd/system/bigclaw.service` | Systemd service definition for the Slack bot |
@@ -817,4 +900,4 @@ This document, the `ARCHITECTURE.md` in the repo, the `SOUL.md`, and the live Pi
 
 ---
 
-*Document generated March 27, 2026. Based on live system state from Raspberry Pi "BigClaw" at 192.168.1.171.*
+*Document generated March 28, 2026. Based on live system state from Raspberry Pi "BigClaw" at 192.168.1.171.*
