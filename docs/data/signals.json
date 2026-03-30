@@ -3557,18 +3557,255 @@
   "earnings": [
     {
       "ticker": "JNJ",
-      "date": "Apr 14",
-      "days": 14
-    },
-    {
-      "ticker": "JPM",
-      "date": "Apr 14",
-      "days": 14
+      "date": "2026-04-14",
+      "days_away": 15,
+      "eps_est": 2.68
     },
     {
       "ticker": "WFC",
-      "date": "Apr 14",
-      "days": 14
+      "date": "2026-04-14",
+      "days_away": 15,
+      "eps_est": 1.58
+    },
+    {
+      "ticker": "BAC",
+      "date": "2026-04-15",
+      "days_away": 16,
+      "eps_est": 1.0
+    },
+    {
+      "ticker": "KMI",
+      "date": "2026-04-15",
+      "days_away": 16,
+      "eps_est": 0.39
+    },
+    {
+      "ticker": "NFLX",
+      "date": "2026-04-16",
+      "days_away": 17,
+      "eps_est": 0.77
+    },
+    {
+      "ticker": "UNH",
+      "date": "2026-04-21",
+      "days_away": 22,
+      "eps_est": 6.73
+    },
+    {
+      "ticker": "RTX",
+      "date": "2026-04-21",
+      "days_away": 22,
+      "eps_est": 1.51
+    },
+    {
+      "ticker": "NOC",
+      "date": "2026-04-21",
+      "days_away": 22,
+      "eps_est": 6.04
+    },
+    {
+      "ticker": "LMT",
+      "date": "2026-04-21",
+      "days_away": 22,
+      "eps_est": 6.8
+    },
+    {
+      "ticker": "GE",
+      "date": "2026-04-21",
+      "days_away": 22,
+      "eps_est": 1.59
+    },
+    {
+      "ticker": "IBM",
+      "date": "2026-04-22",
+      "days_away": 23,
+      "eps_est": 1.81
+    },
+    {
+      "ticker": "GD",
+      "date": "2026-04-22",
+      "days_away": 23,
+      "eps_est": 3.66
+    },
+    {
+      "ticker": "PM",
+      "date": "2026-04-22",
+      "days_away": 23,
+      "eps_est": 1.84
+    },
+    {
+      "ticker": "GOOGL",
+      "date": "2026-04-23",
+      "days_away": 24,
+      "eps_est": 2.62
+    },
+    {
+      "ticker": "PG",
+      "date": "2026-04-24",
+      "days_away": 25,
+      "eps_est": 1.57
+    },
+    {
+      "ticker": "VZ",
+      "date": "2026-04-27",
+      "days_away": 28,
+      "eps_est": 1.22
+    },
+    {
+      "ticker": "KHC",
+      "date": "2026-04-28",
+      "days_away": 29,
+      "eps_est": 0.5
+    },
+    {
+      "ticker": "EPD",
+      "date": "2026-04-28",
+      "days_away": 29,
+      "eps_est": 0.7
+    },
+    {
+      "ticker": "V",
+      "date": "2026-04-28",
+      "days_away": 29,
+      "eps_est": 3.09
+    },
+    {
+      "ticker": "MSFT",
+      "date": "2026-04-29",
+      "days_away": 30,
+      "eps_est": 4.06
+    },
+    {
+      "ticker": "META",
+      "date": "2026-04-29",
+      "days_away": 30,
+      "eps_est": 6.73
+    },
+    {
+      "ticker": "MRK",
+      "date": "2026-04-30",
+      "days_away": 31,
+      "eps_est": null
+    },
+    {
+      "ticker": "AMZN",
+      "date": "2026-04-30",
+      "days_away": 31,
+      "eps_est": 1.64
+    },
+    {
+      "ticker": "TRGP",
+      "date": "2026-04-30",
+      "days_away": 31,
+      "eps_est": 2.48
+    },
+    {
+      "ticker": "MA",
+      "date": "2026-04-30",
+      "days_away": 31,
+      "eps_est": 4.4
+    },
+    {
+      "ticker": "TWLO",
+      "date": "2026-04-30",
+      "days_away": 31,
+      "eps_est": 1.27
+    },
+    {
+      "ticker": "AAPL",
+      "date": "2026-04-30",
+      "days_away": 31,
+      "eps_est": 1.96
+    },
+    {
+      "ticker": "ABBV",
+      "date": "2026-05-01",
+      "days_away": 32,
+      "eps_est": 3.01
+    },
+    {
+      "ticker": "XOM",
+      "date": "2026-05-01",
+      "days_away": 32,
+      "eps_est": 1.83
+    },
+    {
+      "ticker": "PLTR",
+      "date": "2026-05-04",
+      "days_away": 35,
+      "eps_est": 0.28
+    },
+    {
+      "ticker": "BWXT",
+      "date": "2026-05-04",
+      "days_away": 35,
+      "eps_est": 0.94
+    },
+    {
+      "ticker": "O",
+      "date": "2026-05-04",
+      "days_away": 35,
+      "eps_est": 0.4
+    },
+    {
+      "ticker": "CCJ",
+      "date": "2026-05-05",
+      "days_away": 36,
+      "eps_est": 0.34
+    },
+    {
+      "ticker": "ARM",
+      "date": "2026-05-06",
+      "days_away": 37,
+      "eps_est": 0.58
+    },
+    {
+      "ticker": "NET",
+      "date": "2026-05-07",
+      "days_away": 38,
+      "eps_est": 0.23
+    },
+    {
+      "ticker": "DNN",
+      "date": "2026-05-11",
+      "days_away": 42,
+      "eps_est": null
+    },
+    {
+      "ticker": "HD",
+      "date": "2026-05-19",
+      "days_away": 50,
+      "eps_est": 3.42
+    },
+    {
+      "ticker": "NVDA",
+      "date": "2026-05-20",
+      "days_away": 51,
+      "eps_est": 1.78
+    },
+    {
+      "ticker": "LOW",
+      "date": "2026-05-20",
+      "days_away": 51,
+      "eps_est": 2.97
+    },
+    {
+      "ticker": "CRM",
+      "date": "2026-05-27",
+      "days_away": 58,
+      "eps_est": 3.13
+    },
+    {
+      "ticker": "COST",
+      "date": "2026-05-28",
+      "days_away": 59,
+      "eps_est": 4.95
+    },
+    {
+      "ticker": "AVGO",
+      "date": "2026-06-03",
+      "days_away": 65,
+      "eps_est": 2.39
     }
   ],
   "overlap": [
@@ -3641,35 +3878,30 @@
   ],
   "bond_signals": {
     "yield_curve": {
-      "two_year": 3.96,
-      "ten_year": 4.42,
-      "spread": 0.46,
-      "spread_1mo_ago": 0.6,
-      "spread_change": -0.14,
-      "date": "2026-03-26",
-      "assessment": "Flat \u2014 neutral"
+      "two_year": 3.974,
+      "ten_year": 4.346,
+      "spread": 0.372,
+      "date": "2026-03-30",
+      "assessment": "Normal & steepening \u2014 bullish"
     },
     "credit_spreads": {
-      "current_bps": 342.0,
-      "raw_value": 3.42,
-      "prev_value": 3.1,
-      "change": 0.32,
-      "date": "2026-03-27",
-      "assessment": "Tight (342bps) \u2014 bullish"
+      "current_bps": 292.0,
+      "date": "2026-03-30",
+      "assessment": "Tight (292bps) \u2014 bullish"
     },
     "ten_year": {
-      "current": 4.42,
-      "prev": 4.05,
-      "change_bps": 37.0,
-      "date": "2026-03-26",
-      "assessment": "High/rising \u2014 bearish"
+      "current": 4.346,
+      "prev": 4.392,
+      "change_bps": -4.6,
+      "date": "2026-03-30",
+      "assessment": "Elevated \u2014 bearish"
     },
     "scores": {
-      "yield_curve": 0,
+      "yield_curve": 1,
       "credit_spreads": 1,
       "ten_year_level": -1
     },
-    "combined_score": 0
+    "combined_score": 1
   },
   "portfolio_optimization": {
     "Value Picks": {
@@ -4638,5 +4870,12 @@
         }
       ]
     }
+  },
+  "rates": {
+    "fed_funds": "4.25\u20134.50%",
+    "ten_year": 4.346,
+    "two_year": 3.974,
+    "yield_spread": 0.372,
+    "inverted": false
   }
 }
