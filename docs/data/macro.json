@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-03-28T10:38:05.176001",
+  "timestamp": "2026-03-30T07:30:12.342178",
   "context": {
     "ticker": null,
     "sector": null,
@@ -8,8 +8,8 @@
   "rates": {
     "fed_funds": "4.25\u20134.50%",
     "ten_year": 4.44,
-    "two_year": 3.796,
-    "yield_spread": 0.644,
+    "two_year": 4.07,
+    "yield_spread": 0.37,
     "inverted": false
   },
   "market": {
@@ -42,9 +42,9 @@
       "3mo": -3.34
     },
     "VIX": {
-      "level": 31.05,
+      "level": 30.4,
       "classification": "High",
-      "1mo_change": 73.17
+      "1mo_change": 53.07
     }
   },
   "sectors": [
@@ -112,20 +112,20 @@
       "above_200sma": "False"
     },
     {
-      "etf": "XLV",
-      "sector": "Healthcare",
-      "price": 143.26,
-      "1mo": -8.86,
-      "3mo": -7.82,
-      "above_50sma": "False",
-      "above_200sma": "False"
-    },
-    {
       "etf": "XLK",
       "sector": "Technology",
       "price": 129.92,
       "1mo": -9.15,
       "3mo": -11.34,
+      "above_50sma": "False",
+      "above_200sma": "False"
+    },
+    {
+      "etf": "XLV",
+      "sector": "Healthcare",
+      "price": 143.26,
+      "1mo": -9.23,
+      "3mo": -8.2,
       "above_50sma": "False",
       "above_200sma": "False"
     },
@@ -150,9 +150,9 @@
   ],
   "risk": {
     "vix": {
-      "level": 31.05,
+      "level": 30.4,
       "classification": "High",
-      "1mo_change": 73.17
+      "1mo_change": 53.07
     },
     "Gold (GLD)": {
       "price": 414.7,
@@ -163,8 +163,8 @@
       "1mo": 2.81
     },
     "Bitcoin": {
-      "price": 67085.03,
-      "1mo": -0.55
+      "price": 67823.79,
+      "1mo": 1.24
     },
     "yield_curve": {
       "spread": 0.644,
@@ -183,10 +183,10 @@
       "mom_change": 0.2
     },
     "fear_greed": {
-      "score": 10.2,
+      "score": 10.7,
       "rating": "extreme fear",
-      "previous": 17.5,
-      "1w_ago": 15.6,
+      "previous": 10.2,
+      "1w_ago": 14.1,
       "1m_ago": 41.2
     },
     "saving_rate": {
@@ -208,35 +208,30 @@
   },
   "bond_signals": {
     "yield_curve": {
-      "two_year": 3.96,
-      "ten_year": 4.42,
-      "spread": 0.46,
-      "spread_1mo_ago": 0.6,
-      "spread_change": -0.14,
-      "date": "2026-03-26",
-      "assessment": "Flat \u2014 neutral"
+      "two_year": 4.07,
+      "ten_year": 4.44,
+      "spread": 0.37,
+      "date": "2026-03-30",
+      "assessment": "Normal & steepening \u2014 bullish"
     },
     "credit_spreads": {
-      "current_bps": 321.0,
-      "raw_value": 3.21,
-      "prev_value": 2.98,
-      "change": 0.23,
-      "date": "2026-03-26",
-      "assessment": "Tight (321bps) \u2014 bullish"
+      "current_bps": 292.0,
+      "date": "2026-03-30",
+      "assessment": "Tight (292bps) \u2014 bullish"
     },
     "ten_year": {
-      "current": 4.42,
-      "prev": 4.05,
-      "change_bps": 37.0,
-      "date": "2026-03-26",
-      "assessment": "High/rising \u2014 bearish"
+      "current": 4.44,
+      "prev": 4.44,
+      "change_bps": 0.0,
+      "date": "2026-03-30",
+      "assessment": "Elevated \u2014 bearish"
     },
     "scores": {
-      "yield_curve": 0,
+      "yield_curve": 1,
       "credit_spreads": 1,
       "ten_year_level": -1
     },
-    "combined_score": 0
+    "combined_score": 1
   },
   "economic": {
     "links": {
@@ -256,6 +251,6 @@
       "bearish": 4
     },
     "specific": null,
-    "watch": "Elevated VIX at 31.1 \u2014 volatility risk"
+    "watch": "Elevated VIX at 30.4 \u2014 volatility risk"
   }
 }
