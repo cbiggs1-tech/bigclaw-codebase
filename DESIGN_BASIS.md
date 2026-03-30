@@ -271,6 +271,7 @@ A handful of lightweight crontab jobs (`stop_check.py` every 15 min during marke
 
 The database (SQLite) is deliberately simple and self-contained. Everything that matters is here; nothing is hidden in external services. All portfolio state lives in `src/portfolios.db`.
 
+All scripts connect with WAL (Write-Ahead Logging) journal mode and a 30-second busy timeout. WAL allows concurrent readers and writers without "database is locked" errors — critical because cron jobs (stop_check, price_refresh) overlap with the autonomous trader during market hours. Every sqlite3.connect call across all 15+ scripts enforces PRAGMA journal_mode=WAL and PRAGMA busy_timeout=30000.
 ### 4.1 Tables
 
 ```
@@ -878,7 +879,7 @@ All external API calls use `bigclaw_retry.py` for automatic retries on transient
 
 ## 14. Key Design Principles (Guidance for Anyone Who Comes After)
 
-These eight principles are the operating manual. Violate them at the risk of breaking the system's integrity:
+These nine principles are the operating manual. Violate them at the risk of breaking the system's integrity:
 
 1. **The Pi is the source of truth.** All execution, state, and decisions happen on the Raspberry Pi. Local copies and GitHub are snapshots only.
 
@@ -896,8 +897,10 @@ These eight principles are the operating manual. Violate them at the risk of bre
 
 8. **Log everything.** Every trade, every API call, every decision is logged with timestamps and rationale. Post-mortem analysis depends on it.
 
+9. **WAL mode everywhere.** Every SQLite connection uses WAL journal mode and a 30-second busy timeout. Multiple cron jobs overlap during market hours (stop checks, price refreshes, trading). WAL prevents database-locked errors that caused 14 failed trade recordings on 2026-03-30.
+
 This document, the `ARCHITECTURE.md` in the repo, the `SOUL.md`, and the live Pi itself are the complete specification. If you are reading this because you are taking over maintenance, start by running the weekly style-compliance audit and the security scan, then read the logs. The system is designed to be understandable, auditable, and safe — as long as these principles are respected.
 
 ---
 
-*Document generated March 28, 2026. Based on live system state from Raspberry Pi "BigClaw" at 192.168.1.171.*
+*Document generated March 30, 2026. Based on live system state from Raspberry Pi "BigClaw" at 192.168.1.171.*

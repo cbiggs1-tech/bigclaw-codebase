@@ -27,6 +27,8 @@ def get_db_connection(immediate=False):
         immediate: If True, use BEGIN IMMEDIATE for write safety.
     """
     conn = sqlite3.connect(DB_PATH, timeout=10)
+    conn.execute("PRAGMA journal_mode=WAL")
+    conn.execute("PRAGMA busy_timeout=30000")
     conn.row_factory = sqlite3.Row
     if immediate:
         conn.execute("BEGIN IMMEDIATE")
