@@ -595,6 +595,11 @@ def export_trades() -> dict:
                 date_str = dt.strftime("%b %d")
             except Exception:
                 date_str = exec_at[:10] if exec_at else ""
+            # Skip correction/reconciliation trades from dashboard display
+            rationale = t.get('rationale', '')
+            if 'CORRECTION' in rationale.upper() or 'RECONCILIATION' in rationale.upper():
+                continue
+
             trades.append({
                 "date": date_str,
                 "portfolio": pname,
