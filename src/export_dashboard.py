@@ -762,7 +762,7 @@ def export_dashboard(sentiment_data: Optional[dict] = None) -> bool:
                 _scripts = os.path.expanduser('~/.openclaw/workspace/scripts')
                 _env = os.environ.copy()
                 # Get the 5 key sentiment tickers
-                _tickers = ['TSLA', 'NVDA', 'PLTR', 'AAPL', 'MSFT']
+                _tickers = ['TSLA', 'NVDA', 'PLTR', 'AAPL', 'MSFT', 'META', 'GOOGL']
                 _result = _sp.run(
                     ['python3', os.path.join(_scripts, 'sentiment.py')] + _tickers + ['--json'],
                     capture_output=True, text=True, timeout=90, env=_env
@@ -775,9 +775,9 @@ def export_dashboard(sentiment_data: Optional[dict] = None) -> bool:
                         t = item.get('ticker', '')
                         s = item.get('sentiment', {})
                         sentiment_data[t] = {
-                            'bullish_percent': round((s.get('composite', 0) + 1) * 50),
-                            'tweet_count': s.get('total_posts', 0),
-                            'score': s.get('composite', 0),
+                            'bullish_percent': round((s.get('composite_score', s.get('composite', 0)) + 1) * 50),
+                            'tweet_count': sum(len(item.get('sources', {}).get(src, {}).get('posts', [])) for src in ['twitter', 'reddit', 'yahoo', 'brave']),
+                            'score': s.get('composite_score', s.get('composite', 0)),
                         }
                     logger.info(f"Generated sentiment for {len(sentiment_data)} tickers")
             except Exception as e:
