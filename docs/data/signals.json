@@ -1,5 +1,5 @@
 {
-  "date": "2026-04-03 10:02",
+  "date": "2026-04-03 12:02",
   "signals": [
     {
       "ticker": "AAPL",
@@ -166,7 +166,7 @@
         "components": {
           "analyst_target": {
             "score": 2,
-            "reason": "25% below analyst target $281.26"
+            "reason": "25% below analyst target $281.27"
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (25% below target)"
@@ -529,7 +529,7 @@
         "payout ratio 33% (safe)",
         "insider net selling (1B/3S)",
         "outperforming XLI by 8.7%",
-        "\u26a1 VALUE OVERRIDE: +1 (20% below target)"
+        "\u26a1 VALUE OVERRIDE: +1 (19% below target)"
       ],
       "price": 83.13,
       "value_override": {
@@ -538,10 +538,10 @@
         "components": {
           "analyst_target": {
             "score": 1,
-            "reason": "20% below analyst target $104.17"
+            "reason": "19% below analyst target $102.33"
           }
         },
-        "summary": "\u26a1 VALUE OVERRIDE: +1 (20% below target)"
+        "summary": "\u26a1 VALUE OVERRIDE: +1 (19% below target)"
       },
       "held_in": [],
       "pending_swaps": []
@@ -1009,7 +1009,7 @@
         "components": {
           "analyst_target": {
             "score": 2,
-            "reason": "34% below analyst target $181.69"
+            "reason": "34% below analyst target $181.52"
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (34% below target)"
@@ -1050,8 +1050,8 @@
     },
     {
       "ticker": "DNN",
-      "score": 0,
-      "label": "\u26aa HOLD",
+      "score": 1,
+      "label": "\ud83d\udfe2 BUY / HOLD",
       "reasons": [
         "MACD bullish crossover",
         "below 50-day SMA",
@@ -1063,21 +1063,21 @@
         "FCF negative ($-0.1B)",
         "gross margin -15% (thin)",
         "underperforming XLE by 11.3%",
-        "\u26a1 VALUE OVERRIDE: +1 (25% below target)",
+        "\u26a1 VALUE OVERRIDE: +2 (25% below target)",
         "correlated with CCJ (0.86)",
         "correlated with URA (0.91)"
       ],
       "price": 3.66,
       "value_override": {
-        "total_score": 1,
-        "base_score_before": 0.25,
+        "total_score": 2,
+        "base_score_before": 1.25,
         "components": {
           "analyst_target": {
-            "score": 1,
+            "score": 2,
             "reason": "25% below analyst target $4.88"
           }
         },
-        "summary": "\u26a1 VALUE OVERRIDE: +1 (25% below target)"
+        "summary": "\u26a1 VALUE OVERRIDE: +2 (25% below target)"
       },
       "held_in": [
         {
@@ -1088,7 +1088,17 @@
           "at_max_holdings": false
         }
       ],
-      "pending_swaps": []
+      "pending_swaps": [
+        {
+          "action": "SWAP IN",
+          "portfolio": "Nuclear Renaissance",
+          "sell": "TLN",
+          "sell_score": -2,
+          "buy": "DNN",
+          "buy_score": 1,
+          "score_diff": 3
+        }
+      ]
     },
     {
       "ticker": "DUK",
@@ -1304,7 +1314,7 @@
         "gross margin 83% (wide moat)",
         "insider net selling (0B/7S)",
         "underperforming XLK by 23.3%",
-        "\u26a1 VALUE OVERRIDE: +2 (42% below target)"
+        "\u26a1 VALUE OVERRIDE: +2 (41% below target)"
       ],
       "price": 1089.76,
       "value_override": {
@@ -1313,10 +1323,10 @@
         "components": {
           "analyst_target": {
             "score": 2,
-            "reason": "42% below analyst target $1872.18"
+            "reason": "41% below analyst target $1851.55"
           }
         },
-        "summary": "\u26a1 VALUE OVERRIDE: +2 (42% below target)"
+        "summary": "\u26a1 VALUE OVERRIDE: +2 (41% below target)"
       },
       "held_in": [],
       "pending_swaps": []
@@ -1531,7 +1541,7 @@
         "payout ratio 8% (safe)",
         "insider net selling (0B/20S)",
         "outperforming XLC by 3.8%",
-        "\u26a1 VALUE OVERRIDE: +1 (22% below target)"
+        "\u26a1 VALUE OVERRIDE: +1 (21% below target)"
       ],
       "price": 295.77,
       "value_override": {
@@ -1540,10 +1550,10 @@
         "components": {
           "analyst_target": {
             "score": 1,
-            "reason": "22% below analyst target $376.93"
+            "reason": "21% below analyst target $376.29"
           }
         },
-        "summary": "\u26a1 VALUE OVERRIDE: +1 (22% below target)"
+        "summary": "\u26a1 VALUE OVERRIDE: +1 (21% below target)"
       },
       "held_in": [
         {
@@ -2580,7 +2590,7 @@
         "components": {
           "analyst_target": {
             "score": 2,
-            "reason": "33% below analyst target $861.76"
+            "reason": "33% below analyst target $860.25"
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (33% below target)"
@@ -2923,7 +2933,7 @@
         "components": {
           "analyst_target": {
             "score": 2,
-            "reason": "45% below analyst target $186.14"
+            "reason": "45% below analyst target $185.04"
           },
           "rsi_oversold": {
             "score": 1,
@@ -3888,6 +3898,15 @@
           "portfolio": "Nuclear Renaissance",
           "sell": "TLN",
           "sell_score": -2,
+          "buy": "DNN",
+          "buy_score": 1,
+          "score_diff": 3
+        },
+        {
+          "action": "SWAP OUT",
+          "portfolio": "Nuclear Renaissance",
+          "sell": "TLN",
+          "sell_score": -2,
           "buy": "CEG",
           "buy_score": 1,
           "score_diff": 3
@@ -4817,8 +4836,8 @@
         "label": "\ud83d\udfe2 BUY / HOLD"
       },
       "DNN": {
-        "score": 0,
-        "label": "\u26aa HOLD"
+        "score": 1,
+        "label": "\ud83d\udfe2 BUY / HOLD"
       },
       "GEV": {
         "score": 6,
@@ -4920,232 +4939,34 @@
   },
   "earnings": [
     {
-      "ticker": "WFC",
-      "date": "2026-04-14",
-      "days_away": 11,
-      "eps_est": 1.59
+      "ticker": "BAC",
+      "date": "Apr 15",
+      "days": 11
     },
     {
       "ticker": "JNJ",
-      "date": "2026-04-14",
-      "days_away": 11,
-      "eps_est": 2.68
+      "date": "Apr 14",
+      "days": 10
+    },
+    {
+      "ticker": "JPM",
+      "date": "Apr 14",
+      "days": 10
     },
     {
       "ticker": "KMI",
-      "date": "2026-04-15",
-      "days_away": 12,
-      "eps_est": 0.39
-    },
-    {
-      "ticker": "BAC",
-      "date": "2026-04-15",
-      "days_away": 12,
-      "eps_est": 1.0
+      "date": "Apr 15",
+      "days": 11
     },
     {
       "ticker": "NFLX",
-      "date": "2026-04-16",
-      "days_away": 13,
-      "eps_est": 0.77
+      "date": "Apr 16",
+      "days": 12
     },
     {
-      "ticker": "RTX",
-      "date": "2026-04-21",
-      "days_away": 18,
-      "eps_est": 1.51
-    },
-    {
-      "ticker": "NOC",
-      "date": "2026-04-21",
-      "days_away": 18,
-      "eps_est": 6.03
-    },
-    {
-      "ticker": "UNH",
-      "date": "2026-04-21",
-      "days_away": 18,
-      "eps_est": 6.69
-    },
-    {
-      "ticker": "IBM",
-      "date": "2026-04-22",
-      "days_away": 19,
-      "eps_est": 1.81
-    },
-    {
-      "ticker": "GEV",
-      "date": "2026-04-22",
-      "days_away": 19,
-      "eps_est": 1.67
-    },
-    {
-      "ticker": "GD",
-      "date": "2026-04-22",
-      "days_away": 19,
-      "eps_est": 3.66
-    },
-    {
-      "ticker": "LMT",
-      "date": "2026-04-23",
-      "days_away": 20,
-      "eps_est": 6.8
-    },
-    {
-      "ticker": "GOOGL",
-      "date": "2026-04-23",
-      "days_away": 20,
-      "eps_est": 2.62
-    },
-    {
-      "ticker": "PG",
-      "date": "2026-04-24",
-      "days_away": 21,
-      "eps_est": 1.57
-    },
-    {
-      "ticker": "V",
-      "date": "2026-04-28",
-      "days_away": 25,
-      "eps_est": 3.09
-    },
-    {
-      "ticker": "EPD",
-      "date": "2026-04-28",
-      "days_away": 25,
-      "eps_est": 0.7
-    },
-    {
-      "ticker": "ABBV",
-      "date": "2026-04-29",
-      "days_away": 26,
-      "eps_est": 3.01
-    },
-    {
-      "ticker": "META",
-      "date": "2026-04-29",
-      "days_away": 26,
-      "eps_est": 6.73
-    },
-    {
-      "ticker": "MSFT",
-      "date": "2026-04-29",
-      "days_away": 26,
-      "eps_est": 4.06
-    },
-    {
-      "ticker": "TXT",
-      "date": "2026-04-30",
-      "days_away": 27,
-      "eps_est": 1.34
-    },
-    {
-      "ticker": "AAPL",
-      "date": "2026-04-30",
-      "days_away": 27,
-      "eps_est": 1.96
-    },
-    {
-      "ticker": "TWLO",
-      "date": "2026-04-30",
-      "days_away": 27,
-      "eps_est": 1.27
-    },
-    {
-      "ticker": "TRGP",
-      "date": "2026-04-30",
-      "days_away": 27,
-      "eps_est": 2.48
-    },
-    {
-      "ticker": "MRK",
-      "date": "2026-04-30",
-      "days_away": 27,
-      "eps_est": null
-    },
-    {
-      "ticker": "O",
-      "date": "2026-05-04",
-      "days_away": 31,
-      "eps_est": 0.4
-    },
-    {
-      "ticker": "BWXT",
-      "date": "2026-05-04",
-      "days_away": 31,
-      "eps_est": 0.94
-    },
-    {
-      "ticker": "PLTR",
-      "date": "2026-05-04",
-      "days_away": 31,
-      "eps_est": 0.28
-    },
-    {
-      "ticker": "ANET",
-      "date": "2026-05-05",
-      "days_away": 32,
-      "eps_est": 0.81
-    },
-    {
-      "ticker": "CCJ",
-      "date": "2026-05-05",
-      "days_away": 32,
-      "eps_est": 0.34
-    },
-    {
-      "ticker": "ARM",
-      "date": "2026-05-06",
-      "days_away": 33,
-      "eps_est": 0.58
-    },
-    {
-      "ticker": "NET",
-      "date": "2026-05-07",
-      "days_away": 34,
-      "eps_est": 0.23
-    },
-    {
-      "ticker": "DNN",
-      "date": "2026-05-11",
-      "days_away": 38,
-      "eps_est": null
-    },
-    {
-      "ticker": "CEG",
-      "date": "2026-05-11",
-      "days_away": 38,
-      "eps_est": 2.53
-    },
-    {
-      "ticker": "LOW",
-      "date": "2026-05-20",
-      "days_away": 47,
-      "eps_est": 2.97
-    },
-    {
-      "ticker": "NVDA",
-      "date": "2026-05-20",
-      "days_away": 47,
-      "eps_est": 1.78
-    },
-    {
-      "ticker": "CRM",
-      "date": "2026-05-27",
-      "days_away": 54,
-      "eps_est": 3.13
-    },
-    {
-      "ticker": "COST",
-      "date": "2026-05-28",
-      "days_away": 55,
-      "eps_est": 4.95
-    },
-    {
-      "ticker": "AVGO",
-      "date": "2026-06-03",
-      "days_away": 61,
-      "eps_est": 2.39
+      "ticker": "WFC",
+      "date": "Apr 14",
+      "days": 10
     }
   ],
   "overlap": [
@@ -5257,23 +5078,28 @@
   ],
   "bond_signals": {
     "yield_curve": {
-      "two_year": 3.948,
-      "ten_year": 4.313,
-      "spread": 0.365,
-      "date": "2026-04-03",
+      "two_year": 3.81,
+      "ten_year": 4.33,
+      "spread": 0.52,
+      "spread_1mo_ago": 0.55,
+      "spread_change": -0.03,
+      "date": "2026-04-01",
       "assessment": "Normal & steepening \u2014 bullish"
     },
     "credit_spreads": {
-      "current_bps": 292.0,
-      "date": "2026-04-03",
-      "assessment": "Tight (292bps) \u2014 bullish"
+      "current_bps": 316.0,
+      "raw_value": 3.16,
+      "prev_value": 3.08,
+      "change": 0.08,
+      "date": "2026-04-01",
+      "assessment": "Tight (316bps) \u2014 bullish"
     },
     "ten_year": {
-      "current": 4.313,
-      "prev": 4.313,
-      "change_bps": 0.0,
-      "date": "2026-04-03",
-      "assessment": "Elevated \u2014 bearish"
+      "current": 4.33,
+      "prev": 4.06,
+      "change_bps": 27.0,
+      "date": "2026-04-01",
+      "assessment": "High/rising \u2014 bearish"
     },
     "scores": {
       "yield_curve": 1,
@@ -5908,6 +5734,16 @@
           "label": "\ud83d\udfe2 BUY / HOLD"
         },
         {
+          "ticker": "DNN",
+          "score": 1,
+          "value": 6756.360158443451,
+          "position_size": {
+            "category": "starter",
+            "range": "5-8%"
+          },
+          "label": "\ud83d\udfe2 BUY / HOLD"
+        },
+        {
           "ticker": "CCJ",
           "score": 1,
           "value": 5290.789985656738,
@@ -5926,16 +5762,6 @@
             "range": "5-8%"
           },
           "label": "\ud83d\udfe2 BUY / HOLD"
-        },
-        {
-          "ticker": "DNN",
-          "score": 0,
-          "value": 6756.360158443451,
-          "position_size": {
-            "category": "review",
-            "range": "0% (flag for review)"
-          },
-          "label": "\u26aa HOLD"
         },
         {
           "ticker": "TLN",
@@ -5975,6 +5801,13 @@
           "sell": "TLN",
           "sell_score": -2,
           "buy": "CCJ",
+          "buy_score": 1,
+          "score_diff": 3
+        },
+        {
+          "sell": "TLN",
+          "sell_score": -2,
+          "buy": "DNN",
           "buy_score": 1,
           "score_diff": 3
         },
@@ -6411,12 +6244,5 @@
       "swap_recommendations": []
     }
   },
-  "priceRefreshedAt": "2026-04-03T15:02:49.025080Z",
-  "rates": {
-    "fed_funds": "4.25\u20134.50%",
-    "ten_year": 4.313,
-    "two_year": 3.948,
-    "yield_spread": 0.365,
-    "inverted": false
-  }
+  "priceRefreshedAt": "2026-04-03T17:02:50.416335Z"
 }
