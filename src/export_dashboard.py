@@ -755,6 +755,34 @@ def export_dashboard(sentiment_data: Optional[dict] = None) -> bool:
 
         # Export all data
         portfolios = export_portfolios()
+        # Generate live sentiment data if not provided
+        if not sentiment_data:
+            try:
+                import subprocess as _sp
+                _scripts = os.path.expanduser('~/.openclaw/workspace/scripts')
+                _env = os.environ.copy()
+                # Get the 5 key sentiment tickers
+                _tickers = ['TSLA', 'NVDA', 'PLTR', 'AAPL', 'MSFT']
+                _result = _sp.run(
+                    ['python3', os.path.join(_scripts, 'sentiment.py')] + _tickers + ['--json'],
+                    capture_output=True, text=True, timeout=90, env=_env
+                )
+                if _result.returncode == 0 and _result.stdout.strip():
+                    import json as _json
+                    _raw = _json.loads(_result.stdout)
+                    sentiment_data = {}
+                    for item in _raw:
+                        t = item.get('ticker', '')
+                        s = item.get('sentiment', {})
+                        sentiment_data[t] = {
+                            'bullish_percent': round((s.get('composite', 0) + 1) * 50),
+                            'tweet_count': s.get('total_posts', 0),
+                            'score': s.get('composite', 0),
+                        }
+                    logger.info(f"Generated sentiment for {len(sentiment_data)} tickers")
+            except Exception as e:
+                logger.warning(f"Sentiment generation failed: {e}")
+
         sentiment = export_sentiment(sentiment_data)
         metadata = export_metadata()
         news = export_news()
