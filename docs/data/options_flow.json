@@ -1,5 +1,5 @@
 {
-  "lastUpdate": "2026-04-03T11:27:01.811038Z",
+  "lastUpdate": "2026-04-03T14:04:01.611423Z",
   "tickers": {
     "AAPL": {
       "max_pain": {
@@ -935,6 +935,18 @@
         "iv_rank_1y": "44.9206",
         "volatility": "0.3",
         "date": "2026-04-02"
+      },
+      "options_volume": {
+        "call_volume": 14671,
+        "put_volume": 6659,
+        "call_premium": 5587067.0,
+        "put_premium": 5322475.0,
+        "bullish_premium": 5494189.0,
+        "bearish_premium": 5067298.0,
+        "cp_ratio": 2.2,
+        "bull_bear_ratio": 1.08,
+        "call_open_interest": 197200,
+        "put_open_interest": 178608
       }
     },
     "WFC": {
@@ -947,12 +959,399 @@
         "iv_rank_1y": "36.9655",
         "volatility": "0.3759",
         "date": "2026-04-02"
+      },
+      "options_volume": {
+        "call_volume": 14826,
+        "put_volume": 12334,
+        "call_premium": 5117409.0,
+        "put_premium": 3256762.0,
+        "bullish_premium": 3278094.0,
+        "bearish_premium": 4298598.0,
+        "cp_ratio": 1.2,
+        "bull_bear_ratio": 0.76,
+        "call_open_interest": 548565,
+        "put_open_interest": 527744
       }
     }
   },
-  "sectors": [],
-  "darkpool_alerts": [],
-  "market_volume": null,
+  "sectors": [
+    {
+      "ticker": "SPY",
+      "name": "S&P 500 Index",
+      "last": "655.83",
+      "call_volume": 4734742,
+      "put_volume": 8223766,
+      "cp_ratio": 0.58,
+      "call_premium": 1075538415.0,
+      "put_premium": 1985789696.0,
+      "bullish_premium": 1430743021.0,
+      "bearish_premium": 1285312200.0,
+      "net_flow_5d": -8300000
+    },
+    {
+      "ticker": "XLB",
+      "name": "Materials",
+      "last": "50.41",
+      "call_volume": 3142,
+      "put_volume": 1556,
+      "cp_ratio": 2.02,
+      "call_premium": 283174.0,
+      "put_premium": 201565.0,
+      "bullish_premium": 278587.0,
+      "bearish_premium": 142366.0,
+      "net_flow_5d": 600000
+    },
+    {
+      "ticker": "XLC",
+      "name": "Communication Services",
+      "last": "111.7",
+      "call_volume": 1185,
+      "put_volume": 231,
+      "cp_ratio": 5.13,
+      "call_premium": 178534.0,
+      "put_premium": 51058.0,
+      "bullish_premium": 80198.0,
+      "bearish_premium": 142454.0,
+      "net_flow_5d": 850000
+    },
+    {
+      "ticker": "XLE",
+      "name": "Energy",
+      "last": "59.25",
+      "call_volume": 172006,
+      "put_volume": 116387,
+      "cp_ratio": 1.48,
+      "call_premium": 18184044.0,
+      "put_premium": 9182058.0,
+      "bullish_premium": 11226980.0,
+      "bearish_premium": 11407676.0,
+      "net_flow_5d": 19950000
+    },
+    {
+      "ticker": "XLF",
+      "name": "Financials",
+      "last": "49.53",
+      "call_volume": 53217,
+      "put_volume": 99653,
+      "cp_ratio": 0.53,
+      "call_premium": 3416241.0,
+      "put_premium": 5497645.0,
+      "bullish_premium": 4606838.0,
+      "bearish_premium": 3644960.0,
+      "net_flow_5d": -12300000
+    },
+    {
+      "ticker": "XLI",
+      "name": "Industrials",
+      "last": "163.77",
+      "call_volume": 8056,
+      "put_volume": 25244,
+      "cp_ratio": 0.32,
+      "call_premium": 2358980.0,
+      "put_premium": 5382275.0,
+      "bullish_premium": 4816742.0,
+      "bearish_premium": 2789925.0,
+      "net_flow_5d": -800000
+    },
+    {
+      "ticker": "XLK",
+      "name": "Technology",
+      "last": "135.99",
+      "call_volume": 10361,
+      "put_volume": 13505,
+      "cp_ratio": 0.77,
+      "call_premium": 2782683.0,
+      "put_premium": 4619385.0,
+      "bullish_premium": 3761528.0,
+      "bearish_premium": 2628064.0,
+      "net_flow_5d": 2450000
+    },
+    {
+      "ticker": "XLP",
+      "name": "Consumer Staples",
+      "last": "81.89",
+      "call_volume": 4442,
+      "put_volume": 8648,
+      "cp_ratio": 0.51,
+      "call_premium": 397891.0,
+      "put_premium": 1095967.0,
+      "bullish_premium": 739486.0,
+      "bearish_premium": 666826.0,
+      "net_flow_5d": -1800000
+    },
+    {
+      "ticker": "XLRE",
+      "name": "Real Estate",
+      "last": "41.61",
+      "call_volume": 373,
+      "put_volume": 47,
+      "cp_ratio": 7.94,
+      "call_premium": 15222.0,
+      "put_premium": 1693.0,
+      "bullish_premium": 12269.0,
+      "bearish_premium": 2576.0,
+      "net_flow_5d": 4500000
+    },
+    {
+      "ticker": "XLU",
+      "name": "Utilities",
+      "last": "46.34",
+      "call_volume": 23609,
+      "put_volume": 8350,
+      "cp_ratio": 2.83,
+      "call_premium": 1426352.0,
+      "put_premium": 369588.0,
+      "bullish_premium": 580140.0,
+      "bearish_premium": 941396.0,
+      "net_flow_5d": -1450000
+    },
+    {
+      "ticker": "XLV",
+      "name": "Health Care",
+      "last": "146.81",
+      "call_volume": 1901,
+      "put_volume": 10113,
+      "cp_ratio": 0.19,
+      "call_premium": 520491.0,
+      "put_premium": 3535352.0,
+      "bullish_premium": 578129.0,
+      "bearish_premium": 868193.0,
+      "net_flow_5d": 0
+    },
+    {
+      "ticker": "XLY",
+      "name": "Consumer Discretionary",
+      "last": "108.15",
+      "call_volume": 1680,
+      "put_volume": 10017,
+      "cp_ratio": 0.17,
+      "call_premium": 663578.0,
+      "put_premium": 5324541.0,
+      "bullish_premium": 630493.0,
+      "bearish_premium": 1149136.0,
+      "net_flow_5d": -5300000
+    }
+  ],
+  "darkpool_alerts": [
+    {
+      "ticker": "NVDA",
+      "size": 12364,
+      "price": 176.73,
+      "premium": 2185089.72,
+      "executed_at": "2026-04-02T23:52:20Z"
+    },
+    {
+      "ticker": "NVDA",
+      "size": 3800,
+      "price": 176.68,
+      "premium": 671384.0,
+      "executed_at": "2026-04-02T23:58:04Z"
+    },
+    {
+      "ticker": "NVDA",
+      "size": 3193,
+      "price": 176.76,
+      "premium": 564394.68,
+      "executed_at": "2026-04-02T23:51:27Z"
+    },
+    {
+      "ticker": "NVDA",
+      "size": 2479,
+      "price": 176.66,
+      "premium": 437940.14,
+      "executed_at": "2026-04-02T23:59:06Z"
+    },
+    {
+      "ticker": "NVDA",
+      "size": 2400,
+      "price": 176.66,
+      "premium": 423984.0,
+      "executed_at": "2026-04-02T23:57:00Z"
+    },
+    {
+      "ticker": "AVGO",
+      "size": 1260,
+      "price": 314.0201,
+      "premium": 395665.326,
+      "executed_at": "2026-04-02T23:57:55Z"
+    },
+    {
+      "ticker": "META",
+      "size": 684,
+      "price": 574.46,
+      "premium": 392930.64,
+      "executed_at": "2026-04-02T23:51:50Z"
+    },
+    {
+      "ticker": "NVDA",
+      "size": 2000,
+      "price": 176.76,
+      "premium": 353520.0,
+      "executed_at": "2026-04-02T23:51:44Z"
+    },
+    {
+      "ticker": "AVGO",
+      "size": 1000,
+      "price": 314.095,
+      "premium": 314095.0,
+      "executed_at": "2026-04-02T23:56:40Z"
+    },
+    {
+      "ticker": "COST",
+      "size": 300,
+      "price": 1014.0,
+      "premium": 304200.0,
+      "executed_at": "2026-04-02T23:50:11Z"
+    },
+    {
+      "ticker": "META",
+      "size": 500,
+      "price": 574.5485,
+      "premium": 287274.25,
+      "executed_at": "2026-04-02T23:56:16Z"
+    },
+    {
+      "ticker": "NVDA",
+      "size": 1500,
+      "price": 176.63,
+      "premium": 264945.0,
+      "executed_at": "2026-04-02T23:59:27Z"
+    },
+    {
+      "ticker": "NVDA",
+      "size": 1400,
+      "price": 176.73,
+      "premium": 247422.0,
+      "executed_at": "2026-04-02T23:52:20Z"
+    },
+    {
+      "ticker": "MSFT",
+      "size": 600,
+      "price": 373.4,
+      "premium": 224040.0,
+      "executed_at": "2026-04-02T23:59:57Z"
+    },
+    {
+      "ticker": "PLTR",
+      "size": 1224,
+      "price": 148.26,
+      "premium": 181470.24,
+      "executed_at": "2026-04-02T23:52:52Z"
+    },
+    {
+      "ticker": "NVDA",
+      "size": 1000,
+      "price": 176.68,
+      "premium": 176680.0,
+      "executed_at": "2026-04-02T23:57:36Z"
+    },
+    {
+      "ticker": "NVDA",
+      "size": 1000,
+      "price": 176.6695,
+      "premium": 176669.5,
+      "executed_at": "2026-04-02T23:58:41Z"
+    },
+    {
+      "ticker": "NVDA",
+      "size": 1000,
+      "price": 176.6474,
+      "premium": 176647.4,
+      "executed_at": "2026-04-02T23:59:20Z"
+    },
+    {
+      "ticker": "NVDA",
+      "size": 897,
+      "price": 176.6995,
+      "premium": 158499.4515,
+      "executed_at": "2026-04-02T23:56:12Z"
+    },
+    {
+      "ticker": "SCHD",
+      "size": 5000,
+      "price": 30.5797,
+      "premium": 152898.5,
+      "executed_at": "2026-04-02T23:51:47Z"
+    },
+    {
+      "ticker": "MSFT",
+      "size": 400,
+      "price": 373.3999,
+      "premium": 149359.96,
+      "executed_at": "2026-04-02T23:59:57Z"
+    },
+    {
+      "ticker": "GOOGL",
+      "size": 500,
+      "price": 295.8596,
+      "premium": 147929.8,
+      "executed_at": "2026-04-02T23:56:32Z"
+    },
+    {
+      "ticker": "GEV",
+      "size": 160,
+      "price": 902.5,
+      "premium": 144400.0,
+      "executed_at": "2026-04-02T23:56:25Z"
+    },
+    {
+      "ticker": "NVDA",
+      "size": 800,
+      "price": 176.7,
+      "premium": 141360.0,
+      "executed_at": "2026-04-02T23:59:49Z"
+    },
+    {
+      "ticker": "NVDA",
+      "size": 800,
+      "price": 176.68,
+      "premium": 141344.0,
+      "executed_at": "2026-04-02T23:58:22Z"
+    },
+    {
+      "ticker": "NVDA",
+      "size": 800,
+      "price": 176.6799,
+      "premium": 141343.92,
+      "executed_at": "2026-04-02T23:58:22Z"
+    },
+    {
+      "ticker": "SCHD",
+      "size": 4169,
+      "price": 30.55,
+      "premium": 127362.95,
+      "executed_at": "2026-04-02T23:54:55Z"
+    },
+    {
+      "ticker": "NVDA",
+      "size": 690,
+      "price": 176.6701,
+      "premium": 121902.369,
+      "executed_at": "2026-04-02T23:57:26Z"
+    },
+    {
+      "ticker": "NVDA",
+      "size": 690,
+      "price": 176.67,
+      "premium": 121902.3,
+      "executed_at": "2026-04-02T23:57:26Z"
+    },
+    {
+      "ticker": "ARM",
+      "size": 800,
+      "price": 149.5,
+      "premium": 119600.0,
+      "executed_at": "2026-04-02T23:56:30Z"
+    }
+  ],
+  "market_volume": {
+    "call_volume": 33126387,
+    "put_volume": 32348348,
+    "cp_ratio": 1.02,
+    "call_premium": 18946402581.15,
+    "put_premium": 18461764102.53,
+    "date": "2026-04-02"
+  },
   "signals": [
     {
       "ticker": "LMT",
