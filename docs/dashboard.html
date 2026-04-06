@@ -886,37 +886,47 @@ function renderSignalsBar(data) {
 
 function renderSignalsSection(data) {
     const el = document.getElementById('signalsContent');
-    const signals = data.signals || [];
+    const planned = data.planned_actions || [];
     const earnings = data.earnings || [];
-    if (signals.length === 0 && earnings.length === 0) {
-        el.innerHTML = '<div class="placeholder">No signals data available</div>';
-        return;
-    }
 
-    const cats = [
-        { label: '🔴 Sell / Trim', filter: s => s.score <= -3, id: 'action' },
-        { label: '🟢 Strong Buy / Add', filter: s => s.score >= 3, id: 'opp' },
-    ];
+    // Use planned_actions if available (cash-aware execution plan)
+    if (planned.length > 0) {
+        let html = '';
+        const sells = planned.filter(a => a.action.includes('SELL'));
+        const buys = planned.filter(a => a.action === 'BUY');
 
-    let html = '';
-    cats.forEach(cat => {
-        const items = signals.filter(cat.filter);
-        if (items.length === 0) return;
-        html += `<div class="signal-category"><div class="signal-cat-header">${cat.label} (${items.length})</div><div class="signal-cat-body">`;
-        items.forEach(s => {
-            const scoreClass = s.score < 0 ? 'neg' : s.score > 0 ? 'pos' : 'neu';
-            const reasons = Array.isArray(s.reasons) ? s.reasons.slice(0, 3).join(', ') : (s.reasons || '');
-            const price = s.price ? '$' + fmtPrice(s.price) : '';
-            html += `<div class="signal-row">
-                <a href="ticker.html?ticker=${encodeURIComponent(s.ticker)}&from=dashboard" class="signal-ticker" style="text-decoration:none;color:var(--gold)">${s.ticker}</a>
-                <span class="signal-score ${scoreClass}">${s.score > 0 ? '+' : ''}${s.score}</span>
-                <span class="signal-price">${price}</span>
-                <span class="signal-reasons">${reasons}</span>
-            </div>`;
-        });
-        html += '</div></div>';
-    });
+        if (sells.length > 0) {
+            html += '<div class="signal-category"><div class="signal-cat-header">\ud83d\udd34 Planned Sells (' + sells.length + ')</div><div class="signal-cat-body">';
+            sells.forEach(s => {
+                html += '<div class="signal-row">' +
+                    '<span class="signal-ticker" style="color:var(--gold);font-weight:700;min-width:55px">' + s.ticker + '</span>' +
+                    '<span class="signal-score neg">' + s.score + '</span>' +
+                    '<span style="color:var(--text-secondary);font-size:0.8rem">' + s.portfolio + '</span>' +
+                    '<span class="signal-reasons">' + s.action + ' — ' + s.reason + '</span>' +
+                '</div>';
+            });
+            html += '</div></div>';
+        }
 
+        if (buys.length > 0) {
+            html += '<div class="signal-category"><div class="signal-cat-header">\ud83d\udfe2 Planned Buys (' + buys.length + ')</div><div class="signal-cat-body">';
+            buys.forEach(s => {
+                const alloc = s.est_allocation ? ' ~$' + Number(s.est_allocation).toLocaleString() : '';
+                html += '<div class="signal-row">' +
+                    '<span class="signal-ticker" style="color:var(--gold);font-weight:700;min-width:55px">' + s.ticker + '</span>' +
+                    '<span class="signal-score pos">+' + s.score + '</span>' +
+                    '<span style="color:var(--text-secondary);font-size:0.8rem">' + s.portfolio + alloc + '</span>' +
+                    '<span class="signal-reasons">' + s.reason + '</span>' +
+                '</div>';
+            });
+            html += '</div></div>';
+        }
+
+        if (sells.length === 0 && buys.length === 0) {
+            html = '<div class="placeholder">No trades planned — holding current positions</div>';
+        }
+
+        // Earnings calendar
     if (earnings.length > 0) {
         html += '<div class="signal-category"><div class="signal-cat-header">📅 Earnings Calendar</div><div class="signal-cat-body">';
         earnings.forEach(e => {
