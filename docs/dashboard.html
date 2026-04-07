@@ -904,7 +904,7 @@ function renderSignalsSection(data) {
                     '<span class="signal-ticker" style="color:var(--gold);font-weight:700;min-width:55px">' + s.ticker + '</span>' +
                     '<span class="signal-score neg">' + s.score + '</span>' +
                     '<span style="color:var(--text-secondary);font-size:0.8rem">' + s.portfolio + '</span>' +
-                    '<span class="signal-reasons">' + s.action + ' \u2014 ' + s.reason + '</span>' +
+                    '<span class="signal-reasons">' + (s.executed ? '\u2705 ' : '') + s.action + ' \u2014 ' + s.reason + '</span>' +
                 '</div>';
             });
             html += '</div></div>';
@@ -918,7 +918,7 @@ function renderSignalsSection(data) {
                     '<span class="signal-ticker" style="color:var(--gold);font-weight:700;min-width:55px">' + s.ticker + '</span>' +
                     '<span class="signal-score pos">+' + s.score + '</span>' +
                     '<span style="color:var(--text-secondary);font-size:0.8rem">' + s.portfolio + alloc + '</span>' +
-                    '<span class="signal-reasons">' + s.reason + '</span>' +
+                    '<span class="signal-reasons">' + (s.executed ? '\u2705 DONE \u2014 ' : '') + s.reason + '</span>' +
                 '</div>';
             });
             html += '</div></div>';
