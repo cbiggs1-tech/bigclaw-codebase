@@ -6569,20 +6569,116 @@
   },
   "planned_actions": [
     {
+      "portfolio": "Value Picks",
+      "action": "FUND-SELL",
+      "ticker": "BAC",
+      "shares": 100,
+      "score": 3,
+      "reason": "Sell (score 3) to fund JNJ (score 12)"
+    },
+    {
+      "portfolio": "Value Picks",
+      "action": "FUND-SELL",
+      "ticker": "LOW",
+      "shares": 18,
+      "score": 2,
+      "reason": "Sell (score 2) to fund JNJ (score 12)"
+    },
+    {
+      "portfolio": "Value Picks",
+      "action": "FUND-SELL",
+      "ticker": "UNH",
+      "shares": 41,
+      "score": 2,
+      "reason": "Sell (score 2) to fund JNJ (score 12)"
+    },
+    {
+      "portfolio": "Growth Value",
+      "action": "FUND-SELL",
+      "ticker": "META",
+      "shares": 14,
+      "score": 2,
+      "reason": "Sell (score 2) to fund GOOGL (score 10)"
+    },
+    {
+      "portfolio": "Growth Value",
+      "action": "FUND-SELL",
+      "ticker": "UNH",
+      "shares": 52,
+      "score": -1,
+      "reason": "Sell (score -1) to fund GOOGL (score 10)"
+    },
+    {
       "portfolio": "Income Dividends",
-      "action": "BUY",
-      "ticker": "PM",
-      "score": 7,
-      "reason": "Score 7 >= 3",
+      "action": "ADD",
+      "ticker": "JNJ",
+      "score": 13,
+      "reason": "Score 13 >= 3",
       "est_allocation": 7773
     },
     {
       "portfolio": "Value Picks",
-      "action": "BUY",
-      "ticker": "KO",
-      "score": 5,
-      "reason": "Score 5 >= 3",
-      "est_allocation": 1943
+      "action": "ADD",
+      "ticker": "JNJ",
+      "score": 12,
+      "reason": "Score 12 >= 3",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Growth Value",
+      "action": "ADD",
+      "ticker": "GOOGL",
+      "score": 10,
+      "reason": "Score 10 >= 3",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Value Picks",
+      "action": "ADD",
+      "ticker": "MRK",
+      "score": 9,
+      "reason": "Score 9 >= 3",
+      "est_allocation": 10113
+    },
+    {
+      "portfolio": "Growth Value",
+      "action": "ADD",
+      "ticker": "NVDA",
+      "score": 8,
+      "reason": "Score 8 >= 3",
+      "est_allocation": 9694
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "ADD",
+      "ticker": "GEV",
+      "score": 7,
+      "reason": "Score 7 >= 3",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "ADD",
+      "ticker": "TWLO",
+      "score": 6,
+      "reason": "Score 6 >= 2",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "ADD",
+      "ticker": "GEV",
+      "score": 6,
+      "reason": "Score 6 >= 2",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "ADD",
+      "ticker": "BWXT",
+      "score": 6,
+      "reason": "Score 6 >= 3",
+      "est_allocation": 12000
     },
     {
       "portfolio": "Innovation Fund",
@@ -6601,6 +6697,30 @@
       "est_allocation": 12000
     },
     {
+      "portfolio": "AI Defense & Autonomous",
+      "action": "ADD",
+      "ticker": "PLTR",
+      "score": 5,
+      "reason": "Score 5 >= 3",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "ADD",
+      "ticker": "NVDA",
+      "score": 4,
+      "reason": "Score 4 >= 2",
+      "est_allocation": 8000
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "ADD",
+      "ticker": "ANET",
+      "score": 4,
+      "reason": "Score 4 >= 2",
+      "est_allocation": 8000
+    },
+    {
       "portfolio": "Momentum Growth",
       "action": "BUY",
       "ticker": "LLY",
@@ -6610,58 +6730,66 @@
     },
     {
       "portfolio": "Momentum Growth",
-      "action": "BUY",
-      "ticker": "NOW",
+      "action": "ADD",
+      "ticker": "NFLX",
       "score": 4,
       "reason": "Score 4 >= 2",
       "est_allocation": 8000
     },
     {
+      "portfolio": "Nuclear Renaissance",
+      "action": "ADD",
+      "ticker": "CCJ",
+      "score": 4,
+      "reason": "Score 4 >= 3",
+      "est_allocation": 8000
+    },
+    {
+      "portfolio": "AI Defense & Autonomous",
+      "action": "ADD",
+      "ticker": "GD",
+      "score": 4,
+      "reason": "Score 4 >= 3",
+      "est_allocation": 8000
+    },
+    {
+      "portfolio": "AI Defense & Autonomous",
+      "action": "ADD",
+      "ticker": "LMT",
+      "score": 4,
+      "reason": "Score 4 >= 3",
+      "est_allocation": 8000
+    },
+    {
       "portfolio": "Innovation Fund",
-      "action": "BUY",
-      "ticker": "PLTR",
+      "action": "ADD",
+      "ticker": "ARM",
       "score": 3,
       "reason": "Score 3 >= 2",
       "est_allocation": 8000
     },
     {
-      "portfolio": "Momentum Growth",
-      "action": "BUY",
-      "ticker": "TTD",
+      "portfolio": "Innovation Fund",
+      "action": "ADD",
+      "ticker": "NET",
       "score": 3,
       "reason": "Score 3 >= 2",
       "est_allocation": 8000
     },
     {
-      "portfolio": "Innovation Fund",
-      "action": "BUY",
-      "ticker": "AFRM",
-      "score": 2,
-      "reason": "Score 2 >= 2",
-      "est_allocation": 8000
+      "portfolio": "Nuclear Renaissance",
+      "action": "ADD",
+      "ticker": "CEG",
+      "score": 3,
+      "reason": "Score 3 >= 3",
+      "est_allocation": 6133
     },
     {
-      "portfolio": "Innovation Fund",
-      "action": "BUY",
-      "ticker": "CELH",
-      "score": 2,
-      "reason": "Score 2 >= 2",
-      "est_allocation": 8000
-    },
-    {
-      "portfolio": "Innovation Fund",
-      "action": "BUY",
-      "ticker": "SMCI",
-      "score": 2,
-      "reason": "Score 2 >= 2",
-      "est_allocation": 8000
-    },
-    {
-      "portfolio": "Momentum Growth",
-      "action": "BUY",
-      "ticker": "APP",
-      "score": 2,
-      "reason": "Score 2 >= 2",
+      "portfolio": "AI Defense & Autonomous",
+      "action": "ADD",
+      "ticker": "TXT",
+      "score": 3,
+      "reason": "Score 3 >= 3",
       "est_allocation": 8000
     }
   ],

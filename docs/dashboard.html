@@ -895,7 +895,7 @@ function renderSignalsSection(data) {
     // Use planned_actions if available (cash-aware execution plan)
     if (planned.length > 0) {
         const sells = planned.filter(a => a.action.includes('SELL'));
-        const buys = planned.filter(a => a.action === 'BUY');
+        const buys = planned.filter(a => a.action === 'BUY' || a.action === 'ADD');
 
         if (sells.length > 0) {
             html += '<div class="signal-category"><div class="signal-cat-header">\ud83d\udd34 Planned Sells (' + sells.length + ')</div><div class="signal-cat-body">';
