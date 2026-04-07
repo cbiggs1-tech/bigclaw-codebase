@@ -6569,67 +6569,67 @@
   },
   "planned_actions": [
     {
-      "portfolio": "Value Picks",
-      "action": "FUND-SELL",
-      "ticker": "BAC",
-      "shares": 100,
+      "portfolio": "Income Dividends",
+      "action": "UPGRADE-SELL",
+      "ticker": "O",
+      "shares": 173,
+      "score": 4,
+      "reason": "Replace with T (score 9)"
+    },
+    {
+      "portfolio": "Income Dividends",
+      "action": "UPGRADE-SELL",
+      "ticker": "MAIN",
+      "shares": 146,
       "score": 3,
-      "reason": "Sell (score 3) to fund JNJ (score 12)"
+      "reason": "Replace with JNJ (score 13)"
     },
     {
       "portfolio": "Value Picks",
-      "action": "FUND-SELL",
+      "action": "UPGRADE-SELL",
       "ticker": "LOW",
       "shares": 18,
       "score": 2,
-      "reason": "Sell (score 2) to fund JNJ (score 12)"
+      "reason": "Replace with JNJ (score 12)"
     },
     {
       "portfolio": "Value Picks",
-      "action": "FUND-SELL",
+      "action": "UPGRADE-SELL",
       "ticker": "UNH",
       "shares": 41,
       "score": 2,
-      "reason": "Sell (score 2) to fund JNJ (score 12)"
+      "reason": "Replace with MRK (score 9)"
     },
     {
       "portfolio": "Growth Value",
-      "action": "FUND-SELL",
-      "ticker": "META",
-      "shares": 14,
-      "score": 2,
-      "reason": "Sell (score 2) to fund GOOGL (score 10)"
-    },
-    {
-      "portfolio": "Growth Value",
-      "action": "FUND-SELL",
+      "action": "UPGRADE-SELL",
       "ticker": "UNH",
       "shares": 52,
       "score": -1,
-      "reason": "Sell (score -1) to fund GOOGL (score 10)"
+      "reason": "Replace with GOOGL (score 10)"
     },
     {
       "portfolio": "Income Dividends",
       "action": "ADD",
       "ticker": "JNJ",
       "score": 13,
-      "reason": "Score 13 >= 3",
-      "est_allocation": 7773
+      "reason": "Score 13 \u2014 replaces MAIN (score 3)",
+      "est_allocation": 7855
     },
     {
       "portfolio": "Value Picks",
       "action": "ADD",
       "ticker": "JNJ",
       "score": 12,
-      "reason": "Score 12 >= 3",
-      "est_allocation": 12000
+      "reason": "Score 12 \u2014 replaces LOW (score 2)",
+      "est_allocation": 4070
     },
     {
       "portfolio": "Growth Value",
       "action": "ADD",
       "ticker": "GOOGL",
       "score": 10,
-      "reason": "Score 10 >= 3",
+      "reason": "Score 10 \u2014 replaces UNH (score -1)",
       "est_allocation": 12000
     },
     {
@@ -6637,23 +6637,23 @@
       "action": "ADD",
       "ticker": "MRK",
       "score": 9,
-      "reason": "Score 9 >= 3",
-      "est_allocation": 10113
+      "reason": "Score 9 \u2014 replaces UNH (score 2)",
+      "est_allocation": 11378
     },
     {
-      "portfolio": "Growth Value",
+      "portfolio": "Income Dividends",
       "action": "ADD",
-      "ticker": "NVDA",
-      "score": 8,
-      "reason": "Score 8 >= 3",
-      "est_allocation": 9694
+      "ticker": "T",
+      "score": 9,
+      "reason": "Score 9 \u2014 replaces O (score 4)",
+      "est_allocation": 11076
     },
     {
       "portfolio": "Nuclear Renaissance",
       "action": "ADD",
       "ticker": "GEV",
       "score": 7,
-      "reason": "Score 7 >= 3",
+      "reason": "Score 7 \u2014 add to position",
       "est_allocation": 12000
     },
     {
@@ -6661,7 +6661,7 @@
       "action": "ADD",
       "ticker": "TWLO",
       "score": 6,
-      "reason": "Score 6 >= 2",
+      "reason": "Score 6 \u2014 add to position",
       "est_allocation": 12000
     },
     {
@@ -6669,7 +6669,7 @@
       "action": "ADD",
       "ticker": "GEV",
       "score": 6,
-      "reason": "Score 6 >= 2",
+      "reason": "Score 6 \u2014 add to position",
       "est_allocation": 12000
     },
     {
@@ -6677,7 +6677,7 @@
       "action": "ADD",
       "ticker": "BWXT",
       "score": 6,
-      "reason": "Score 6 >= 3",
+      "reason": "Score 6 \u2014 add to position",
       "est_allocation": 12000
     },
     {
@@ -6685,7 +6685,7 @@
       "action": "BUY",
       "ticker": "ROKU",
       "score": 5,
-      "reason": "Score 5 >= 2",
+      "reason": "Score 5 \u2014 new position",
       "est_allocation": 12000
     },
     {
@@ -6693,7 +6693,7 @@
       "action": "BUY",
       "ticker": "DECK",
       "score": 5,
-      "reason": "Score 5 >= 2",
+      "reason": "Score 5 \u2014 new position",
       "est_allocation": 12000
     },
     {
@@ -6701,95 +6701,39 @@
       "action": "ADD",
       "ticker": "PLTR",
       "score": 5,
-      "reason": "Score 5 >= 3",
+      "reason": "Score 5 \u2014 add to position",
       "est_allocation": 12000
-    },
-    {
-      "portfolio": "Innovation Fund",
-      "action": "ADD",
-      "ticker": "NVDA",
-      "score": 4,
-      "reason": "Score 4 >= 2",
-      "est_allocation": 8000
-    },
-    {
-      "portfolio": "Momentum Growth",
-      "action": "ADD",
-      "ticker": "ANET",
-      "score": 4,
-      "reason": "Score 4 >= 2",
-      "est_allocation": 8000
     },
     {
       "portfolio": "Momentum Growth",
       "action": "BUY",
       "ticker": "LLY",
       "score": 4,
-      "reason": "Score 4 >= 2",
+      "reason": "Score 4 \u2014 new position",
       "est_allocation": 8000
     },
     {
       "portfolio": "Momentum Growth",
-      "action": "ADD",
-      "ticker": "NFLX",
+      "action": "BUY",
+      "ticker": "NOW",
       "score": 4,
-      "reason": "Score 4 >= 2",
-      "est_allocation": 8000
-    },
-    {
-      "portfolio": "Nuclear Renaissance",
-      "action": "ADD",
-      "ticker": "CCJ",
-      "score": 4,
-      "reason": "Score 4 >= 3",
-      "est_allocation": 8000
-    },
-    {
-      "portfolio": "AI Defense & Autonomous",
-      "action": "ADD",
-      "ticker": "GD",
-      "score": 4,
-      "reason": "Score 4 >= 3",
-      "est_allocation": 8000
-    },
-    {
-      "portfolio": "AI Defense & Autonomous",
-      "action": "ADD",
-      "ticker": "LMT",
-      "score": 4,
-      "reason": "Score 4 >= 3",
+      "reason": "Score 4 \u2014 new position",
       "est_allocation": 8000
     },
     {
       "portfolio": "Innovation Fund",
-      "action": "ADD",
-      "ticker": "ARM",
+      "action": "BUY",
+      "ticker": "PLTR",
       "score": 3,
-      "reason": "Score 3 >= 2",
+      "reason": "Score 3 \u2014 new position",
       "est_allocation": 8000
     },
     {
-      "portfolio": "Innovation Fund",
-      "action": "ADD",
-      "ticker": "NET",
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "TTD",
       "score": 3,
-      "reason": "Score 3 >= 2",
-      "est_allocation": 8000
-    },
-    {
-      "portfolio": "Nuclear Renaissance",
-      "action": "ADD",
-      "ticker": "CEG",
-      "score": 3,
-      "reason": "Score 3 >= 3",
-      "est_allocation": 6133
-    },
-    {
-      "portfolio": "AI Defense & Autonomous",
-      "action": "ADD",
-      "ticker": "TXT",
-      "score": 3,
-      "reason": "Score 3 >= 3",
+      "reason": "Score 3 \u2014 new position",
       "est_allocation": 8000
     }
   ],
