@@ -887,12 +887,35 @@ function renderSignalsBar(data) {
 function renderSignalsSection(data) {
     const el = document.getElementById('signalsContent');
     const planned = data.planned_actions || [];
-    const signals = data.signals || [];
+    const executed = data.executed_this_week || [];
     const earnings = data.earnings || [];
 
     let html = '';
 
-    // Use planned_actions if available (cash-aware execution plan)
+    // SECTION 1: Executed trades this week
+    if (executed.length > 0) {
+        const exec_sells = executed.filter(a => a.action.includes('SELL'));
+        const exec_buys = executed.filter(a => a.action === 'BUY' || a.action === 'ADD');
+
+        html += '<div class="signal-category"><div class="signal-cat-header">\u2705 Executed This Week (' + executed.length + ' trades)</div><div class="signal-cat-body">';
+
+        executed.forEach(t => {
+            const isSell = t.action.includes('SELL');
+            const scoreClass = isSell ? 'neg' : 'pos';
+            const icon = isSell ? '\ud83d\udd34' : '\ud83d\udfe2';
+            html += '<div class="signal-row">' +
+                '<span style="min-width:20px">' + icon + '</span>' +
+                '<span class="signal-ticker" style="color:var(--gold);font-weight:700;min-width:55px">' + t.ticker + '</span>' +
+                '<span class="signal-score ' + scoreClass + '">' + t.action + '</span>' +
+                '<span style="color:var(--text-secondary);font-size:0.8rem">' + t.portfolio + '</span>' +
+                '<span style="color:var(--text-secondary);font-size:0.8rem">' + t.shares + ' sh @ $' + t.price + '</span>' +
+                '<span class="signal-reasons">' + t.date + ' \u2014 ' + (t.reason || '').substring(0, 50) + '</span>' +
+            '</div>';
+        });
+        html += '</div></div>';
+    }
+
+    // SECTION 2: Planned next trades
     if (planned.length > 0) {
         const sells = planned.filter(a => a.action.includes('SELL'));
         const buys = planned.filter(a => a.action === 'BUY' || a.action === 'ADD');
@@ -904,7 +927,7 @@ function renderSignalsSection(data) {
                     '<span class="signal-ticker" style="color:var(--gold);font-weight:700;min-width:55px">' + s.ticker + '</span>' +
                     '<span class="signal-score neg">' + s.score + '</span>' +
                     '<span style="color:var(--text-secondary);font-size:0.8rem">' + s.portfolio + '</span>' +
-                    '<span class="signal-reasons">' + (s.executed ? '\u2705 ' : '') + s.action + ' \u2014 ' + s.reason + '</span>' +
+                    '<span class="signal-reasons">' + s.action + ' \u2014 ' + s.reason + '</span>' +
                 '</div>';
             });
             html += '</div></div>';
@@ -918,37 +941,18 @@ function renderSignalsSection(data) {
                     '<span class="signal-ticker" style="color:var(--gold);font-weight:700;min-width:55px">' + s.ticker + '</span>' +
                     '<span class="signal-score pos">+' + s.score + '</span>' +
                     '<span style="color:var(--text-secondary);font-size:0.8rem">' + s.portfolio + alloc + '</span>' +
-                    '<span class="signal-reasons">' + (s.executed ? '\u2705 DONE \u2014 ' : '') + s.reason + '</span>' +
+                    '<span class="signal-reasons">' + s.reason + '</span>' +
                 '</div>';
             });
             html += '</div></div>';
         }
-
-        if (sells.length === 0 && buys.length === 0) {
-            html = '<div class="placeholder">No trades planned \u2014 holding current positions</div>';
-        }
-    } else {
-        // Fallback: show raw signals if no planned_actions
-        const cats = [
-            { label: '\ud83d\udd34 Sell / Trim', filter: s => s.score <= -3 },
-            { label: '\ud83d\udfe2 Strong Buy / Add', filter: s => s.score >= 3 },
-        ];
-        cats.forEach(cat => {
-            const items = signals.filter(cat.filter);
-            if (items.length === 0) return;
-            html += '<div class="signal-category"><div class="signal-cat-header">' + cat.label + ' (' + items.length + ')</div><div class="signal-cat-body">';
-            items.forEach(s => {
-                const scoreClass = s.score < 0 ? 'neg' : s.score > 0 ? 'pos' : 'neu';
-                html += '<div class="signal-row">' +
-                    '<a href="ticker.html?ticker=' + encodeURIComponent(s.ticker) + '&from=dashboard" class="signal-ticker" style="text-decoration:none;color:var(--gold)">' + s.ticker + '</a>' +
-                    '<span class="signal-score ' + scoreClass + '">' + (s.score > 0 ? '+' : '') + s.score + '</span>' +
-                '</div>';
-            });
-            html += '</div></div>';
-        });
     }
 
-    // Earnings calendar (always shown)
+    if (!html && planned.length === 0 && executed.length === 0) {
+        html = '<div class="placeholder">No trades planned or executed this week</div>';
+    }
+
+    // Earnings calendar
     if (earnings.length > 0) {
         html += '<div class="signal-category"><div class="signal-cat-header">\ud83d\udcc5 Earnings Calendar</div><div class="signal-cat-body">';
         earnings.forEach(e => {
@@ -962,14 +966,9 @@ function renderSignalsSection(data) {
         html += '</div></div>';
     }
 
-    if (!html) {
-        html = '<div class="placeholder">No signals data available</div>';
-    }
-
     el.innerHTML = html;
 }
 
-// ── Macro / Market Pulse ──
 function loadMacro() {
     safeFetch('data/macro.json').then(data => {
         renderMarketBar(data);
