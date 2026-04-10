@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-09T16:38:33.672623",
+  "timestamp": "2026-04-10T07:30:12.870007",
   "context": {
     "ticker": null,
     "sector": null,
@@ -8,8 +8,8 @@
   "rates": {
     "fed_funds": "4.25\u20134.50%",
     "ten_year": 4.293,
-    "two_year": 3.806,
-    "yield_spread": 0.487,
+    "two_year": 3.915,
+    "yield_spread": 0.378,
     "inverted": false
   },
   "market": {
@@ -42,9 +42,9 @@
       "3mo": 0.46
     },
     "VIX": {
-      "level": 19.49,
+      "level": 19.43,
       "classification": "Moderate",
-      "1mo_change": -21.82
+      "1mo_change": -19.81
     }
   },
   "sectors": [
@@ -150,9 +150,9 @@
   ],
   "risk": {
     "vix": {
-      "level": 19.49,
+      "level": 19.43,
       "classification": "Moderate",
-      "1mo_change": -21.82
+      "1mo_change": -19.81
     },
     "Gold (GLD)": {
       "price": 437.91,
@@ -163,8 +163,8 @@
       "1mo": 0.11
     },
     "Bitcoin": {
-      "price": 72237.84,
-      "1mo": 3.3
+      "price": 72060.11,
+      "1mo": 2.64
     },
     "yield_curve": {
       "spread": 0.487,
@@ -183,11 +183,11 @@
       "mom_change": 0.2
     },
     "fear_greed": {
-      "score": 36.1,
+      "score": 37.2,
       "rating": "fear",
-      "previous": 30.8,
-      "1w_ago": 19.0,
-      "1m_ago": 22.2
+      "previous": 36.1,
+      "1w_ago": 23.7,
+      "1m_ago": 20.3
     },
     "saving_rate": {
       "current": 4.0,
@@ -208,33 +208,28 @@
   },
   "bond_signals": {
     "yield_curve": {
-      "two_year": 3.79,
-      "ten_year": 4.29,
-      "spread": 0.5,
-      "spread_1mo_ago": 0.58,
-      "spread_change": -0.08,
-      "date": "2026-04-08",
-      "assessment": "Flat \u2014 neutral"
+      "two_year": 3.915,
+      "ten_year": 4.293,
+      "spread": 0.378,
+      "date": "2026-04-10",
+      "assessment": "Normal & steepening \u2014 bullish"
     },
     "credit_spreads": {
-      "current_bps": 294.0,
-      "raw_value": 2.94,
-      "prev_value": 3.06,
-      "change": -0.12,
-      "date": "2026-04-08",
-      "assessment": "Tight (294bps) \u2014 bullish"
+      "current_bps": 292.0,
+      "date": "2026-04-10",
+      "assessment": "Tight (292bps) \u2014 bullish"
     },
     "ten_year": {
-      "current": 4.29,
-      "prev": 4.15,
-      "change_bps": 14.0,
-      "date": "2026-04-08",
-      "assessment": "Stable \u2014 neutral"
+      "current": 4.293,
+      "prev": 4.293,
+      "change_bps": 0.0,
+      "date": "2026-04-10",
+      "assessment": "Elevated \u2014 bearish"
     },
     "scores": {
-      "yield_curve": 0,
+      "yield_curve": 1,
       "credit_spreads": 1,
-      "ten_year_level": 0
+      "ten_year_level": -1
     },
     "combined_score": 1
   },
