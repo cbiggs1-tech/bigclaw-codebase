@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-10T10:03:28.888296",
+  "timestamp": "2026-04-10T12:04:35.947415",
   "context": {
     "ticker": null,
     "sector": null,
@@ -7,167 +7,167 @@
   },
   "rates": {
     "fed_funds": "4.25\u20134.50%",
-    "ten_year": 4.309,
-    "two_year": 3.931,
-    "yield_spread": 0.378,
+    "ten_year": 4.317,
+    "two_year": 3.806,
+    "yield_spread": 0.511,
     "inverted": false
   },
   "market": {
     "S&P 500": {
       "ticker": "^GSPC",
-      "price": 6835.86,
-      "ytd": -0.14,
-      "1mo": 0.89,
-      "3mo": -1.87
+      "price": 6812.0,
+      "ytd": -0.49,
+      "1mo": 0.53,
+      "3mo": -2.21
     },
     "Nasdaq": {
       "ticker": "^IXIC",
-      "price": 22976.71,
-      "ytd": -1.14,
-      "1mo": 1.15,
-      "3mo": -2.93
+      "price": 22863.27,
+      "ytd": -1.63,
+      "1mo": 0.65,
+      "3mo": -3.41
     },
     "Dow Jones": {
       "ticker": "^DJI",
-      "price": 48037.51,
-      "ytd": -0.05,
-      "1mo": 1.31,
-      "3mo": -2.96
+      "price": 47882.31,
+      "ytd": -0.38,
+      "1mo": 0.98,
+      "3mo": -3.28
     },
     "Russell 2000": {
       "ticker": "^RUT",
-      "price": 2636.57,
-      "ytd": 6.23,
-      "1mo": 3.68,
-      "3mo": 0.47
+      "price": 2624.53,
+      "ytd": 5.75,
+      "1mo": 3.21,
+      "3mo": 0.01
     },
     "VIX": {
-      "level": 19.03,
-      "classification": "Moderate",
-      "1mo_change": -21.46
+      "level": 20.0,
+      "classification": "Elevated",
+      "1mo_change": -17.46
     }
   },
   "sectors": [
     {
       "etf": "XLB",
       "sector": "Materials",
-      "price": 51.92,
-      "1mo": 4.64,
-      "3mo": 8.06,
+      "price": 51.93,
+      "1mo": 4.66,
+      "3mo": 8.08,
       "above_50sma": "True",
       "above_200sma": "True"
     },
     {
       "etf": "XLU",
       "sector": "Utilities",
-      "price": 47.31,
-      "1mo": 3.17,
-      "3mo": 12.06,
+      "price": 47.24,
+      "1mo": 3.04,
+      "3mo": 11.92,
       "above_50sma": "True",
       "above_200sma": "True"
     },
     {
       "etf": "XLF",
       "sector": "Financials",
-      "price": 50.83,
-      "1mo": 2.92,
-      "3mo": -8.32,
-      "above_50sma": "True",
+      "price": 50.72,
+      "1mo": 2.69,
+      "3mo": -8.53,
+      "above_50sma": "False",
       "above_200sma": "False"
-    },
-    {
-      "etf": "XLK",
-      "sector": "Technology",
-      "price": 143.01,
-      "1mo": 1.97,
-      "3mo": -2.02,
-      "above_50sma": "True",
-      "above_200sma": "True"
     },
     {
       "etf": "XLI",
       "sector": "Industrials",
-      "price": 172.2,
-      "1mo": 1.88,
-      "3mo": 6.64,
+      "price": 171.77,
+      "1mo": 1.63,
+      "3mo": 6.37,
+      "above_50sma": "True",
+      "above_200sma": "True"
+    },
+    {
+      "etf": "XLK",
+      "sector": "Technology",
+      "price": 142.46,
+      "1mo": 1.57,
+      "3mo": -2.41,
       "above_50sma": "True",
       "above_200sma": "True"
     },
     {
       "etf": "XLRE",
       "sector": "Real Estate",
-      "price": 42.81,
-      "1mo": 1.63,
-      "3mo": 6.43,
+      "price": 42.74,
+      "1mo": 1.46,
+      "3mo": 6.24,
       "above_50sma": "True",
       "above_200sma": "True"
     },
     {
       "etf": "XLE",
       "sector": "Energy",
-      "price": 56.76,
-      "1mo": 0.26,
-      "3mo": 22.4,
+      "price": 56.9,
+      "1mo": 0.5,
+      "3mo": 22.71,
       "above_50sma": "True",
       "above_200sma": "True"
     },
     {
       "etf": "XLY",
       "sector": "Consumer Discretionary",
-      "price": 112.96,
-      "1mo": -0.84,
-      "3mo": -9.03,
+      "price": 112.32,
+      "1mo": -1.4,
+      "3mo": -9.54,
       "above_50sma": "False",
       "above_200sma": "False"
     },
     {
       "etf": "XLP",
       "sector": "Consumer Staples",
-      "price": 82.49,
-      "1mo": -1.93,
-      "3mo": 4.67,
+      "price": 82.43,
+      "1mo": -2.0,
+      "3mo": 4.6,
       "above_50sma": "False",
       "above_200sma": "True"
     },
     {
       "etf": "XLC",
       "sector": "Communications",
-      "price": 114.14,
-      "1mo": -2.13,
-      "3mo": -2.89,
+      "price": 113.86,
+      "1mo": -2.38,
+      "3mo": -3.13,
       "above_50sma": "False",
       "above_200sma": "True"
     },
     {
       "etf": "XLV",
       "sector": "Healthcare",
-      "price": 148.13,
-      "1mo": -2.69,
-      "3mo": -5.45,
+      "price": 147.63,
+      "1mo": -3.01,
+      "3mo": -5.76,
       "above_50sma": "False",
       "above_200sma": "True"
     }
   ],
   "risk": {
     "vix": {
-      "level": 19.03,
-      "classification": "Moderate",
-      "1mo_change": -21.46
+      "level": 20.0,
+      "classification": "Elevated",
+      "1mo_change": -17.46
     },
     "Gold (GLD)": {
-      "price": 438.82,
-      "1mo": -7.86
+      "price": 437.26,
+      "1mo": -8.19
     },
     "US Dollar (UUP)": {
-      "price": 27.45,
-      "1mo": -0.35
+      "price": 27.48,
+      "1mo": -0.27
     },
     "Bitcoin": {
-      "price": 72958.81,
-      "1mo": 3.92
+      "price": 72966.08,
+      "1mo": 3.93
     },
     "yield_curve": {
-      "spread": 0.503,
+      "spread": 0.511,
       "inverted": false
     }
   },
@@ -183,7 +183,7 @@
       "mom_change": 0.2
     },
     "fear_greed": {
-      "score": 38.7,
+      "score": 37.9,
       "rating": "fear",
       "previous": 36.1,
       "1w_ago": 23.7,
@@ -200,7 +200,7 @@
       "trend": "rising"
     },
     "sp_oil_ratio": {
-      "current": 54.18,
+      "current": 53.74,
       "1mo_ago": 62.71,
       "trend": "declining"
     },
@@ -208,28 +208,33 @@
   },
   "bond_signals": {
     "yield_curve": {
-      "two_year": 3.931,
-      "ten_year": 4.309,
-      "spread": 0.378,
-      "date": "2026-04-10",
-      "assessment": "Normal & steepening \u2014 bullish"
+      "two_year": 3.79,
+      "ten_year": 4.29,
+      "spread": 0.5,
+      "spread_1mo_ago": 0.58,
+      "spread_change": -0.08,
+      "date": "2026-04-08",
+      "assessment": "Flat \u2014 neutral"
     },
     "credit_spreads": {
-      "current_bps": 292.0,
-      "date": "2026-04-10",
-      "assessment": "Tight (292bps) \u2014 bullish"
+      "current_bps": 290.0,
+      "raw_value": 2.9,
+      "prev_value": 3.09,
+      "change": -0.19,
+      "date": "2026-04-09",
+      "assessment": "Tight (290bps) \u2014 bullish"
     },
     "ten_year": {
-      "current": 4.309,
-      "prev": 4.335,
-      "change_bps": -2.6,
-      "date": "2026-04-10",
-      "assessment": "Elevated \u2014 bearish"
+      "current": 4.29,
+      "prev": 4.15,
+      "change_bps": 14.0,
+      "date": "2026-04-08",
+      "assessment": "Stable \u2014 neutral"
     },
     "scores": {
-      "yield_curve": 1,
+      "yield_curve": 0,
       "credit_spreads": 1,
-      "ten_year_level": -1
+      "ten_year_level": 0
     },
     "combined_score": 1
   },
@@ -243,12 +248,12 @@
     "headlines": []
   },
   "verdict": {
-    "environment": "Risk-On",
-    "positioning": "Aggressive",
-    "score": 2,
+    "environment": "Mixed",
+    "positioning": "Neutral",
+    "score": 0,
     "signals": {
-      "bullish": 2,
-      "bearish": 0
+      "bullish": 1,
+      "bearish": 1
     },
     "specific": null,
     "watch": "Next FOMC meeting & CPI release"
