@@ -1,264 +1,4833 @@
 {
-  "lastUpdate": "2026-04-10T15:03:17.906129Z",
-  "tickers": {},
+  "lastUpdate": "2026-04-10T17:04:24.121451Z",
+  "tickers": {
+    "ABBV": {
+      "max_pain": {
+        "max_pain": "210",
+        "expiry": "2026-04-10",
+        "close": "209.63"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "60.2215",
+        "volatility": "0.3459",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 4569,
+        "put_volume": 2576,
+        "call_premium": 1655522.0,
+        "put_premium": 1004903.0,
+        "bullish_premium": 1365444.0,
+        "bearish_premium": 1209714.0,
+        "cp_ratio": 1.77,
+        "bull_bear_ratio": 1.13,
+        "call_open_interest": 117798,
+        "put_open_interest": 127227
+      }
+    },
+    "AFRM": {
+      "max_pain": {
+        "max_pain": "46.5",
+        "expiry": "2026-04-10",
+        "close": "48.68"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "50.5335",
+        "volatility": "0.857",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 5378,
+        "put_volume": 3308,
+        "call_premium": 988901.0,
+        "put_premium": 401115.0,
+        "bullish_premium": 633022.0,
+        "bearish_premium": 617241.0,
+        "cp_ratio": 1.63,
+        "bull_bear_ratio": 1.03,
+        "call_open_interest": 143292,
+        "put_open_interest": 157061
+      }
+    },
+    "AMZN": {
+      "max_pain": {
+        "max_pain": "217.5",
+        "expiry": "2026-04-10",
+        "close": "237.86"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "63.3421",
+        "volatility": "0.4136",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 691580,
+        "put_volume": 314649,
+        "call_premium": 498888316.0,
+        "put_premium": 85981074.0,
+        "bullish_premium": 267486940.0,
+        "bearish_premium": 257401947.0,
+        "cp_ratio": 2.2,
+        "bull_bear_ratio": 1.04,
+        "call_open_interest": 3168978,
+        "put_open_interest": 1958778
+      }
+    },
+    "ANET": {
+      "max_pain": {
+        "max_pain": "130",
+        "expiry": "2026-04-10",
+        "close": "146.34"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "73.7764",
+        "volatility": "0.6357",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 5501,
+        "put_volume": 3313,
+        "call_premium": 5147041.0,
+        "put_premium": 1157305.0,
+        "bullish_premium": 2897791.0,
+        "bearish_premium": 2743362.0,
+        "cp_ratio": 1.66,
+        "bull_bear_ratio": 1.06,
+        "call_open_interest": 164343,
+        "put_open_interest": 140997
+      }
+    },
+    "ARM": {
+      "max_pain": {
+        "max_pain": "140",
+        "expiry": "2026-04-10",
+        "close": "150.62"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "64.8258",
+        "volatility": "0.6964",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 47456,
+        "put_volume": 13559,
+        "call_premium": 28230706.0,
+        "put_premium": 6572938.0,
+        "bullish_premium": 13930057.0,
+        "bearish_premium": 16009189.0,
+        "cp_ratio": 3.5,
+        "bull_bear_ratio": 0.87,
+        "call_open_interest": 329094,
+        "put_open_interest": 391674
+      }
+    },
+    "AVGO": {
+      "max_pain": {
+        "max_pain": "327.5",
+        "expiry": "2026-04-10",
+        "close": "372.99"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "37.0927",
+        "volatility": "0.4623",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 221228,
+        "put_volume": 144632,
+        "call_premium": 309011725.0,
+        "put_premium": 89285161.0,
+        "bullish_premium": 193626169.0,
+        "bearish_premium": 165992182.0,
+        "cp_ratio": 1.53,
+        "bull_bear_ratio": 1.17,
+        "call_open_interest": 907942,
+        "put_open_interest": 996480
+      }
+    },
+    "BAC": {
+      "max_pain": {
+        "max_pain": "50",
+        "expiry": "2026-04-10",
+        "close": "52.473"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "32.3535",
+        "volatility": "0.2865",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 74996,
+        "put_volume": 23431,
+        "call_premium": 12568160.0,
+        "put_premium": 1940374.0,
+        "bullish_premium": 5867457.0,
+        "bearish_premium": 6209196.0,
+        "cp_ratio": 3.2,
+        "bull_bear_ratio": 0.94,
+        "call_open_interest": 1239804,
+        "put_open_interest": 1415675
+      }
+    },
+    "BWXT": {
+      "max_pain": {
+        "max_pain": "200",
+        "expiry": "2026-04-17",
+        "close": "231.43"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "62.7986",
+        "volatility": "0.5252",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 298,
+        "put_volume": 235,
+        "call_premium": 422310.0,
+        "put_premium": 136385.0,
+        "bullish_premium": 225397.0,
+        "bearish_premium": 220158.0,
+        "cp_ratio": 1.27,
+        "bull_bear_ratio": 1.02,
+        "call_open_interest": 11871,
+        "put_open_interest": 6699
+      }
+    },
+    "CCJ": {
+      "max_pain": {
+        "max_pain": "110",
+        "expiry": "2026-04-10",
+        "close": "116.21"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "66.405",
+        "volatility": "0.5786",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 11156,
+        "put_volume": 6326,
+        "call_premium": 2993239.0,
+        "put_premium": 2025741.0,
+        "bullish_premium": 1693602.0,
+        "bearish_premium": 2852825.0,
+        "cp_ratio": 1.76,
+        "bull_bear_ratio": 0.59,
+        "call_open_interest": 161079,
+        "put_open_interest": 219749
+      }
+    },
+    "CELH": {
+      "max_pain": {
+        "max_pain": "35",
+        "expiry": "2026-04-10",
+        "close": "34.99"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "81.0861",
+        "volatility": "0.7279",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 5036,
+        "put_volume": 3998,
+        "call_premium": 1051372.0,
+        "put_premium": 1005992.0,
+        "bullish_premium": 900683.0,
+        "bearish_premium": 979011.0,
+        "cp_ratio": 1.26,
+        "bull_bear_ratio": 0.92,
+        "call_open_interest": 326036,
+        "put_open_interest": 140862
+      }
+    },
+    "CRM": {
+      "max_pain": {
+        "max_pain": "177.5",
+        "expiry": "2026-04-10",
+        "close": "165"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "63.987",
+        "volatility": "0.4629",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 39042,
+        "put_volume": 30870,
+        "call_premium": 20370126.0,
+        "put_premium": 27093296.0,
+        "bullish_premium": 17056069.0,
+        "bearish_premium": 26566439.0,
+        "cp_ratio": 1.26,
+        "bull_bear_ratio": 0.64,
+        "call_open_interest": 485037,
+        "put_open_interest": 388931
+      }
+    },
+    "DDOG": {
+      "max_pain": {
+        "max_pain": "116",
+        "expiry": "2026-04-10",
+        "close": "103.75"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "97.9984",
+        "volatility": "0.8347",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 10038,
+        "put_volume": 34820,
+        "call_premium": 3409901.0,
+        "put_premium": 9629933.0,
+        "bullish_premium": 5180050.0,
+        "bearish_premium": 7010955.0,
+        "cp_ratio": 0.29,
+        "bull_bear_ratio": 0.74,
+        "call_open_interest": 121624,
+        "put_open_interest": 133217
+      }
+    },
+    "EPD": {
+      "max_pain": {
+        "max_pain": "37",
+        "expiry": "2026-04-10",
+        "close": "37.71"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "49.6239",
+        "volatility": "0.23",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 1160,
+        "put_volume": 1019,
+        "call_premium": 162427.0,
+        "put_premium": 34511.0,
+        "bullish_premium": 75242.0,
+        "bearish_premium": 81130.0,
+        "cp_ratio": 1.14,
+        "bull_bear_ratio": 0.93,
+        "call_open_interest": 205146,
+        "put_open_interest": 46670
+      }
+    },
+    "GD": {
+      "max_pain": {
+        "max_pain": "357.5",
+        "expiry": "2026-04-10",
+        "close": "335.8039"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "79.1239",
+        "volatility": "0.2845",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 608,
+        "put_volume": 603,
+        "call_premium": 315704.0,
+        "put_premium": 348465.0,
+        "bullish_premium": 276606.0,
+        "bearish_premium": 322043.0,
+        "cp_ratio": 1.01,
+        "bull_bear_ratio": 0.86,
+        "call_open_interest": 18271,
+        "put_open_interest": 11896
+      }
+    },
+    "GE": {
+      "max_pain": {
+        "max_pain": "292.5",
+        "expiry": "2026-04-10",
+        "close": "308.205"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "60.8559",
+        "volatility": "0.406",
+        "date": "2026-04-10"
+      }
+    },
+    "GEV": {
+      "max_pain": {
+        "max_pain": "900",
+        "expiry": "2026-04-10",
+        "close": "992.2"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "29.5094",
+        "volatility": "0.513",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 8529,
+        "put_volume": 7437,
+        "call_premium": 43014915.0,
+        "put_premium": 16354769.0,
+        "bullish_premium": 25219976.0,
+        "bearish_premium": 23023068.0,
+        "cp_ratio": 1.15,
+        "bull_bear_ratio": 1.1,
+        "call_open_interest": 92513,
+        "put_open_interest": 103932
+      }
+    },
+    "GOOGL": {
+      "max_pain": {
+        "max_pain": "305",
+        "expiry": "2026-04-10",
+        "close": "316.95"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "53.497",
+        "volatility": "0.3715",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 137123,
+        "put_volume": 88557,
+        "call_premium": 90385100.0,
+        "put_premium": 41079031.0,
+        "bullish_premium": 45327627.0,
+        "bearish_premium": 57147580.0,
+        "cp_ratio": 1.55,
+        "bull_bear_ratio": 0.79,
+        "call_open_interest": 1667240,
+        "put_open_interest": 1342609
+      }
+    },
+    "IBM": {
+      "max_pain": {
+        "max_pain": "240",
+        "expiry": "2026-04-10",
+        "close": "231.9555"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "81.105",
+        "volatility": "0.4806",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 6032,
+        "put_volume": 4625,
+        "call_premium": 4589211.0,
+        "put_premium": 3093816.0,
+        "bullish_premium": 3260989.0,
+        "bearish_premium": 3783283.0,
+        "cp_ratio": 1.3,
+        "bull_bear_ratio": 0.86,
+        "call_open_interest": 170670,
+        "put_open_interest": 142287
+      }
+    },
+    "JNJ": {
+      "max_pain": {
+        "max_pain": "242.5",
+        "expiry": "2026-04-10",
+        "close": "239.41"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "71.705",
+        "volatility": "0.2448",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 4832,
+        "put_volume": 5196,
+        "call_premium": 3237422.0,
+        "put_premium": 2078619.0,
+        "bullish_premium": 1971529.0,
+        "bearish_premium": 1766329.0,
+        "cp_ratio": 0.93,
+        "bull_bear_ratio": 1.12,
+        "call_open_interest": 201450,
+        "put_open_interest": 171762
+      }
+    },
+    "JPM": {
+      "max_pain": {
+        "max_pain": "297.5",
+        "expiry": "2026-04-10",
+        "close": "308.91"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "39.5507",
+        "volatility": "0.2751",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 19659,
+        "put_volume": 14354,
+        "call_premium": 9625404.0,
+        "put_premium": 4119994.0,
+        "bullish_premium": 6274245.0,
+        "bearish_premium": 5411065.0,
+        "cp_ratio": 1.37,
+        "bull_bear_ratio": 1.16,
+        "call_open_interest": 316400,
+        "put_open_interest": 369744
+      }
+    },
+    "KMI": {
+      "max_pain": {
+        "max_pain": "32.5",
+        "expiry": "2026-04-10",
+        "close": "32.825"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "31.1352",
+        "volatility": "0.2582",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 5409,
+        "put_volume": 859,
+        "call_premium": 410883.0,
+        "put_premium": 100052.0,
+        "bullish_premium": 100521.0,
+        "bearish_premium": 363565.0,
+        "cp_ratio": 6.3,
+        "bull_bear_ratio": 0.28,
+        "call_open_interest": 224597,
+        "put_open_interest": 114482
+      }
+    },
+    "KO": {
+      "max_pain": {
+        "max_pain": "76",
+        "expiry": "2026-04-10",
+        "close": "77.72"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "67.1526",
+        "volatility": "0.2124",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 28399,
+        "put_volume": 6330,
+        "call_premium": 2461211.0,
+        "put_premium": 584360.0,
+        "bullish_premium": 1569571.0,
+        "bearish_premium": 1320574.0,
+        "cp_ratio": 4.49,
+        "bull_bear_ratio": 1.19,
+        "call_open_interest": 378298,
+        "put_open_interest": 354009
+      }
+    },
+    "LDOS": {
+      "max_pain": {
+        "max_pain": "160",
+        "expiry": "2026-04-17",
+        "close": "153.79"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "54.5039",
+        "volatility": "0.3473",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 148,
+        "put_volume": 137,
+        "call_premium": 27805.0,
+        "put_premium": 87352.0,
+        "bullish_premium": 47097.0,
+        "bearish_premium": 50920.0,
+        "cp_ratio": 1.08,
+        "bull_bear_ratio": 0.92,
+        "call_open_interest": 4961,
+        "put_open_interest": 2694
+      }
+    },
+    "LLY": {
+      "max_pain": {
+        "max_pain": "930",
+        "expiry": "2026-04-10",
+        "close": "941.22"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "53.8321",
+        "volatility": "0.4551",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 14073,
+        "put_volume": 10277,
+        "call_premium": 13222079.0,
+        "put_premium": 10588772.0,
+        "bullish_premium": 11030251.0,
+        "bearish_premium": 11407926.0,
+        "cp_ratio": 1.37,
+        "bull_bear_ratio": 0.97,
+        "call_open_interest": 163890,
+        "put_open_interest": 184618
+      }
+    },
+    "LMT": {
+      "max_pain": {
+        "max_pain": "580",
+        "expiry": "2026-04-10",
+        "close": "619.37"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "69.3134",
+        "volatility": "0.3369",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 4541,
+        "put_volume": 2988,
+        "call_premium": 42675458.0,
+        "put_premium": 710255.0,
+        "bullish_premium": 8917345.0,
+        "bearish_premium": 9193143.0,
+        "cp_ratio": 1.52,
+        "bull_bear_ratio": 0.97,
+        "call_open_interest": 57828,
+        "put_open_interest": 43130
+      }
+    },
+    "LOW": {
+      "max_pain": {
+        "max_pain": "235",
+        "expiry": "2026-04-10",
+        "close": "244.68"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "46.2928",
+        "volatility": "0.2818",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 1137,
+        "put_volume": 497,
+        "call_premium": 597734.0,
+        "put_premium": 172372.0,
+        "bullish_premium": 254920.0,
+        "bearish_premium": 427696.0,
+        "cp_ratio": 2.29,
+        "bull_bear_ratio": 0.6,
+        "call_open_interest": 47917,
+        "put_open_interest": 51754
+      }
+    },
+    "MA": {
+      "max_pain": {
+        "max_pain": "500",
+        "expiry": "2026-04-10",
+        "close": "497.52"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "63.6249",
+        "volatility": "0.3064",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 1673,
+        "put_volume": 1448,
+        "call_premium": 2366535.0,
+        "put_premium": 1900310.0,
+        "bullish_premium": 2042771.0,
+        "bearish_premium": 1954559.0,
+        "cp_ratio": 1.16,
+        "bull_bear_ratio": 1.05,
+        "call_open_interest": 66145,
+        "put_open_interest": 71741
+      }
+    },
+    "META": {
+      "max_pain": {
+        "max_pain": "605",
+        "expiry": "2026-04-10",
+        "close": "627.51"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "53.9663",
+        "volatility": "0.4253",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 377850,
+        "put_volume": 236605,
+        "call_premium": 320812242.0,
+        "put_premium": 116922134.0,
+        "bullish_premium": 194346240.0,
+        "bearish_premium": 218185522.0,
+        "cp_ratio": 1.6,
+        "bull_bear_ratio": 0.89,
+        "call_open_interest": 1965975,
+        "put_open_interest": 983031
+      }
+    },
+    "MO": {
+      "max_pain": {
+        "max_pain": "66",
+        "expiry": "2026-04-10",
+        "close": "66.9314"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "73.5967",
+        "volatility": "0.2532",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 3727,
+        "put_volume": 2605,
+        "call_premium": 346563.0,
+        "put_premium": 234185.0,
+        "bullish_premium": 259735.0,
+        "bearish_premium": 265736.0,
+        "cp_ratio": 1.43,
+        "bull_bear_ratio": 0.98,
+        "call_open_interest": 176801,
+        "put_open_interest": 139898
+      }
+    },
+    "MRK": {
+      "max_pain": {
+        "max_pain": "116",
+        "expiry": "2026-04-10",
+        "close": "121.77"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "39.828",
+        "volatility": "0.3187",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 5872,
+        "put_volume": 6613,
+        "call_premium": 1996427.0,
+        "put_premium": 1018277.0,
+        "bullish_premium": 1356062.0,
+        "bearish_premium": 1313134.0,
+        "cp_ratio": 0.89,
+        "bull_bear_ratio": 1.03,
+        "call_open_interest": 303244,
+        "put_open_interest": 219578
+      }
+    },
+    "MSFT": {
+      "max_pain": {
+        "max_pain": "370",
+        "expiry": "2026-04-10",
+        "close": "371.455"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "94.0787",
+        "volatility": "0.3799",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 279050,
+        "put_volume": 122886,
+        "call_premium": 136004638.0,
+        "put_premium": 59651320.0,
+        "bullish_premium": 75455264.0,
+        "bearish_premium": 101342819.0,
+        "cp_ratio": 2.27,
+        "bull_bear_ratio": 0.74,
+        "call_open_interest": 2610018,
+        "put_open_interest": 1221767
+      }
+    },
+    "NET": {
+      "max_pain": {
+        "max_pain": "200",
+        "expiry": "2026-04-10",
+        "close": "169.31"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "100",
+        "volatility": "0.8892",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 43490,
+        "put_volume": 27021,
+        "call_premium": 35059095.0,
+        "put_premium": 21770192.0,
+        "bullish_premium": 24403647.0,
+        "bearish_premium": 27683633.0,
+        "cp_ratio": 1.61,
+        "bull_bear_ratio": 0.88,
+        "call_open_interest": 119616,
+        "put_open_interest": 81326
+      }
+    },
+    "NOC": {
+      "max_pain": {
+        "max_pain": "705",
+        "expiry": "2026-04-17",
+        "close": "680.73"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "76.5684",
+        "volatility": "0.335",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 176,
+        "put_volume": 187,
+        "call_premium": 326914.0,
+        "put_premium": 442070.0,
+        "bullish_premium": 440781.0,
+        "bearish_premium": 231543.0,
+        "cp_ratio": 0.94,
+        "bull_bear_ratio": 1.9,
+        "call_open_interest": 12517,
+        "put_open_interest": 11182
+      }
+    },
+    "NVDA": {
+      "max_pain": {
+        "max_pain": "177.5",
+        "expiry": "2026-04-10",
+        "close": "188.615"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "12.0329",
+        "volatility": "0.3336",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 1800932,
+        "put_volume": 893475,
+        "call_premium": 647103119.0,
+        "put_premium": 190108676.0,
+        "bullish_premium": 379482424.0,
+        "bearish_premium": 328272717.0,
+        "cp_ratio": 2.02,
+        "bull_bear_ratio": 1.16,
+        "call_open_interest": 8399802,
+        "put_open_interest": 7175078
+      }
+    },
+    "O": {
+      "max_pain": {
+        "max_pain": "62.5",
+        "expiry": "2026-04-17",
+        "close": "63.44"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "52.9078",
+        "volatility": "0.2091",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 437,
+        "put_volume": 480,
+        "call_premium": 65026.0,
+        "put_premium": 54981.0,
+        "bullish_premium": 43971.0,
+        "bearish_premium": 52481.0,
+        "cp_ratio": 0.91,
+        "bull_bear_ratio": 0.84,
+        "call_open_interest": 79066,
+        "put_open_interest": 51633
+      }
+    },
+    "PANW": {
+      "max_pain": {
+        "max_pain": "165",
+        "expiry": "2026-04-10",
+        "close": "154.94"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "78.1432",
+        "volatility": "0.4893",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 35810,
+        "put_volume": 29245,
+        "call_premium": 22146327.0,
+        "put_premium": 14280434.0,
+        "bullish_premium": 14484737.0,
+        "bearish_premium": 19612319.0,
+        "cp_ratio": 1.22,
+        "bull_bear_ratio": 0.74,
+        "call_open_interest": 278875,
+        "put_open_interest": 265332
+      }
+    },
+    "PATH": {
+      "max_pain": {
+        "max_pain": "10",
+        "expiry": "2026-04-10",
+        "close": "9.515"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "39.888",
+        "volatility": "0.6329",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 33189,
+        "put_volume": 12039,
+        "call_premium": 1712790.0,
+        "put_premium": 1547199.0,
+        "bullish_premium": 1146362.0,
+        "bearish_premium": 1917038.0,
+        "cp_ratio": 2.76,
+        "bull_bear_ratio": 0.6,
+        "call_open_interest": 627202,
+        "put_open_interest": 195811
+      }
+    },
+    "PG": {
+      "max_pain": {
+        "max_pain": "143",
+        "expiry": "2026-04-10",
+        "close": "145.56"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "63.3612",
+        "volatility": "0.2406",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 6246,
+        "put_volume": 2258,
+        "call_premium": 1191139.0,
+        "put_premium": 426883.0,
+        "bullish_premium": 892702.0,
+        "bearish_premium": 624153.0,
+        "cp_ratio": 2.77,
+        "bull_bear_ratio": 1.43,
+        "call_open_interest": 180442,
+        "put_open_interest": 155176
+      }
+    },
+    "PLTR": {
+      "max_pain": {
+        "max_pain": "135",
+        "expiry": "2026-04-10",
+        "close": "127.51"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "52.1405",
+        "volatility": "0.6825",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 816190,
+        "put_volume": 564086,
+        "call_premium": 214972154.0,
+        "put_premium": 215889180.0,
+        "bullish_premium": 181104776.0,
+        "bearish_premium": 192896173.0,
+        "cp_ratio": 1.45,
+        "bull_bear_ratio": 0.94,
+        "call_open_interest": 1864227,
+        "put_open_interest": 1864257
+      }
+    },
+    "PM": {
+      "max_pain": {
+        "max_pain": "157.5",
+        "expiry": "2026-04-10",
+        "close": "158.42"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "69.1705",
+        "volatility": "0.3401",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 1257,
+        "put_volume": 526,
+        "call_premium": 235616.0,
+        "put_premium": 247646.0,
+        "bullish_premium": 280205.0,
+        "bearish_premium": 122732.0,
+        "cp_ratio": 2.39,
+        "bull_bear_ratio": 2.28,
+        "call_open_interest": 70564,
+        "put_open_interest": 70080
+      }
+    },
+    "ROKU": {
+      "max_pain": {
+        "max_pain": "95",
+        "expiry": "2026-04-10",
+        "close": "100.74"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "66.0852",
+        "volatility": "0.7505",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 3020,
+        "put_volume": 6378,
+        "call_premium": 2019214.0,
+        "put_premium": 3598743.0,
+        "bullish_premium": 2592203.0,
+        "bearish_premium": 2008416.0,
+        "cp_ratio": 0.47,
+        "bull_bear_ratio": 1.29,
+        "call_open_interest": 76442,
+        "put_open_interest": 73063
+      }
+    },
+    "RTX": {
+      "max_pain": {
+        "max_pain": "195",
+        "expiry": "2026-04-10",
+        "close": "202.33"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "80.1744",
+        "volatility": "0.3413",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 3107,
+        "put_volume": 3204,
+        "call_premium": 1550246.0,
+        "put_premium": 877936.0,
+        "bullish_premium": 1042804.0,
+        "bearish_premium": 1255316.0,
+        "cp_ratio": 0.97,
+        "bull_bear_ratio": 0.83,
+        "call_open_interest": 155331,
+        "put_open_interest": 106491
+      }
+    },
+    "SGOV": {
+      "max_pain": {
+        "max_pain": "89",
+        "expiry": "2026-04-17",
+        "close": "100.495"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "21.5816",
+        "volatility": "0.0204",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 1076,
+        "put_volume": 18,
+        "call_premium": 564626.0,
+        "put_premium": 477.0,
+        "bullish_premium": 172031.0,
+        "bearish_premium": 361597.0,
+        "cp_ratio": 59.78,
+        "bull_bear_ratio": 0.48,
+        "call_open_interest": 6664,
+        "put_open_interest": 1073
+      }
+    },
+    "SHOP": {
+      "max_pain": {
+        "max_pain": "116",
+        "expiry": "2026-04-10",
+        "close": "110.5415"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "74.0683",
+        "volatility": "0.7552",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 12231,
+        "put_volume": 6435,
+        "call_premium": 5629212.0,
+        "put_premium": 5214767.0,
+        "bullish_premium": 3069644.0,
+        "bearish_premium": 6649034.0,
+        "cp_ratio": 1.9,
+        "bull_bear_ratio": 0.46,
+        "call_open_interest": 380021,
+        "put_open_interest": 278089
+      }
+    },
+    "T": {
+      "max_pain": {
+        "max_pain": "27.5",
+        "expiry": "2026-04-10",
+        "close": "26.355"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "52.0752",
+        "volatility": "0.2838",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 16783,
+        "put_volume": 7514,
+        "call_premium": 926779.0,
+        "put_premium": 536315.0,
+        "bullish_premium": 563166.0,
+        "bearish_premium": 740757.0,
+        "cp_ratio": 2.23,
+        "bull_bear_ratio": 0.76,
+        "call_open_interest": 550378,
+        "put_open_interest": 457820
+      }
+    },
+    "TRGP": {
+      "max_pain": {
+        "max_pain": "220",
+        "expiry": "2026-04-17",
+        "close": "243.02"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "28.1415",
+        "volatility": "0.3279",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 182,
+        "put_volume": 31,
+        "call_premium": 479917.0,
+        "put_premium": 17282.0,
+        "bullish_premium": 179720.0,
+        "bearish_premium": 286884.0,
+        "cp_ratio": 5.87,
+        "bull_bear_ratio": 0.63,
+        "call_open_interest": 11954,
+        "put_open_interest": 3105
+      }
+    },
+    "TWLO": {
+      "max_pain": {
+        "max_pain": "129",
+        "expiry": "2026-04-10",
+        "close": "118.815"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "86.7194",
+        "volatility": "0.7617",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 2366,
+        "put_volume": 4750,
+        "call_premium": 845892.0,
+        "put_premium": 2279414.0,
+        "bullish_premium": 1451297.0,
+        "bearish_premium": 1432879.0,
+        "cp_ratio": 0.5,
+        "bull_bear_ratio": 1.01,
+        "call_open_interest": 32605,
+        "put_open_interest": 24418
+      }
+    },
+    "TXT": {
+      "max_pain": {
+        "max_pain": "90",
+        "expiry": "2026-04-17",
+        "close": "91.08"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "58.3254",
+        "volatility": "0.3327",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 36,
+        "put_volume": 26,
+        "call_premium": 10560.0,
+        "put_premium": 11900.0,
+        "bullish_premium": 12260.0,
+        "bearish_premium": 2910.0,
+        "cp_ratio": 1.38,
+        "bull_bear_ratio": 4.21,
+        "call_open_interest": 5444,
+        "put_open_interest": 6626
+      }
+    },
+    "U": {
+      "max_pain": {
+        "max_pain": "21",
+        "expiry": "2026-04-10",
+        "close": "21.29"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "65.559",
+        "volatility": "0.8778",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 9343,
+        "put_volume": 4097,
+        "call_premium": 1104401.0,
+        "put_premium": 398224.0,
+        "bullish_premium": 727806.0,
+        "bearish_premium": 592382.0,
+        "cp_ratio": 2.28,
+        "bull_bear_ratio": 1.23,
+        "call_open_interest": 426135,
+        "put_open_interest": 226003
+      }
+    },
+    "V": {
+      "max_pain": {
+        "max_pain": "302.5",
+        "expiry": "2026-04-10",
+        "close": "304.6499"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "55.212",
+        "volatility": "0.2788",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 6723,
+        "put_volume": 4066,
+        "call_premium": 3157927.0,
+        "put_premium": 1769856.0,
+        "bullish_premium": 2133488.0,
+        "bearish_premium": 2195891.0,
+        "cp_ratio": 1.65,
+        "bull_bear_ratio": 0.97,
+        "call_open_interest": 198974,
+        "put_open_interest": 183781
+      }
+    },
+    "VZ": {
+      "max_pain": {
+        "max_pain": "48.5",
+        "expiry": "2026-04-10",
+        "close": "46.225"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "91.559",
+        "volatility": "0.2862",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 30612,
+        "put_volume": 23998,
+        "call_premium": 4417898.0,
+        "put_premium": 3089603.0,
+        "bullish_premium": 2676850.0,
+        "bearish_premium": 3692114.0,
+        "cp_ratio": 1.28,
+        "bull_bear_ratio": 0.73,
+        "call_open_interest": 552222,
+        "put_open_interest": 500523
+      }
+    },
+    "WFC": {
+      "max_pain": {
+        "max_pain": "80",
+        "expiry": "2026-04-10",
+        "close": "85.365"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "34.3055",
+        "volatility": "0.3118",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 12422,
+        "put_volume": 12382,
+        "call_premium": 3171548.0,
+        "put_premium": 1631932.0,
+        "bullish_premium": 2108488.0,
+        "bearish_premium": 2050162.0,
+        "cp_ratio": 1.0,
+        "bull_bear_ratio": 1.03,
+        "call_open_interest": 533419,
+        "put_open_interest": 536601
+      }
+    },
+    "XOM": {
+      "max_pain": {
+        "max_pain": "157.5",
+        "expiry": "2026-04-10",
+        "close": "152.6001"
+      },
+      "iv_rank": {
+        "iv_rank_1y": "52.9895",
+        "volatility": "0.309",
+        "date": "2026-04-10"
+      },
+      "options_volume": {
+        "call_volume": 30444,
+        "put_volume": 21966,
+        "call_premium": 13482239.0,
+        "put_premium": 7097494.0,
+        "bullish_premium": 9256869.0,
+        "bearish_premium": 9078280.0,
+        "cp_ratio": 1.39,
+        "bull_bear_ratio": 1.02,
+        "call_open_interest": 830571,
+        "put_open_interest": 515092
+      }
+    }
+  },
   "sectors": [
     {
       "ticker": "SPY",
       "name": "S&P 500 Index",
-      "last": "681.18",
-      "call_volume": 1419298,
-      "put_volume": 2203461,
-      "cp_ratio": 0.64,
-      "call_premium": 366062123.0,
-      "put_premium": 361754118.0,
-      "bullish_premium": 347655605.0,
-      "bearish_premium": 327735698.0,
+      "last": "678.93",
+      "call_volume": 2887625,
+      "put_volume": 4355945,
+      "cp_ratio": 0.66,
+      "call_premium": 730443867.0,
+      "put_premium": 733135109.0,
+      "bullish_premium": 654388720.0,
+      "bearish_premium": 688957821.0,
       "net_flow_5d": 17200000
     },
     {
       "ticker": "XLB",
       "name": "Materials",
-      "last": "51.91",
-      "call_volume": 554,
-      "put_volume": 457,
-      "cp_ratio": 1.21,
-      "call_premium": 160437.0,
-      "put_premium": 37968.0,
-      "bullish_premium": 46780.0,
-      "bearish_premium": 142087.0,
+      "last": "51.92",
+      "call_volume": 2767,
+      "put_volume": 1831,
+      "cp_ratio": 1.51,
+      "call_premium": 331269.0,
+      "put_premium": 231248.0,
+      "bullish_premium": 152745.0,
+      "bearish_premium": 359605.0,
       "net_flow_5d": 6350000
     },
     {
       "ticker": "XLC",
       "name": "Communication Services",
-      "last": "114.15",
-      "call_volume": 33,
-      "put_volume": 12,
-      "cp_ratio": 2.75,
-      "call_premium": 24800.0,
-      "put_premium": 2266.0,
-      "bullish_premium": 5117.0,
-      "bearish_premium": 18889.0,
+      "last": "113.88",
+      "call_volume": 63,
+      "put_volume": 104,
+      "cp_ratio": 0.61,
+      "call_premium": 31086.0,
+      "put_premium": 14357.0,
+      "bullish_premium": 6640.0,
+      "bearish_premium": 35743.0,
       "net_flow_5d": 150000
     },
     {
       "ticker": "XLE",
       "name": "Energy",
-      "last": "56.75",
-      "call_volume": 27252,
-      "put_volume": 56798,
-      "cp_ratio": 0.48,
-      "call_premium": 2475276.0,
-      "put_premium": 5106219.0,
-      "bullish_premium": 1732028.0,
-      "bearish_premium": 4584828.0,
+      "last": "56.88",
+      "call_volume": 91405,
+      "put_volume": 103161,
+      "cp_ratio": 0.89,
+      "call_premium": 25752660.0,
+      "put_premium": 9215151.0,
+      "bullish_premium": 3783715.0,
+      "bearish_premium": 7622625.0,
       "net_flow_5d": -27000000
     },
     {
       "ticker": "XLF",
       "name": "Financials",
-      "last": "50.82",
-      "call_volume": 24283,
-      "put_volume": 40129,
-      "cp_ratio": 0.61,
-      "call_premium": 2020161.0,
-      "put_premium": 3115375.0,
-      "bullish_premium": 638871.0,
-      "bearish_premium": 619155.0,
+      "last": "50.715",
+      "call_volume": 44362,
+      "put_volume": 67995,
+      "cp_ratio": 0.65,
+      "call_premium": 2939826.0,
+      "put_premium": 6503628.0,
+      "bullish_premium": 1380860.0,
+      "bearish_premium": 1874010.0,
       "net_flow_5d": 9200000
     },
     {
       "ticker": "XLI",
       "name": "Industrials",
-      "last": "172.19",
-      "call_volume": 1211,
-      "put_volume": 5804,
+      "last": "171.79",
+      "call_volume": 1647,
+      "put_volume": 7971,
       "cp_ratio": 0.21,
-      "call_premium": 192562.0,
-      "put_premium": 1288800.0,
-      "bullish_premium": 851633.0,
-      "bearish_premium": 610409.0,
+      "call_premium": 366584.0,
+      "put_premium": 1987909.0,
+      "bullish_premium": 1430209.0,
+      "bearish_premium": 873213.0,
       "net_flow_5d": 2500000
     },
     {
       "ticker": "XLK",
       "name": "Technology",
-      "last": "143.03",
-      "call_volume": 3754,
-      "put_volume": 4033,
-      "cp_ratio": 0.93,
-      "call_premium": 1808472.0,
-      "put_premium": 677346.0,
-      "bullish_premium": 986375.0,
-      "bearish_premium": 1108277.0,
+      "last": "142.49",
+      "call_volume": 6230,
+      "put_volume": 7293,
+      "cp_ratio": 0.85,
+      "call_premium": 3077359.0,
+      "put_premium": 2023312.0,
+      "bullish_premium": 1896870.0,
+      "bearish_premium": 2500767.0,
       "net_flow_5d": 5350000
     },
     {
       "ticker": "XLP",
       "name": "Consumer Staples",
-      "last": "82.47",
-      "call_volume": 877,
-      "put_volume": 6248,
-      "cp_ratio": 0.14,
-      "call_premium": 208362.0,
-      "put_premium": 504205.0,
-      "bullish_premium": 101052.0,
-      "bearish_premium": 278263.0,
+      "last": "82.42",
+      "call_volume": 1547,
+      "put_volume": 14791,
+      "cp_ratio": 0.1,
+      "call_premium": 326024.0,
+      "put_premium": 948164.0,
+      "bullish_premium": 237772.0,
+      "bearish_premium": 387825.0,
       "net_flow_5d": -13750000
     },
     {
       "ticker": "XLRE",
       "name": "Real Estate",
-      "last": "42.815",
-      "call_volume": 38,
-      "put_volume": 88,
-      "cp_ratio": 0.43,
-      "call_premium": 4870.0,
-      "put_premium": 19336.0,
-      "bullish_premium": 1336.0,
-      "bearish_premium": 22865.0,
+      "last": "42.735",
+      "call_volume": 60,
+      "put_volume": 199,
+      "cp_ratio": 0.3,
+      "call_premium": 12749.0,
+      "put_premium": 23708.0,
+      "bullish_premium": 8263.0,
+      "bearish_premium": 28189.0,
       "net_flow_5d": -950000
     },
     {
       "ticker": "XLU",
       "name": "Utilities",
-      "last": "47.2942",
-      "call_volume": 1976,
-      "put_volume": 1980,
-      "cp_ratio": 1.0,
-      "call_premium": 184470.0,
-      "put_premium": 152027.0,
-      "bullish_premium": 100993.0,
-      "bearish_premium": 198837.0,
+      "last": "47.255",
+      "call_volume": 9305,
+      "put_volume": 10139,
+      "cp_ratio": 0.92,
+      "call_premium": 1167622.0,
+      "put_premium": 869598.0,
+      "bullish_premium": 636383.0,
+      "bearish_premium": 912062.0,
       "net_flow_5d": 9400000
     },
     {
       "ticker": "XLV",
       "name": "Health Care",
-      "last": "148.0601",
-      "call_volume": 838,
-      "put_volume": 5791,
-      "cp_ratio": 0.14,
-      "call_premium": 238595.0,
-      "put_premium": 348900.0,
-      "bullish_premium": 196116.0,
-      "bearish_premium": 189047.0,
+      "last": "147.665",
+      "call_volume": 2325,
+      "put_volume": 8122,
+      "cp_ratio": 0.29,
+      "call_premium": 554376.0,
+      "put_premium": 785045.0,
+      "bullish_premium": 580707.0,
+      "bearish_premium": 533899.0,
       "net_flow_5d": -3350000
     },
     {
       "ticker": "XLY",
       "name": "Consumer Discretionary",
-      "last": "112.965",
-      "call_volume": 624,
-      "put_volume": 176,
-      "cp_ratio": 3.55,
-      "call_premium": 122477.0,
-      "put_premium": 28051.0,
-      "bullish_premium": 43126.0,
-      "bearish_premium": 75607.0,
+      "last": "112.345",
+      "call_volume": 754,
+      "put_volume": 446,
+      "cp_ratio": 1.69,
+      "call_premium": 174537.0,
+      "put_premium": 136404.0,
+      "bullish_premium": 102192.0,
+      "bearish_premium": 123299.0,
       "net_flow_5d": -250000
     }
   ],
-  "darkpool_alerts": [],
+  "darkpool_alerts": [
+    {
+      "ticker": "AMZN",
+      "size": 7461,
+      "price": 237.7599,
+      "premium": 1773926.6139,
+      "executed_at": "2026-04-10T17:03:48Z"
+    },
+    {
+      "ticker": "MSFT",
+      "size": 848,
+      "price": 371.3601,
+      "premium": 314913.3648,
+      "executed_at": "2026-04-10T17:03:50Z"
+    },
+    {
+      "ticker": "MSFT",
+      "size": 799,
+      "price": 371.4499,
+      "premium": 296788.4701,
+      "executed_at": "2026-04-10T17:04:02Z"
+    },
+    {
+      "ticker": "PLTR",
+      "size": 2300,
+      "price": 127.35,
+      "premium": 292905.0,
+      "executed_at": "2026-04-10T17:04:04Z"
+    },
+    {
+      "ticker": "PLTR",
+      "size": 1800,
+      "price": 127.32,
+      "premium": 229176.0,
+      "executed_at": "2026-04-10T17:04:00Z"
+    },
+    {
+      "ticker": "JNJ",
+      "size": 950,
+      "price": 239.5408,
+      "premium": 227563.76,
+      "executed_at": "2026-04-10T17:04:02Z"
+    },
+    {
+      "ticker": "AMZN",
+      "size": 939,
+      "price": 237.7599,
+      "premium": 223256.5461,
+      "executed_at": "2026-04-10T17:03:48Z"
+    },
+    {
+      "ticker": "VZ",
+      "size": 4684,
+      "price": 46.23,
+      "premium": 216541.32,
+      "executed_at": "2026-04-10T17:03:53Z"
+    },
+    {
+      "ticker": "PLTR",
+      "size": 1700,
+      "price": 127.3299,
+      "premium": 216460.83,
+      "executed_at": "2026-04-10T17:04:02Z"
+    },
+    {
+      "ticker": "AMZN",
+      "size": 800,
+      "price": 237.75,
+      "premium": 190200.0,
+      "executed_at": "2026-04-10T17:04:00Z"
+    },
+    {
+      "ticker": "PLTR",
+      "size": 1375,
+      "price": 127.3099,
+      "premium": 175051.1125,
+      "executed_at": "2026-04-10T17:03:57Z"
+    },
+    {
+      "ticker": "NVDA",
+      "size": 900,
+      "price": 188.545,
+      "premium": 169690.5,
+      "executed_at": "2026-04-10T17:03:52Z"
+    },
+    {
+      "ticker": "META",
+      "size": 250,
+      "price": 627.27,
+      "premium": 156817.5,
+      "executed_at": "2026-04-10T17:03:58Z"
+    },
+    {
+      "ticker": "META",
+      "size": 230,
+      "price": 627.1801,
+      "premium": 144251.423,
+      "executed_at": "2026-04-10T17:03:57Z"
+    },
+    {
+      "ticker": "AMZN",
+      "size": 600,
+      "price": 237.785,
+      "premium": 142671.0,
+      "executed_at": "2026-04-10T17:04:04Z"
+    },
+    {
+      "ticker": "XOM",
+      "size": 900,
+      "price": 152.645,
+      "premium": 137380.5,
+      "executed_at": "2026-04-10T17:03:55Z"
+    },
+    {
+      "ticker": "MRK",
+      "size": 1049,
+      "price": 121.735,
+      "premium": 127700.015,
+      "executed_at": "2026-04-10T17:03:57Z"
+    },
+    {
+      "ticker": "PLTR",
+      "size": 1000,
+      "price": 127.295,
+      "premium": 127295.0,
+      "executed_at": "2026-04-10T17:03:51Z"
+    },
+    {
+      "ticker": "PLTR",
+      "size": 1000,
+      "price": 127.2901,
+      "premium": 127290.1,
+      "executed_at": "2026-04-10T17:03:51Z"
+    },
+    {
+      "ticker": "SGOV",
+      "size": 1250,
+      "price": 100.495,
+      "premium": 125618.75,
+      "executed_at": "2026-04-10T17:03:58Z"
+    },
+    {
+      "ticker": "AVGO",
+      "size": 325,
+      "price": 372.56,
+      "premium": 121082.0,
+      "executed_at": "2026-04-10T17:04:00Z"
+    },
+    {
+      "ticker": "AMZN",
+      "size": 500,
+      "price": 237.78,
+      "premium": 118890.0,
+      "executed_at": "2026-04-10T17:04:04Z"
+    },
+    {
+      "ticker": "AMZN",
+      "size": 500,
+      "price": 237.76,
+      "premium": 118880.0,
+      "executed_at": "2026-04-10T17:03:57Z"
+    },
+    {
+      "ticker": "META",
+      "size": 183,
+      "price": 627.17,
+      "premium": 114772.11,
+      "executed_at": "2026-04-10T17:03:56Z"
+    },
+    {
+      "ticker": "NVDA",
+      "size": 600,
+      "price": 188.5299,
+      "premium": 113117.94,
+      "executed_at": "2026-04-10T17:04:02Z"
+    },
+    {
+      "ticker": "NVDA",
+      "size": 600,
+      "price": 188.5199,
+      "premium": 113111.94,
+      "executed_at": "2026-04-10T17:03:59Z"
+    },
+    {
+      "ticker": "LOW",
+      "size": 457,
+      "price": 244.6332,
+      "premium": 111797.3724,
+      "executed_at": "2026-04-10T17:03:50Z"
+    },
+    {
+      "ticker": "AMZN",
+      "size": 432,
+      "price": 237.77,
+      "premium": 102716.64,
+      "executed_at": "2026-04-10T17:04:03Z"
+    },
+    {
+      "ticker": "PLTR",
+      "size": 800,
+      "price": 127.2801,
+      "premium": 101824.08,
+      "executed_at": "2026-04-10T17:03:51Z"
+    }
+  ],
   "market_volume": {
-    "call_volume": 13984253,
-    "put_volume": 10150663,
-    "cp_ratio": 1.38,
-    "call_premium": 7061612896.78,
-    "put_premium": 4014131971.33,
+    "call_volume": 24863356,
+    "put_volume": 19147564,
+    "cp_ratio": 1.3,
+    "call_premium": 12833616818.18,
+    "put_premium": 8211729112.54,
     "date": "2026-04-10"
   },
-  "signals": [],
+  "signals": [
+    {
+      "ticker": "CELH",
+      "type": "iv_high",
+      "message": "IV rank 81% \u2014 elevated volatility, options expensive"
+    },
+    {
+      "ticker": "DDOG",
+      "type": "iv_high",
+      "message": "IV rank 98% \u2014 elevated volatility, options expensive"
+    },
+    {
+      "ticker": "IBM",
+      "type": "iv_high",
+      "message": "IV rank 81% \u2014 elevated volatility, options expensive"
+    },
+    {
+      "ticker": "MSFT",
+      "type": "iv_high",
+      "message": "IV rank 94% \u2014 elevated volatility, options expensive"
+    },
+    {
+      "ticker": "NET",
+      "type": "iv_high",
+      "message": "IV rank 100% \u2014 elevated volatility, options expensive"
+    },
+    {
+      "ticker": "RTX",
+      "type": "iv_high",
+      "message": "IV rank 80% \u2014 elevated volatility, options expensive"
+    },
+    {
+      "ticker": "TWLO",
+      "type": "iv_high",
+      "message": "IV rank 87% \u2014 elevated volatility, options expensive"
+    },
+    {
+      "ticker": "VZ",
+      "type": "iv_high",
+      "message": "IV rank 92% \u2014 elevated volatility, options expensive"
+    },
+    {
+      "ticker": "AMZN",
+      "type": "max_pain_divergence",
+      "message": "Price 9.4% above max pain $217.5 (exp 2026-04-10)",
+      "max_pain": 217.5,
+      "close": 237.86,
+      "pct_diff": 9.4
+    },
+    {
+      "ticker": "ANET",
+      "type": "max_pain_divergence",
+      "message": "Price 12.6% above max pain $130.0 (exp 2026-04-10)",
+      "max_pain": 130.0,
+      "close": 146.34,
+      "pct_diff": 12.6
+    },
+    {
+      "ticker": "ARM",
+      "type": "max_pain_divergence",
+      "message": "Price 7.6% above max pain $140.0 (exp 2026-04-10)",
+      "max_pain": 140.0,
+      "close": 150.62,
+      "pct_diff": 7.6
+    },
+    {
+      "ticker": "AVGO",
+      "type": "max_pain_divergence",
+      "message": "Price 13.9% above max pain $327.5 (exp 2026-04-10)",
+      "max_pain": 327.5,
+      "close": 372.99,
+      "pct_diff": 13.9
+    },
+    {
+      "ticker": "BWXT",
+      "type": "max_pain_divergence",
+      "message": "Price 15.7% above max pain $200.0 (exp 2026-04-17)",
+      "max_pain": 200.0,
+      "close": 231.43,
+      "pct_diff": 15.7
+    },
+    {
+      "ticker": "CCJ",
+      "type": "max_pain_divergence",
+      "message": "Price 5.6% above max pain $110.0 (exp 2026-04-10)",
+      "max_pain": 110.0,
+      "close": 116.21,
+      "pct_diff": 5.6
+    },
+    {
+      "ticker": "CRM",
+      "type": "max_pain_divergence",
+      "message": "Price 7.0% below max pain $177.5 (exp 2026-04-10)",
+      "max_pain": 177.5,
+      "close": 165.0,
+      "pct_diff": -7.0
+    },
+    {
+      "ticker": "DDOG",
+      "type": "max_pain_divergence",
+      "message": "Price 10.6% below max pain $116.0 (exp 2026-04-10)",
+      "max_pain": 116.0,
+      "close": 103.75,
+      "pct_diff": -10.6
+    },
+    {
+      "ticker": "GD",
+      "type": "max_pain_divergence",
+      "message": "Price 6.1% below max pain $357.5 (exp 2026-04-10)",
+      "max_pain": 357.5,
+      "close": 335.8039,
+      "pct_diff": -6.1
+    },
+    {
+      "ticker": "GE",
+      "type": "max_pain_divergence",
+      "message": "Price 5.4% above max pain $292.5 (exp 2026-04-10)",
+      "max_pain": 292.5,
+      "close": 308.205,
+      "pct_diff": 5.4
+    },
+    {
+      "ticker": "GEV",
+      "type": "max_pain_divergence",
+      "message": "Price 10.2% above max pain $900.0 (exp 2026-04-10)",
+      "max_pain": 900.0,
+      "close": 992.2,
+      "pct_diff": 10.2
+    },
+    {
+      "ticker": "LMT",
+      "type": "max_pain_divergence",
+      "message": "Price 6.8% above max pain $580.0 (exp 2026-04-10)",
+      "max_pain": 580.0,
+      "close": 619.37,
+      "pct_diff": 6.8
+    },
+    {
+      "ticker": "NET",
+      "type": "max_pain_divergence",
+      "message": "Price 15.3% below max pain $200.0 (exp 2026-04-10)",
+      "max_pain": 200.0,
+      "close": 169.31,
+      "pct_diff": -15.3
+    },
+    {
+      "ticker": "NVDA",
+      "type": "max_pain_divergence",
+      "message": "Price 6.3% above max pain $177.5 (exp 2026-04-10)",
+      "max_pain": 177.5,
+      "close": 188.615,
+      "pct_diff": 6.3
+    },
+    {
+      "ticker": "PANW",
+      "type": "max_pain_divergence",
+      "message": "Price 6.1% below max pain $165.0 (exp 2026-04-10)",
+      "max_pain": 165.0,
+      "close": 154.94,
+      "pct_diff": -6.1
+    },
+    {
+      "ticker": "PLTR",
+      "type": "max_pain_divergence",
+      "message": "Price 5.5% below max pain $135.0 (exp 2026-04-10)",
+      "max_pain": 135.0,
+      "close": 127.51,
+      "pct_diff": -5.5
+    },
+    {
+      "ticker": "ROKU",
+      "type": "max_pain_divergence",
+      "message": "Price 6.0% above max pain $95.0 (exp 2026-04-10)",
+      "max_pain": 95.0,
+      "close": 100.74,
+      "pct_diff": 6.0
+    },
+    {
+      "ticker": "SGOV",
+      "type": "max_pain_divergence",
+      "message": "Price 12.9% above max pain $89.0 (exp 2026-04-17)",
+      "max_pain": 89.0,
+      "close": 100.495,
+      "pct_diff": 12.9
+    },
+    {
+      "ticker": "TRGP",
+      "type": "max_pain_divergence",
+      "message": "Price 10.5% above max pain $220.0 (exp 2026-04-17)",
+      "max_pain": 220.0,
+      "close": 243.02,
+      "pct_diff": 10.5
+    },
+    {
+      "ticker": "TWLO",
+      "type": "max_pain_divergence",
+      "message": "Price 7.9% below max pain $129.0 (exp 2026-04-10)",
+      "max_pain": 129.0,
+      "close": 118.815,
+      "pct_diff": -7.9
+    },
+    {
+      "ticker": "WFC",
+      "type": "max_pain_divergence",
+      "message": "Price 6.7% above max pain $80.0 (exp 2026-04-10)",
+      "max_pain": 80.0,
+      "close": 85.365,
+      "pct_diff": 6.7
+    },
+    {
+      "ticker": "KMI",
+      "type": "bearish_flow",
+      "message": "Bearish premium 3.6x bullish \u2014 smart money distributing"
+    },
+    {
+      "ticker": "PM",
+      "type": "bullish_flow",
+      "message": "Bullish premium 2.3x bearish \u2014 smart money accumulating"
+    },
+    {
+      "ticker": "SGOV",
+      "type": "bearish_flow",
+      "message": "Bearish premium 2.1x bullish \u2014 smart money distributing"
+    },
+    {
+      "ticker": "SHOP",
+      "type": "bearish_flow",
+      "message": "Bearish premium 2.2x bullish \u2014 smart money distributing"
+    },
+    {
+      "ticker": "TXT",
+      "type": "bullish_flow",
+      "message": "Bullish premium 4.2x bearish \u2014 smart money accumulating"
+    }
+  ],
+  "flow_alerts": {
+    "ABBV": [
+      {
+        "ticker": "ABBV",
+        "type": "put",
+        "premium": "94635",
+        "size": 112,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "ABBV",
+        "type": "call",
+        "premium": "57330",
+        "size": 147,
+        "strike": 0,
+        "expiry": "2026-06-18",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "ABBV",
+        "type": "put",
+        "premium": "64260",
+        "size": 42,
+        "strike": 0,
+        "expiry": "2026-08-21",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "ABBV",
+        "type": "put",
+        "premium": "61645",
+        "size": 134,
+        "strike": 0,
+        "expiry": "2026-04-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "ABBV",
+        "type": "put",
+        "premium": "52315",
+        "size": 27,
+        "strike": 0,
+        "expiry": "2026-11-20",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "ABBV",
+        "type": "put",
+        "premium": "61560",
+        "size": 54,
+        "strike": 0,
+        "expiry": "2026-08-21",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "ABBV",
+        "type": "call",
+        "premium": "71225",
+        "size": 185,
+        "strike": 0,
+        "expiry": "2026-06-18",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "ABBV",
+        "type": "call",
+        "premium": "134900",
+        "size": 71,
+        "strike": 0,
+        "expiry": "2026-10-16",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "ABBV",
+        "type": "call",
+        "premium": "66188",
+        "size": 100,
+        "strike": 0,
+        "expiry": "2027-01-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "ABBV",
+        "type": "call",
+        "premium": "72800",
+        "size": 112,
+        "strike": 0,
+        "expiry": "2026-12-18",
+        "sentiment": "",
+        "executed_at": ""
+      }
+    ],
+    "AFRM": [
+      {
+        "ticker": "AFRM",
+        "type": "call",
+        "premium": "100891",
+        "size": 855,
+        "strike": 0,
+        "expiry": "2026-04-10",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "AFRM",
+        "type": "put",
+        "premium": "74336",
+        "size": 404,
+        "strike": 0,
+        "expiry": "2026-06-18",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "AFRM",
+        "type": "call",
+        "premium": "94300",
+        "size": 170,
+        "strike": 0,
+        "expiry": "2027-01-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "AFRM",
+        "type": "call",
+        "premium": "134937",
+        "size": 517,
+        "strike": 0,
+        "expiry": "2026-06-18",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "AFRM",
+        "type": "put",
+        "premium": "80223",
+        "size": 429,
+        "strike": 0,
+        "expiry": "2026-04-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "AFRM",
+        "type": "call",
+        "premium": "228092",
+        "size": 1907,
+        "strike": 0,
+        "expiry": "2026-04-10",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "AFRM",
+        "type": "call",
+        "premium": "57921",
+        "size": 449,
+        "strike": 0,
+        "expiry": "2026-04-10",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "AFRM",
+        "type": "put",
+        "premium": "159250",
+        "size": 325,
+        "strike": 0,
+        "expiry": "2026-09-18",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "AFRM",
+        "type": "call",
+        "premium": "66960",
+        "size": 432,
+        "strike": 0,
+        "expiry": "2026-04-24",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "AFRM",
+        "type": "call",
+        "premium": "53252",
+        "size": 208,
+        "strike": 0,
+        "expiry": "2026-04-17",
+        "sentiment": "",
+        "executed_at": ""
+      }
+    ],
+    "AMZN": [
+      {
+        "ticker": "AMZN",
+        "type": "call",
+        "premium": "503100",
+        "size": 430,
+        "strike": 0,
+        "expiry": "2026-09-18",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "AMZN",
+        "type": "call",
+        "premium": "112650",
+        "size": 30,
+        "strike": 0,
+        "expiry": "2027-06-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "AMZN",
+        "type": "call",
+        "premium": "161465",
+        "size": 43,
+        "strike": 0,
+        "expiry": "2027-06-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "AMZN",
+        "type": "call",
+        "premium": "282301",
+        "size": 415,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "AMZN",
+        "type": "call",
+        "premium": "308848",
+        "size": 58,
+        "strike": 0,
+        "expiry": "2028-12-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "AMZN",
+        "type": "call",
+        "premium": "952280",
+        "size": 179,
+        "strike": 0,
+        "expiry": "2028-12-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "AMZN",
+        "type": "put",
+        "premium": "441298",
+        "size": 1543,
+        "strike": 0,
+        "expiry": "2026-04-24",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "AMZN",
+        "type": "call",
+        "premium": "149500",
+        "size": 50,
+        "strike": 0,
+        "expiry": "2027-06-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "AMZN",
+        "type": "put",
+        "premium": "196250",
+        "size": 314,
+        "strike": 0,
+        "expiry": "2026-07-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "AMZN",
+        "type": "put",
+        "premium": "240435",
+        "size": 411,
+        "strike": 0,
+        "expiry": "2026-06-18",
+        "sentiment": "",
+        "executed_at": ""
+      }
+    ],
+    "ANET": [
+      {
+        "ticker": "ANET",
+        "type": "put",
+        "premium": "168960",
+        "size": 384,
+        "strike": 0,
+        "expiry": "2026-04-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "ANET",
+        "type": "put",
+        "premium": "176231",
+        "size": 235,
+        "strike": 0,
+        "expiry": "2026-05-01",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "ANET",
+        "type": "call",
+        "premium": "85500",
+        "size": 57,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "ANET",
+        "type": "call",
+        "premium": "91960",
+        "size": 76,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "ANET",
+        "type": "call",
+        "premium": "224645",
+        "size": 251,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "ANET",
+        "type": "put",
+        "premium": "109974",
+        "size": 250,
+        "strike": 0,
+        "expiry": "2026-04-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "ANET",
+        "type": "call",
+        "premium": "183599",
+        "size": 272,
+        "strike": 0,
+        "expiry": "2026-06-18",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "ANET",
+        "type": "call",
+        "premium": "322650",
+        "size": 478,
+        "strike": 0,
+        "expiry": "2026-06-18",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "ANET",
+        "type": "call",
+        "premium": "99660",
+        "size": 151,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "ANET",
+        "type": "call",
+        "premium": "267000",
+        "size": 890,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      }
+    ],
+    "ARM": [
+      {
+        "ticker": "ARM",
+        "type": "call",
+        "premium": "134135",
+        "size": 193,
+        "strike": 0,
+        "expiry": "2026-09-18",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "ARM",
+        "type": "put",
+        "premium": "93226",
+        "size": 113,
+        "strike": 0,
+        "expiry": "2026-05-01",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "ARM",
+        "type": "call",
+        "premium": "624357",
+        "size": 892,
+        "strike": 0,
+        "expiry": "2026-04-24",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "ARM",
+        "type": "put",
+        "premium": "673540",
+        "size": 476,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "ARM",
+        "type": "call",
+        "premium": "52311",
+        "size": 21,
+        "strike": 0,
+        "expiry": "2026-06-18",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "ARM",
+        "type": "put",
+        "premium": "52805",
+        "size": 50,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "ARM",
+        "type": "call",
+        "premium": "62042",
+        "size": 463,
+        "strike": 0,
+        "expiry": "2026-04-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "ARM",
+        "type": "put",
+        "premium": "109296",
+        "size": 792,
+        "strike": 0,
+        "expiry": "2026-04-10",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "ARM",
+        "type": "call",
+        "premium": "104000",
+        "size": 100,
+        "strike": 0,
+        "expiry": "2026-04-24",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "ARM",
+        "type": "call",
+        "premium": "89700",
+        "size": 260,
+        "strike": 0,
+        "expiry": "2026-04-17",
+        "sentiment": "",
+        "executed_at": ""
+      }
+    ],
+    "AVGO": [
+      {
+        "ticker": "AVGO",
+        "type": "call",
+        "premium": "112920",
+        "size": 23,
+        "strike": 0,
+        "expiry": "2026-12-18",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "AVGO",
+        "type": "put",
+        "premium": "2857565",
+        "size": 816,
+        "strike": 0,
+        "expiry": "2027-01-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "AVGO",
+        "type": "call",
+        "premium": "1772285",
+        "size": 816,
+        "strike": 0,
+        "expiry": "2026-06-18",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "AVGO",
+        "type": "put",
+        "premium": "3712732",
+        "size": 816,
+        "strike": 0,
+        "expiry": "2026-12-18",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "AVGO",
+        "type": "call",
+        "premium": "133860",
+        "size": 49,
+        "strike": 0,
+        "expiry": "2026-04-24",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "AVGO",
+        "type": "call",
+        "premium": "1008000",
+        "size": 1008,
+        "strike": 0,
+        "expiry": "2026-04-24",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "AVGO",
+        "type": "put",
+        "premium": "486661",
+        "size": 317,
+        "strike": 0,
+        "expiry": "2026-07-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "AVGO",
+        "type": "put",
+        "premium": "160504",
+        "size": 150,
+        "strike": 0,
+        "expiry": "2026-07-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "AVGO",
+        "type": "put",
+        "premium": "275505",
+        "size": 58,
+        "strike": 0,
+        "expiry": "2027-03-19",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "AVGO",
+        "type": "call",
+        "premium": "150000",
+        "size": 250,
+        "strike": 0,
+        "expiry": "2026-04-17",
+        "sentiment": "",
+        "executed_at": ""
+      }
+    ],
+    "BAC": [
+      {
+        "ticker": "BAC",
+        "type": "call",
+        "premium": "124200",
+        "size": 345,
+        "strike": 0,
+        "expiry": "2026-04-10",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "BAC",
+        "type": "call",
+        "premium": "318652",
+        "size": 3886,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "BAC",
+        "type": "call",
+        "premium": "140603",
+        "size": 3125,
+        "strike": 0,
+        "expiry": "2026-04-10",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "BAC",
+        "type": "call",
+        "premium": "52076",
+        "size": 1108,
+        "strike": 0,
+        "expiry": "2026-04-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "BAC",
+        "type": "put",
+        "premium": "62456",
+        "size": 488,
+        "strike": 0,
+        "expiry": "2026-04-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "BAC",
+        "type": "put",
+        "premium": "118580",
+        "size": 196,
+        "strike": 0,
+        "expiry": "2028-01-21",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "BAC",
+        "type": "call",
+        "premium": "90720",
+        "size": 126,
+        "strike": 0,
+        "expiry": "2027-01-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "BAC",
+        "type": "call",
+        "premium": "93090",
+        "size": 214,
+        "strike": 0,
+        "expiry": "2026-06-18",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "BAC",
+        "type": "call",
+        "premium": "72720",
+        "size": 360,
+        "strike": 0,
+        "expiry": "2026-07-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "BAC",
+        "type": "call",
+        "premium": "559668",
+        "size": 3092,
+        "strike": 0,
+        "expiry": "2026-04-24",
+        "sentiment": "",
+        "executed_at": ""
+      }
+    ],
+    "BWXT": [
+      {
+        "ticker": "BWXT",
+        "type": "call",
+        "premium": "150480",
+        "size": 99,
+        "strike": 0,
+        "expiry": "2026-08-21",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "BWXT",
+        "type": "call",
+        "premium": "131209",
+        "size": 146,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "BWXT",
+        "type": "call",
+        "premium": "66940",
+        "size": 19,
+        "strike": 0,
+        "expiry": "2028-01-21",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "BWXT",
+        "type": "call",
+        "premium": "59840",
+        "size": 17,
+        "strike": 0,
+        "expiry": "2028-01-21",
+        "sentiment": "",
+        "executed_at": ""
+      }
+    ],
+    "CCJ": [
+      {
+        "ticker": "CCJ",
+        "type": "put",
+        "premium": "515060",
+        "size": 566,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "CCJ",
+        "type": "put",
+        "premium": "1395000",
+        "size": 15000,
+        "strike": 0,
+        "expiry": "2026-05-22",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "CCJ",
+        "type": "call",
+        "premium": "773300",
+        "size": 209,
+        "strike": 0,
+        "expiry": "2028-01-21",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "CCJ",
+        "type": "put",
+        "premium": "85880",
+        "size": 760,
+        "strike": 0,
+        "expiry": "2026-06-18",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "CCJ",
+        "type": "call",
+        "premium": "223060",
+        "size": 587,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "CCJ",
+        "type": "put",
+        "premium": "653578",
+        "size": 2351,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "CCJ",
+        "type": "put",
+        "premium": "210000",
+        "size": 3750,
+        "strike": 0,
+        "expiry": "2026-05-08",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "CCJ",
+        "type": "call",
+        "premium": "140075",
+        "size": 200,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "CCJ",
+        "type": "call",
+        "premium": "454980",
+        "size": 650,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "CCJ",
+        "type": "put",
+        "premium": "60775",
+        "size": 118,
+        "strike": 0,
+        "expiry": "2026-04-24",
+        "sentiment": "",
+        "executed_at": ""
+      }
+    ],
+    "CELH": [
+      {
+        "ticker": "CELH",
+        "type": "call",
+        "premium": "58776",
+        "size": 700,
+        "strike": 0,
+        "expiry": "2026-04-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "CELH",
+        "type": "put",
+        "premium": "110725",
+        "size": 215,
+        "strike": 0,
+        "expiry": "2026-07-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "CELH",
+        "type": "call",
+        "premium": "62025",
+        "size": 180,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "CELH",
+        "type": "call",
+        "premium": "719800",
+        "size": 5900,
+        "strike": 0,
+        "expiry": "2026-06-18",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "CELH",
+        "type": "call",
+        "premium": "55384",
+        "size": 301,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "CELH",
+        "type": "call",
+        "premium": "82542",
+        "size": 454,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "CELH",
+        "type": "put",
+        "premium": "230700",
+        "size": 769,
+        "strike": 0,
+        "expiry": "2026-06-18",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "CELH",
+        "type": "call",
+        "premium": "59570",
+        "size": 46,
+        "strike": 0,
+        "expiry": "2028-01-21",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "CELH",
+        "type": "call",
+        "premium": "56170",
+        "size": 137,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "CELH",
+        "type": "put",
+        "premium": "80080",
+        "size": 104,
+        "strike": 0,
+        "expiry": "2026-12-18",
+        "sentiment": "",
+        "executed_at": ""
+      }
+    ],
+    "CRM": [
+      {
+        "ticker": "CRM",
+        "type": "put",
+        "premium": "79170",
+        "size": 39,
+        "strike": 0,
+        "expiry": "2026-07-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "CRM",
+        "type": "call",
+        "premium": "56350",
+        "size": 35,
+        "strike": 0,
+        "expiry": "2026-09-18",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "CRM",
+        "type": "call",
+        "premium": "58100",
+        "size": 140,
+        "strike": 0,
+        "expiry": "2026-07-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "CRM",
+        "type": "put",
+        "premium": "55125",
+        "size": 21,
+        "strike": 0,
+        "expiry": "2027-03-19",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "CRM",
+        "type": "put",
+        "premium": "81600",
+        "size": 40,
+        "strike": 0,
+        "expiry": "2026-12-18",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "CRM",
+        "type": "call",
+        "premium": "111496",
+        "size": 616,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "CRM",
+        "type": "call",
+        "premium": "67735",
+        "size": 31,
+        "strike": 0,
+        "expiry": "2026-12-18",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "CRM",
+        "type": "call",
+        "premium": "102950",
+        "size": 2059,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "CRM",
+        "type": "call",
+        "premium": "154320",
+        "size": 203,
+        "strike": 0,
+        "expiry": "2026-06-18",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "CRM",
+        "type": "call",
+        "premium": "116500",
+        "size": 100,
+        "strike": 0,
+        "expiry": "2026-06-18",
+        "sentiment": "",
+        "executed_at": ""
+      }
+    ],
+    "DDOG": [
+      {
+        "ticker": "DDOG",
+        "type": "put",
+        "premium": "56170",
+        "size": 137,
+        "strike": 0,
+        "expiry": "2026-04-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "DDOG",
+        "type": "put",
+        "premium": "54600",
+        "size": 133,
+        "strike": 0,
+        "expiry": "2026-04-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "DDOG",
+        "type": "put",
+        "premium": "56025",
+        "size": 135,
+        "strike": 0,
+        "expiry": "2026-04-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "DDOG",
+        "type": "put",
+        "premium": "97445",
+        "size": 234,
+        "strike": 0,
+        "expiry": "2026-04-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "DDOG",
+        "type": "call",
+        "premium": "72003",
+        "size": 70,
+        "strike": 0,
+        "expiry": "2027-01-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "DDOG",
+        "type": "call",
+        "premium": "70484",
+        "size": 100,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "DDOG",
+        "type": "put",
+        "premium": "133083",
+        "size": 837,
+        "strike": 0,
+        "expiry": "2026-04-10",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "DDOG",
+        "type": "call",
+        "premium": "51296",
+        "size": 40,
+        "strike": 0,
+        "expiry": "2026-10-16",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "DDOG",
+        "type": "call",
+        "premium": "57857",
+        "size": 25,
+        "strike": 0,
+        "expiry": "2028-01-21",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "DDOG",
+        "type": "put",
+        "premium": "60900",
+        "size": 29,
+        "strike": 0,
+        "expiry": "2026-12-18",
+        "sentiment": "",
+        "executed_at": ""
+      }
+    ],
+    "EPD": [
+      {
+        "ticker": "EPD",
+        "type": "call",
+        "premium": "89579",
+        "size": 560,
+        "strike": 0,
+        "expiry": "2026-06-18",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "EPD",
+        "type": "call",
+        "premium": "273955",
+        "size": 3223,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "EPD",
+        "type": "call",
+        "premium": "51903",
+        "size": 179,
+        "strike": 0,
+        "expiry": "2026-04-10",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "EPD",
+        "type": "call",
+        "premium": "83271",
+        "size": 677,
+        "strike": 0,
+        "expiry": "2026-04-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "EPD",
+        "type": "call",
+        "premium": "92800",
+        "size": 400,
+        "strike": 0,
+        "expiry": "2026-06-18",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "EPD",
+        "type": "call",
+        "premium": "58001",
+        "size": 250,
+        "strike": 0,
+        "expiry": "2026-04-10",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "EPD",
+        "type": "call",
+        "premium": "53912",
+        "size": 453,
+        "strike": 0,
+        "expiry": "2026-06-18",
+        "sentiment": "",
+        "executed_at": ""
+      }
+    ],
+    "GD": [
+      {
+        "ticker": "GD",
+        "type": "call",
+        "premium": "66418",
+        "size": 81,
+        "strike": 0,
+        "expiry": "2026-09-18",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "GD",
+        "type": "call",
+        "premium": "79381",
+        "size": 147,
+        "strike": 0,
+        "expiry": "2026-04-10",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "GD",
+        "type": "put",
+        "premium": "71340",
+        "size": 87,
+        "strike": 0,
+        "expiry": "2026-04-10",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "GD",
+        "type": "put",
+        "premium": "69600",
+        "size": 116,
+        "strike": 0,
+        "expiry": "2026-04-17",
+        "sentiment": "",
+        "executed_at": ""
+      }
+    ],
+    "GE": [
+      {
+        "ticker": "GE",
+        "type": "put",
+        "premium": "56650",
+        "size": 227,
+        "strike": 0,
+        "expiry": "2026-04-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "GE",
+        "type": "call",
+        "premium": "250040",
+        "size": 329,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "GE",
+        "type": "put",
+        "premium": "161090",
+        "size": 89,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "GE",
+        "type": "call",
+        "premium": "117455",
+        "size": 695,
+        "strike": 0,
+        "expiry": "2026-04-24",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "GE",
+        "type": "put",
+        "premium": "68792",
+        "size": 49,
+        "strike": 0,
+        "expiry": "2026-09-18",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "GE",
+        "type": "call",
+        "premium": "57236",
+        "size": 54,
+        "strike": 0,
+        "expiry": "2026-09-18",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "GE",
+        "type": "call",
+        "premium": "62520",
+        "size": 140,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "GE",
+        "type": "put",
+        "premium": "144100",
+        "size": 131,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "GE",
+        "type": "call",
+        "premium": "168990",
+        "size": 86,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "GE",
+        "type": "call",
+        "premium": "64900",
+        "size": 15,
+        "strike": 0,
+        "expiry": "2026-09-18",
+        "sentiment": "",
+        "executed_at": ""
+      }
+    ],
+    "GEV": [
+      {
+        "ticker": "GEV",
+        "type": "put",
+        "premium": "197995",
+        "size": 120,
+        "strike": 0,
+        "expiry": "2026-04-24",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "GEV",
+        "type": "put",
+        "premium": "287976",
+        "size": 128,
+        "strike": 0,
+        "expiry": "2026-04-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "GEV",
+        "type": "call",
+        "premium": "60000",
+        "size": 6,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "GEV",
+        "type": "call",
+        "premium": "57420",
+        "size": 6,
+        "strike": 0,
+        "expiry": "2026-04-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "GEV",
+        "type": "put",
+        "premium": "734440",
+        "size": 122,
+        "strike": 0,
+        "expiry": "2026-05-08",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "GEV",
+        "type": "put",
+        "premium": "93450",
+        "size": 10,
+        "strike": 0,
+        "expiry": "2026-10-16",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "GEV",
+        "type": "put",
+        "premium": "294244",
+        "size": 300,
+        "strike": 0,
+        "expiry": "2026-04-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "GEV",
+        "type": "call",
+        "premium": "395730",
+        "size": 37,
+        "strike": 0,
+        "expiry": "2026-07-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "GEV",
+        "type": "put",
+        "premium": "111340",
+        "size": 12,
+        "strike": 0,
+        "expiry": "2026-10-16",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "GEV",
+        "type": "put",
+        "premium": "771570",
+        "size": 148,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      }
+    ],
+    "GOOGL": [
+      {
+        "ticker": "GOOGL",
+        "type": "put",
+        "premium": "2880730",
+        "size": 1063,
+        "strike": 0,
+        "expiry": "2026-07-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "GOOGL",
+        "type": "put",
+        "premium": "112010",
+        "size": 974,
+        "strike": 0,
+        "expiry": "2026-04-10",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "GOOGL",
+        "type": "call",
+        "premium": "122674",
+        "size": 55,
+        "strike": 0,
+        "expiry": "2026-10-16",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "GOOGL",
+        "type": "call",
+        "premium": "202958",
+        "size": 198,
+        "strike": 0,
+        "expiry": "2026-07-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "GOOGL",
+        "type": "call",
+        "premium": "1327518",
+        "size": 1500,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "GOOGL",
+        "type": "call",
+        "premium": "1340865",
+        "size": 1501,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "GOOGL",
+        "type": "call",
+        "premium": "127650",
+        "size": 345,
+        "strike": 0,
+        "expiry": "2026-04-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "GOOGL",
+        "type": "put",
+        "premium": "549375",
+        "size": 375,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "GOOGL",
+        "type": "put",
+        "premium": "150429",
+        "size": 185,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "GOOGL",
+        "type": "put",
+        "premium": "328760",
+        "size": 234,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      }
+    ],
+    "IBM": [
+      {
+        "ticker": "IBM",
+        "type": "put",
+        "premium": "62390",
+        "size": 34,
+        "strike": 0,
+        "expiry": "2026-07-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "IBM",
+        "type": "call",
+        "premium": "246612",
+        "size": 1497,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "IBM",
+        "type": "put",
+        "premium": "53040",
+        "size": 136,
+        "strike": 0,
+        "expiry": "2026-05-08",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "IBM",
+        "type": "put",
+        "premium": "321030",
+        "size": 738,
+        "strike": 0,
+        "expiry": "2026-04-24",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "IBM",
+        "type": "call",
+        "premium": "96000",
+        "size": 341,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "IBM",
+        "type": "call",
+        "premium": "86685",
+        "size": 225,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "IBM",
+        "type": "call",
+        "premium": "302000",
+        "size": 604,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "IBM",
+        "type": "call",
+        "premium": "65370",
+        "size": 27,
+        "strike": 0,
+        "expiry": "2026-08-21",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "IBM",
+        "type": "put",
+        "premium": "108474",
+        "size": 71,
+        "strike": 0,
+        "expiry": "2026-06-18",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "IBM",
+        "type": "put",
+        "premium": "89290",
+        "size": 53,
+        "strike": 0,
+        "expiry": "2027-01-15",
+        "sentiment": "",
+        "executed_at": ""
+      }
+    ],
+    "JNJ": [
+      {
+        "ticker": "JNJ",
+        "type": "call",
+        "premium": "839981",
+        "size": 509,
+        "strike": 0,
+        "expiry": "2027-01-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "JNJ",
+        "type": "put",
+        "premium": "826648",
+        "size": 405,
+        "strike": 0,
+        "expiry": "2027-01-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "JNJ",
+        "type": "call",
+        "premium": "144770",
+        "size": 144,
+        "strike": 0,
+        "expiry": "2026-07-17",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "JNJ",
+        "type": "call",
+        "premium": "929360",
+        "size": 501,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "JNJ",
+        "type": "call",
+        "premium": "165890",
+        "size": 160,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "JNJ",
+        "type": "call",
+        "premium": "378910",
+        "size": 250,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "JNJ",
+        "type": "put",
+        "premium": "305125",
+        "size": 339,
+        "strike": 0,
+        "expiry": "2026-06-18",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "JNJ",
+        "type": "put",
+        "premium": "124440",
+        "size": 136,
+        "strike": 0,
+        "expiry": "2026-06-18",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "JNJ",
+        "type": "put",
+        "premium": "102845",
+        "size": 113,
+        "strike": 0,
+        "expiry": "2026-06-18",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "JNJ",
+        "type": "call",
+        "premium": "594346",
+        "size": 331,
+        "strike": 0,
+        "expiry": "2026-07-17",
+        "sentiment": "",
+        "executed_at": ""
+      }
+    ],
+    "JPM": [
+      {
+        "ticker": "JPM",
+        "type": "call",
+        "premium": "100500",
+        "size": 150,
+        "strike": 0,
+        "expiry": "2026-04-10",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "JPM",
+        "type": "call",
+        "premium": "150696",
+        "size": 552,
+        "strike": 0,
+        "expiry": "2026-05-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "JPM",
+        "type": "call",
+        "premium": "165115",
+        "size": 79,
+        "strike": 0,
+        "expiry": "2026-08-21",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "JPM",
+        "type": "put",
+        "premium": "303755",
+        "size": 79,
+        "strike": 0,
+        "expiry": "2028-01-21",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "JPM",
+        "type": "put",
+        "premium": "177500",
+        "size": 50,
+        "strike": 0,
+        "expiry": "2028-01-21",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "JPM",
+        "type": "put",
+        "premium": "215600",
+        "size": 77,
+        "strike": 0,
+        "expiry": "2027-01-15",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "JPM",
+        "type": "call",
+        "premium": "126000",
+        "size": 120,
+        "strike": 0,
+        "expiry": "2026-04-10",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "JPM",
+        "type": "put",
+        "premium": "198405",
+        "size": 320,
+        "strike": 0,
+        "expiry": "2026-04-24",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "JPM",
+        "type": "put",
+        "premium": "107286",
+        "size": 43,
+        "strike": 0,
+        "expiry": "2028-01-21",
+        "sentiment": "",
+        "executed_at": ""
+      },
+      {
+        "ticker": "JPM",
+        "type": "put",
+        "premium": "313719",
+        "size": 246,
+        "strike": 0,
+        "expiry": "2027-01-15",
+        "sentiment": "",
+        "executed_at": ""
+      }
+    ]
+  },
   "market_tide": {
-    "timestamp": "2026-04-10T11:03:00-04:00",
-    "net_call_premium": "178712016.5000",
-    "net_put_premium": "3301379.0000",
+    "timestamp": "2026-04-10T13:04:00-04:00",
+    "net_call_premium": "111922647.5000",
+    "net_put_premium": "53223057.0000",
     "call_volume": 0,
     "put_volume": 0,
     "entries": [
       {
-        "timestamp": "2026-04-10T10:52:00-04:00",
+        "timestamp": "2026-04-10T12:53:00-04:00",
         "date": "2026-04-10",
-        "net_call_premium": "143363512.5000",
-        "net_put_premium": "1701340.0000",
-        "net_volume": 502427
+        "net_call_premium": "106001012.5000",
+        "net_put_premium": "50441805.0000",
+        "net_volume": 235377
       },
       {
-        "timestamp": "2026-04-10T10:53:00-04:00",
+        "timestamp": "2026-04-10T12:54:00-04:00",
         "date": "2026-04-10",
-        "net_call_premium": "148243891.5000",
-        "net_put_premium": "2443967.0000",
-        "net_volume": 512717
+        "net_call_premium": "105403880.5000",
+        "net_put_premium": "53040655.0000",
+        "net_volume": 240028
       },
       {
-        "timestamp": "2026-04-10T10:54:00-04:00",
+        "timestamp": "2026-04-10T12:55:00-04:00",
         "date": "2026-04-10",
-        "net_call_premium": "149501290.5000",
-        "net_put_premium": "6655530.0000",
-        "net_volume": 492083
+        "net_call_premium": "104122627.5000",
+        "net_put_premium": "52300585.0000",
+        "net_volume": 244610
       },
       {
-        "timestamp": "2026-04-10T10:55:00-04:00",
+        "timestamp": "2026-04-10T12:56:00-04:00",
         "date": "2026-04-10",
-        "net_call_premium": "156194818.5000",
-        "net_put_premium": "8718146.0000",
-        "net_volume": 571215
+        "net_call_premium": "100538091.5000",
+        "net_put_premium": "52515678.0000",
+        "net_volume": 240907
       },
       {
-        "timestamp": "2026-04-10T10:56:00-04:00",
+        "timestamp": "2026-04-10T12:57:00-04:00",
         "date": "2026-04-10",
-        "net_call_premium": "159261428.5000",
-        "net_put_premium": "7345111.0000",
-        "net_volume": 586776
+        "net_call_premium": "102383740.5000",
+        "net_put_premium": "51790144.0000",
+        "net_volume": 252303
       },
       {
-        "timestamp": "2026-04-10T10:57:00-04:00",
+        "timestamp": "2026-04-10T12:58:00-04:00",
         "date": "2026-04-10",
-        "net_call_premium": "165331619.5000",
-        "net_put_premium": "6291611.0000",
-        "net_volume": 613762
+        "net_call_premium": "100622236.5000",
+        "net_put_premium": "50949091.0000",
+        "net_volume": 225112
       },
       {
-        "timestamp": "2026-04-10T10:58:00-04:00",
+        "timestamp": "2026-04-10T12:59:00-04:00",
         "date": "2026-04-10",
-        "net_call_premium": "169280336.5000",
-        "net_put_premium": "5697976.0000",
-        "net_volume": 628539
+        "net_call_premium": "106574166.5000",
+        "net_put_premium": "51333183.0000",
+        "net_volume": 327741
       },
       {
-        "timestamp": "2026-04-10T10:59:00-04:00",
+        "timestamp": "2026-04-10T13:00:00-04:00",
         "date": "2026-04-10",
-        "net_call_premium": "171423562.5000",
-        "net_put_premium": "4855919.0000",
-        "net_volume": 625271
+        "net_call_premium": "108724530.5000",
+        "net_put_premium": "52073680.0000",
+        "net_volume": 323721
       },
       {
-        "timestamp": "2026-04-10T11:00:00-04:00",
+        "timestamp": "2026-04-10T13:01:00-04:00",
         "date": "2026-04-10",
-        "net_call_premium": "176988503.5000",
-        "net_put_premium": "4298419.0000",
-        "net_volume": 631129
+        "net_call_premium": "110831964.5000",
+        "net_put_premium": "51676660.0000",
+        "net_volume": 336663
       },
       {
-        "timestamp": "2026-04-10T11:01:00-04:00",
+        "timestamp": "2026-04-10T13:02:00-04:00",
         "date": "2026-04-10",
-        "net_call_premium": "177367097.5000",
-        "net_put_premium": "2867163.0000",
-        "net_volume": 632983
+        "net_call_premium": "111717982.5000",
+        "net_put_premium": "51645989.0000",
+        "net_volume": 323117
       },
       {
-        "timestamp": "2026-04-10T11:02:00-04:00",
+        "timestamp": "2026-04-10T13:03:00-04:00",
         "date": "2026-04-10",
-        "net_call_premium": "179388976.5000",
-        "net_put_premium": "2391925.0000",
-        "net_volume": 664153
+        "net_call_premium": "113233828.5000",
+        "net_put_premium": "52778318.0000",
+        "net_volume": 323894
       },
       {
-        "timestamp": "2026-04-10T11:03:00-04:00",
+        "timestamp": "2026-04-10T13:04:00-04:00",
         "date": "2026-04-10",
-        "net_call_premium": "178712016.5000",
-        "net_put_premium": "3301379.0000",
-        "net_volume": 665327
+        "net_call_premium": "111922647.5000",
+        "net_put_premium": "53223057.0000",
+        "net_volume": 321071
+      }
+    ]
+  },
+  "gex": {
+    "AFRM": [
+      {
+        "strike": "17.5",
+        "call_gamma": "299.46",
+        "put_gamma": "-26037.4",
+        "net_gamma": -25737.940000000002
+      },
+      {
+        "strike": "20",
+        "call_gamma": "489.19",
+        "put_gamma": "-1513.01",
+        "net_gamma": -1023.8199999999999
+      },
+      {
+        "strike": "22.5",
+        "call_gamma": "1055.42",
+        "put_gamma": "-4617.36",
+        "net_gamma": -3561.9399999999996
+      },
+      {
+        "strike": "25",
+        "call_gamma": "3033.65",
+        "put_gamma": "-36555.28",
+        "net_gamma": -33521.63
+      },
+      {
+        "strike": "27.5",
+        "call_gamma": "2117.83",
+        "put_gamma": "-20456.25",
+        "net_gamma": -18338.42
+      },
+      {
+        "strike": "30",
+        "call_gamma": "13398.64",
+        "put_gamma": "-55992.56",
+        "net_gamma": -42593.92
+      },
+      {
+        "strike": "32",
+        "call_gamma": "0",
+        "put_gamma": "0",
+        "net_gamma": 0.0
+      },
+      {
+        "strike": "32.5",
+        "call_gamma": "7886.77",
+        "put_gamma": "-113888.41",
+        "net_gamma": -106001.64
+      },
+      {
+        "strike": "33",
+        "call_gamma": "0",
+        "put_gamma": "0",
+        "net_gamma": 0.0
+      },
+      {
+        "strike": "33.5",
+        "call_gamma": "0",
+        "put_gamma": "0",
+        "net_gamma": 0.0
+      },
+      {
+        "strike": "34",
+        "call_gamma": "78.06",
+        "put_gamma": "0",
+        "net_gamma": 78.06
+      },
+      {
+        "strike": "34.5",
+        "call_gamma": "0",
+        "put_gamma": "0",
+        "net_gamma": 0.0
+      },
+      {
+        "strike": "35",
+        "call_gamma": "11314.2",
+        "put_gamma": "-226710.98",
+        "net_gamma": -215396.78
+      },
+      {
+        "strike": "35.5",
+        "call_gamma": "0",
+        "put_gamma": "0",
+        "net_gamma": 0.0
+      },
+      {
+        "strike": "36",
+        "call_gamma": "32.61",
+        "put_gamma": "-1206.31",
+        "net_gamma": -1173.7
+      },
+      {
+        "strike": "36.5",
+        "call_gamma": "0",
+        "put_gamma": "0",
+        "net_gamma": 0.0
+      },
+      {
+        "strike": "37",
+        "call_gamma": "775.38",
+        "put_gamma": "-1757.91",
+        "net_gamma": -982.5300000000001
+      },
+      {
+        "strike": "37.5",
+        "call_gamma": "17256.89",
+        "put_gamma": "-185540.83",
+        "net_gamma": -168283.94
+      },
+      {
+        "strike": "38",
+        "call_gamma": "39.9",
+        "put_gamma": "-30071.19",
+        "net_gamma": -30031.289999999997
+      },
+      {
+        "strike": "38.5",
+        "call_gamma": "0",
+        "put_gamma": "0",
+        "net_gamma": 0.0
+      }
+    ],
+    "AMZN": [
+      {
+        "strike": "150",
+        "call_gamma": "1206056.49",
+        "put_gamma": "-5343757.83",
+        "net_gamma": -4137701.34
+      },
+      {
+        "strike": "155",
+        "call_gamma": "515040.15",
+        "put_gamma": "-3029618.59",
+        "net_gamma": -2514578.44
+      },
+      {
+        "strike": "180",
+        "call_gamma": "3048547.22",
+        "put_gamma": "-17982471.02",
+        "net_gamma": -14933923.799999999
+      },
+      {
+        "strike": "185",
+        "call_gamma": "2759463.17",
+        "put_gamma": "-12699093.4",
+        "net_gamma": -9939630.23
+      },
+      {
+        "strike": "187.5",
+        "call_gamma": "2355.68",
+        "put_gamma": "-63501.38",
+        "net_gamma": -61145.7
+      },
+      {
+        "strike": "190",
+        "call_gamma": "8366552.4",
+        "put_gamma": "-19657542.21",
+        "net_gamma": -11290989.81
+      },
+      {
+        "strike": "195",
+        "call_gamma": "2282455.53",
+        "put_gamma": "-15566336.75",
+        "net_gamma": -13283881.22
+      },
+      {
+        "strike": "200",
+        "call_gamma": "18091617.41",
+        "put_gamma": "-36586316.4",
+        "net_gamma": -18494698.99
+      },
+      {
+        "strike": "205",
+        "call_gamma": "10904124.39",
+        "put_gamma": "-19731381.01",
+        "net_gamma": -8827256.620000001
+      },
+      {
+        "strike": "210",
+        "call_gamma": "23384451.54",
+        "put_gamma": "-27741017.27",
+        "net_gamma": -4356565.73
+      },
+      {
+        "strike": "215",
+        "call_gamma": "24990314.43",
+        "put_gamma": "-21964028.68",
+        "net_gamma": 3026285.75
+      },
+      {
+        "strike": "217.5",
+        "call_gamma": "4092316.4",
+        "put_gamma": "-1239707.51",
+        "net_gamma": 2852608.8899999997
+      },
+      {
+        "strike": "220",
+        "call_gamma": "47595473.04",
+        "put_gamma": "-38007638.74",
+        "net_gamma": 9587834.299999997
+      },
+      {
+        "strike": "222.5",
+        "call_gamma": "8386275.1",
+        "put_gamma": "-4220295.24",
+        "net_gamma": 4165979.8599999994
+      },
+      {
+        "strike": "225",
+        "call_gamma": "80907316.2",
+        "put_gamma": "-29360763.28",
+        "net_gamma": 51546552.92
+      },
+      {
+        "strike": "227.5",
+        "call_gamma": "17867423.79",
+        "put_gamma": "-4125394.41",
+        "net_gamma": 13742029.379999999
+      },
+      {
+        "strike": "230",
+        "call_gamma": "124260717.97",
+        "put_gamma": "-42286286.74",
+        "net_gamma": 81974431.22999999
+      },
+      {
+        "strike": "232.5",
+        "call_gamma": "19228412.31",
+        "put_gamma": "-6958506.17",
+        "net_gamma": 12269906.139999999
+      },
+      {
+        "strike": "235",
+        "call_gamma": "184774449.47",
+        "put_gamma": "-23752232.49",
+        "net_gamma": 161022216.98
+      },
+      {
+        "strike": "237.5",
+        "call_gamma": "15511303.89",
+        "put_gamma": "-380134.3",
+        "net_gamma": 15131169.59
+      }
+    ],
+    "ANET": [
+      {
+        "strike": "35",
+        "call_gamma": "977.47",
+        "put_gamma": "-2829.78",
+        "net_gamma": -1852.3100000000002
+      },
+      {
+        "strike": "40",
+        "call_gamma": "784.58",
+        "put_gamma": "-666.04",
+        "net_gamma": 118.54000000000008
+      },
+      {
+        "strike": "45",
+        "call_gamma": "1020.53",
+        "put_gamma": "-2199.99",
+        "net_gamma": -1179.4599999999998
+      },
+      {
+        "strike": "47.5",
+        "call_gamma": "646.24",
+        "put_gamma": "-942.37",
+        "net_gamma": -296.13
+      },
+      {
+        "strike": "48.75",
+        "call_gamma": "241.27",
+        "put_gamma": "-418.63",
+        "net_gamma": -177.35999999999999
+      },
+      {
+        "strike": "50",
+        "call_gamma": "6163.52",
+        "put_gamma": "-6307.16",
+        "net_gamma": -143.63999999999942
+      },
+      {
+        "strike": "52.5",
+        "call_gamma": "1510.01",
+        "put_gamma": "-265.56",
+        "net_gamma": 1244.45
+      },
+      {
+        "strike": "55",
+        "call_gamma": "6095.24",
+        "put_gamma": "-7995.7",
+        "net_gamma": -1900.46
+      },
+      {
+        "strike": "57.5",
+        "call_gamma": "1531.96",
+        "put_gamma": "-1086.26",
+        "net_gamma": 445.70000000000005
+      },
+      {
+        "strike": "60",
+        "call_gamma": "10233.19",
+        "put_gamma": "-30506.19",
+        "net_gamma": -20273.0
+      },
+      {
+        "strike": "62.5",
+        "call_gamma": "2372.23",
+        "put_gamma": "-7686.74",
+        "net_gamma": -5314.51
+      },
+      {
+        "strike": "65",
+        "call_gamma": "9090.42",
+        "put_gamma": "-60866.45",
+        "net_gamma": -51776.03
+      },
+      {
+        "strike": "67.5",
+        "call_gamma": "16401.14",
+        "put_gamma": "-8986.02",
+        "net_gamma": 7415.119999999999
+      },
+      {
+        "strike": "70",
+        "call_gamma": "18666.65",
+        "put_gamma": "-39028.39",
+        "net_gamma": -20361.739999999998
+      },
+      {
+        "strike": "72.5",
+        "call_gamma": "15805.67",
+        "put_gamma": "-2883.14",
+        "net_gamma": 12922.53
+      },
+      {
+        "strike": "75",
+        "call_gamma": "47687.6",
+        "put_gamma": "-59810.09",
+        "net_gamma": -12122.489999999998
+      },
+      {
+        "strike": "77.5",
+        "call_gamma": "5203.81",
+        "put_gamma": "-5720.26",
+        "net_gamma": -516.4499999999998
+      },
+      {
+        "strike": "80",
+        "call_gamma": "47763.92",
+        "put_gamma": "-83570.13",
+        "net_gamma": -35806.21000000001
+      },
+      {
+        "strike": "82.5",
+        "call_gamma": "30788.14",
+        "put_gamma": "-8692.96",
+        "net_gamma": 22095.18
+      },
+      {
+        "strike": "85",
+        "call_gamma": "62058.69",
+        "put_gamma": "-69991.03",
+        "net_gamma": -7932.3399999999965
+      }
+    ],
+    "ARM": [
+      {
+        "strike": "42.5",
+        "call_gamma": "121.55",
+        "put_gamma": "-17258.88",
+        "net_gamma": -17137.33
+      },
+      {
+        "strike": "45",
+        "call_gamma": "763.56",
+        "put_gamma": "-18507.65",
+        "net_gamma": -17744.09
+      },
+      {
+        "strike": "47.5",
+        "call_gamma": "812.24",
+        "put_gamma": "-5510.05",
+        "net_gamma": -4697.81
+      },
+      {
+        "strike": "50",
+        "call_gamma": "3834.36",
+        "put_gamma": "-43611.97",
+        "net_gamma": -39777.61
+      },
+      {
+        "strike": "55",
+        "call_gamma": "4514.59",
+        "put_gamma": "-19909.04",
+        "net_gamma": -15394.45
+      },
+      {
+        "strike": "60",
+        "call_gamma": "10327.63",
+        "put_gamma": "-45005.64",
+        "net_gamma": -34678.01
+      },
+      {
+        "strike": "65",
+        "call_gamma": "9750.37",
+        "put_gamma": "-72564.14",
+        "net_gamma": -62813.77
+      },
+      {
+        "strike": "70",
+        "call_gamma": "11385.71",
+        "put_gamma": "-206391.92",
+        "net_gamma": -195006.21000000002
+      },
+      {
+        "strike": "75",
+        "call_gamma": "8281.47",
+        "put_gamma": "-138209.1",
+        "net_gamma": -129927.63
+      },
+      {
+        "strike": "77.5",
+        "call_gamma": "3147.29",
+        "put_gamma": "-12117.05",
+        "net_gamma": -8969.759999999998
+      },
+      {
+        "strike": "80",
+        "call_gamma": "18513.64",
+        "put_gamma": "-608314.73",
+        "net_gamma": -589801.09
+      },
+      {
+        "strike": "82.5",
+        "call_gamma": "5952.26",
+        "put_gamma": "-39389.97",
+        "net_gamma": -33437.71
+      },
+      {
+        "strike": "85",
+        "call_gamma": "15982.44",
+        "put_gamma": "-273686.7",
+        "net_gamma": -257704.26
+      },
+      {
+        "strike": "87.5",
+        "call_gamma": "5583.74",
+        "put_gamma": "-25059.49",
+        "net_gamma": -19475.75
+      },
+      {
+        "strike": "90",
+        "call_gamma": "29285.06",
+        "put_gamma": "-1271957.38",
+        "net_gamma": -1242672.3199999998
+      },
+      {
+        "strike": "92.5",
+        "call_gamma": "5188.44",
+        "put_gamma": "-191526.16",
+        "net_gamma": -186337.72
+      },
+      {
+        "strike": "95",
+        "call_gamma": "24660.18",
+        "put_gamma": "-1146772.13",
+        "net_gamma": -1122111.95
+      },
+      {
+        "strike": "97.5",
+        "call_gamma": "14861.72",
+        "put_gamma": "-153879.55",
+        "net_gamma": -139017.83
+      },
+      {
+        "strike": "100",
+        "call_gamma": "187696.69",
+        "put_gamma": "-1818305.56",
+        "net_gamma": -1630608.87
+      },
+      {
+        "strike": "105",
+        "call_gamma": "188746.3",
+        "put_gamma": "-1400270.9",
+        "net_gamma": -1211524.5999999999
+      }
+    ],
+    "AVGO": [
+      {
+        "strike": "66",
+        "call_gamma": "1411.6",
+        "put_gamma": "-2758.18",
+        "net_gamma": -1346.58
+      },
+      {
+        "strike": "68",
+        "call_gamma": "172.82",
+        "put_gamma": "-684.35",
+        "net_gamma": -511.53000000000003
+      },
+      {
+        "strike": "70",
+        "call_gamma": "6996.01",
+        "put_gamma": "-12201.94",
+        "net_gamma": -5205.93
+      },
+      {
+        "strike": "72",
+        "call_gamma": "260.84",
+        "put_gamma": "-647.39",
+        "net_gamma": -386.55
+      },
+      {
+        "strike": "74",
+        "call_gamma": "223.66",
+        "put_gamma": "-378.73",
+        "net_gamma": -155.07000000000002
+      },
+      {
+        "strike": "75",
+        "call_gamma": "4229.91",
+        "put_gamma": "-2358.68",
+        "net_gamma": 1871.23
+      },
+      {
+        "strike": "76",
+        "call_gamma": "691.1",
+        "put_gamma": "-226.31",
+        "net_gamma": 464.79
+      },
+      {
+        "strike": "78",
+        "call_gamma": "349.21",
+        "put_gamma": "-520.36",
+        "net_gamma": -171.15000000000003
+      },
+      {
+        "strike": "80",
+        "call_gamma": "7553.64",
+        "put_gamma": "-7030.89",
+        "net_gamma": 522.75
+      },
+      {
+        "strike": "82",
+        "call_gamma": "270.39",
+        "put_gamma": "-326.45",
+        "net_gamma": -56.06
+      },
+      {
+        "strike": "84",
+        "call_gamma": "1542.02",
+        "put_gamma": "-330.69",
+        "net_gamma": 1211.33
+      },
+      {
+        "strike": "85",
+        "call_gamma": "56057.27",
+        "put_gamma": "-30178.77",
+        "net_gamma": 25878.499999999996
+      },
+      {
+        "strike": "86",
+        "call_gamma": "421.38",
+        "put_gamma": "-356.54",
+        "net_gamma": 64.83999999999997
+      },
+      {
+        "strike": "88",
+        "call_gamma": "332.52",
+        "put_gamma": "-566.31",
+        "net_gamma": -233.78999999999996
+      },
+      {
+        "strike": "90",
+        "call_gamma": "18668.22",
+        "put_gamma": "-19735.43",
+        "net_gamma": -1067.2099999999991
+      },
+      {
+        "strike": "92",
+        "call_gamma": "488.5",
+        "put_gamma": "-4504.9",
+        "net_gamma": -4016.3999999999996
+      },
+      {
+        "strike": "94",
+        "call_gamma": "219.3",
+        "put_gamma": "-1011.74",
+        "net_gamma": -792.44
+      },
+      {
+        "strike": "95",
+        "call_gamma": "5043.14",
+        "put_gamma": "-32387.84",
+        "net_gamma": -27344.7
+      },
+      {
+        "strike": "96",
+        "call_gamma": "8966.78",
+        "put_gamma": "-956.51",
+        "net_gamma": 8010.27
+      },
+      {
+        "strike": "98",
+        "call_gamma": "5973.66",
+        "put_gamma": "-897.78",
+        "net_gamma": 5075.88
+      }
+    ],
+    "BAC": [
+      {
+        "strike": "18",
+        "call_gamma": "1874.36",
+        "put_gamma": "-5452.59",
+        "net_gamma": -3578.2300000000005
+      },
+      {
+        "strike": "20",
+        "call_gamma": "6241.86",
+        "put_gamma": "-73672.48",
+        "net_gamma": -67430.62
+      },
+      {
+        "strike": "23",
+        "call_gamma": "5677.76",
+        "put_gamma": "-41409.67",
+        "net_gamma": -35731.909999999996
+      },
+      {
+        "strike": "25",
+        "call_gamma": "19172.83",
+        "put_gamma": "-379073.54",
+        "net_gamma": -359900.70999999996
+      },
+      {
+        "strike": "28",
+        "call_gamma": "10911.75",
+        "put_gamma": "-195152.91",
+        "net_gamma": -184241.16
+      },
+      {
+        "strike": "30",
+        "call_gamma": "55585.51",
+        "put_gamma": "-776061.58",
+        "net_gamma": -720476.07
+      },
+      {
+        "strike": "32",
+        "call_gamma": "15190.01",
+        "put_gamma": "-137165.34",
+        "net_gamma": -121975.33
+      },
+      {
+        "strike": "33",
+        "call_gamma": "113198.72",
+        "put_gamma": "-490300.09",
+        "net_gamma": -377101.37
+      },
+      {
+        "strike": "35",
+        "call_gamma": "439302.69",
+        "put_gamma": "-2228417.16",
+        "net_gamma": -1789114.4700000002
+      },
+      {
+        "strike": "36",
+        "call_gamma": "845.86",
+        "put_gamma": "-2666.28",
+        "net_gamma": -1820.42
+      },
+      {
+        "strike": "37",
+        "call_gamma": "301265.31",
+        "put_gamma": "-715894.35",
+        "net_gamma": -414629.04
+      },
+      {
+        "strike": "38",
+        "call_gamma": "279539.39",
+        "put_gamma": "-1285838.88",
+        "net_gamma": -1006299.4899999999
+      },
+      {
+        "strike": "39",
+        "call_gamma": "1119.7",
+        "put_gamma": "-5157.27",
+        "net_gamma": -4037.5700000000006
+      },
+      {
+        "strike": "40",
+        "call_gamma": "1522814.62",
+        "put_gamma": "-4863592.8",
+        "net_gamma": -3340778.1799999997
+      },
+      {
+        "strike": "41",
+        "call_gamma": "1343.57",
+        "put_gamma": "-7527.56",
+        "net_gamma": -6183.990000000001
+      },
+      {
+        "strike": "41.5",
+        "call_gamma": "684.45",
+        "put_gamma": "-403.63",
+        "net_gamma": 280.82000000000005
+      },
+      {
+        "strike": "42",
+        "call_gamma": "1104512.16",
+        "put_gamma": "-3298884.73",
+        "net_gamma": -2194372.5700000003
+      },
+      {
+        "strike": "42.5",
+        "call_gamma": "740.18",
+        "put_gamma": "-4743.5",
+        "net_gamma": -4003.32
+      },
+      {
+        "strike": "43",
+        "call_gamma": "418689.98",
+        "put_gamma": "-185222.64",
+        "net_gamma": 233467.33999999997
+      },
+      {
+        "strike": "43.5",
+        "call_gamma": "2516.91",
+        "put_gamma": "-11602.07",
+        "net_gamma": -9085.16
+      }
+    ],
+    "CCJ": [
+      {
+        "strike": "20",
+        "call_gamma": "791.52",
+        "put_gamma": "-224.47",
+        "net_gamma": 567.05
+      },
+      {
+        "strike": "23",
+        "call_gamma": "178.26",
+        "put_gamma": "-116.34",
+        "net_gamma": 61.91999999999999
+      },
+      {
+        "strike": "25",
+        "call_gamma": "1071.48",
+        "put_gamma": "-247.99",
+        "net_gamma": 823.49
+      },
+      {
+        "strike": "28",
+        "call_gamma": "220.22",
+        "put_gamma": "-588.53",
+        "net_gamma": -368.30999999999995
+      },
+      {
+        "strike": "30",
+        "call_gamma": "2025.24",
+        "put_gamma": "-569.23",
+        "net_gamma": 1456.01
+      },
+      {
+        "strike": "33",
+        "call_gamma": "954.83",
+        "put_gamma": "-1667.23",
+        "net_gamma": -712.4
+      },
+      {
+        "strike": "35",
+        "call_gamma": "2960.81",
+        "put_gamma": "-1461.72",
+        "net_gamma": 1499.09
+      },
+      {
+        "strike": "38",
+        "call_gamma": "2985.04",
+        "put_gamma": "-4780.86",
+        "net_gamma": -1795.8199999999997
+      },
+      {
+        "strike": "40",
+        "call_gamma": "8212.81",
+        "put_gamma": "-3721.48",
+        "net_gamma": 4491.33
+      },
+      {
+        "strike": "42",
+        "call_gamma": "3530.23",
+        "put_gamma": "-4744.59",
+        "net_gamma": -1214.3600000000001
+      },
+      {
+        "strike": "45",
+        "call_gamma": "7108.41",
+        "put_gamma": "-11350.67",
+        "net_gamma": -4242.26
+      },
+      {
+        "strike": "47",
+        "call_gamma": "4225.05",
+        "put_gamma": "-2143.28",
+        "net_gamma": 2081.77
+      },
+      {
+        "strike": "50",
+        "call_gamma": "27050.71",
+        "put_gamma": "-25048.69",
+        "net_gamma": 2002.0200000000004
+      },
+      {
+        "strike": "55",
+        "call_gamma": "20115.47",
+        "put_gamma": "-20821.42",
+        "net_gamma": -705.9499999999971
+      },
+      {
+        "strike": "60",
+        "call_gamma": "25629.5",
+        "put_gamma": "-71370.12",
+        "net_gamma": -45740.619999999995
+      },
+      {
+        "strike": "65",
+        "call_gamma": "34044.95",
+        "put_gamma": "-47955.85",
+        "net_gamma": -13910.900000000001
+      },
+      {
+        "strike": "70",
+        "call_gamma": "75653.17",
+        "put_gamma": "-315628.2",
+        "net_gamma": -239975.03000000003
+      },
+      {
+        "strike": "75",
+        "call_gamma": "51674.12",
+        "put_gamma": "-426416.43",
+        "net_gamma": -374742.31
+      },
+      {
+        "strike": "79",
+        "call_gamma": "0",
+        "put_gamma": "0",
+        "net_gamma": 0.0
+      },
+      {
+        "strike": "80",
+        "call_gamma": "96214.27",
+        "put_gamma": "-998448.55",
+        "net_gamma": -902234.28
+      }
+    ],
+    "CELH": [
+      {
+        "strike": "26.5",
+        "call_gamma": "565.82",
+        "put_gamma": "-0.02",
+        "net_gamma": 565.8000000000001
+      },
+      {
+        "strike": "37",
+        "call_gamma": "371216.95",
+        "put_gamma": "-63351.39",
+        "net_gamma": 307865.56
+      },
+      {
+        "strike": "55",
+        "call_gamma": "1294309.08",
+        "put_gamma": "-9852.52",
+        "net_gamma": 1284456.56
+      },
+      {
+        "strike": "12.5",
+        "call_gamma": "2182.61",
+        "put_gamma": "-5038.16",
+        "net_gamma": -2855.5499999999997
+      },
+      {
+        "strike": "15",
+        "call_gamma": "5380.07",
+        "put_gamma": "-17792.84",
+        "net_gamma": -12412.77
+      },
+      {
+        "strike": "17.5",
+        "call_gamma": "1187.38",
+        "put_gamma": "-12338.86",
+        "net_gamma": -11151.48
+      },
+      {
+        "strike": "20",
+        "call_gamma": "6901.14",
+        "put_gamma": "-25801.09",
+        "net_gamma": -18899.95
+      },
+      {
+        "strike": "22.5",
+        "call_gamma": "4232.01",
+        "put_gamma": "-19594.3",
+        "net_gamma": -15362.289999999999
+      },
+      {
+        "strike": "23",
+        "call_gamma": "0",
+        "put_gamma": "-320.6",
+        "net_gamma": -320.6
+      },
+      {
+        "strike": "24",
+        "call_gamma": "0",
+        "put_gamma": "-667.31",
+        "net_gamma": -667.31
+      },
+      {
+        "strike": "25",
+        "call_gamma": "14565.14",
+        "put_gamma": "-389544.67",
+        "net_gamma": -374979.52999999997
+      },
+      {
+        "strike": "26",
+        "call_gamma": "63.1",
+        "put_gamma": "-915.58",
+        "net_gamma": -852.48
+      },
+      {
+        "strike": "27",
+        "call_gamma": "959.34",
+        "put_gamma": "-1089.44",
+        "net_gamma": -130.10000000000002
+      },
+      {
+        "strike": "27.5",
+        "call_gamma": "21137.86",
+        "put_gamma": "-95810.4",
+        "net_gamma": -74672.54
+      },
+      {
+        "strike": "28",
+        "call_gamma": "455.19",
+        "put_gamma": "-2635.74",
+        "net_gamma": -2180.5499999999997
+      },
+      {
+        "strike": "28.5",
+        "call_gamma": "708.37",
+        "put_gamma": "-85.97",
+        "net_gamma": 622.4
+      },
+      {
+        "strike": "29",
+        "call_gamma": "1010.51",
+        "put_gamma": "-3507.3",
+        "net_gamma": -2496.79
+      },
+      {
+        "strike": "29.5",
+        "call_gamma": "491.61",
+        "put_gamma": "-138.46",
+        "net_gamma": 353.15
+      },
+      {
+        "strike": "30",
+        "call_gamma": "47185.4",
+        "put_gamma": "-790927.6",
+        "net_gamma": -743742.2
+      },
+      {
+        "strike": "30.5",
+        "call_gamma": "4958.57",
+        "put_gamma": "-8371.49",
+        "net_gamma": -3412.92
       }
     ]
   },
@@ -269,30 +4838,6 @@
       "transaction_type": "",
       "amount": "",
       "transaction_date": "2026-04-06",
-      "party": ""
-    },
-    {
-      "politician": "",
-      "ticker": "NDAQ",
-      "transaction_type": "",
-      "amount": "",
-      "transaction_date": "2026-03-31",
-      "party": ""
-    },
-    {
-      "politician": "",
-      "ticker": null,
-      "transaction_type": "",
-      "amount": "",
-      "transaction_date": "2026-03-31",
-      "party": ""
-    },
-    {
-      "politician": "",
-      "ticker": "TSCO",
-      "transaction_type": "",
-      "amount": "",
-      "transaction_date": "2026-03-31",
       "party": ""
     },
     {
@@ -321,7 +4866,7 @@
     },
     {
       "politician": "",
-      "ticker": "FDS",
+      "ticker": "TSCO",
       "transaction_type": "",
       "amount": "",
       "transaction_date": "2026-03-31",
@@ -329,7 +4874,23 @@
     },
     {
       "politician": "",
-      "ticker": "MMM",
+      "ticker": null,
+      "transaction_type": "",
+      "amount": "",
+      "transaction_date": "2026-03-31",
+      "party": ""
+    },
+    {
+      "politician": "",
+      "ticker": "NDAQ",
+      "transaction_type": "",
+      "amount": "",
+      "transaction_date": "2026-03-31",
+      "party": ""
+    },
+    {
+      "politician": "",
+      "ticker": "FDS",
       "transaction_type": "",
       "amount": "",
       "transaction_date": "2026-03-31",
@@ -345,7 +4906,39 @@
     },
     {
       "politician": "",
+      "ticker": "MMM",
+      "transaction_type": "",
+      "amount": "",
+      "transaction_date": "2026-03-31",
+      "party": ""
+    },
+    {
+      "politician": "",
       "ticker": "PEP",
+      "transaction_type": "",
+      "amount": "",
+      "transaction_date": "2026-03-30",
+      "party": ""
+    },
+    {
+      "politician": "",
+      "ticker": "AMZN",
+      "transaction_type": "",
+      "amount": "",
+      "transaction_date": "2026-03-30",
+      "party": ""
+    },
+    {
+      "politician": "",
+      "ticker": "MU",
+      "transaction_type": "",
+      "amount": "",
+      "transaction_date": "2026-03-30",
+      "party": ""
+    },
+    {
+      "politician": "",
+      "ticker": "ERIE",
       "transaction_type": "",
       "amount": "",
       "transaction_date": "2026-03-30",
@@ -369,30 +4962,6 @@
     },
     {
       "politician": "",
-      "ticker": "ERIE",
-      "transaction_type": "",
-      "amount": "",
-      "transaction_date": "2026-03-30",
-      "party": ""
-    },
-    {
-      "politician": "",
-      "ticker": "MU",
-      "transaction_type": "",
-      "amount": "",
-      "transaction_date": "2026-03-30",
-      "party": ""
-    },
-    {
-      "politician": "",
-      "ticker": "AMZN",
-      "transaction_type": "",
-      "amount": "",
-      "transaction_date": "2026-03-30",
-      "party": ""
-    },
-    {
-      "politician": "",
       "ticker": null,
       "transaction_type": "",
       "amount": "",
@@ -401,7 +4970,7 @@
     },
     {
       "politician": "",
-      "ticker": "MTSI",
+      "ticker": "SARO",
       "transaction_type": "",
       "amount": "",
       "transaction_date": "2026-03-27",
@@ -409,7 +4978,7 @@
     },
     {
       "politician": "",
-      "ticker": "DASH",
+      "ticker": "BABAF",
       "transaction_type": "",
       "amount": "",
       "transaction_date": "2026-03-27",
@@ -417,7 +4986,7 @@
     },
     {
       "politician": "",
-      "ticker": "LPLA",
+      "ticker": "FSV",
       "transaction_type": "",
       "amount": "",
       "transaction_date": "2026-03-27",
@@ -641,6 +5210,17 @@
       "transaction_type": "",
       "shares": 0,
       "price": "0.0000",
+      "value": 0,
+      "date": "2026-04-09",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "PAM",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "3.4700",
       "value": 0,
       "date": "2026-04-09",
       "is_portfolio": false
@@ -877,6 +5457,17 @@
       "is_portfolio": false
     },
     {
+      "ticker": "VICR",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "187.2294",
+      "value": 0,
+      "date": "2026-04-09",
+      "is_portfolio": false
+    },
+    {
       "ticker": "ESLT",
       "insider": "",
       "title": "",
@@ -921,6 +5512,17 @@
       "is_portfolio": false
     },
     {
+      "ticker": "ENR",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "17.4700",
+      "value": 0,
+      "date": "2026-04-08",
+      "is_portfolio": false
+    },
+    {
       "ticker": "AFL",
       "insider": "",
       "title": "",
@@ -932,105 +5534,131 @@
       "is_portfolio": false
     },
     {
-      "ticker": "SE",
+      "ticker": "CDZI",
       "insider": "",
       "title": "",
       "transaction_type": "",
       "shares": 0,
-      "price": "86.6241",
-      "value": 0,
-      "date": "2026-04-08",
-      "is_portfolio": false
-    },
-    {
-      "ticker": "HUIZ",
-      "insider": "",
-      "title": "",
-      "transaction_type": "",
-      "shares": 0,
-      "price": "1.4200",
-      "value": 0,
-      "date": "2026-04-08",
-      "is_portfolio": false
-    },
-    {
-      "ticker": "SE",
-      "insider": "",
-      "title": "",
-      "transaction_type": "",
-      "shares": 0,
-      "price": "86.6242",
-      "value": 0,
-      "date": "2026-04-08",
-      "is_portfolio": false
-    },
-    {
-      "ticker": "FINV",
-      "insider": "",
-      "title": "",
-      "transaction_type": "",
-      "shares": 0,
-      "price": "0.0000",
+      "price": null,
       "value": 0,
       "date": "2026-04-08",
       "is_portfolio": false
     }
   ],
-  "hottest_chains": [
-    {
-      "ticker": "NVDA",
-      "option_symbol": "NVDA260410C00187500",
-      "type": "",
-      "strike": 0,
-      "expiry": "",
-      "volume": 194616,
-      "open_interest": 54879,
-      "premium": 94057,
-      "avg_price": "0.6996187877666789986434825510"
+  "net_premium": {
+    "ABBV": {
+      "net_premium": 0,
+      "call_premium": 0,
+      "put_premium": 0,
+      "timestamp": ""
     },
+    "AFRM": {
+      "net_premium": 0,
+      "call_premium": 0,
+      "put_premium": 0,
+      "timestamp": ""
+    },
+    "AMZN": {
+      "net_premium": 0,
+      "call_premium": 0,
+      "put_premium": 0,
+      "timestamp": ""
+    },
+    "ANET": {
+      "net_premium": 0,
+      "call_premium": 0,
+      "put_premium": 0,
+      "timestamp": ""
+    },
+    "ARM": {
+      "net_premium": 0,
+      "call_premium": 0,
+      "put_premium": 0,
+      "timestamp": ""
+    },
+    "AVGO": {
+      "net_premium": 0,
+      "call_premium": 0,
+      "put_premium": 0,
+      "timestamp": ""
+    },
+    "BAC": {
+      "net_premium": 0,
+      "call_premium": 0,
+      "put_premium": 0,
+      "timestamp": ""
+    },
+    "BWXT": {
+      "net_premium": 0,
+      "call_premium": 0,
+      "put_premium": 0,
+      "timestamp": ""
+    },
+    "CCJ": {
+      "net_premium": 0,
+      "call_premium": 0,
+      "put_premium": 0,
+      "timestamp": ""
+    },
+    "CELH": {
+      "net_premium": 0,
+      "call_premium": 0,
+      "put_premium": 0,
+      "timestamp": ""
+    },
+    "CRM": {
+      "net_premium": 0,
+      "call_premium": 0,
+      "put_premium": 0,
+      "timestamp": ""
+    },
+    "DDOG": {
+      "net_premium": 0,
+      "call_premium": 0,
+      "put_premium": 0,
+      "timestamp": ""
+    },
+    "EPD": {
+      "net_premium": 0,
+      "call_premium": 0,
+      "put_premium": 0,
+      "timestamp": ""
+    },
+    "GD": {
+      "net_premium": 0,
+      "call_premium": 0,
+      "put_premium": 0,
+      "timestamp": ""
+    },
+    "GE": {
+      "net_premium": 0,
+      "call_premium": 0,
+      "put_premium": 0,
+      "timestamp": ""
+    }
+  },
+  "hottest_chains": [
     {
       "ticker": "NVDA",
       "option_symbol": "NVDA260410C00190000",
       "type": "",
       "strike": 0,
       "expiry": "",
-      "volume": 153545,
+      "volume": 344721,
       "open_interest": 60702,
-      "premium": 87289,
-      "avg_price": "0.1712884822039141619720603056"
-    },
-    {
-      "ticker": "TSLA",
-      "option_symbol": "TSLA260410C00350000",
-      "type": "",
-      "strike": 0,
-      "expiry": "",
-      "volume": 101078,
-      "open_interest": 15502,
-      "premium": 42378,
-      "avg_price": "1.3915092304952610854983280217"
+      "premium": 184047,
+      "avg_price": "0.2238207710003161977367204254"
     },
     {
       "ticker": "NVDA",
-      "option_symbol": "NVDA260410P00185000",
+      "option_symbol": "NVDA260410C00187500",
       "type": "",
       "strike": 0,
       "expiry": "",
-      "volume": 93643,
-      "open_interest": 7138,
-      "premium": 44595,
-      "avg_price": "0.2816185940219770831776000374"
-    },
-    {
-      "ticker": "AMZN",
-      "option_symbol": "AMZN260410C00240000",
-      "type": "",
-      "strike": 0,
-      "expiry": "",
-      "volume": 92846,
-      "open_interest": 9749,
-      "premium": 44084,
-      "avg_price": "0.6870811882041229562932167282"
+      "volume": 232200,
+      "open_interest": 54879,
+      "premium": 111412,
+      "avg_price": "0.8521807924203273040482342785"
     },
     {
       "ticker": "TSLA",
@@ -1038,87 +5666,10 @@
       "type": "",
       "strike": 0,
       "expiry": "",
-      "volume": 92216,
+      "volume": 179595,
       "open_interest": 6887,
-      "premium": 41500,
-      "avg_price": "1.7863266678233712154073045935"
-    },
-    {
-      "ticker": "NVDA",
-      "option_symbol": "NVDA260410C00185000",
-      "type": "",
-      "strike": 0,
-      "expiry": "",
-      "volume": 89076,
-      "open_interest": 73025,
-      "premium": 41617,
-      "avg_price": "1.8099433068391036867394135374"
-    },
-    {
-      "ticker": "AMD",
-      "option_symbol": "AMD260410C00250000",
-      "type": "",
-      "strike": 0,
-      "expiry": "",
-      "volume": 86294,
-      "open_interest": 6017,
-      "premium": 39648,
-      "avg_price": "0.7619096345052958490740955337"
-    },
-    {
-      "ticker": "TSLA",
-      "option_symbol": "TSLA260410C00347500",
-      "type": "",
-      "strike": 0,
-      "expiry": "",
-      "volume": 66465,
-      "open_interest": 4678,
-      "premium": 30275,
-      "avg_price": "2.1482635973820807944030692886"
-    },
-    {
-      "ticker": "PLTR",
-      "option_symbol": "PLTR260410C00130000",
-      "type": "",
-      "strike": 0,
-      "expiry": "",
-      "volume": 66144,
-      "open_interest": 3374,
-      "premium": 31787,
-      "avg_price": "0.6252970791001451378809869351"
-    },
-    {
-      "ticker": "PLTR",
-      "option_symbol": "PLTR260410P00125000",
-      "type": "",
-      "strike": 0,
-      "expiry": "",
-      "volume": 62536,
-      "open_interest": 11420,
-      "premium": 25604,
-      "avg_price": "1.2780228988102852756812076214"
-    },
-    {
-      "ticker": "TSLA",
-      "option_symbol": "TSLA260410P00347500",
-      "type": "",
-      "strike": 0,
-      "expiry": "",
-      "volume": 62435,
-      "open_interest": 3746,
-      "premium": 31793,
-      "avg_price": "3.0305008408745094898694642418"
-    },
-    {
-      "ticker": "AAPL",
-      "option_symbol": "AAPL260410C00262500",
-      "type": "",
-      "strike": 0,
-      "expiry": "",
-      "volume": 60930,
-      "open_interest": 11674,
-      "premium": 25997,
-      "avg_price": "0.3757521746266207122927950096"
+      "premium": 84507,
+      "avg_price": "1.7871258665330326568111584391"
     },
     {
       "ticker": "NVDA",
@@ -1126,10 +5677,54 @@
       "type": "",
       "strike": 0,
       "expiry": "",
-      "volume": 53629,
+      "volume": 163201,
       "open_interest": 1238,
-      "premium": 24261,
-      "avg_price": "0.7459458501929925972887803245"
+      "premium": 80253,
+      "avg_price": "0.4207158044374728096028823325"
+    },
+    {
+      "ticker": "TSLA",
+      "option_symbol": "TSLA260410C00350000",
+      "type": "",
+      "strike": 0,
+      "expiry": "",
+      "volume": 152907,
+      "open_interest": 15502,
+      "premium": 63122,
+      "avg_price": "1.0151558136645150320129228854"
+    },
+    {
+      "ticker": "AMZN",
+      "option_symbol": "AMZN260410C00240000",
+      "type": "",
+      "strike": 0,
+      "expiry": "",
+      "volume": 128842,
+      "open_interest": 9749,
+      "premium": 58224,
+      "avg_price": "0.6382424985641328138339982338"
+    },
+    {
+      "ticker": "NVDA",
+      "option_symbol": "NVDA260410P00185000",
+      "type": "",
+      "strike": 0,
+      "expiry": "",
+      "volume": 128230,
+      "open_interest": 7138,
+      "premium": 64030,
+      "avg_price": "0.2207728300709662325508851327"
+    },
+    {
+      "ticker": "AMD",
+      "option_symbol": "AMD260410C00250000",
+      "type": "",
+      "strike": 0,
+      "expiry": "",
+      "volume": 110359,
+      "open_interest": 6017,
+      "premium": 51473,
+      "avg_price": "0.6834102338730869253980191943"
     },
     {
       "ticker": "TSLA",
@@ -1137,65 +5732,76 @@
       "type": "",
       "strike": 0,
       "expiry": "",
-      "volume": 45150,
+      "volume": 108673,
       "open_interest": 4613,
-      "premium": 23111,
-      "avg_price": "3.4306383167220376522702104142"
+      "premium": 48921,
+      "avg_price": "2.1861512059113119174035869141"
     },
     {
       "ticker": "TSLA",
-      "option_symbol": "TSLA260410C00355000",
+      "option_symbol": "TSLA260410C00347500",
       "type": "",
       "strike": 0,
       "expiry": "",
-      "volume": 42261,
-      "open_interest": 14049,
-      "premium": 18814,
-      "avg_price": "0.5190814225882018882657769600"
+      "volume": 102972,
+      "open_interest": 4678,
+      "premium": 43681,
+      "avg_price": "1.6427034533659635629103057153"
     },
     {
-      "ticker": "AMD",
-      "option_symbol": "AMD260410C00245000",
+      "ticker": "TSLA",
+      "option_symbol": "TSLA260410P00342500",
       "type": "",
       "strike": 0,
       "expiry": "",
-      "volume": 41593,
-      "open_interest": 8478,
-      "premium": 21923,
-      "avg_price": "2.0152273219051282667756593616"
-    },
-    {
-      "ticker": "AMZN",
-      "option_symbol": "AMZN260410P00235000",
-      "type": "",
-      "strike": 0,
-      "expiry": "",
-      "volume": 37839,
-      "open_interest": 861,
-      "premium": 19017,
-      "avg_price": "0.3914812759322392240809746558"
-    },
-    {
-      "ticker": "PLTR",
-      "option_symbol": "PLTR260410C00128000",
-      "type": "",
-      "strike": 0,
-      "expiry": "",
-      "volume": 36286,
-      "open_interest": 818,
-      "premium": 16418,
-      "avg_price": "1.2054618861268808907016480153"
+      "volume": 102248,
+      "open_interest": 5914,
+      "premium": 46517,
+      "avg_price": "0.9793816015961192394961270626"
     },
     {
       "ticker": "NVDA",
-      "option_symbol": "NVDA260410P00182500",
+      "option_symbol": "NVDA260410C00185000",
       "type": "",
       "strike": 0,
       "expiry": "",
-      "volume": 36218,
-      "open_interest": 13480,
-      "premium": 16308,
-      "avg_price": "0.1032754431498150091114915228"
+      "volume": 101392,
+      "open_interest": 73025,
+      "premium": 45545,
+      "avg_price": "2.0526817697648729682815212291"
+    },
+    {
+      "ticker": "PLTR",
+      "option_symbol": "PLTR260410C00130000",
+      "type": "",
+      "strike": 0,
+      "expiry": "",
+      "volume": 96664,
+      "open_interest": 3374,
+      "premium": 43270,
+      "avg_price": "0.5815723537201026235206488439"
+    },
+    {
+      "ticker": "AAPL",
+      "option_symbol": "AAPL260410C00262500",
+      "type": "",
+      "strike": 0,
+      "expiry": "",
+      "volume": 94940,
+      "open_interest": 11674,
+      "premium": 41637,
+      "avg_price": "0.3135155887929218453760269655"
+    },
+    {
+      "ticker": "TSLA",
+      "option_symbol": "TSLA260410P00347500",
+      "type": "",
+      "strike": 0,
+      "expiry": "",
+      "volume": 90644,
+      "open_interest": 3746,
+      "premium": 44773,
+      "avg_price": "3.1207482017563214332995013442"
     },
     {
       "ticker": "TSLA",
@@ -1203,54 +5809,109 @@
       "type": "",
       "strike": 0,
       "expiry": "",
-      "volume": 36103,
+      "volume": 84825,
       "open_interest": 7806,
-      "premium": 16508,
-      "avg_price": "0.6267731213472564606819377953"
-    },
-    {
-      "ticker": "AMZN",
-      "option_symbol": "AMZN260515C00250000",
-      "type": "",
-      "strike": 0,
-      "expiry": "",
-      "volume": 35728,
-      "open_interest": 50482,
-      "premium": 14478,
-      "avg_price": "7.2396039520824003582624272288"
-    },
-    {
-      "ticker": "MSTR",
-      "option_symbol": "MSTR260417C00135000",
-      "type": "",
-      "strike": 0,
-      "expiry": "",
-      "volume": 33155,
-      "open_interest": 58674,
-      "premium": 32916,
-      "avg_price": "2.3590794076212905782450508829"
-    },
-    {
-      "ticker": "TSLA",
-      "option_symbol": "TSLA260410C00352500",
-      "type": "",
-      "strike": 0,
-      "expiry": "",
-      "volume": 32647,
-      "open_interest": 5401,
-      "premium": 15534,
-      "avg_price": "0.9073449321530309063619934460"
+      "premium": 39832,
+      "avg_price": "0.5019646330680813439434129135"
     },
     {
       "ticker": "PLTR",
-      "option_symbol": "PLTR260410P00124000",
+      "option_symbol": "PLTR260410P00125000",
       "type": "",
       "strike": 0,
       "expiry": "",
-      "volume": 32621,
-      "open_interest": 1212,
-      "premium": 14023,
-      "avg_price": "1.1002010974525612335612029062"
+      "volume": 74370,
+      "open_interest": 11420,
+      "premium": 30211,
+      "avg_price": "1.1099439290036304961678095979"
+    },
+    {
+      "ticker": "NVDA",
+      "option_symbol": "NVDA260410C00192500",
+      "type": "",
+      "strike": 0,
+      "expiry": "",
+      "volume": 62667,
+      "open_interest": 11586,
+      "premium": 32826,
+      "avg_price": "0.0415379705427098792027701991"
+    },
+    {
+      "ticker": "AMZN",
+      "option_symbol": "AMZN260410P00235000",
+      "type": "",
+      "strike": 0,
+      "expiry": "",
+      "volume": 57516,
+      "open_interest": 861,
+      "premium": 28235,
+      "avg_price": "0.3045389109117462966826622157"
+    },
+    {
+      "ticker": "NVDA",
+      "option_symbol": "NVDA260417C00190000",
+      "type": "",
+      "strike": 0,
+      "expiry": "",
+      "volume": 56509,
+      "open_interest": 97668,
+      "premium": 23935,
+      "avg_price": "2.3652519067759118016599125807"
+    },
+    {
+      "ticker": "PLTR",
+      "option_symbol": "PLTR260410C00128000",
+      "type": "",
+      "strike": 0,
+      "expiry": "",
+      "volume": 56350,
+      "open_interest": 818,
+      "premium": 25779,
+      "avg_price": "1.1615850931677018633540372634"
+    },
+    {
+      "ticker": "AAPL",
+      "option_symbol": "AAPL260410P00260000",
+      "type": "",
+      "strike": 0,
+      "expiry": "",
+      "volume": 55454,
+      "open_interest": 5580,
+      "premium": 25675,
+      "avg_price": "0.4689988098243589281206044674"
+    },
+    {
+      "ticker": "AMD",
+      "option_symbol": "AMD260410P00245000",
+      "type": "",
+      "strike": 0,
+      "expiry": "",
+      "volume": 53964,
+      "open_interest": 182,
+      "premium": 26088,
+      "avg_price": "1.0728630197909717589504113873"
+    },
+    {
+      "ticker": "TSLA",
+      "option_symbol": "TSLA260410C00355000",
+      "type": "",
+      "strike": 0,
+      "expiry": "",
+      "volume": 53400,
+      "open_interest": 14049,
+      "premium": 23219,
+      "avg_price": "0.4260657303370786516853932611"
+    },
+    {
+      "ticker": "AMD",
+      "option_symbol": "AMD260410C00245000",
+      "type": "",
+      "strike": 0,
+      "expiry": "",
+      "volume": 52769,
+      "open_interest": 8478,
+      "premium": 27716,
+      "avg_price": "1.9201798404366199852185942461"
     }
   ]
 }
