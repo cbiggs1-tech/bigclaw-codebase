@@ -3553,134 +3553,33 @@
       }
     }
   },
-  "earnings": [
-    {
-      "ticker": "BAC",
-      "date": "Apr 15",
-      "days": 4
-    },
-    {
-      "ticker": "GE",
-      "date": "Apr 21",
-      "days": 10
-    },
-    {
-      "ticker": "GEV",
-      "date": "Apr 22",
-      "days": 11
-    },
-    {
-      "ticker": "IBM",
-      "date": "Apr 22",
-      "days": 11
-    },
-    {
-      "ticker": "JNJ",
-      "date": "Apr 14",
-      "days": 3
-    },
-    {
-      "ticker": "JPM",
-      "date": "Apr 14",
-      "days": 3
-    },
-    {
-      "ticker": "KMI",
-      "date": "Apr 15",
-      "days": 4
-    },
-    {
-      "ticker": "LMT",
-      "date": "Apr 23",
-      "days": 12
-    },
-    {
-      "ticker": "MMM",
-      "date": "Apr 21",
-      "days": 10
-    },
-    {
-      "ticker": "NFLX",
-      "date": "Apr 16",
-      "days": 5
-    },
-    {
-      "ticker": "NOC",
-      "date": "Apr 21",
-      "days": 10
-    },
-    {
-      "ticker": "NOW",
-      "date": "Apr 22",
-      "days": 11
-    },
-    {
-      "ticker": "PG",
-      "date": "Apr 24",
-      "days": 13
-    },
-    {
-      "ticker": "PM",
-      "date": "Apr 22",
-      "days": 11
-    },
-    {
-      "ticker": "RTX",
-      "date": "Apr 21",
-      "days": 10
-    },
-    {
-      "ticker": "T",
-      "date": "Apr 22",
-      "days": 11
-    },
-    {
-      "ticker": "TSLA",
-      "date": "Apr 22",
-      "days": 11
-    },
-    {
-      "ticker": "UNH",
-      "date": "Apr 21",
-      "days": 10
-    },
-    {
-      "ticker": "WFC",
-      "date": "Apr 14",
-      "days": 3
-    }
-  ],
+  "earnings": [],
   "overlap": [],
   "concentration": [],
   "bond_signals": {
     "yield_curve": {
-      "two_year": 3.79,
-      "ten_year": 4.29,
-      "spread": 0.5,
-      "spread_1mo_ago": 0.58,
-      "spread_change": -0.08,
-      "date": "2026-04-08",
-      "assessment": "Flat \u2014 neutral"
+      "two_year": 3.931,
+      "ten_year": 4.309,
+      "spread": 0.378,
+      "date": "2026-04-10",
+      "assessment": "Normal & steepening \u2014 bullish"
     },
     "credit_spreads": {
-      "current_bps": 290.0,
-      "raw_value": 2.9,
-      "prev_value": 3.09,
-      "change": -0.19,
-      "date": "2026-04-09",
-      "assessment": "Tight (290bps) \u2014 bullish"
+      "current_bps": 292.0,
+      "date": "2026-04-10",
+      "assessment": "Tight (292bps) \u2014 bullish"
     },
     "ten_year": {
-      "current": 4.29,
-      "prev": 4.15,
-      "change_bps": 14.0,
-      "date": "2026-04-08",
-      "assessment": "Stable \u2014 neutral"
+      "current": 4.309,
+      "prev": 4.335,
+      "change_bps": -2.6,
+      "date": "2026-04-10",
+      "assessment": "Elevated \u2014 bearish"
     },
     "scores": {
-      "yield_curve": 0,
+      "yield_curve": 1,
       "credit_spreads": 1,
-      "ten_year_level": 0
+      "ten_year_level": -1
     },
     "combined_score": 1
   },
@@ -4121,5 +4020,12 @@
     }
   ],
   "executed_this_week": [],
-  "priceRefreshedAt": "2026-04-10T15:02:41.798432Z"
+  "priceRefreshedAt": "2026-04-10T15:02:41.798432Z",
+  "rates": {
+    "fed_funds": "4.25\u20134.50%",
+    "ten_year": 4.309,
+    "two_year": 3.931,
+    "yield_spread": 0.378,
+    "inverted": false
+  }
 }
