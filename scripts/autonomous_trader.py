@@ -171,25 +171,9 @@ def get_position_count(pid):
     return count
 
 
-def get_position_value(pid, ticker):
-    """Return current market value of a position (shares * avg_cost as proxy).
-    Returns 0 if not held."""
-    conn = db_conn()
-    c = conn.cursor()
-    c.execute(
-        "SELECT shares, avg_cost FROM holdings WHERE portfolio_id = ? AND ticker = ? AND shares > 0",
-        (pid, ticker)
-    )
-    row = c.fetchone()
-    conn.close()
-    if row:
-        return row[0] * row[1]
-    return 0.0
-
-
 def get_portfolio_market_value(pid):
-    """Return total portfolio value (cash + all holdings at cost basis).
-    Used for concentration checks."""
+    """Return total portfolio value (cash + holdings at cost basis).
+    Cost basis is used as proxy — monthly rebalance uses live prices."""
     cash = get_verified_cash(pid)
     conn = db_conn()
     c = conn.cursor()
@@ -1076,8 +1060,7 @@ def execute_trades(client, data, dry_run=False, seed_mode=False):
                     continue
                 score = sig.get("score", 0)
             # Style gate check — only for candidates, not existing holdings
-            gate_info = signal_map.get(ticker, {}).get("info", {})
-            gate_result = passes_style_gate(ticker, pname, gate_info if gate_info else None)
+            gate_result = passes_style_gate(ticker, pname, None)
             if not gate_result["pass"]:
                 continue
             all_scored[ticker] = {"ticker": ticker, "score": score, "held": False,
@@ -1152,9 +1135,23 @@ def execute_trades(client, data, dry_run=False, seed_mode=False):
             conn.close()
             sgov_shares = int(sgov_row[0]) if sgov_row and sgov_row[0] > 0 else 0
             if sgov_shares > 0:
-                sell_sgov_for_cash(client, pid, pname, sgov_shares * 101, dry_run=dry_run)
+                sell_sgov_for_cash(client, pid, pname, float('inf'), dry_run=dry_run)
 
-        # 8. Execute buys in score order (strongest first)
+        # 8. CANSLIM market direction check — block Momentum Growth buys in downtrend
+        if pname == "Momentum Growth" and to_buy:
+            try:
+                import yfinance as yf
+                spy = yf.Ticker("SPY").history(period="60d")
+                if len(spy) >= 50:
+                    spy_close = spy["Close"]
+                    sma50 = spy_close.rolling(50).mean().iloc[-1]
+                    if spy_close.iloc[-1] < sma50:
+                        logger.info(f"{pname}: SPY below 50-day SMA — CANSLIM M rule blocks new buys")
+                        to_buy = [s for s in to_buy if s["held"]]  # Only allow adds to existing, no new positions
+            except Exception as e:
+                logger.warning(f"SPY trend check failed (non-fatal): {e}")
+
+        # Execute buys in score order (strongest first)
         for s in to_buy:
             if pid in halted_portfolios:
                 break

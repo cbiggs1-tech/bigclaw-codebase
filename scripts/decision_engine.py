@@ -25,10 +25,10 @@ logger = get_logger("decision_engine")
 BOND_WEIGHTS = {
     "Income Dividends": 1.5,
     "Innovation Fund": 1.25,
-    "Nuclear Energy": 1.0,
+    "Nuclear Renaissance": 1.0,
     "Value Picks": 0.5,
-    "Defense & Aerospace": 0.25,
-    "Momentum Plays": 0.75,
+    "AI Defense & Autonomous": 0.25,
+    "Momentum Growth": 0.75,
     "Growth Value": 0.75,
 }
 DEFAULT_BOND_WEIGHT = 0.75
@@ -45,70 +45,69 @@ PORTFOLIO_UNIVERSES_PATH = os.path.expanduser("~/.openclaw/workspace/config/port
 #                    ShortInterest, Insider, BondMkt, ValueOverride
 # ---------------------------------------------------------------------------
 STYLE_WEIGHTS = {
+    # Key names MUST match the signal category names emitted by analyze_* functions.
+    # Emitted names: RSI, MACD, SMA50, SMA200, Cross, RelStrength,
+    #   EarningsGrowth, RevenueGrowth, PE, DebtEquity, ShortInterest,
+    #   Insider, BondMkt, ValueOverride, DividendYield, PEG, ROE, FCF,
+    #   GrossMargin, PayoutSafety, EarningsProximity
+
     # Buffett/Graham — Quality Value: ROE, FCF, gross margin define quality.
-    # P/E is a gate, not the only metric. Technicals are noise.
     "Value Picks": {
-        "RSI": 0.0, "MACD": 0.0, "SMA": 0.0, "GoldenCross": 0.0, "RelativeStrength": 0.0,
-        "Earnings": 2.0, "Revenue": 1.0, "PE": 2.0, "Debt": 1.5, "ShortInterest": 0.0,
-        "InsiderFlow": 0.5, "BondYield": 1.0, "DividendYield": 1.0, "ExpertOverride": 1.0,
+        "RSI": 0.0, "MACD": 0.0, "SMA50": 0.0, "SMA200": 0.0, "Cross": 0.0, "RelStrength": 0.0,
+        "EarningsGrowth": 2.0, "RevenueGrowth": 1.0, "PE": 2.0, "DebtEquity": 1.5, "ShortInterest": 0.0,
+        "Insider": 0.5, "BondMkt": 1.0, "DividendYield": 1.0, "ValueOverride": 1.0,
         "PEG": 0.5, "ROE": 2.0, "FCF": 2.0, "GrossMargin": 1.5, "PayoutSafety": 1.0
     },
     # Cathie Wood — Disruptive Innovation: Revenue growth and TAM matter.
-    # P/E is irrelevant for high-growth. Momentum confirms adoption curve.
     "Innovation Fund": {
-        "RSI": 0.0, "MACD": 0.0, "SMA": 0.0, "GoldenCross": 0.0, "RelativeStrength": 1.0,
-        "Earnings": 0.0, "Revenue": 2.0, "PE": 0.0, "Debt": 0.5, "ShortInterest": 1.0,
-        "InsiderFlow": 0.5, "BondYield": 0.0, "DividendYield": 0.0, "ExpertOverride": 2.0,
+        "RSI": 0.0, "MACD": 0.0, "SMA50": 0.0, "SMA200": 0.0, "Cross": 0.0, "RelStrength": 1.0,
+        "EarningsGrowth": 0.0, "RevenueGrowth": 2.0, "PE": 0.0, "DebtEquity": 0.5, "ShortInterest": 1.0,
+        "Insider": 0.5, "BondMkt": 0.0, "DividendYield": 0.0, "ValueOverride": 2.0,
         "PEG": 0.0, "ROE": 0.0, "FCF": 1.0, "GrossMargin": 0.5, "PayoutSafety": 0.0
     },
     # Peter Lynch — GARP: PEG is the single most important metric.
-    # Replaces separate PE + EarningsGrowth with one smarter signal.
     "Growth Value": {
-        "RSI": 0.0, "MACD": 0.0, "SMA": 0.0, "GoldenCross": 0.0, "RelativeStrength": 0.0,
-        "Earnings": 2.0, "Revenue": 1.0, "PE": 1.5, "Debt": 1.5, "ShortInterest": 0.0,
-        "InsiderFlow": 1.0, "BondYield": 0.0, "DividendYield": 0.5, "ExpertOverride": 0.0,
+        "RSI": 0.0, "MACD": 0.0, "SMA50": 0.0, "SMA200": 0.0, "Cross": 0.0, "RelStrength": 0.0,
+        "EarningsGrowth": 2.0, "RevenueGrowth": 1.0, "PE": 1.5, "DebtEquity": 1.5, "ShortInterest": 0.0,
+        "Insider": 1.0, "BondMkt": 0.0, "DividendYield": 0.5, "ValueOverride": 0.0,
         "PEG": 2.0, "ROE": 1.0, "FCF": 1.0, "GrossMargin": 1.0, "PayoutSafety": 0.5
     },
     # Dividend Aristocrats — Income: Yield, payout safety, bond sensitivity.
-    # PayoutSafety is critical — a high yield with unsustainable payout is a trap.
     "Income Dividends": {
-        "RSI": 0.0, "MACD": 0.0, "SMA": 0.0, "GoldenCross": 0.0, "RelativeStrength": 0.0,
-        "Earnings": 2.0, "Revenue": 1.0, "PE": 1.0, "Debt": 1.5, "ShortInterest": 0.0,
-        "InsiderFlow": 0.5, "BondYield": 0.5, "DividendYield": 2.0, "ExpertOverride": 0.5,
+        "RSI": 0.0, "MACD": 0.0, "SMA50": 0.0, "SMA200": 0.0, "Cross": 0.0, "RelStrength": 0.0,
+        "EarningsGrowth": 2.0, "RevenueGrowth": 1.0, "PE": 1.0, "DebtEquity": 1.5, "ShortInterest": 0.0,
+        "Insider": 0.5, "BondMkt": 0.5, "DividendYield": 2.0, "ValueOverride": 0.5,
         "PEG": 0.0, "ROE": 1.0, "FCF": 2.0, "GrossMargin": 1.0, "PayoutSafety": 2.0
     },
     # William O'Neil — CANSLIM: Technical momentum + earnings acceleration.
-    # EarningsGrowth bumped to 1.5 — O'Neil requires earnings-confirmed momentum.
     "Momentum Growth": {
-        "RSI": 1.0, "MACD": 0.5, "SMA": 1.0, "GoldenCross": 1.5, "RelativeStrength": 2.0,
-        "Earnings": 2.0, "Revenue": 1.5, "PE": 0.0, "Debt": 0.5, "ShortInterest": 0.5,
-        "InsiderFlow": 0.5, "BondYield": 0.0, "DividendYield": 0.0, "ExpertOverride": 0.5,
+        "RSI": 1.0, "MACD": 0.5, "SMA50": 1.0, "SMA200": 1.0, "Cross": 1.5, "RelStrength": 2.0,
+        "EarningsGrowth": 2.0, "RevenueGrowth": 1.5, "PE": 0.0, "DebtEquity": 0.5, "ShortInterest": 0.5,
+        "Insider": 0.5, "BondMkt": 0.0, "DividendYield": 0.0, "ValueOverride": 0.5,
         "PEG": 0.0, "ROE": 1.5, "FCF": 0.5, "GrossMargin": 0.5, "PayoutSafety": 0.0
     },
     # Nuclear Renaissance — Domain expertise + fundamentals + catalyst-driven.
-    # Technical confirmation matters but thesis is structural (multi-year).
     "Nuclear Renaissance": {
-        "RSI": 0.0, "MACD": 0.0, "SMA": 0.0, "GoldenCross": 0.0, "RelativeStrength": 1.0,
-        "Earnings": 1.5, "Revenue": 1.5, "PE": 0.5, "Debt": 1.0, "ShortInterest": 1.0,
-        "InsiderFlow": 1.0, "BondYield": 0.5, "DividendYield": 0.5, "ExpertOverride": 2.0,
+        "RSI": 0.0, "MACD": 0.0, "SMA50": 0.0, "SMA200": 0.0, "Cross": 0.0, "RelStrength": 1.0,
+        "EarningsGrowth": 1.5, "RevenueGrowth": 1.5, "PE": 0.5, "DebtEquity": 1.0, "ShortInterest": 1.0,
+        "Insider": 1.0, "BondMkt": 0.5, "DividendYield": 0.5, "ValueOverride": 2.0,
         "PEG": 0.0, "ROE": 0.5, "FCF": 2.0, "GrossMargin": 0.5, "PayoutSafety": 0.5
     },
     # AI Defense & Autonomous — Thematic / catalyst-driven (Pentagon spending).
-    # Revenue growth from contracts matters. Technicals for timing.
     "AI Defense & Autonomous": {
-        "RSI": 0.0, "MACD": 0.0, "SMA": 0.0, "GoldenCross": 0.0, "RelativeStrength": 1.0,
-        "Earnings": 1.5, "Revenue": 2.0, "PE": 1.5, "Debt": 1.0, "ShortInterest": 1.0,
-        "InsiderFlow": 1.0, "BondYield": 0.0, "DividendYield": 0.0, "ExpertOverride": 2.0,
+        "RSI": 0.0, "MACD": 0.0, "SMA50": 0.0, "SMA200": 0.0, "Cross": 0.0, "RelStrength": 1.0,
+        "EarningsGrowth": 1.5, "RevenueGrowth": 2.0, "PE": 1.5, "DebtEquity": 1.0, "ShortInterest": 1.0,
+        "Insider": 1.0, "BondMkt": 0.0, "DividendYield": 0.0, "ValueOverride": 2.0,
         "PEG": 0.5, "ROE": 1.0, "FCF": 2.0, "GrossMargin": 1.0, "PayoutSafety": 0.5
     },
 }
 
-# Default weights (equal, matches old behavior)
+# Default weights (equal, matches old behavior). Keys MUST match emitted signal names.
 DEFAULT_STYLE_WEIGHTS = {k: 1.0 for k in [
     "RSI", "MACD", "SMA50", "SMA200", "Cross", "RelStrength",
     "EarningsGrowth", "RevenueGrowth", "PE", "DebtEquity",
     "ShortInterest", "Insider", "BondMkt", "ValueOverride", "DividendYield",
-    "PEG", "ROE", "FCF", "GrossMargin", "PayoutSafety",
+    "PEG", "ROE", "FCF", "GrossMargin", "PayoutSafety", "EarningsProximity",
 ]}
 
 # Portfolio concentration limits
@@ -200,7 +199,7 @@ def fetch_market_data(tickers):
                 close = prices["Close"][etf].dropna()
             if len(close) > 0:
                 data[etf] = {"close": close}
-        except:
+        except Exception:
             pass
 
     # Fetch info per ticker
@@ -222,7 +221,7 @@ def fetch_market_data(tickers):
                     data[ticker]["next_earnings"] = pd.Timestamp(dates[0])
                 elif dates:
                     data[ticker]["next_earnings"] = pd.Timestamp(dates)
-        except:
+        except Exception:
             pass
 
     return data, prices
@@ -255,7 +254,7 @@ def fetch_finviz_data(ticker):
                     result["insider_buys"] += 1
                 elif "sale" in trans or "sell" in trans:
                     result["insider_sells"] += 1
-    except:
+    except Exception:
         pass
 
     return result
@@ -291,14 +290,15 @@ def analyze_technicals(close):
     else:
         signals.append(("MACD", 0, "MACD below signal"))
 
-    # 50-day SMA
+    # 50-day SMA (computed once, reused for cross check)
+    sma50 = None
     if len(close) >= 50:
         sma50 = SMAIndicator(close, window=50).sma_indicator().iloc[-1]
         if current > sma50:
             signals.append(("SMA50", 1, f"above 50-day SMA"))
         else:
             signals.append(("SMA50", -0.5, f"below 50-day SMA"))
-    
+
     # 200-day SMA
     if len(close) >= 200:
         sma200 = SMAIndicator(close, window=200).sma_indicator().iloc[-1]
@@ -306,10 +306,9 @@ def analyze_technicals(close):
             signals.append(("SMA200", 1, f"above 200-day SMA"))
         else:
             signals.append(("SMA200", -0.5, f"below 200-day SMA"))
-        
-        # Golden/Death cross
-        sma50 = SMAIndicator(close, window=50).sma_indicator().iloc[-1]
-        if sma50 > sma200:
+
+        # Golden/Death cross (reuses cached sma50)
+        if sma50 is not None and sma50 > sma200:
             signals.append(("Cross", 1, "golden cross (50>200)"))
         else:
             signals.append(("Cross", -0.5, "death cross (50<200)"))
@@ -335,7 +334,7 @@ def analyze_fundamentals(info, finviz):
         if rg < 0:
             signals.append(("RevenueGrowth", -1, f"revenue growth {rg:.0%}"))
         else:
-            signals.append(("RevenueGrowth", 0, f"revenue growth {rg:.0%}"))
+            signals.append(("RevenueGrowth", 1, f"revenue growth {rg:.0%}"))
 
     # P/E comparison
     trailing = info.get("trailingPE")
@@ -344,7 +343,7 @@ def analyze_fundamentals(info, finviz):
         if forward > trailing:
             signals.append(("PE", -1, f"forward P/E ({forward:.1f}) > trailing ({trailing:.1f})"))
         else:
-            signals.append(("PE", 0, f"P/E improving"))
+            signals.append(("PE", 1, f"P/E improving ({forward:.1f} < {trailing:.1f})"))
 
     # Debt/equity
     de = info.get("debtToEquity")
@@ -473,7 +472,7 @@ def analyze_earnings_proximity(ticker_data):
             now = pd.Timestamp.now(tz=next_e.tz)
         days = (next_e - now).days
         if 0 <= days <= 14:
-            signals.append(("Earnings", 0, f"EARNINGS APPROACHING ({days}d)"))
+            signals.append(("EarningsProximity", 0, f"EARNINGS APPROACHING ({days}d)"))
             flags.append({"date": next_e.strftime("%b %d"), "days": days})
     return signals, flags
 
@@ -560,7 +559,7 @@ def portfolio_level_checks(portfolios, market_data):
                         corr = returns[t1].loc[common].corr(returns[t2].loc[common])
                         if corr > 0.8:
                             corr_flags.append({"t1": t1, "t2": t2, "corr": corr})
-                except:
+                except Exception:
                     pass
 
     return overlap, concentration, corr_flags
@@ -735,7 +734,8 @@ def score_ticker(ticker, market_data, prices, bond_combined, bond_weight, style_
 
     # Collect raw signals: (category, raw_score, description)
     all_signals = []
-    all_signals.extend(analyze_technicals(close))
+    tech_signals = analyze_technicals(close)  # Compute once, reuse
+    all_signals.extend(tech_signals)
     all_signals.extend(analyze_fundamentals(info, finviz))
     all_signals.extend(analyze_quality_fundamentals(info))
     all_signals.extend(analyze_insider(finviz))
@@ -756,8 +756,7 @@ def score_ticker(ticker, market_data, prices, bond_combined, bond_weight, style_
         weight = style_weights.get(cat, 1.0)
         base_score += raw * weight
 
-    # Value Override
-    tech_signals = analyze_technicals(close)
+    # Value Override (reuses cached tech_signals)
     vo_score, vo_components, vo_summary = analyze_value_override(ticker, close, info, tech_signals, prices)
     if vo_score > 0:
         vo_weight = style_weights.get("ValueOverride", 1.0)
