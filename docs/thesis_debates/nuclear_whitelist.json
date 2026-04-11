@@ -1,0 +1,67 @@
+{
+  "_metadata": {
+    "description": "BigClaw Nuclear Renaissance Portfolio — Sector Whitelist",
+    "version": "1.1",
+    "last_updated": "2026-04-01",
+    "reactor_coverage": "94 operating reactors at 54 sites across 28 states. ~76% owned by publicly traded companies. TVA (7 reactors) is federal. A few reactors are owned by public power/cooperatives (Columbia-WA, Cooper-NE).",
+    "updated_by": "Curtis Biggs (ExpertOverride)",
+    "purpose": "yfinance sector/industry fields cannot reliably identify nuclear companies. This manually curated whitelist is the authoritative source for sector gate (G1) in the Nuclear Renaissance portfolio.",
+    "market_cap_gate": "$3B (companies below this are tracked on watchlist but not eligible for purchase)",
+    "review_frequency": "quarterly or when new nuclear IPOs/SPACs emerge"
+  },
+  "eligible": {
+    "_note": "Market cap >= $3B. Eligible for purchase subject to other gates.",
+    "nuclear_utilities": [
+      {"ticker": "CEG", "name": "Constellation Energy", "market_cap": "$102B", "thesis_tier": "Tier 1 Core", "notes": "Largest US carbon-free generator. 21 reactors. Three Mile Island restart."},
+      {"ticker": "VST", "name": "Vistra Corp", "market_cap": "$52B", "thesis_tier": "Tier 1 Core", "notes": "Comanche Peak (2 reactors) + acquired Energy Harbor 2024: Beaver Valley (2), Davis-Besse (1), Perry (1). Total 6 reactors."},
+      {"ticker": "EXC", "name": "Exelon Corp", "market_cap": "$50B", "thesis_tier": "Eligible", "notes": "Largest US nuclear fleet operator (post-CEG spin). Regulated utility."},
+      {"ticker": "SO", "name": "Southern Company", "market_cap": "$108B", "thesis_tier": "Eligible", "notes": "Vogtle 3&4 operator — only new-build nuclear in US."},
+      {"ticker": "D", "name": "Dominion Energy", "market_cap": "$54B", "thesis_tier": "Eligible", "notes": "Millstone, Surry, North Anna nuclear stations."},
+      {"ticker": "PEG", "name": "PSEG", "market_cap": "$41B", "thesis_tier": "Eligible", "notes": "Salem and Hope Creek nuclear stations."},
+      {"ticker": "ETR", "name": "Entergy Corp", "market_cap": "$52B", "thesis_tier": "Eligible", "notes": "Grand Gulf, Waterford, River Bend nuclear stations. 3 reactors."},
+      {"ticker": "TLN", "name": "Talen Energy", "market_cap": "$15B", "thesis_tier": "Eligible", "notes": "Susquehanna nuclear plant (2 reactors). Data center co-location pioneer."},
+      {"ticker": "DUK", "name": "Duke Energy", "market_cap": "$102B", "thesis_tier": "Eligible", "notes": "Brunswick, Catawba, McGuire, Oconee, Harris. 10 reactors across NC/SC."},
+      {"ticker": "NEE", "name": "NextEra Energy", "market_cap": "$193B", "thesis_tier": "Eligible", "notes": "Point Beach, Seabrook, St Lucie, Turkey Point. 7 reactors via FPL."},
+      {"ticker": "XEL", "name": "Xcel Energy", "market_cap": "$50B", "thesis_tier": "Eligible", "notes": "Monticello, Prairie Island. 3 reactors in MN."},
+      {"ticker": "PNW", "name": "Pinnacle West Capital (APS)", "market_cap": "$12B", "thesis_tier": "Eligible", "notes": "Palo Verde — largest US nuclear plant, 3 units, ~3,937 MW. APS is largest co-owner (~29%)."},
+      {"ticker": "PCG", "name": "PG&E Corp", "market_cap": "$39B", "thesis_tier": "Eligible", "notes": "Diablo Canyon — 2 reactors. License extended past planned 2024-25 closure."},
+      {"ticker": "EVRG", "name": "Evergy", "market_cap": "$19B", "thesis_tier": "Eligible", "notes": "Wolf Creek — 1 reactor in KS. ~47% owner."},
+      {"ticker": "AEP", "name": "American Electric Power", "market_cap": "$71B", "thesis_tier": "Eligible", "notes": "Donald C. Cook — 2 reactors in MI."},
+      {"ticker": "AEE", "name": "Ameren Corp", "market_cap": "$31B", "thesis_tier": "Eligible", "notes": "Callaway — 1 reactor in MO."}
+    ],
+    "uranium_mining_fuel": [
+      {"ticker": "CCJ", "name": "Cameco Corp", "market_cap": "$50B", "thesis_tier": "Tier 1 Core", "notes": "World's largest publicly traded uranium producer and fuel services."},
+      {"ticker": "UEC", "name": "Uranium Energy Corp", "market_cap": "$7B", "thesis_tier": "Eligible", "notes": "US-based ISR uranium mining."},
+      {"ticker": "UUUU", "name": "Energy Fuels", "market_cap": "$5B", "thesis_tier": "Eligible", "notes": "Leading US uranium/vanadium/rare earth producer."},
+      {"ticker": "NXE", "name": "NexGen Energy", "market_cap": "$8B", "thesis_tier": "Eligible", "notes": "Rook I project — one of highest-grade uranium deposits globally."},
+      {"ticker": "DNN", "name": "Denison Mines", "market_cap": "$3.5B", "thesis_tier": "Eligible", "notes": "Athabasca Basin uranium development. Wheeler River project."},
+      {"ticker": "LEU", "name": "Centrus Energy", "market_cap": "$3.7B", "thesis_tier": "Tier 2 Speculative", "notes": "Sole US uranium enricher. HALEU production for advanced reactors."}
+    ],
+    "nuclear_manufacturing_services": [
+      {"ticker": "BWXT", "name": "BWX Technologies", "market_cap": "$20B", "thesis_tier": "Tier 1 Core", "notes": "Naval nuclear reactors, TRISO fuel, medical isotopes. Only US manufacturer of naval reactor components."},
+      {"ticker": "GEV", "name": "GE Vernova", "market_cap": "$246B", "thesis_tier": "Tier 1 Core (nuclear-adjacent)", "notes": "BWRX-300 SMR developer. Nuclear is minority of revenue — primarily gas turbines, wind, grid. Provides portfolio diversification."},
+      {"ticker": "FLR", "name": "Fluor Corp", "market_cap": "$7B", "thesis_tier": "Eligible", "notes": "Nuclear engineering and construction. Vogtle experience."},
+      {"ticker": "J", "name": "Jacobs Solutions", "market_cap": "$15B", "thesis_tier": "Eligible", "notes": "Nuclear decommissioning, operations support, NRC regulatory services."},
+      {"ticker": "CW", "name": "Curtiss-Wright", "market_cap": "$26B", "thesis_tier": "Eligible", "notes": "Nuclear reactor components, instrumentation & controls, defense nuclear."}
+    ],
+    "smr_developers": [
+      {"ticker": "OKLO", "name": "Oklo Inc", "market_cap": "$9B", "thesis_tier": "Tier 2 Speculative", "notes": "Aurora micro-reactor. Sam Altman backed. NRC application resubmitted."},
+      {"ticker": "SMR", "name": "NuScale Power", "market_cap": "$3.5B", "thesis_tier": "Tier 2 Speculative", "notes": "Only NRC-certified SMR design (VOYGR). Idaho project cancelled; seeking new flagship."}
+    ]
+  },
+  "watchlist": {
+    "_note": "Market cap $500M-$3B. Tracked for growth potential. Not eligible for purchase until market cap exceeds $3B.",
+    "companies": [
+      {"ticker": "NNE", "name": "Nano Nuclear Energy", "market_cap": "$1.1B", "thesis_tier": "Tier 3 Watchlist", "notes": "Micro-reactor concept stage. No NRC engagement yet. High short interest (~30%)."},
+      {"ticker": "URG", "name": "Ur-Energy", "market_cap": "$620M", "thesis_tier": "Watchlist", "notes": "US ISR uranium mining. Small but producing."}
+    ]
+  },
+  "etf_benchmarks": {
+    "_note": "Not for purchase. Used as sector proxies for relative performance and uranium price tracking.",
+    "etfs": [
+      {"ticker": "URA", "name": "Global X Uranium ETF", "notes": "Primary sector benchmark. Use for correlation audit and relative performance (A6)."},
+      {"ticker": "URNM", "name": "Sprott Uranium Miners ETF", "notes": "Focused uranium miner exposure."},
+      {"ticker": "NLR", "name": "VanEck Uranium+Nuclear Energy ETF", "notes": "Broad nuclear energy exposure."}
+    ]
+  }
+}
