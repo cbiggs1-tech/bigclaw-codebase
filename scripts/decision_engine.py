@@ -792,6 +792,7 @@ def score_ticker(ticker, market_data, prices, bond_combined, bond_weight, style_
         "reasons": reasons, "label": label,
         "price": float(close.iloc[-1]),
         "sector": info.get("sector", ""),
+        "info": info,  # Passed through for style gate checks (avoids re-fetching yfinance)
     }
     if vo_score > 0:
         result_entry["value_override"] = {

@@ -1060,7 +1060,8 @@ def execute_trades(client, data, dry_run=False, seed_mode=False):
                     continue
                 score = sig.get("score", 0)
             # Style gate check — only for candidates, not existing holdings
-            gate_result = passes_style_gate(ticker, pname, None)
+            gate_info = signal_map.get(ticker, {}).get("info")
+            gate_result = passes_style_gate(ticker, pname, gate_info)
             if not gate_result["pass"]:
                 continue
             all_scored[ticker] = {"ticker": ticker, "score": score, "held": False,
