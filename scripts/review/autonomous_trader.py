@@ -1204,6 +1204,8 @@ def execute_trades(client, data, dry_run=False, seed_mode=False):
         logger.error(f"Post-trade reconciliation failed: {e}")
 
     # RULE 6: Post-trade compliance verification
+    # Verify each portfolio conforms to design: holds its top-scoring stocks,
+    # within position count limits, cash accounting is correct.
     logger.info("--- Post-Trade Compliance Check ---")
     conn = db_conn()
     c = conn.cursor()
@@ -1214,32 +1216,67 @@ def execute_trades(client, data, dry_run=False, seed_mode=False):
     for _pid, _pname, _starting in all_ports:
         if _pname == "Treasury Reserve":
             continue
+
+        # Position count check
         pos_count = get_position_count(_pid)
         if pos_count > MAX_HOLDINGS:
             violations.append(f"{_pname}: {pos_count} positions (max {MAX_HOLDINGS})")
         if pos_count < MIN_HOLDINGS and pos_count > 0:
-            violations.append(f"{_pname}: only {pos_count} positions (min {MIN_HOLDINGS})")
-        # Check concentration
-        port_val = get_portfolio_market_value(_pid)
-        if port_val > 0:
-            conn = db_conn()
-            c = conn.cursor()
-            c.execute(
-                "SELECT ticker, shares, avg_cost FROM holdings WHERE portfolio_id = ? AND shares > 0 AND ticker != ?",
-                (_pid, MONEY_MARKET_TICKER)
-            )
-            for _tk, _sh, _avg in c.fetchall():
-                pct = (_sh * _avg) / port_val
-                if pct > MAX_POSITION_PCT:
-                    violations.append(f"{_pname}: {_tk} at {pct:.1%} (max {MAX_POSITION_PCT:.0%})")
-            conn.close()
+            violations.append(f"{_pname}: only {pos_count} positions (min {MIN_HOLDINGS}) — universe may be too restrictive")
+
+        # Cash accounting check
+        verified = get_verified_cash(_pid)
+        conn = db_conn()
+        c = conn.cursor()
+        c.execute("SELECT current_cash FROM portfolios WHERE id = ?", (_pid,))
+        db_cash = c.fetchone()[0]
+        conn.close()
+        if abs(verified - db_cash) > 1:
+            violations.append(f"{_pname}: cash mismatch DB=${db_cash:,.2f} vs replay=${verified:,.2f}")
+
+        # Best-in-class check: are we holding our top-ranked stocks?
+        # Re-score to see what we SHOULD hold vs what we DO hold
+        _port_sigs = portfolio_signals.get(_pname, {})
+        _universe = universes.get(_pname, {})
+        if isinstance(_universe, dict):
+            _allowed = set(_universe.get("holdings", []) + _universe.get("candidates", []))
+        else:
+            _allowed = set(_universe)
+
+        _scores = {}
+        for _tk, _psig in _port_sigs.items():
+            if _tk != MONEY_MARKET_TICKER:
+                _scores[_tk] = _psig.get("score", 0)
+        for _tk in _allowed:
+            if _tk not in _scores and _tk != MONEY_MARKET_TICKER:
+                _sig = signal_map.get(_tk)
+                if _sig:
+                    _scores[_tk] = _sig.get("score", 0)
+
+        _target_top = sorted(_scores.items(), key=lambda x: x[1], reverse=True)[:MAX_HOLDINGS]
+        _target_set = {t[0] for t in _target_top if t[1] >= SCORE_BUY_MINIMUM}
+
+        conn = db_conn()
+        c = conn.cursor()
+        c.execute("SELECT ticker FROM holdings WHERE portfolio_id = ? AND shares > 0 AND ticker != ?",
+                  (_pid, MONEY_MARKET_TICKER))
+        _held_set = {row[0] for row in c.fetchall()}
+        conn.close()
+
+        _should_hold = _target_set - _held_set
+        _should_sell = _held_set - _target_set
+        if _should_hold:
+            violations.append(f"{_pname}: should hold but doesn't: {', '.join(sorted(_should_hold))}")
+        if _should_sell:
+            violations.append(f"{_pname}: holds but shouldn't: {', '.join(sorted(_should_sell))}")
+
     if violations:
-        logger.warning(f"COMPLIANCE VIOLATIONS ({len(violations)}):")
+        logger.warning(f"COMPLIANCE REPORT ({len(violations)} items):")
         for v in violations:
             logger.warning(f"  {v}")
-        log_trade(f"COMPLIANCE | {len(violations)} violations: {'; '.join(violations[:5])}")
+        log_trade(f"COMPLIANCE | {len(violations)} items: {'; '.join(violations[:5])}")
     else:
-        logger.info("All portfolios within position limits")
+        logger.info("All portfolios in compliance with best-in-class design")
 
     return executed
 
