@@ -1,0 +1,31 @@
+# === BigClaw Scheduled Jobs ===
+# All times are Central Time (Pi timezone)
+# Daily pre-market export — 7:30 AM CT Mon-Fri
+# Generates: sector heatmap, calendar, trades, analysis, news, performance chart
+30 7 * * 1-5 /home/cbiggs90/.openclaw/workspace/scripts/daily_export.sh
+# Signals + Prices + Charts — 5x daily during market hours (Mon-Fri)
+# Runs decision engine (with rescreen), macro scanner, price refresh, chart export
+0 9 * * 1-5 /home/cbiggs90/.openclaw/workspace/scripts/refresh_all.sh
+0 10 * * 1-5 /home/cbiggs90/.openclaw/workspace/scripts/refresh_all.sh
+0 12 * * 1-5 /home/cbiggs90/.openclaw/workspace/scripts/refresh_all.sh
+0 14 * * 1-5 /home/cbiggs90/.openclaw/workspace/scripts/refresh_all.sh
+30 16 * * 1-5 /home/cbiggs90/.openclaw/workspace/scripts/refresh_all.sh
+# Autonomous Trading — 10:30 AM CT Mon-Fri
+# Executes trades: syncs with Alpaca, runs decision engine, sells/swaps/buys
+30 9 * * 1-5 cd /home/cbiggs90/.openclaw/workspace/scripts && source /home/cbiggs90/.env_secrets && python3 autonomous_trader.py >> /home/cbiggs90/bigclaw-ai/logs/autonomous_trader.log 2>&1
+# Trailing stop monitor — every 15 min during market hours (Mon-Fri)
+*/15 9-15 * * 1-5 cd /home/cbiggs90/.openclaw/workspace/scripts && source /home/cbiggs90/.env_secrets && python3 stop_check.py >> /home/cbiggs90/bigclaw-ai/logs/stop_check.log 2>&1
+# Saturday candidate screening — 9:00 AM CT
+# Discovers new stocks for each portfolio, runs style gates + AI reasoning
+0 9 * * 6 cd /home/cbiggs90/.openclaw/workspace/scripts && source /home/cbiggs90/.env_secrets && python3 candidate_screener.py >> /home/cbiggs90/bigclaw-ai/logs/candidate_screener.log 2>&1
+50 6 * * * cd /home/cbiggs90/.openclaw/workspace/scripts && source /home/cbiggs90/.env_secrets && python3 morning_briefing_gather.py >> /home/cbiggs90/bigclaw-ai/logs/morning_briefing.log 2>&1
+# Afternoon data gather — 3:25 PM CT (4:25 PM ET) Mon-Fri
+25 15 * * 1-5 cd /home/cbiggs90/.openclaw/workspace/scripts && source /home/cbiggs90/.env_secrets && python3 afternoon_data_gather.py >> /home/cbiggs90/bigclaw-ai/logs/afternoon_gather.log 2>&1
+# Saturday scripts — run before OpenClaw crons
+45 8 * * 6 cd /home/cbiggs90/.openclaw/workspace/scripts && source /home/cbiggs90/.env_secrets && python3 style_compliance.py > /tmp/bigclaw_compliance.txt 2>&1
+# Sunday scripts
+45 8 * * 0 bash /home/cbiggs90/.openclaw/workspace/scripts/openclaw_update_check.sh > /tmp/bigclaw_version_check.txt 2>&1
+# Morning market data gather — 7:55 AM CT (8:55 AM ET) Mon-Fri
+55 7 * * 1-5 cd /home/cbiggs90/.openclaw/workspace/scripts && source /home/cbiggs90/.env_secrets && python3 morning_data_gather.py >> /home/cbiggs90/bigclaw-ai/logs/morning_gather.log 2>&1
+45 7 * * 6 cd /home/cbiggs90/.openclaw/workspace/scripts && source /home/cbiggs90/.env_secrets && python3 ark_itk_tracker.py > /tmp/bigclaw_ark_itk.txt 2>&1 || sleep 60 && python3 ark_itk_tracker.py > /tmp/bigclaw_ark_itk.txt 2>&1
+45 6 * * 0 cd /home/cbiggs90/.openclaw/workspace/scripts && source /home/cbiggs90/.env_secrets && python3 network_scan.py > /tmp/bigclaw_network_scan.txt 2>&1

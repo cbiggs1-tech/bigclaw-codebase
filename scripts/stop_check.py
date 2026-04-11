@@ -1,0 +1,145 @@
+#!/usr/bin/env python3
+"""Lightweight trailing stop checker — runs every 15 min during market hours.
+
+Fetches prices for held tickers, checks trailing stop triggers,
+executes Alpaca sells if triggered, posts to Slack. Zero LLM cost.
+"""
+
+import argparse
+import json
+import re
+import sqlite3
+import sys
+import urllib.request
+from datetime import datetime
+from pathlib import Path
+from zoneinfo import ZoneInfo
+
+ET = ZoneInfo("America/New_York")
+DB_PATH = Path.home() / "bigclaw-ai" / "src" / "portfolios.db"
+SECRETS_FILE = Path.home() / ".env_secrets"
+SLACK_CHANNEL = "D0ADHLUJ400"
+
+sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path.home() / "bigclaw-ai" / "src"))
+
+from bigclaw_logging import get_logger
+from trailing_stop_manager import (
+    fetch_prices, check_triggers, execute_stop_sells,
+    initialize_stops, ratchet_stops, remove_stale_stops,
+)
+
+logger = get_logger("stop_check")
+
+
+def is_market_open():
+    now = datetime.now(ET)
+    if now.weekday() >= 5:
+        return False
+    market_open = now.replace(hour=10, minute=0, second=0)
+    market_close = now.replace(hour=16, minute=0, second=0)
+    return market_open <= now <= market_close
+
+
+def get_held_tickers():
+    conn = sqlite3.connect(str(DB_PATH), timeout=10)
+    conn.execute("PRAGMA journal_mode=WAL")
+    conn.execute("PRAGMA busy_timeout=10000")
+    rows = conn.execute("""
+        SELECT DISTINCT h.ticker FROM holdings h
+        JOIN portfolios p ON p.id = h.portfolio_id
+        WHERE h.shares > 0 AND p.is_active = 1
+    """).fetchall()
+    conn.close()
+    return {r[0] for r in rows}
+
+
+def load_secrets():
+    secrets = {}
+    for line in SECRETS_FILE.read_text().splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        line = re.sub(r"^export\s+", "", line)
+        if "=" not in line:
+            continue
+        k, v = line.split("=", 1)
+        secrets[k.strip()] = v.strip().strip("'\"")
+    return secrets
+
+
+def notify_slack(sells):
+    secrets = load_secrets()
+    token = secrets.get("SLACK_BOT_TOKEN")
+    if not token or not sells:
+        return
+
+    lines = ["\U0001f6a8 *Trailing Stop Triggered*"]
+    for s in sells:
+        dry = " (DRY RUN)" if s.get("dry_run") else ""
+        price = s.get("price", 0)
+        lines.append(
+            "* *{}* | SELL {} {} @ ${:,.2f} | {}{}".format(
+                s["portfolio"], s["shares"], s["ticker"], price, s["reason"], dry
+            )
+        )
+
+    msg = "\n".join(lines)
+    payload = json.dumps({"channel": SLACK_CHANNEL, "text": msg}).encode()
+    req = urllib.request.Request(
+        "https://slack.com/api/chat.postMessage",
+        data=payload,
+        headers={
+            "Authorization": "Bearer " + token,
+            "Content-Type": "application/json",
+        },
+    )
+    try:
+        urllib.request.urlopen(req, timeout=10)
+        logger.info("Slack notification sent")
+    except Exception as e:
+        logger.warning("Slack notify failed: {}".format(e))
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Lightweight trailing stop checker")
+    parser.add_argument("--dry-run", action="store_true", help="Preview without executing")
+    parser.add_argument("--force", action="store_true", help="Run even outside market hours")
+    args = parser.parse_args()
+
+    if not args.force and not is_market_open():
+        return  # Silent exit outside market hours
+
+    tickers = get_held_tickers()
+    if not tickers:
+        logger.info("No held tickers")
+        return
+
+    logger.info("Checking {} tickers".format(len(tickers)))
+    prices = fetch_prices(tickers)
+    if not prices:
+        logger.warning("No prices fetched")
+        return
+
+    # Quick maintenance (lightweight)
+    remove_stale_stops()
+    initialize_stops()
+    ratchet_stops(prices=prices)
+
+    # Check triggers
+    triggered = check_triggers(prices=prices, dry_run=args.dry_run)
+    if not triggered:
+        logger.info("No stops triggered ({} prices checked)".format(len(prices)))
+        return
+
+    # Execute sells
+    logger.info("{} stops triggered!".format(len(triggered)))
+    executed = execute_stop_sells(triggered, dry_run=args.dry_run)
+
+    # Notify
+    notify_slack(executed)
+    logger.info("Stop check complete: {} sells executed".format(len(executed)))
+
+
+if __name__ == "__main__":
+    main()
