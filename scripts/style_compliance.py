@@ -108,6 +108,20 @@ STYLE_RULES = {
         },
         "min_yield": None,
     },
+    "Innovation Fund": {
+        "label": "Disruptive Innovation / Cathie Wood (IPS April 2026)",
+        "require": {
+            "revenue_growing": {"desc": "revenue growth >= 15%", "check": lambda info: (info.get("revenueGrowth") or 0) >= 0.15},
+        },
+        "reject": {
+            "dividend_heavy": {"desc": "dividend yield > 3%", "check": lambda info: (info.get("dividendYield") or 0) > 0.03},
+        },
+        "audit": {
+            "revenue_slowing": {"desc": "revenue growth < 20%", "check": lambda info: 0.15 <= (info.get("revenueGrowth") or 0) < 0.20},
+            "high_debt": {"desc": "D/E > 2.0", "check": lambda info: (info.get("debtToEquity") or 0) > 200},
+        },
+        "min_yield": None,
+    },
     "AI Defense & Autonomous": {
         "label": "Pentagon Thematic (IPS April 2026)",
         "require": {
@@ -186,37 +200,25 @@ def check_technical(ticker, check_type):
 
 
 def check_style_divergence(info_map):
-    """Verify that the same ticker gets different scores across portfolio styles.
+    """Verify that style weights produce different scores across portfolios.
 
-    This is the exact bug that went undetected for 2 months — all portfolios
-    scoring identically means style weights aren't being applied.
+    Two-level check:
+    1. Weight vectors must be unique across all 7 portfolios
+    2. A synthetic signal vector must produce different scores when weighted by each style
+    This catches both the old naming mismatch bug AND asymmetric scoring issues.
     """
-    # Import style weights from decision engine
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-    from decision_engine import STYLE_WEIGHTS
+    from decision_engine import STYLE_WEIGHTS, DEFAULT_STYLE_WEIGHTS
 
-    # Pick a well-known ticker that should score very differently
-    test_tickers = ["TSLA", "JNJ", "NVDA"]
-    available = [t for t in test_tickers if t in info_map]
-    if not available:
-        # Use first ticker we have info for
-        available = [t for t in info_map if info_map[t]][:1]
-    if not available:
-        return {"status": "skip", "reason": "no ticker data available"}
-
-    ticker = available[0]
-
-    # Simulate scoring with different style weights
-    # We just check if the weight vectors are actually different
     style_names = list(STYLE_WEIGHTS.keys())
+
+    # Level 1: Weight vector uniqueness
     weight_vectors = {}
     for sname in style_names:
         w = STYLE_WEIGHTS[sname]
-        # Create a hashable signature of the weights
         sig = tuple(sorted(w.items()))
         weight_vectors[sname] = sig
 
-    # Check uniqueness
     unique_sigs = set(weight_vectors.values())
     if len(unique_sigs) == 1:
         return {
@@ -224,20 +226,57 @@ def check_style_divergence(info_map):
             "reason": "ALL portfolio styles have identical weights — scoring is NOT style-specific!",
             "severity": "CRITICAL",
         }
-    elif len(unique_sigs) < len(style_names):
-        dupes = {}
-        for sname, sig in weight_vectors.items():
-            dupes.setdefault(sig, []).append(sname)
-        identical = {k: v for k, v in dupes.items() if len(v) > 1}
+
+    dupes = {}
+    for sname, sig in weight_vectors.items():
+        dupes.setdefault(sig, []).append(sname)
+    identical_groups = {k: v for k, v in dupes.items() if len(v) > 1}
+
+    # Level 2: Synthetic scoring test
+    # Create a signal vector where every category scores +1.
+    # Each style should produce a different total because weights differ.
+    all_cats = sorted(DEFAULT_STYLE_WEIGHTS.keys())
+    synthetic_signals = [(cat, 1, f"test_{cat}") for cat in all_cats]
+
+    style_scores = {}
+    for sname in style_names:
+        w = STYLE_WEIGHTS[sname]
+        total = sum(1 * w.get(cat, 1.0) for cat, _, _ in synthetic_signals)
+        style_scores[sname] = round(total, 2)
+
+    unique_scores = set(style_scores.values())
+
+    # Also check that no category in STYLE_WEIGHTS is missing from emitted signals
+    missing_keys = []
+    for sname in style_names:
+        for key in STYLE_WEIGHTS[sname]:
+            if key not in DEFAULT_STYLE_WEIGHTS:
+                missing_keys.append(f"{sname}.{key}")
+
+    issues = []
+    if identical_groups:
+        issues.append(f"Identical weight vectors: {[v for v in identical_groups.values()]}")
+    if len(unique_scores) < len(style_names):
+        score_dupes = {}
+        for sname, sc in style_scores.items():
+            score_dupes.setdefault(sc, []).append(sname)
+        score_identical = {k: v for k, v in score_dupes.items() if len(v) > 1}
+        issues.append(f"Identical synthetic scores: {[v for v in score_identical.values()]}")
+    if missing_keys:
+        issues.append(f"Keys in STYLE_WEIGHTS not in DEFAULT: {missing_keys}")
+
+    if issues:
         return {
-            "status": "WARN",
-            "reason": f"Some styles share identical weights: {[v for v in identical.values()]}",
-            "severity": "WARNING",
+            "status": "WARN" if len(unique_sigs) > 1 else "FAIL",
+            "reason": "; ".join(issues),
+            "severity": "WARNING" if len(unique_sigs) > 1 else "CRITICAL",
+            "style_scores": style_scores,
         }
     else:
         return {
             "status": "PASS",
-            "reason": f"All {len(style_names)} portfolio styles have unique weight vectors",
+            "reason": f"All {len(style_names)} styles have unique weights and produce distinct scores",
+            "style_scores": style_scores,
         }
 
 
