@@ -744,7 +744,10 @@ def sell_sgov_for_cash(client, pid, pname, amount_needed, dry_run=False):
     except Exception:
         sgov_price = 100.0
 
-    shares_to_sell = min(sgov_shares, max(1, int(amount_needed / sgov_price) + 1))
+    if math.isinf(amount_needed):
+        shares_to_sell = sgov_shares  # Sell all SGOV
+    else:
+        shares_to_sell = min(sgov_shares, max(1, int(amount_needed / sgov_price) + 1))
     expected_cash = shares_to_sell * sgov_price
 
     if dry_run:
@@ -1089,8 +1092,9 @@ def execute_trades(client, data, dry_run=False, seed_mode=False):
             if not s["held"]:
                 to_buy.append(s)
             elif s["held"]:
-                # Check if underweight — could add more
-                existing_val = s["shares"] * s["avg_cost"]
+                # Check if underweight — use market price from signals, fall back to cost basis
+                sig_price = signal_map.get(s["ticker"], {}).get("price", 0)
+                existing_val = s["shares"] * (sig_price if sig_price > 0 else s["avg_cost"])
                 target_alloc = starting * (0.12 if s["score"] >= 5 else 0.10 if s["score"] >= 3 else 0.08)
                 if existing_val < target_alloc * 0.80:  # More than 20% underweight
                     to_buy.append({**s, "is_add": True, "gap": target_alloc - existing_val})
@@ -1138,16 +1142,16 @@ def execute_trades(client, data, dry_run=False, seed_mode=False):
             if sgov_shares > 0:
                 sell_sgov_for_cash(client, pid, pname, float('inf'), dry_run=dry_run)
 
-        # 8. CANSLIM market direction check — block Momentum Growth buys in downtrend
+        # 8. CANSLIM M rule: market must be in confirmed uptrend (SPY > 200-day SMA)
         if pname == "Momentum Growth" and to_buy:
             try:
                 import yfinance as yf
-                spy = yf.Ticker("SPY").history(period="60d")
-                if len(spy) >= 50:
+                spy = yf.Ticker("SPY").history(period="250d")
+                if len(spy) >= 200:
                     spy_close = spy["Close"]
-                    sma50 = spy_close.rolling(50).mean().iloc[-1]
-                    if spy_close.iloc[-1] < sma50:
-                        logger.info(f"{pname}: SPY below 50-day SMA — CANSLIM M rule blocks new buys")
+                    sma200 = spy_close.rolling(200).mean().iloc[-1]
+                    if spy_close.iloc[-1] < sma200:
+                        logger.info(f"{pname}: SPY below 200-day SMA — CANSLIM M rule blocks new buys")
                         to_buy = [s for s in to_buy if s["held"]]  # Only allow adds to existing, no new positions
             except Exception as e:
                 logger.warning(f"SPY trend check failed (non-fatal): {e}")
