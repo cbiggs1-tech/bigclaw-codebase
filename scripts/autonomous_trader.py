@@ -1487,6 +1487,34 @@ def main():
     args = parser.parse_args()
 
     LOG_DIR.mkdir(parents=True, exist_ok=True)
+
+    # LOCK: Prevent double execution. If another instance is running, exit immediately.
+    # This protects against duplicate cron jobs, OpenClaw double-triggers, or manual overlap.
+    lock_file = LOG_DIR / "autonomous_trader.lock"
+    if lock_file.exists():
+        # Check if the lock is stale (older than 30 minutes = something crashed)
+        import time as _t
+        lock_age = _t.time() - lock_file.stat().st_mtime
+        if lock_age < 1800:  # 30 minutes
+            log_trade("=== BLOCKED: Another instance is already running (lock file exists) ===")
+            logger.error("Another autonomous_trader instance is running. Exiting to prevent double execution.")
+            sys.exit(0)
+        else:
+            logger.warning(f"Stale lock file found ({lock_age:.0f}s old) — removing and proceeding")
+            lock_file.unlink()
+
+    # Create lock file
+    lock_file.write_text(str(os.getpid()))
+    try:
+        _run_main(args)
+    finally:
+        # Always remove lock file when done
+        if lock_file.exists():
+            lock_file.unlink()
+
+
+def _run_main(args):
+    """Actual main logic — called inside lock."""
     log_trade("=== Autonomous Trader started ===")
 
     client = get_trading_client()
