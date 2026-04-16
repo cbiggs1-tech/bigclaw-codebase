@@ -1434,19 +1434,20 @@ def reconcile_with_alpaca(client):
             })
 
     if not mismatches:
-        logger.info("Reconciliation: all positions match")
+        logger.info("Reconciliation: ALL POSITIONS MATCH — DB and Alpaca are in sync")
         conn.close()
-        return
+        return True
 
-    logger.warning(f"Reconciliation: {len(mismatches)} mismatches found")
+    logger.error(f"RECONCILIATION FAILED: {len(mismatches)} mismatches between DB and Alpaca")
     for m in mismatches:
-        logger.warning(f"  {m['ticker']}: DB={m['db']:.0f} Alpaca={m['alpaca']:.0f} diff={m['diff']:+.0f}")
+        logger.error(f"  {m['ticker']}: DB={m['db']:.0f} Alpaca={m['alpaca']:.0f} diff={m['diff']:+.0f}")
 
-    # DO NOT AUTO-FIX — log for manual review
-    # Auto-fixing without knowing which portfolio the shares belong to
-    # would violate RULE 2 (closed cash system)
-    logger.warning("MANUAL REVIEW REQUIRED: Cannot auto-assign shares to portfolios")
-    logger.warning("Run audit script to determine which portfolio should own these shares")
+    # Write a flag file so the next run knows the system is dirty
+    mismatch_file = Path.home() / "bigclaw-ai" / "logs" / "ALPACA_MISMATCH.flag"
+    import json as _json
+    mismatch_file.write_text(_json.dumps(mismatches, indent=2))
+    logger.error(f"Mismatch flag written to {mismatch_file}")
+    logger.error("TRADING SHOULD BE HALTED until mismatches are resolved")
 
     # Post to Slack
     try:
@@ -1461,11 +1462,13 @@ def reconcile_with_alpaca(client):
                     secrets[k.strip()] = v.strip().strip('"')
         token = secrets.get("SLACK_BOT_TOKEN", "")
         if token:
-            msg = ":warning: *BigClaw Reconciliation Alert*\n"
+            msg = ":rotating_light: *BigClaw TRADING HALTED — Alpaca Mismatch*\n"
             msg += f"{len(mismatches)} position mismatches between DB and Alpaca:\n"
-            for m in mismatches:
+            for m in mismatches[:10]:
                 msg += f"  {m['ticker']}: DB={m['db']:.0f} Alpaca={m['alpaca']:.0f} ({m['diff']:+.0f})\n"
-            msg += "\nManual review required. Run audit script."
+            if len(mismatches) > 10:
+                msg += f"  ... and {len(mismatches) - 10} more\n"
+            msg += "\n*Trading will not resume until mismatches are resolved and flag file is cleared.*"
             payload = json.dumps({"channel": "D0ADHLUJ400", "text": msg}).encode()
             req = urllib.request.Request(
                 "https://slack.com/api/chat.postMessage",
@@ -1477,6 +1480,8 @@ def reconcile_with_alpaca(client):
         pass
 
     conn.close()
+    return False  # Mismatches found
+
 
 def main():
     parser = argparse.ArgumentParser(description="BigClaw Autonomous Trader")
@@ -1515,6 +1520,17 @@ def main():
 
 def _run_main(args):
     """Actual main logic — called inside lock."""
+
+    # MISMATCH GUARD: If previous run found DB/Alpaca mismatches, refuse to trade.
+    # This prevents compounding errors. Clear the flag after manual investigation.
+    mismatch_file = Path.home() / "bigclaw-ai" / "logs" / "ALPACA_MISMATCH.flag"
+    if mismatch_file.exists() and not args.dry_run and not args.status:
+        log_trade("=== BLOCKED: Alpaca mismatch flag exists — trading halted until resolved ===")
+        logger.error(f"Previous run found DB/Alpaca mismatches. Review {mismatch_file}")
+        logger.error("After resolving, delete the flag file to resume trading:")
+        logger.error(f"  rm {mismatch_file}")
+        sys.exit(1)
+
     log_trade("=== Autonomous Trader started ===")
 
     client = get_trading_client()
