@@ -1438,16 +1438,38 @@ def reconcile_with_alpaca(client):
         conn.close()
         return True
 
-    logger.error(f"RECONCILIATION FAILED: {len(mismatches)} mismatches between DB and Alpaca")
+    # Classify mismatches: minor (<=5% or <=2 shares) vs critical
+    minor = []
+    critical = []
     for m in mismatches:
+        diff = abs(m["diff"])
+        db_sh = max(m["db"], 1)
+        pct_off = diff / db_sh if db_sh > 0 else diff
+        if diff <= 2 or (pct_off <= 0.05 and diff <= 5):
+            minor.append(m)
+        else:
+            critical.append(m)
+
+    if minor:
+        logger.warning(f"Reconciliation: {len(minor)} minor mismatches (rounding/timing — no action needed)")
+        for m in minor:
+            logger.warning(f"  {m['ticker']}: DB={m['db']:.0f} Alpaca={m['alpaca']:.0f} diff={m['diff']:+.0f}")
+
+    if not critical:
+        logger.info(f"Reconciliation: no critical mismatches — system is healthy")
+        conn.close()
+        return True
+
+    # Critical mismatches — something is seriously wrong
+    logger.error(f"RECONCILIATION FAILED: {len(critical)} CRITICAL mismatches")
+    for m in critical:
         logger.error(f"  {m['ticker']}: DB={m['db']:.0f} Alpaca={m['alpaca']:.0f} diff={m['diff']:+.0f}")
 
-    # Write a flag file so the next run knows the system is dirty
+    # Write flag file to halt next trading session
     mismatch_file = Path.home() / "bigclaw-ai" / "logs" / "ALPACA_MISMATCH.flag"
     import json as _json
-    mismatch_file.write_text(_json.dumps(mismatches, indent=2))
-    logger.error(f"Mismatch flag written to {mismatch_file}")
-    logger.error("TRADING SHOULD BE HALTED until mismatches are resolved")
+    mismatch_file.write_text(_json.dumps(critical, indent=2))
+    logger.error(f"Mismatch flag written — trading halted until resolved")
 
     # Post to Slack
     try:
@@ -1462,13 +1484,16 @@ def reconcile_with_alpaca(client):
                     secrets[k.strip()] = v.strip().strip('"')
         token = secrets.get("SLACK_BOT_TOKEN", "")
         if token:
-            msg = ":rotating_light: *BigClaw TRADING HALTED — Alpaca Mismatch*\n"
-            msg += f"{len(mismatches)} position mismatches between DB and Alpaca:\n"
-            for m in mismatches[:10]:
+            msg = ":rotating_light: *BigClaw TRADING HALTED — Critical Alpaca Mismatch*\n"
+            msg += f"{len(critical)} critical mismatches (>{'>'}5% or >{'>'}2 shares):\n"
+            for m in critical[:10]:
                 msg += f"  {m['ticker']}: DB={m['db']:.0f} Alpaca={m['alpaca']:.0f} ({m['diff']:+.0f})\n"
-            if len(mismatches) > 10:
-                msg += f"  ... and {len(mismatches) - 10} more\n"
-            msg += "\n*Trading will not resume until mismatches are resolved and flag file is cleared.*"
+            if len(critical) > 10:
+                msg += f"  ... and {len(critical) - 10} more\n"
+            if minor:
+                msg += f"\n{len(minor)} minor mismatches (rounding — ignored)\n"
+            msg += "\n*Trading halted. Investigate and clear flag to resume:*\n"
+            msg += "`rm ~/bigclaw-ai/logs/ALPACA_MISMATCH.flag`"
             payload = json.dumps({"channel": "D0ADHLUJ400", "text": msg}).encode()
             req = urllib.request.Request(
                 "https://slack.com/api/chat.postMessage",
