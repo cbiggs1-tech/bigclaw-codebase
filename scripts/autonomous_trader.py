@@ -54,8 +54,8 @@ UNIVERSES_FILE = Path.home() / ".openclaw" / "workspace" / "config" / "portfolio
 
 # Trading rules
 MIN_CASH_RESERVE_PCT = 0.02   # Keep 2% cash reserve per portfolio ($2K on $100K)
-MONEY_MARKET_TICKER = "SGOV"  # iShares 0-3 Month Treasury Bond ETF (~4% yield)
-MIN_SWEEP_AMOUNT = 500        # Don't bother sweeping less than $500
+MONEY_MARKET_TICKER = "SGOV"  # Excluded from scoring/counting (legacy — no longer traded)
+# SGOV sweep removed: idle cash stays as cash. Eliminates DB write failures from SGOV operations.
 MAX_SINGLE_ORDER = 25000.0
 MAX_HOLDINGS = 10            # Max positions per portfolio
 MIN_HOLDINGS = 7             # Min positions per portfolio (triggers swap/add)
@@ -731,150 +731,6 @@ def check_concentration(client, dry_run=False):
 
 
 
-def sell_sgov_for_cash(client, pid, pname, amount_needed, dry_run=False):
-    """Sell SGOV shares to free cash for stock purchases.
-    Returns actual cash freed."""
-    conn = db_conn()
-    c = conn.cursor()
-    c.execute("SELECT shares FROM holdings WHERE portfolio_id = ? AND ticker = ?",
-              (pid, MONEY_MARKET_TICKER))
-    row = c.fetchone()
-    conn.close()
-
-    if not row or row[0] <= 0:
-        return 0
-
-    sgov_shares = int(row[0])
-    import yfinance as yf
-    try:
-        info = retry(lambda: yf.Ticker(MONEY_MARKET_TICKER).info, attempts=2, delay=3,
-                     label=f"yf.info({MONEY_MARKET_TICKER})")
-        sgov_price = info.get("currentPrice") or info.get("regularMarketPrice") or 100.0
-    except Exception:
-        sgov_price = 100.0
-
-    if math.isinf(amount_needed):
-        shares_to_sell = sgov_shares  # Sell all SGOV
-    else:
-        shares_to_sell = min(sgov_shares, max(1, int(amount_needed / sgov_price) + 1))
-    expected_cash = shares_to_sell * sgov_price
-
-    if dry_run:
-        log_trade(f"DRY-SGOV-SELL | {pname} | {shares_to_sell} SGOV @ ~${sgov_price:.2f} = ~${expected_cash:,.2f} | freeing cash for buy")
-        return expected_cash
-
-    from alpaca.trading.requests import MarketOrderRequest
-    from alpaca.trading.enums import OrderSide, TimeInForce
-    try:
-        order = client.submit_order(MarketOrderRequest(
-            symbol=MONEY_MARKET_TICKER, qty=shares_to_sell,
-            side=OrderSide.SELL, time_in_force=TimeInForce.DAY,
-        ))
-        import time
-        time.sleep(1)
-        updated = client.get_order_by_id(str(order.id))
-        status = str(updated.status).lower()
-
-        if "filled" in status:
-            filled_qty = int(float(updated.filled_qty or 0))
-            filled_price = float(updated.filled_avg_price or sgov_price)
-        else:
-            filled_qty = shares_to_sell
-            filled_price = sgov_price
-
-        actual_cash = filled_qty * filled_price
-        log_trade(f"SGOV-SELL | {pname} | {filled_qty} SGOV @ ${filled_price:.2f} = ${actual_cash:,.2f} | freeing cash for buy | order={order.id}")
-
-        _record_trade_with_retry(
-            pid, pname, MONEY_MARKET_TICKER, "sell", filled_qty, filled_price, actual_cash,
-            f"Money market liquidation — freeing cash for stock purchase",
-            sell_all=(filled_qty >= sgov_shares)
-        )
-        return actual_cash
-
-    except Exception as e:
-        log_trade(f"ERROR | {pname} | SGOV-SELL | {e}")
-        return 0
-
-
-def sweep_idle_cash_to_sgov(client, dry_run=False):
-    """Sweep idle cash above reserve into SGOV for all portfolios."""
-    logger.info("--- Cash Sweep: Idle Cash -> SGOV ---")
-
-    from alpaca.trading.requests import MarketOrderRequest
-    from alpaca.trading.enums import OrderSide, TimeInForce
-
-    conn = db_conn()
-    c = conn.cursor()
-    c.execute("SELECT id, name, current_cash, starting_cash FROM portfolios WHERE is_active = 1")
-    portfolios = c.fetchall()
-    conn.close()
-
-    import yfinance as yf
-    try:
-        info = retry(lambda: yf.Ticker(MONEY_MARKET_TICKER).info, attempts=2, delay=3,
-                     label=f"yf.info({MONEY_MARKET_TICKER})")
-        sgov_price = info.get("currentPrice") or info.get("regularMarketPrice") or 100.0
-    except Exception:
-        sgov_price = 100.0
-
-    total_swept = 0
-    for pid, pname, cash, starting in portfolios:
-        if pname == "Treasury Reserve":
-            continue  # Treasury Reserve is already in IEF
-
-        # CASH WALL: Use verified cash, not stale DB read
-        cash = get_verified_cash(pid)
-        reserve = starting * MIN_CASH_RESERVE_PCT
-        sweepable = cash - reserve
-        if sweepable < MIN_SWEEP_AMOUNT:
-            continue
-
-        shares_to_buy = int(sweepable / sgov_price)
-        if shares_to_buy <= 0:
-            continue
-
-        cost = shares_to_buy * sgov_price
-
-        if dry_run:
-            log_trade(f"DRY-SGOV-BUY | {pname} | {shares_to_buy} SGOV @ ~${sgov_price:.2f} = ~${cost:,.2f} | sweeping idle cash")
-            total_swept += cost
-            continue
-
-        try:
-            order = client.submit_order(MarketOrderRequest(
-                symbol=MONEY_MARKET_TICKER, qty=shares_to_buy,
-                side=OrderSide.BUY, time_in_force=TimeInForce.DAY,
-            ))
-            import time
-            time.sleep(1)
-            updated = client.get_order_by_id(str(order.id))
-            status = str(updated.status).lower()
-
-            if "filled" in status:
-                filled_qty = int(float(updated.filled_qty or 0))
-                filled_price = float(updated.filled_avg_price or sgov_price)
-            else:
-                filled_qty = shares_to_buy
-                filled_price = sgov_price
-
-            actual_cost = filled_qty * filled_price
-            log_trade(f"SGOV-BUY | {pname} | {filled_qty} SGOV @ ${filled_price:.2f} = ${actual_cost:,.2f} | cash sweep | order={order.id}")
-
-            _record_trade_with_retry(
-                pid, pname, MONEY_MARKET_TICKER, "buy", filled_qty, filled_price, actual_cost,
-                f"Money market sweep — idle cash earning ~4% yield"
-            )
-            total_swept += actual_cost
-
-        except Exception as e:
-            log_trade(f"ERROR | {pname} | SGOV-BUY | {e}")
-
-    if total_swept > 0:
-        logger.info(f"Cash sweep complete: ${total_swept:,.2f} moved to SGOV")
-    else:
-        logger.info("Cash sweep: no idle cash to sweep")
-
 
 def execute_trades(client, data, dry_run=False, seed_mode=False):
     """Execute trades: Phase 1 safety sells, then best-in-class optimization per portfolio."""
@@ -1139,17 +995,7 @@ def execute_trades(client, data, dry_run=False, seed_mode=False):
         if pid in halted_portfolios:
             continue
 
-        # 7. Sell SGOV to free cash for buys (if we have buys to make)
-        if to_buy:
-            conn = db_conn()
-            c = conn.cursor()
-            c.execute("SELECT shares FROM holdings WHERE portfolio_id = ? AND ticker = ?",
-                      (pid, MONEY_MARKET_TICKER))
-            sgov_row = c.fetchone()
-            conn.close()
-            sgov_shares = int(sgov_row[0]) if sgov_row and sgov_row[0] > 0 else 0
-            if sgov_shares > 0:
-                sell_sgov_for_cash(client, pid, pname, float('inf'), dry_run=dry_run)
+        # 7. Cash is cash — no SGOV sweep. Idle cash stays in portfolio.
 
         # 8. CANSLIM M rule: market must be in confirmed uptrend (SPY > 200-day SMA)
         if pname == "Momentum Growth" and to_buy:
@@ -1202,11 +1048,7 @@ def execute_trades(client, data, dry_run=False, seed_mode=False):
                                 "shares": result["shares"], "price": result["price"], "reason": reason,
                                 **({} if dry_run else {"order_id": result.get("order_id", "")})})
 
-    # --- POST-TRADE: Sweep idle cash to SGOV ---
-    try:
-        sweep_idle_cash_to_sgov(client, dry_run=dry_run)
-    except Exception as e:
-        logger.error(f"Cash sweep failed (non-fatal): {e}")
+    # POST-TRADE: Idle cash stays as cash (SGOV sweep removed)
 
     # RULE 5: Post-trade reconciliation
     try:
