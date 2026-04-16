@@ -354,23 +354,27 @@ def _record_trade_with_retry(pid, pname, ticker, action, shares, price, total_va
 
             # Update holdings
             if action == "buy":
-                # Always check DB for existing holding (caller may not know)
+                # Check if a row exists for this ticker (even with shares=0 from previous sell)
                 c.execute("SELECT shares, avg_cost FROM holdings WHERE portfolio_id = ? AND ticker = ?", (pid, ticker))
                 _existing = c.fetchone()
-                if _existing and _existing[0] > 0:
-                    existing_shares = _existing[0]
-                if existing_shares > 0:
-                    c.execute("SELECT avg_cost FROM holdings WHERE portfolio_id = ? AND ticker = ?", (pid, ticker))
-                    row = c.fetchone()
-                    old_avg = row[0] if row else price
-                    new_shares = existing_shares + shares
-                    new_avg = ((existing_shares * old_avg) + (shares * price)) / new_shares
+                if _existing is not None:
+                    # Row exists — UPDATE it (handles both shares>0 and shares=0 cases)
+                    old_shares = _existing[0] or 0
+                    old_avg = _existing[1] or price
+                    if old_shares > 0:
+                        new_shares = old_shares + shares
+                        new_avg = ((old_shares * old_avg) + (shares * price)) / new_shares
+                    else:
+                        # Was zeroed from a sell — treat as fresh position
+                        new_shares = shares
+                        new_avg = price
                     c.execute(
                         "UPDATE holdings SET shares = ?, avg_cost = ?, last_bought_at = CURRENT_TIMESTAMP "
                         "WHERE portfolio_id = ? AND ticker = ?",
                         (new_shares, round(new_avg, 4), pid, ticker)
                     )
                 else:
+                    # No row at all — INSERT new
                     c.execute(
                         "INSERT INTO holdings (portfolio_id, ticker, shares, avg_cost, rationale) VALUES (?,?,?,?,?)",
                         (pid, ticker, shares, price, reason)
@@ -402,10 +406,15 @@ def _record_trade_with_retry(pid, pname, ticker, action, shares, price, total_va
             return True
 
         except Exception as e:
-            if "database is locked" in str(e) and attempt < max_retries - 1:
+            err_str = str(e)
+            retryable = "database is locked" in err_str or "UNIQUE constraint" in err_str
+            if retryable and attempt < max_retries - 1:
                 wait = 3 * (attempt + 1)
-                logger.warning(f"DB locked recording {action} {ticker} for {pname}, retry {attempt + 1}/{max_retries} in {wait}s...")
+                logger.warning(f"DB error recording {action} {ticker} for {pname}: {err_str}")
+                logger.warning(f"  Retry {attempt + 1}/{max_retries} in {wait}s...")
                 _time.sleep(wait)
+                # On UNIQUE constraint retry, the holdings logic above will re-check
+                # and find the existing row on the next attempt
             else:
                 logger.error(f"CRITICAL: Failed to record {action} {ticker} for {pname} after {attempt + 1} attempts: {e}")
                 logger.error(f"ALPACA EXECUTED BUT DB NOT RECORDED — needs manual reconciliation")
