@@ -3443,241 +3443,35 @@
       }
     }
   },
-  "earnings": [
-    {
-      "ticker": "AAPL",
-      "date": "Apr 30",
-      "days": 12
-    },
-    {
-      "ticker": "ABBV",
-      "date": "Apr 29",
-      "days": 11
-    },
-    {
-      "ticker": "AMZN",
-      "date": "Apr 29",
-      "days": 11
-    },
-    {
-      "ticker": "BRK-B",
-      "date": "May 02",
-      "days": 14
-    },
-    {
-      "ticker": "CVX",
-      "date": "May 01",
-      "days": 13
-    },
-    {
-      "ticker": "EPD",
-      "date": "Apr 28",
-      "days": 10
-    },
-    {
-      "ticker": "FICO",
-      "date": "Apr 28",
-      "days": 10
-    },
-    {
-      "ticker": "GD",
-      "date": "Apr 29",
-      "days": 11
-    },
-    {
-      "ticker": "GE",
-      "date": "Apr 21",
-      "days": 3
-    },
-    {
-      "ticker": "GEV",
-      "date": "Apr 22",
-      "days": 4
-    },
-    {
-      "ticker": "GOOGL",
-      "date": "Apr 29",
-      "days": 11
-    },
-    {
-      "ticker": "HOOD",
-      "date": "Apr 28",
-      "days": 10
-    },
-    {
-      "ticker": "IBM",
-      "date": "Apr 22",
-      "days": 4
-    },
-    {
-      "ticker": "KMI",
-      "date": "Apr 22",
-      "days": 4
-    },
-    {
-      "ticker": "KO",
-      "date": "Apr 28",
-      "days": 10
-    },
-    {
-      "ticker": "LHX",
-      "date": "Apr 30",
-      "days": 12
-    },
-    {
-      "ticker": "LLY",
-      "date": "Apr 30",
-      "days": 12
-    },
-    {
-      "ticker": "LMT",
-      "date": "Apr 23",
-      "days": 5
-    },
-    {
-      "ticker": "MA",
-      "date": "Apr 30",
-      "days": 12
-    },
-    {
-      "ticker": "META",
-      "date": "Apr 29",
-      "days": 11
-    },
-    {
-      "ticker": "MMM",
-      "date": "Apr 21",
-      "days": 3
-    },
-    {
-      "ticker": "MO",
-      "date": "Apr 30",
-      "days": 12
-    },
-    {
-      "ticker": "MRK",
-      "date": "Apr 30",
-      "days": 12
-    },
-    {
-      "ticker": "MSFT",
-      "date": "Apr 29",
-      "days": 11
-    },
-    {
-      "ticker": "NOC",
-      "date": "Apr 21",
-      "days": 3
-    },
-    {
-      "ticker": "NOW",
-      "date": "Apr 22",
-      "days": 4
-    },
-    {
-      "ticker": "PG",
-      "date": "Apr 24",
-      "days": 6
-    },
-    {
-      "ticker": "PM",
-      "date": "Apr 22",
-      "days": 4
-    },
-    {
-      "ticker": "RBLX",
-      "date": "Apr 30",
-      "days": 12
-    },
-    {
-      "ticker": "ROKU",
-      "date": "Apr 30",
-      "days": 12
-    },
-    {
-      "ticker": "RTX",
-      "date": "Apr 21",
-      "days": 3
-    },
-    {
-      "ticker": "SOFI",
-      "date": "Apr 29",
-      "days": 11
-    },
-    {
-      "ticker": "T",
-      "date": "Apr 22",
-      "days": 4
-    },
-    {
-      "ticker": "TSLA",
-      "date": "Apr 22",
-      "days": 4
-    },
-    {
-      "ticker": "TWLO",
-      "date": "Apr 30",
-      "days": 12
-    },
-    {
-      "ticker": "TXT",
-      "date": "Apr 30",
-      "days": 12
-    },
-    {
-      "ticker": "UNH",
-      "date": "Apr 21",
-      "days": 3
-    },
-    {
-      "ticker": "V",
-      "date": "Apr 28",
-      "days": 10
-    },
-    {
-      "ticker": "VZ",
-      "date": "Apr 27",
-      "days": 9
-    },
-    {
-      "ticker": "XOM",
-      "date": "May 01",
-      "days": 13
-    }
-  ],
+  "earnings": [],
   "overlap": [],
   "concentration": [],
   "bond_signals": {
     "yield_curve": {
-      "two_year": 3.76,
-      "ten_year": 4.29,
-      "spread": 0.53,
-      "spread_1mo_ago": 0.52,
-      "spread_change": 0.01,
-      "date": "2026-04-15",
+      "two_year": 3.819,
+      "ten_year": 4.228,
+      "spread": 0.409,
+      "date": "2026-04-17",
       "assessment": "Normal & steepening \u2014 bullish"
     },
     "credit_spreads": {
-      "current_bps": 286.0,
-      "raw_value": 2.86,
-      "prev_value": 3.2,
-      "change": -0.34,
-      "date": "2026-04-16",
-      "assessment": "Tight (286bps) \u2014 bullish"
+      "current_bps": 292.0,
+      "date": "2026-04-17",
+      "assessment": "Tight (292bps) \u2014 bullish"
     },
     "ten_year": {
-      "current": 4.29,
-      "prev": 4.2,
-      "change_bps": 9.0,
-      "date": "2026-04-15",
-      "assessment": "Stable \u2014 neutral"
+      "current": 4.228,
+      "prev": 4.297,
+      "change_bps": -6.9,
+      "date": "2026-04-17",
+      "assessment": "Elevated \u2014 bearish"
     },
     "scores": {
       "yield_curve": 1,
       "credit_spreads": 1,
-      "ten_year_level": 0
+      "ten_year_level": -1
     },
-    "combined_score": 2
+    "combined_score": 1
   },
   "portfolio_optimization": {
     "Value Picks": {
@@ -4252,5 +4046,12 @@
     }
   ],
   "executed_this_week": [],
-  "priceRefreshedAt": "2026-04-17T15:01:53.438371Z"
+  "priceRefreshedAt": "2026-04-17T15:01:53.438371Z",
+  "rates": {
+    "fed_funds": "4.25\u20134.50%",
+    "ten_year": 4.228,
+    "two_year": 3.819,
+    "yield_spread": 0.409,
+    "inverted": false
+  }
 }
