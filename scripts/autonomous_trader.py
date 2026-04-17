@@ -138,9 +138,12 @@ def db_execute_with_retry(func, max_retries=3, delay=2):
 
 def get_verified_cash(pid):
     """Return portfolio cash verified by replaying ALL transactions from starting_cash.
-    This is the ONLY way to know how much a portfolio can spend. No shortcuts."""
+    This is the ONLY way to know how much a portfolio can spend. No shortcuts.
+    Forces WAL checkpoint to ensure we see the latest committed data."""
     conn = db_conn()
     c = conn.cursor()
+    # Force WAL checkpoint so we see all committed writes from other connections
+    c.execute("PRAGMA wal_checkpoint(PASSIVE)")
     c.execute("SELECT starting_cash FROM portfolios WHERE id = ?", (pid,))
     row = c.fetchone()
     if not row:
@@ -244,8 +247,9 @@ def _execute_sell_order(client, pid, pname, ticker, shares, reason, dry_run=Fals
 def _execute_buy_order(client, pid, pname, ticker, alloc, reason, starting, reserve, dry_run=False):
     """Execute a buy order through Alpaca and record to DB.
 
-    Verifies cash before ordering. Downsizes if needed. Returns dict or None.
-    On DB write failure, returns {"halted": True} to trigger circuit breaker.
+    CRITICAL: Cash is verified and allocation is capped BEFORE calculating shares.
+    This prevents the WAL read-visibility race where rapid sequential buys each
+    see the full balance because prior commits aren't visible yet.
     """
     import yfinance as yf
     try:
@@ -254,26 +258,27 @@ def _execute_buy_order(client, pid, pname, ticker, alloc, reason, starting, rese
     except Exception:
         price = None
 
-    if not price:
+    if not price or price <= 0:
         log_trade(f"SKIP | {pname} | BUY {ticker} | no price data")
         return None
 
-    num_shares = int(alloc / price)
+    # CASH WALL: Verify cash FIRST, cap allocation to available, THEN calculate shares.
+    # This is the atomic sequence that prevents overspending.
+    verified_cash = get_verified_cash(pid)
+    available = max(0, verified_cash - reserve)
+
+    # Cap allocation to what this portfolio can actually afford RIGHT NOW
+    actual_alloc = min(alloc, available)
+    if actual_alloc < 500:
+        log_trade(f"SKIP | {pname} | BUY {ticker} | insufficient funds (want ${alloc:,.0f}, have ${available:,.2f})")
+        return None
+
+    num_shares = int(actual_alloc / price)
     if num_shares <= 0:
         return None
 
     cost = num_shares * price
-
-    # CASH WALL: Verify cash from transaction replay before every buy
-    verified_cash = get_verified_cash(pid)
-    available = max(0, verified_cash - reserve)
-    if cost > available:
-        num_shares = int(available / price)
-        if num_shares <= 0:
-            log_trade(f"SKIP | {pname} | BUY {ticker} | insufficient funds (need ${cost:,.2f}, have ${available:,.2f})")
-            return None
-        cost = num_shares * price
-        log_trade(f"DOWNSIZED | {pname} | BUY {ticker} | reduced to {num_shares} shares (${cost:,.2f})")
+    logger.info(f"ORDER SIZING: {pname} | {ticker} | {num_shares} shares @ ${price:,.2f} = ${cost:,.2f} | alloc=${alloc:,.0f} capped=${actual_alloc:,.0f} avail=${available:,.2f}")
 
     if dry_run:
         log_trade(f"DRY-BUY | {pname} | {ticker} | {num_shares} shares @ ${price:,.2f} = ${cost:,.2f} | {reason}")
@@ -285,18 +290,26 @@ def _execute_buy_order(client, pid, pname, ticker, alloc, reason, starting, rese
         order = client.submit_order(MarketOrderRequest(
             symbol=ticker, qty=num_shares, side=OrderSide.BUY, time_in_force=TimeInForce.DAY,
         ))
-        import time
-        time.sleep(1)
-        updated = client.get_order_by_id(str(order.id))
-        status = str(updated.status).lower()
 
-        if "filled" in status:
-            filled_qty = int(float(updated.filled_qty or 0))
-            filled_price = float(updated.filled_avg_price or price)
-        else:
+        # Poll for fill — 3 seconds initial wait, then retry up to 5 times
+        import time
+        time.sleep(3)
+        filled_qty = None
+        filled_price = None
+        for _poll in range(5):
+            updated = client.get_order_by_id(str(order.id))
+            status = str(updated.status).lower()
+            if "filled" in status:
+                filled_qty = int(float(updated.filled_qty or 0))
+                filled_price = float(updated.filled_avg_price or price)
+                break
+            time.sleep(2)
+
+        if filled_qty is None:
+            # Order not confirmed filled after 13 seconds — use ordered quantity
             filled_qty = num_shares
             filled_price = price
-            log_trade(f"WARN | {pname} | BUY {ticker} | order status={status}, using expected values")
+            log_trade(f"WARN | {pname} | BUY {ticker} | order not confirmed filled after polling, using ordered qty={num_shares}")
 
         actual_cost = filled_qty * filled_price
         log_trade(f"BUY | {pname} | {ticker} | {filled_qty} @ ${filled_price:,.2f} = ${actual_cost:,.2f} | {reason} | order={order.id}")
@@ -995,7 +1008,15 @@ def execute_trades(client, data, dry_run=False, seed_mode=False):
         if pid in halted_portfolios:
             continue
 
-        # 7. Cash is cash — no SGOV sweep. Idle cash stays in portfolio.
+        # 7. Global buying power safety check — stop if Alpaca is running low
+        try:
+            _acct = client.get_account()
+            _buying_power = float(_acct.buying_power)
+            if _buying_power < 10000:
+                log_trade(f"GLOBAL LIMIT | {pname} | Alpaca buying power ${_buying_power:,.2f} < $10K — skipping buys")
+                continue
+        except Exception:
+            pass
 
         # 8. CANSLIM M rule: market must be in confirmed uptrend (SPY > 200-day SMA)
         if pname == "Momentum Growth" and to_buy:
@@ -1043,10 +1064,16 @@ def execute_trades(client, data, dry_run=False, seed_mode=False):
             if result and result.get("halted"):
                 halted_portfolios.add(pid)
                 break
-            if result:
+            if result and not result.get("dry_run"):
                 executed.append({"portfolio": pname, "action": "ADD" if is_add else "BUY", "ticker": ticker,
                                 "shares": result["shares"], "price": result["price"], "reason": reason,
-                                **({} if dry_run else {"order_id": result.get("order_id", "")})})
+                                "order_id": result.get("order_id", "")})
+                # Delay between buys — ensures DB commit is visible to next get_verified_cash()
+                import time
+                time.sleep(2)
+            elif result:
+                executed.append({"portfolio": pname, "action": "ADD" if is_add else "BUY", "ticker": ticker,
+                                "shares": result["shares"], "price": result["price"], "reason": reason, "dry_run": True})
 
     # POST-TRADE: Idle cash stays as cash (SGOV sweep removed)
 
