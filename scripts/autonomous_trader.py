@@ -296,20 +296,31 @@ def _execute_buy_order(client, pid, pname, ticker, alloc, reason, starting, rese
         time.sleep(3)
         filled_qty = None
         filled_price = None
-        for _poll in range(5):
+        for _poll in range(10):
             updated = client.get_order_by_id(str(order.id))
             status = str(updated.status).lower()
-            if "filled" in status:
-                filled_qty = int(float(updated.filled_qty or 0))
+            alp_filled = int(float(updated.filled_qty or 0))
+            if status == "orderstatus.filled" or alp_filled >= num_shares:
+                # Fully filled
+                filled_qty = alp_filled
                 filled_price = float(updated.filled_avg_price or price)
                 break
+            if "partial" in status and alp_filled > 0:
+                # Partially filled — keep polling
+                logger.info(f"Partial fill: {ticker} {alp_filled}/{num_shares} — waiting...")
             time.sleep(2)
 
         if filled_qty is None:
-            # Order not confirmed filled after 13 seconds — use ordered quantity
-            filled_qty = num_shares
-            filled_price = price
-            log_trade(f"WARN | {pname} | BUY {ticker} | order not confirmed filled after polling, using ordered qty={num_shares}")
+            # Not fully filled after 23 seconds — use whatever Alpaca actually filled
+            alp_filled = int(float(updated.filled_qty or 0))
+            if alp_filled > 0:
+                filled_qty = alp_filled
+                filled_price = float(updated.filled_avg_price or price)
+                log_trade(f"WARN | {pname} | BUY {ticker} | partial fill after polling: {filled_qty}/{num_shares}")
+            else:
+                filled_qty = num_shares
+                filled_price = price
+                log_trade(f"WARN | {pname} | BUY {ticker} | no fill confirmed, using ordered qty={num_shares}")
 
         actual_cost = filled_qty * filled_price
         log_trade(f"BUY | {pname} | {ticker} | {filled_qty} @ ${filled_price:,.2f} = ${actual_cost:,.2f} | {reason} | order={order.id}")
