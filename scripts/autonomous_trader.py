@@ -284,6 +284,17 @@ def _execute_buy_order(client, pid, pname, ticker, alloc, reason, starting, rese
         log_trade(f"DRY-BUY | {pname} | {ticker} | {num_shares} shares @ ${price:,.2f} = ${cost:,.2f} | {reason}")
         return {"ticker": ticker, "shares": num_shares, "price": price, "value": cost, "dry_run": True}
 
+    # GLOBAL GUARD: Check Alpaca buying power before committing real money.
+    # All 7 portfolios share one Alpaca account — this prevents collective overspend.
+    try:
+        _acct = client.get_account()
+        _bp = float(_acct.buying_power)
+        if _bp < cost + 10000:
+            log_trade(f"GLOBAL LIMIT | {pname} | BUY {ticker} | Alpaca buying power ${_bp:,.0f} too low for ${cost:,.0f} order")
+            return None
+    except Exception:
+        pass  # If we can't check, proceed with the order — per-portfolio cash wall is still enforced
+
     from alpaca.trading.requests import MarketOrderRequest
     from alpaca.trading.enums import OrderSide, TimeInForce
     try:
