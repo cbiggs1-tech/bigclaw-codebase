@@ -349,26 +349,29 @@ def run_audit():
                     f"{ticker}: {gate_result['reason']}{ai_note}"
                 )
 
-            # Also run the legacy require/reject checks for any rules not covered by gates
-            for check_name, check_def in rules.get("require", {}).items():
-                try:
-                    passed = check_def["check"](info)
-                    if not passed:
-                        msg = f"{ticker}: fails '{check_def['desc']}' requirement"
-                        if msg not in port_result["warnings"]:
-                            port_result["warnings"].append(msg)
-                except Exception:
-                    pass
-
-            for check_name, check_def in rules.get("reject", {}).items():
-                try:
-                    triggered = check_def["check"](info)
-                    if triggered:
-                        msg = f"{ticker}: {check_def['desc']} — contradicts {rules['label']} thesis"
-                        if msg not in port_result["violations"]:
-                            port_result["violations"].append(msg)
-                except Exception:
-                    pass
+            # Legacy require/reject checks — SKIP if the gate (possibly AI-assisted) already approved.
+            # The gate already considered these rules and applied AI judgment for borderline cases.
+            # Re-running them as rigid number checks would override the AI decision.
+            if not gate_result["pass"]:
+                # Gate said BLOCK — run legacy checks to surface specific violations
+                for check_name, check_def in rules.get("reject", {}).items():
+                    try:
+                        triggered = check_def["check"](info)
+                        if triggered:
+                            msg = f"{ticker}: {check_def['desc']} — contradicts {rules['label']} thesis"
+                            if msg not in port_result["violations"]:
+                                port_result["violations"].append(msg)
+                    except Exception:
+                        pass
+                for check_name, check_def in rules.get("require", {}).items():
+                    try:
+                        passed = check_def["check"](info)
+                        if not passed:
+                            msg = f"{ticker}: fails '{check_def['desc']}' requirement"
+                            if msg not in port_result["warnings"]:
+                                port_result["warnings"].append(msg)
+                    except Exception:
+                        pass
 
         # Technical checks (e.g., momentum must be above SMA)
         for check_name, check_def in rules.get("technical_checks", {}).items():
