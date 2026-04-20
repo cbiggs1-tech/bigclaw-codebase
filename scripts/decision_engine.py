@@ -123,6 +123,25 @@ SECTOR_ETF_MAP = {
 }
 
 
+def _as_float(value):
+    """Safely convert yfinance field to float. Returns None for any non-numeric
+    value (strings, None, NaN, infinity). yfinance occasionally returns strings
+    like 'Infinity' or numeric-string mixtures that crash comparisons."""
+    if value is None:
+        return None
+    try:
+        f = float(value)
+        # NaN is never equal to itself
+        if f != f:
+            return None
+        # Infinity is not useful for our comparisons
+        if f == float("inf") or f == float("-inf"):
+            return None
+        return f
+    except (TypeError, ValueError):
+        return None
+
+
 def load_portfolios(filter_name=None):
     """Load portfolios and holdings from SQLite.
     Returns all active portfolios even if they have zero holdings (100% cash)."""
@@ -317,11 +336,12 @@ def analyze_technicals(close):
 
 
 def analyze_fundamentals(info, finviz):
-    """Return fundamental signals."""
+    """Return fundamental signals. All yfinance values coerced via _as_float
+    to prevent TypeError crashes on string/NaN/None values."""
     signals = []
 
     # Earnings growth
-    eg = info.get("earningsGrowth") or info.get("earningsQuarterlyGrowth")
+    eg = _as_float(info.get("earningsGrowth")) or _as_float(info.get("earningsQuarterlyGrowth"))
     if eg is not None:
         if eg < 0:
             signals.append(("EarningsGrowth", -1, f"earnings growth {eg:.0%}"))
@@ -329,7 +349,7 @@ def analyze_fundamentals(info, finviz):
             signals.append(("EarningsGrowth", 1, f"earnings growth {eg:.0%}"))
 
     # Revenue growth
-    rg = info.get("revenueGrowth")
+    rg = _as_float(info.get("revenueGrowth"))
     if rg is not None:
         if rg < 0:
             signals.append(("RevenueGrowth", -1, f"revenue growth {rg:.0%}"))
@@ -337,29 +357,30 @@ def analyze_fundamentals(info, finviz):
             signals.append(("RevenueGrowth", 1, f"revenue growth {rg:.0%}"))
 
     # P/E comparison
-    trailing = info.get("trailingPE")
-    forward = info.get("forwardPE")
-    if trailing and forward and trailing > 0 and forward > 0:
+    trailing = _as_float(info.get("trailingPE"))
+    forward = _as_float(info.get("forwardPE"))
+    if trailing is not None and forward is not None and trailing > 0 and forward > 0:
         if forward > trailing:
             signals.append(("PE", -1, f"forward P/E ({forward:.1f}) > trailing ({trailing:.1f})"))
         else:
             signals.append(("PE", 1, f"P/E improving ({forward:.1f} < {trailing:.1f})"))
 
     # Debt/equity
-    de = info.get("debtToEquity")
+    de = _as_float(info.get("debtToEquity"))
     if de is not None and de > 100:
         signals.append(("DebtEquity", -1, f"D/E ratio {de:.0f}"))
 
     # Short interest
-    if finviz.get("short_pct") is not None and finviz["short_pct"] > 10:
-        signals.append(("ShortInterest", -1, f"short interest {finviz['short_pct']:.1f}%"))
+    sp = _as_float(finviz.get("short_pct"))
+    if sp is not None and sp > 10:
+        signals.append(("ShortInterest", -1, f"short interest {sp:.1f}%"))
 
     # Dividend yield
-    div_yield = info.get("dividendYield") or info.get("trailingAnnualDividendYield")
+    div_yield = _as_float(info.get("dividendYield")) or _as_float(info.get("trailingAnnualDividendYield"))
     if div_yield is not None and div_yield > 0:
-        if div_yield >= 0.03:  # 3%+ yield
+        if div_yield >= 0.03:
             signals.append(("DividendYield", 1, f"yield {div_yield:.1%}"))
-        elif div_yield >= 0.015:  # 1.5-3%
+        elif div_yield >= 0.015:
             signals.append(("DividendYield", 0, f"yield {div_yield:.1%}"))
     elif div_yield is not None and div_yield == 0:
         signals.append(("DividendYield", -1, "no dividend"))
@@ -377,11 +398,9 @@ def analyze_quality_fundamentals(info):
     signals = []
 
     # ── PEG Ratio (Peter Lynch's key metric) ──
-    # PEG = P/E / (Earnings Growth % * 100)
-    # yfinance pegRatio is often None, so we compute it ourselves
-    trailing_pe = info.get("trailingPE")
-    eg = info.get("earningsGrowth") or info.get("earningsQuarterlyGrowth")
-    if trailing_pe and trailing_pe > 0 and eg and eg > 0:
+    trailing_pe = _as_float(info.get("trailingPE"))
+    eg = _as_float(info.get("earningsGrowth")) or _as_float(info.get("earningsQuarterlyGrowth"))
+    if trailing_pe is not None and trailing_pe > 0 and eg is not None and eg > 0:
         peg = trailing_pe / (eg * 100)
         if peg < 1.0:
             signals.append(("PEG", 1, f"PEG {peg:.2f} (attractive)"))
@@ -389,12 +408,11 @@ def analyze_quality_fundamentals(info):
             signals.append(("PEG", 0, f"PEG {peg:.2f} (fair)"))
         else:
             signals.append(("PEG", -1, f"PEG {peg:.2f} (expensive)"))
-    elif trailing_pe and trailing_pe > 0 and eg is not None and eg <= 0:
-        # Negative or zero growth makes PEG meaningless — penalize
+    elif trailing_pe is not None and trailing_pe > 0 and eg is not None and eg <= 0:
         signals.append(("PEG", -1, f"PEG N/A (negative growth)"))
 
     # ── ROE — Return on Equity (Buffett's #1 metric) ──
-    roe = info.get("returnOnEquity")
+    roe = _as_float(info.get("returnOnEquity"))
     if roe is not None:
         if roe >= 0.20:
             signals.append(("ROE", 1, f"ROE {roe:.0%} (excellent)"))
@@ -408,12 +426,11 @@ def analyze_quality_fundamentals(info):
             signals.append(("ROE", -1, f"ROE {roe:.0%} (negative)"))
 
     # ── FCF — Free Cash Flow (Buffett: owner earnings) ──
-    fcf = info.get("freeCashflow")
+    fcf = _as_float(info.get("freeCashflow"))
     if fcf is not None:
         if fcf > 0:
-            # Scale by market cap for context
-            mcap = info.get("marketCap")
-            if mcap and mcap > 0:
+            mcap = _as_float(info.get("marketCap"))
+            if mcap is not None and mcap > 0:
                 fcf_yield = fcf / mcap
                 if fcf_yield >= 0.05:
                     signals.append(("FCF", 1, f"FCF yield {fcf_yield:.1%} (strong)"))
@@ -425,7 +442,7 @@ def analyze_quality_fundamentals(info):
             signals.append(("FCF", -1, f"FCF negative (${fcf/1e9:.1f}B)"))
 
     # ── Gross Margin (Buffett: durable competitive advantage) ──
-    gm = info.get("grossMargins")
+    gm = _as_float(info.get("grossMargins"))
     if gm is not None:
         if gm >= 0.40:
             signals.append(("GrossMargin", 1, f"gross margin {gm:.0%} (wide moat)"))
@@ -435,9 +452,9 @@ def analyze_quality_fundamentals(info):
             signals.append(("GrossMargin", -1, f"gross margin {gm:.0%} (thin)"))
 
     # ── Payout Safety (Income: can they sustain the dividend?) ──
-    payout = info.get("payoutRatio")
-    div_yield = info.get("dividendYield") or info.get("trailingAnnualDividendYield")
-    if payout is not None and div_yield and div_yield > 0:
+    payout = _as_float(info.get("payoutRatio"))
+    div_yield = _as_float(info.get("dividendYield")) or _as_float(info.get("trailingAnnualDividendYield"))
+    if payout is not None and div_yield is not None and div_yield > 0:
         if payout < 0.60:
             signals.append(("PayoutSafety", 1, f"payout ratio {payout:.0%} (safe)"))
         elif payout < 0.80:
@@ -934,6 +951,10 @@ def run_analysis(portfolio_filter=None, rescreen=False):
     results_by_portfolio = {}  # (pname, ticker) -> result
     earnings_calendar = []
 
+    # PRISTINE GUARANTEE: Per-ticker try/except. A single bad ticker (corrupt yfinance
+    # data, unexpected API response, calculation error) cannot kill the entire run.
+    # The other 175 tickers still get scored correctly.
+    skipped_tickers = []
     for ticker in fetch_tickers:
         if ticker not in market_data:
             entry = {"ticker": ticker, "score": 0, "signals": [], "reasons": ["no data"], "label": "⚪ HOLD",
@@ -944,37 +965,49 @@ def run_analysis(portfolio_filter=None, rescreen=False):
 
         logger.info(f"Analyzing: {ticker}")
 
-        port_names = ticker_portfolios.get(ticker, [])
+        try:
+            port_names = ticker_portfolios.get(ticker, [])
+            best_entry = None
+            seen_styles = set()
+            for pname in (port_names or ["_default"]):
+                style = STYLE_WEIGHTS.get(pname)
+                style_key = pname if style else "_default"
+                if style_key in seen_styles:
+                    continue
+                seen_styles.add(style_key)
 
-        # Score once per portfolio style this ticker belongs to
-        best_entry = None
-        seen_styles = set()
-        for pname in (port_names or ["_default"]):
-            style = STYLE_WEIGHTS.get(pname)
-            style_key = pname if style else "_default"
-            if style_key in seen_styles:
-                continue
-            seen_styles.add(style_key)
+                bond_weight = BOND_WEIGHTS.get(pname, DEFAULT_BOND_WEIGHT)
+                result_entry, earn_flags = score_ticker(
+                    ticker, market_data, _prices, bond_combined, bond_weight,
+                    style_weights=style
+                )
+                result_entry["style"] = pname if style else "default"
 
-            bond_weight = BOND_WEIGHTS.get(pname, DEFAULT_BOND_WEIGHT)
-            result_entry, earn_flags = score_ticker(
-                ticker, market_data, _prices, bond_combined, bond_weight,
-                style_weights=style
-            )
-            result_entry["style"] = pname if style else "default"
+                for ef in earn_flags:
+                    if not any(e["ticker"] == ticker for e in earnings_calendar):
+                        earnings_calendar.append({"ticker": ticker, **ef})
 
-            for ef in earn_flags:
-                if not any(e["ticker"] == ticker for e in earnings_calendar):
-                    earnings_calendar.append({"ticker": ticker, **ef})
+                results_by_portfolio[(pname, ticker)] = result_entry
 
-            # Store per-portfolio result
-            results_by_portfolio[(pname, ticker)] = result_entry
+                if best_entry is None or result_entry["score"] > best_entry["score"]:
+                    best_entry = result_entry
 
-            if best_entry is None or result_entry["score"] > best_entry["score"]:
-                best_entry = result_entry
+            results.append(best_entry)
+            results_by_ticker[ticker] = best_entry
 
-        results.append(best_entry)
-        results_by_ticker[ticker] = best_entry
+        except Exception as e:
+            # Log, skip, continue. Never crash the whole run on one ticker.
+            logger.error(f"SKIP {ticker}: scoring failed ({type(e).__name__}: {e})")
+            skipped_tickers.append(ticker)
+            # Insert a placeholder so the ticker appears in results with score 0
+            entry = {"ticker": ticker, "score": 0, "signals": [], "reasons": [f"scoring error: {type(e).__name__}"],
+                     "label": "⚪ HOLD",
+                     "position_size": {"category": "review", "range": "0% (flag for review)"}}
+            results.append(entry)
+            results_by_ticker[ticker] = entry
+
+    if skipped_tickers:
+        logger.warning(f"Skipped {len(skipped_tickers)} tickers due to scoring errors: {skipped_tickers}")
 
     # Filter out negative-score signals for tickers we don't hold.
     # Can't sell what you don't own — showing sell signals for unheld stocks is noise.
