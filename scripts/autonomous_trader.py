@@ -189,6 +189,37 @@ def get_portfolio_market_value(pid):
     return cash + holdings_val
 
 
+def _wait_for_fill(client, order, ordered_qty, est_price, ticker, pname, side):
+    """Shared fill polling for BOTH buy and sell orders.
+
+    Market orders can partial-fill over multiple seconds. A single 1-second
+    poll captures a partial fill as 'filled' (substring match) and records
+    the wrong quantity. This function waits for full fill.
+
+    Returns (filled_qty, filled_price). Both may be None if no fill confirmed.
+    """
+    import time
+    time.sleep(3)
+    for _poll in range(10):
+        updated = client.get_order_by_id(str(order.id))
+        status = str(updated.status).lower()
+        alp_filled = int(float(updated.filled_qty or 0))
+        if status == "orderstatus.filled" or alp_filled >= ordered_qty:
+            return (alp_filled, float(updated.filled_avg_price or est_price or 0))
+        if "partial" in status and alp_filled > 0:
+            logger.info(f"Partial {side} fill: {ticker} {alp_filled}/{ordered_qty} — waiting...")
+        time.sleep(2)
+
+    # Final check — accept whatever Alpaca actually filled
+    updated = client.get_order_by_id(str(order.id))
+    alp_filled = int(float(updated.filled_qty or 0))
+    if alp_filled > 0:
+        log_trade(f"WARN | {pname} | {side} {ticker} | partial fill after polling: {alp_filled}/{ordered_qty}")
+        return (alp_filled, float(updated.filled_avg_price or est_price or 0))
+    log_trade(f"WARN | {pname} | {side} {ticker} | no fill confirmed, using ordered qty={ordered_qty}")
+    return (ordered_qty, est_price or 0)
+
+
 def _execute_sell_order(client, pid, pname, ticker, shares, reason, dry_run=False):
     """Execute a sell order through Alpaca and record to DB.
 
@@ -213,38 +244,7 @@ def _execute_sell_order(client, pid, pname, ticker, shares, reason, dry_run=Fals
         order = client.submit_order(MarketOrderRequest(
             symbol=ticker, qty=shares, side=OrderSide.SELL, time_in_force=TimeInForce.DAY,
         ))
-
-        # ROBUST POLLING: wait for FULL fill, not just partial. Same pattern as buy.
-        # Partial fills contain "filled" in status but aren't the final state.
-        import time
-        time.sleep(3)
-        filled_qty = None
-        filled_price = None
-        for _poll in range(10):
-            updated = client.get_order_by_id(str(order.id))
-            status = str(updated.status).lower()
-            alp_filled = int(float(updated.filled_qty or 0))
-            if status == "orderstatus.filled" or alp_filled >= shares:
-                filled_qty = alp_filled
-                filled_price = float(updated.filled_avg_price or est_price or 0)
-                break
-            if "partial" in status and alp_filled > 0:
-                logger.info(f"Partial sell fill: {ticker} {alp_filled}/{shares} — waiting...")
-            time.sleep(2)
-
-        if filled_qty is None:
-            # Final check — use whatever Alpaca actually filled
-            updated = client.get_order_by_id(str(order.id))
-            alp_filled = int(float(updated.filled_qty or 0))
-            if alp_filled > 0:
-                filled_qty = alp_filled
-                filled_price = float(updated.filled_avg_price or est_price or 0)
-                log_trade(f"WARN | {pname} | SELL {ticker} | partial fill after polling: {filled_qty}/{shares}")
-            else:
-                filled_qty = shares
-                filled_price = est_price or 0
-                log_trade(f"WARN | {pname} | SELL {ticker} | no fill confirmed, using ordered qty={shares}")
-
+        filled_qty, filled_price = _wait_for_fill(client, order, shares, est_price, ticker, pname, "SELL")
         actual_value = filled_qty * filled_price
         log_trade(f"SELL | {pname} | {ticker} | {filled_qty} @ ${filled_price:,.2f} = ${actual_value:,.2f} | {reason} | order={order.id}")
 
@@ -321,38 +321,7 @@ def _execute_buy_order(client, pid, pname, ticker, alloc, reason, starting, rese
         order = client.submit_order(MarketOrderRequest(
             symbol=ticker, qty=num_shares, side=OrderSide.BUY, time_in_force=TimeInForce.DAY,
         ))
-
-        # Poll for fill — 3 seconds initial wait, then retry up to 5 times
-        import time
-        time.sleep(3)
-        filled_qty = None
-        filled_price = None
-        for _poll in range(10):
-            updated = client.get_order_by_id(str(order.id))
-            status = str(updated.status).lower()
-            alp_filled = int(float(updated.filled_qty or 0))
-            if status == "orderstatus.filled" or alp_filled >= num_shares:
-                # Fully filled
-                filled_qty = alp_filled
-                filled_price = float(updated.filled_avg_price or price)
-                break
-            if "partial" in status and alp_filled > 0:
-                # Partially filled — keep polling
-                logger.info(f"Partial fill: {ticker} {alp_filled}/{num_shares} — waiting...")
-            time.sleep(2)
-
-        if filled_qty is None:
-            # Not fully filled after 23 seconds — use whatever Alpaca actually filled
-            alp_filled = int(float(updated.filled_qty or 0))
-            if alp_filled > 0:
-                filled_qty = alp_filled
-                filled_price = float(updated.filled_avg_price or price)
-                log_trade(f"WARN | {pname} | BUY {ticker} | partial fill after polling: {filled_qty}/{num_shares}")
-            else:
-                filled_qty = num_shares
-                filled_price = price
-                log_trade(f"WARN | {pname} | BUY {ticker} | no fill confirmed, using ordered qty={num_shares}")
-
+        filled_qty, filled_price = _wait_for_fill(client, order, num_shares, price, ticker, pname, "BUY")
         actual_cost = filled_qty * filled_price
         log_trade(f"BUY | {pname} | {ticker} | {filled_qty} @ ${filled_price:,.2f} = ${actual_cost:,.2f} | {reason} | order={order.id}")
 
