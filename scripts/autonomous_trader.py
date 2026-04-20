@@ -213,17 +213,37 @@ def _execute_sell_order(client, pid, pname, ticker, shares, reason, dry_run=Fals
         order = client.submit_order(MarketOrderRequest(
             symbol=ticker, qty=shares, side=OrderSide.SELL, time_in_force=TimeInForce.DAY,
         ))
-        import time
-        time.sleep(1)
-        updated = client.get_order_by_id(str(order.id))
-        status = str(updated.status).lower()
 
-        if "filled" in status:
-            filled_qty = int(float(updated.filled_qty or 0))
-            filled_price = float(updated.filled_avg_price or est_price or 0)
-        else:
-            filled_qty = shares
-            filled_price = est_price or 0
+        # ROBUST POLLING: wait for FULL fill, not just partial. Same pattern as buy.
+        # Partial fills contain "filled" in status but aren't the final state.
+        import time
+        time.sleep(3)
+        filled_qty = None
+        filled_price = None
+        for _poll in range(10):
+            updated = client.get_order_by_id(str(order.id))
+            status = str(updated.status).lower()
+            alp_filled = int(float(updated.filled_qty or 0))
+            if status == "orderstatus.filled" or alp_filled >= shares:
+                filled_qty = alp_filled
+                filled_price = float(updated.filled_avg_price or est_price or 0)
+                break
+            if "partial" in status and alp_filled > 0:
+                logger.info(f"Partial sell fill: {ticker} {alp_filled}/{shares} — waiting...")
+            time.sleep(2)
+
+        if filled_qty is None:
+            # Final check — use whatever Alpaca actually filled
+            updated = client.get_order_by_id(str(order.id))
+            alp_filled = int(float(updated.filled_qty or 0))
+            if alp_filled > 0:
+                filled_qty = alp_filled
+                filled_price = float(updated.filled_avg_price or est_price or 0)
+                log_trade(f"WARN | {pname} | SELL {ticker} | partial fill after polling: {filled_qty}/{shares}")
+            else:
+                filled_qty = shares
+                filled_price = est_price or 0
+                log_trade(f"WARN | {pname} | SELL {ticker} | no fill confirmed, using ordered qty={shares}")
 
         actual_value = filled_qty * filled_price
         log_trade(f"SELL | {pname} | {ticker} | {filled_qty} @ ${filled_price:,.2f} = ${actual_value:,.2f} | {reason} | order={order.id}")
