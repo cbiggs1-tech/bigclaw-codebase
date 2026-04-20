@@ -470,12 +470,12 @@ def analyze_quality_fundamentals(info):
 
 def analyze_insider(finviz):
     signals = []
-    buys = finviz.get("insider_buys", 0)
-    sells = finviz.get("insider_sells", 0)
+    buys = _as_float(finviz.get("insider_buys")) or 0
+    sells = _as_float(finviz.get("insider_sells")) or 0
     if buys > sells and buys > 0:
-        signals.append(("Insider", 1, f"insider net buying ({buys}B/{sells}S)"))
+        signals.append(("Insider", 1, f"insider net buying ({buys:.0f}B/{sells:.0f}S)"))
     elif sells > buys and sells > 0:
-        signals.append(("Insider", -1, f"insider net selling ({buys}B/{sells}S)"))
+        signals.append(("Insider", -1, f"insider net selling ({buys:.0f}B/{sells:.0f}S)"))
     return signals
 
 
@@ -604,8 +604,8 @@ def analyze_value_override(ticker, close, info, technical_signals, prices):
     current_price = float(close.iloc[-1])
 
     # 1. Price vs analyst consensus target
-    target = info.get("targetMeanPrice")
-    if target and target > 0:
+    target = _as_float(info.get("targetMeanPrice"))
+    if target is not None and target > 0:
         discount = (target - current_price) / target
         if discount > 0.25:
             components["analyst_target"] = {"score": 2, "reason": f"{discount:.0%} below analyst target ${target:.2f}"}
@@ -656,15 +656,14 @@ def analyze_value_override(ticker, close, info, technical_signals, prices):
         pass
 
     # 4. Forward P/E vs sector median (>30% cheaper)
-    forward_pe = info.get("forwardPE")
+    forward_pe = _as_float(info.get("forwardPE"))
     industry = info.get("industry", "")
-    if forward_pe and forward_pe > 0 and industry:
+    if forward_pe is not None and forward_pe > 0 and industry:
         try:
-            industry_pe = info.get("industryForwardPE")  # Not always available
-            # Fallback: use sector PE from yfinance
-            sector_pe = info.get("sectorForwardPE")
-            compare_pe = industry_pe or sector_pe
-            if compare_pe and compare_pe > 0:
+            industry_pe = _as_float(info.get("industryForwardPE"))
+            sector_pe = _as_float(info.get("sectorForwardPE"))
+            compare_pe = industry_pe if industry_pe is not None else sector_pe
+            if compare_pe is not None and compare_pe > 0:
                 discount_pe = (compare_pe - forward_pe) / compare_pe
                 if discount_pe > 0.30:
                     components["pe_discount"] = {"score": 1, "reason": f"forward P/E {forward_pe:.1f} vs sector median {compare_pe:.1f} ({discount_pe:.0%} cheaper)"}
@@ -674,7 +673,7 @@ def analyze_value_override(ticker, close, info, technical_signals, prices):
             pass
 
     # 5. Price below book value
-    pb = info.get("priceToBook")
+    pb = _as_float(info.get("priceToBook"))
     if pb is not None and 0.01 < pb < 1.0:
         components["below_book"] = {"score": 1, "reason": f"P/B {pb:.2f} (below book value)"}
         score += 1
@@ -996,12 +995,22 @@ def run_analysis(portfolio_filter=None, rescreen=False):
             results_by_ticker[ticker] = best_entry
 
         except Exception as e:
-            # Log, skip, continue. Never crash the whole run on one ticker.
-            logger.error(f"SKIP {ticker}: scoring failed ({type(e).__name__}: {e})")
+            # Log full traceback so we know exactly which field/line crashed.
+            # Never crash the whole run on one ticker.
+            import traceback
+            tb = traceback.format_exc()
+            # Extract the failing line from the traceback for a concise log
+            tb_lines = [l for l in tb.split("\n") if "decision_engine.py" in l and "line" in l]
+            failing_line = tb_lines[-1].strip() if tb_lines else "unknown location"
+            logger.error(f"SKIP {ticker}: {type(e).__name__}: {e} | at {failing_line}")
+            # Dump full traceback at debug level for post-mortem
+            logger.debug(f"SKIP {ticker} full traceback:\n{tb}")
             skipped_tickers.append(ticker)
-            # Insert a placeholder so the ticker appears in results with score 0
-            entry = {"ticker": ticker, "score": 0, "signals": [], "reasons": [f"scoring error: {type(e).__name__}"],
-                     "label": "⚪ HOLD",
+            # Mark with scoring_error flag so downstream code can exclude from ranking
+            entry = {"ticker": ticker, "score": 0, "signals": [],
+                     "reasons": [f"scoring error: {type(e).__name__}: {e}"],
+                     "label": "⚠️ SCORING ERROR",
+                     "scoring_error": True,
                      "position_size": {"category": "review", "range": "0% (flag for review)"}}
             results.append(entry)
             results_by_ticker[ticker] = entry
