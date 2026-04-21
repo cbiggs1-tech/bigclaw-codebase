@@ -199,12 +199,13 @@ def collect_options_volume(tickers):
         if not data or not isinstance(data, list) or len(data) == 0:
             continue
         entry = data[0]
-        call_vol = int(entry.get("call_volume", 0))
-        put_vol = int(entry.get("put_volume", 0))
-        call_prem = float(entry.get("call_premium", 0))
-        put_prem = float(entry.get("put_premium", 0))
-        bullish = float(entry.get("bullish_premium", 0))
-        bearish = float(entry.get("bearish_premium", 0))
+        # UW API occasionally returns None for fields — use "or 0" to handle
+        call_vol = int(entry.get("call_volume") or 0)
+        put_vol = int(entry.get("put_volume") or 0)
+        call_prem = float(entry.get("call_premium") or 0)
+        put_prem = float(entry.get("put_premium") or 0)
+        bullish = float(entry.get("bullish_premium") or 0)
+        bearish = float(entry.get("bearish_premium") or 0)
 
         cp_ratio = call_vol / put_vol if put_vol > 0 else 0
         bull_bear_ratio = bullish / bearish if bearish > 0 else 0
@@ -218,8 +219,8 @@ def collect_options_volume(tickers):
             "bearish_premium": bearish,
             "cp_ratio": round(cp_ratio, 2),
             "bull_bear_ratio": round(bull_bear_ratio, 2),
-            "call_open_interest": int(entry.get("call_open_interest", 0)),
-            "put_open_interest": int(entry.get("put_open_interest", 0)),
+            "call_open_interest": int(entry.get("call_open_interest") or 0),
+            "put_open_interest": int(entry.get("put_open_interest") or 0),
         }
     return results
 
