@@ -30,7 +30,6 @@ DASHBOARD_FILES = {
     "signals.json": 6,
     "portfolios.json": 6,
     "trades.json": 24,
-    "portfolio_analysis.json": 24,
     "news.json": 12,
     "sentiment.json": 12,
     "options_flow.json": 6,
