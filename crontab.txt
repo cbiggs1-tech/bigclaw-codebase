@@ -1,8 +1,9 @@
+SHELL=/bin/bash
 # === BigClaw Scheduled Jobs ===
 # All times are Central Time (Pi timezone)
 # Daily pre-market export — 7:30 AM CT Mon-Fri
 # Generates: sector heatmap, calendar, trades, analysis, news, performance chart
-30 7 * * 1-5 /home/cbiggs90/.openclaw/workspace/scripts/daily_export.sh
+30 6 * * 1-5 /home/cbiggs90/.openclaw/workspace/scripts/daily_export.sh
 # Signals + Prices + Charts — 5x daily during market hours (Mon-Fri)
 # Runs decision engine (with rescreen), macro scanner, price refresh, chart export
 0 9 * * 1-5 /home/cbiggs90/.openclaw/workspace/scripts/refresh_all.sh
@@ -12,7 +13,7 @@
 30 16 * * 1-5 /home/cbiggs90/.openclaw/workspace/scripts/refresh_all.sh
 # Autonomous Trading — 10:30 AM CT Mon-Fri
 # Executes trades: syncs with Alpaca, runs decision engine, sells/swaps/buys
-30 9 * * 1-5 cd /home/cbiggs90/.openclaw/workspace/scripts && source /home/cbiggs90/.env_secrets && python3 autonomous_trader.py >> /home/cbiggs90/bigclaw-ai/logs/autonomous_trader.log 2>&1
+0 10 * * 1-5 cd /home/cbiggs90/.openclaw/workspace/scripts && source /home/cbiggs90/.env_secrets && python3 autonomous_trader.py >> /home/cbiggs90/bigclaw-ai/logs/autonomous_trader.log 2>&1
 # Trailing stop monitor — every 15 min during market hours (Mon-Fri)
 */15 9-15 * * 1-5 cd /home/cbiggs90/.openclaw/workspace/scripts && source /home/cbiggs90/.env_secrets && python3 stop_check.py >> /home/cbiggs90/bigclaw-ai/logs/stop_check.log 2>&1
 # Saturday candidate screening — 9:00 AM CT
@@ -29,3 +30,5 @@
 55 7 * * 1-5 cd /home/cbiggs90/.openclaw/workspace/scripts && source /home/cbiggs90/.env_secrets && python3 morning_data_gather.py >> /home/cbiggs90/bigclaw-ai/logs/morning_gather.log 2>&1
 45 7 * * 6 cd /home/cbiggs90/.openclaw/workspace/scripts && source /home/cbiggs90/.env_secrets && python3 ark_itk_tracker.py > /tmp/bigclaw_ark_itk.txt 2>&1 || sleep 60 && python3 ark_itk_tracker.py > /tmp/bigclaw_ark_itk.txt 2>&1
 45 6 * * 0 cd /home/cbiggs90/.openclaw/workspace/scripts && source /home/cbiggs90/.env_secrets && python3 network_scan.py > /tmp/bigclaw_network_scan.txt 2>&1
+# Sentiment scan — hourly during market hours Mon-Fri
+30 10,11,12,13,14,15 * * 1-5 cd /home/cbiggs90/.openclaw/workspace/scripts && source /home/cbiggs90/.env_secrets && python3 sentiment.py TSLA NVDA PLTR AAPL MSFT --json > /home/cbiggs90/bigclaw-ai/docs/data/sentiment.json 2>/dev/null
