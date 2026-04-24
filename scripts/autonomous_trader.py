@@ -405,11 +405,15 @@ def _record_trade_with_retry(pid, pname, ticker, action, shares, price, total_va
                     )
             elif action == "sell":
                 if sell_all:
-                    c.execute("UPDATE holdings SET shares = 0 WHERE portfolio_id = ? AND ticker = ?", (pid, ticker))
+                    c.execute("DELETE FROM holdings WHERE portfolio_id = ? AND ticker = ?", (pid, ticker))
                 else:
                     c.execute(
                         "UPDATE holdings SET shares = shares - ? WHERE portfolio_id = ? AND ticker = ?",
                         (shares, pid, ticker)
+                    )
+                    c.execute(
+                        "DELETE FROM holdings WHERE portfolio_id = ? AND ticker = ? AND shares <= 0.001",
+                        (pid, ticker)
                     )
 
             # RULE 2: Recalculate cash from ALL transactions (never incremental)
