@@ -31,9 +31,9 @@ LOCK_FILE = Path("/tmp/morning_briefing.lock")
 FAILURE_FLAG = Path.home() / "bigclaw-ai" / "logs" / "BRIEFING_FAILED.flag"
 LLM_LOG = Path.home() / "bigclaw-ai" / "logs" / "llm_calls.jsonl"
 
-PROMPT = """You are writing a morning MARKET briefing for Curtis. Below is pre-gathered
-market data collected by an automated script. Write a concise, actionable briefing
-based ONLY on this data.
+PROMPT = """You are writing a morning MARKET briefing for Curtis. Today is {today}.
+Below is pre-gathered market data collected by an automated script. Write a concise,
+actionable briefing based ONLY on this data.
 
 CRITICAL RULES:
 - Every price, yield, percentage, and financial number in your output MUST appear
@@ -140,7 +140,8 @@ def call_llm(data_text):
     if not api_key:
         raise RuntimeError("ANTHROPIC_API_KEY not in environment")
     client = anthropic.Anthropic(api_key=api_key, timeout=LLM_TIMEOUT_SECONDS)
-    prompt = PROMPT.format(data=data_text)
+    today = datetime.now().strftime("%A, %B %d, %Y")
+    prompt = PROMPT.format(data=data_text, today=today)
     start = time.time()
     resp = client.messages.create(
         model=MODEL,
