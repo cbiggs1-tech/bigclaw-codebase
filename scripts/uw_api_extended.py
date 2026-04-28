@@ -99,7 +99,7 @@ def collect_market_tide():
     }
 
 
-def collect_gex_by_strike(tickers, max_tickers=10):
+def collect_gex_by_strike(tickers, max_tickers=100):
     """Get gamma exposure by strike for key tickers."""
     results = {}
     for ticker in tickers[:max_tickers]:
@@ -160,7 +160,7 @@ def collect_insider_trades(tickers):
     return trades
 
 
-def collect_net_premium_ticks(tickers, max_tickers=15):
+def collect_net_premium_ticks(tickers, max_tickers=100):
     """Get net premium flow direction per ticker."""
     results = {}
     for ticker in tickers[:max_tickers]:
@@ -210,14 +210,14 @@ def collect_options_screener(limit=25):
 def collect_all(tickers):
     """Run all extended collections. Returns dict of results."""
     print("  [UW Extended] Collecting flow alerts...")
-    flow_alerts = collect_flow_alerts(tickers[:20])
+    flow_alerts = collect_flow_alerts(tickers)
     print(f"    {sum(len(v) for v in flow_alerts.values())} alerts across {len(flow_alerts)} tickers")
 
     print("  [UW Extended] Collecting market tide...")
     market_tide = collect_market_tide()
 
     print("  [UW Extended] Collecting GEX by strike...")
-    gex = collect_gex_by_strike(tickers[:10])
+    gex = collect_gex_by_strike(tickers)
     print(f"    GEX for {len(gex)} tickers")
 
     print("  [UW Extended] Collecting congress trades...")
@@ -229,7 +229,7 @@ def collect_all(tickers):
     print(f"    {len(insider)} insider trades ({sum(1 for i in insider if i.get('is_portfolio'))} in portfolio)")
 
     print("  [UW Extended] Collecting net premium ticks...")
-    net_premium = collect_net_premium_ticks(tickers[:15])
+    net_premium = collect_net_premium_ticks(tickers)
     print(f"    Net premium for {len(net_premium)} tickers")
 
     print("  [UW Extended] Collecting hottest chains...")
