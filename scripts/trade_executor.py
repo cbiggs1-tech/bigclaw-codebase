@@ -196,8 +196,12 @@ def db_update_sell(portfolio_id, ticker, shares, price, rationale):
     if existing:
         old_shares, old_avg = existing
         new_shares = max(0, old_shares - shares)
-        c.execute("UPDATE holdings SET shares=? WHERE portfolio_id=? AND ticker=?",
-                  (new_shares, portfolio_id, ticker))
+        if new_shares <= 0.001:
+            c.execute("DELETE FROM holdings WHERE portfolio_id=? AND ticker=?",
+                      (portfolio_id, ticker))
+        else:
+            c.execute("UPDATE holdings SET shares=? WHERE portfolio_id=? AND ticker=?",
+                      (new_shares, portfolio_id, ticker))
     c.execute("UPDATE portfolios SET current_cash = current_cash + ? WHERE id=?", (total, portfolio_id))
     c.execute("INSERT INTO transactions (portfolio_id, ticker, action, shares, price, total_value, rationale) VALUES (?,?,?,?,?,?,?)",
               (portfolio_id, ticker, "sell", shares, price, total, rationale))
