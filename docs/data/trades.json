@@ -2,6 +2,61 @@
   "trades": [
     {
       "date": "Apr 29",
+      "portfolio": "Income Dividends",
+      "action": "SELL",
+      "ticker": "AU",
+      "shares": 113.0,
+      "price": 90.46,
+      "total": 10221.98,
+      "rationale": "Trailing stop triggered: $90.59 <= $90.72 (HWM $106.74, -15.1%)",
+      "executed_at": "2026-04-29 16:00:11"
+    },
+    {
+      "date": "Apr 29",
+      "portfolio": "Momentum Growth",
+      "action": "SELL",
+      "ticker": "CRS",
+      "shares": 9.0,
+      "price": 405.15,
+      "total": 3646.35,
+      "rationale": "Trailing stop triggered: $405.14 <= $408.99 (HWM $454.43, -10.8%)",
+      "executed_at": "2026-04-29 15:30:11"
+    },
+    {
+      "date": "Apr 29",
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "KEYS",
+      "shares": 4.0,
+      "price": 335.3225,
+      "total": 1341.29,
+      "rationale": "Top 10 (score 10) \u2014 new position",
+      "executed_at": "2026-04-29 15:12:51"
+    },
+    {
+      "date": "Apr 29",
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "MRVL",
+      "shares": 64.0,
+      "price": 152.91,
+      "total": 9786.24,
+      "rationale": "Top 10 (score 10) \u2014 add to position",
+      "executed_at": "2026-04-29 15:12:46"
+    },
+    {
+      "date": "Apr 29",
+      "portfolio": "Momentum Growth",
+      "action": "SELL",
+      "ticker": "LRCX",
+      "shares": 46.0,
+      "price": 247.48,
+      "total": 11384.08,
+      "rationale": "Not in top 10 (score 9)",
+      "executed_at": "2026-04-29 15:12:42"
+    },
+    {
+      "date": "Apr 29",
       "portfolio": "Innovation Fund",
       "action": "BUY",
       "ticker": "APPF",
@@ -573,5 +628,5 @@
       "executed_at": "2026-04-22 15:09:07"
     }
   ],
-  "lastUpdate": "2026-04-29T15:12:38.183181+00:00"
+  "lastUpdate": "2026-04-29T17:13:29.476088+00:00"
 }
