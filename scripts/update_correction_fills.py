@@ -130,10 +130,11 @@ all_ok = True
 for p in portfolios:
     row = conn.execute("""
         SELECT COALESCE(SUM(CASE WHEN action='buy' THEN total_value ELSE 0 END), 0) as buys,
-               COALESCE(SUM(CASE WHEN action='sell' THEN total_value ELSE 0 END), 0) as sells
+               COALESCE(SUM(CASE WHEN action='sell' THEN total_value ELSE 0 END), 0) as sells,
+               COALESCE(SUM(CASE WHEN action='dividend' THEN total_value ELSE 0 END), 0) as dividends
         FROM transactions WHERE portfolio_id = ?
     """, (p["id"],)).fetchone()
-    correct_cash = p["starting_cash"] - row["buys"] + row["sells"]
+    correct_cash = p["starting_cash"] - row["buys"] + row["sells"] + row["dividends"]
     conn.execute("UPDATE portfolios SET current_cash = ? WHERE id = ?",
                  (round(correct_cash, 2), p["id"]))
     status = "OK" if correct_cash >= 0 else "STILL OVERDRAWN"

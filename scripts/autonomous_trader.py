@@ -152,12 +152,13 @@ def get_verified_cash(pid):
     starting = row[0]
     c.execute("""
         SELECT COALESCE(SUM(CASE WHEN action='buy' THEN total_value ELSE 0 END), 0),
-               COALESCE(SUM(CASE WHEN action='sell' THEN total_value ELSE 0 END), 0)
+               COALESCE(SUM(CASE WHEN action='sell' THEN total_value ELSE 0 END), 0),
+               COALESCE(SUM(CASE WHEN action='dividend' THEN total_value ELSE 0 END), 0)
         FROM transactions WHERE portfolio_id = ?
     """, (pid,))
-    buys, sells = c.fetchone()
+    buys, sells, dividends = c.fetchone()
     conn.close()
-    verified = round(starting - buys + sells, 2)
+    verified = round(starting - buys + sells + dividends, 2)
     return verified
 
 
@@ -419,13 +420,14 @@ def _record_trade_with_retry(pid, pname, ticker, action, shares, price, total_va
             # RULE 2: Recalculate cash from ALL transactions (never incremental)
             c.execute("""
                 SELECT COALESCE(SUM(CASE WHEN action='buy' THEN total_value ELSE 0 END), 0) as buys,
-                       COALESCE(SUM(CASE WHEN action='sell' THEN total_value ELSE 0 END), 0) as sells
+                       COALESCE(SUM(CASE WHEN action='sell' THEN total_value ELSE 0 END), 0) as sells,
+                       COALESCE(SUM(CASE WHEN action='dividend' THEN total_value ELSE 0 END), 0) as dividends
                 FROM transactions WHERE portfolio_id = ?
             """, (pid,))
             row = c.fetchone()
             c.execute("SELECT starting_cash FROM portfolios WHERE id = ?", (pid,))
             starting = c.fetchone()[0]
-            correct_cash = starting - row[0] + row[1]
+            correct_cash = starting - row[0] + row[1] + row[2]
             c.execute("UPDATE portfolios SET current_cash = ? WHERE id = ?", (round(correct_cash, 2), pid))
 
             conn.commit()
@@ -519,7 +521,8 @@ def sync_with_alpaca(client):
         tx_sums = {row[0]: row[1] for row in c.fetchall()}
         total_buys = tx_sums.get("buy", 0)
         total_sells = tx_sums.get("sell", 0)
-        calculated_cash = starting_cash - total_buys + total_sells
+        total_dividends = tx_sums.get("dividend", 0)
+        calculated_cash = starting_cash - total_buys + total_sells + total_dividends
 
         # Get current DB cash
         c.execute("SELECT current_cash FROM portfolios WHERE id = ?", (pid,))
