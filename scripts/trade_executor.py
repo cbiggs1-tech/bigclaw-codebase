@@ -213,13 +213,49 @@ def db_update_sell(portfolio_id, ticker, shares, price, rationale):
 # Order execution
 # ---------------------------------------------------------------------------
 
+def _wait_for_fill(client, order, expected_qty, expected_price, timeout_s=30):
+    """Poll an Alpaca order until filled, canceled, or timeout. Returns (filled_qty, filled_price).
+
+    Returns (0, 0.0) if order didn't fill within timeout — caller treats this as not-filled.
+    """
+    import time
+    start = time.time()
+    poll_interval = 2
+    while time.time() - start < timeout_s:
+        try:
+            o = client.get_order_by_id(str(order.id))
+            status = str(o.status).lower()
+            if "filled" in status and "partial" not in status:
+                fq = int(float(o.filled_qty or 0))
+                fp = float(o.filled_avg_price or expected_price)
+                return (fq, fp)
+            if status in ("canceled", "rejected", "expired", "done_for_day"):
+                return (0, 0.0)
+        except Exception:
+            pass
+        time.sleep(poll_interval)
+    # Timed out — read whatever's there
+    try:
+        o = client.get_order_by_id(str(order.id))
+        fq = int(float(o.filled_qty or 0))
+        fp = float(o.filled_avg_price or expected_price) if fq > 0 else 0.0
+        return (fq, fp)
+    except Exception:
+        return (0, 0.0)
+
+
 def place_order(client, ticker, side, shares, limit_price=None, dry_run=False, max_order=DEFAULT_MAX_ORDER, rationale="manual"):
-    """Place a single order. Returns True on success."""
+    """Place a single order. Returns dict with fill data on success, None on failure or no-fill.
+
+    Return shape:
+      {"shares": filled_qty, "price": filled_price, "value": filled_qty*filled_price,
+       "order_id": str, "dry_run": bool}
+    None on validation failure, submission error, or zero fill within timeout.
+    """
     from alpaca.trading.requests import MarketOrderRequest, LimitOrderRequest
     from alpaca.trading.enums import OrderSide, TimeInForce
 
     action = "BUY" if side == OrderSide.BUY else "SELL"
-    price = limit_price or 0
 
     # Get price for sizing check
     if limit_price:
@@ -232,11 +268,12 @@ def place_order(client, ticker, side, shares, limit_price=None, dry_run=False, m
     # Safety: max order size
     if order_value > max_order:
         log_trade(action, ticker, shares, est_price, rationale, f"BLOCKED — exceeds max ${max_order:,.0f}")
-        return False
+        return None
 
     if dry_run:
         log_trade(action, ticker, shares, est_price, rationale, "DRY-RUN (not submitted)")
-        return True
+        return {"shares": shares, "price": est_price, "value": shares * est_price,
+                "order_id": "dry-run", "dry_run": True}
 
     try:
         # Verify ticker is tradeable
@@ -244,10 +281,10 @@ def place_order(client, ticker, side, shares, limit_price=None, dry_run=False, m
             asset = client.get_asset(ticker)
             if not asset.tradable:
                 log_trade(action, ticker, shares, est_price, rationale, f"BLOCKED — {ticker} not tradeable")
-                return False
+                return None
         except Exception as e:
             log_trade(action, ticker, shares, est_price, rationale, f"BLOCKED — ticker error: {e}")
-            return False
+            return None
 
         if side == OrderSide.BUY:
             # Always limit for buys
@@ -255,12 +292,11 @@ def place_order(client, ticker, side, shares, limit_price=None, dry_run=False, m
                 limit_price = get_prev_close(ticker)
             if not limit_price:
                 log_trade(action, ticker, shares, 0, rationale, "BLOCKED — no limit price available")
-                return False
+                return None
             req = LimitOrderRequest(
                 symbol=ticker, qty=shares, side=OrderSide.BUY,
                 time_in_force=TimeInForce.DAY, limit_price=round(limit_price, 2)
             )
-            price = limit_price
         else:
             # Market for sells (default), limit if specified
             if limit_price:
@@ -268,21 +304,28 @@ def place_order(client, ticker, side, shares, limit_price=None, dry_run=False, m
                     symbol=ticker, qty=shares, side=OrderSide.SELL,
                     time_in_force=TimeInForce.DAY, limit_price=round(limit_price, 2)
                 )
-                price = limit_price
             else:
                 req = MarketOrderRequest(
                     symbol=ticker, qty=shares, side=OrderSide.SELL,
                     time_in_force=TimeInForce.DAY
                 )
-                price = est_price
 
         order = client.submit_order(req)
-        log_trade(action, ticker, shares, price, rationale, f"SUBMITTED (order {order.id})")
-        return True
+        log_trade(action, ticker, shares, est_price, rationale, f"SUBMITTED (order {order.id}) — awaiting fill...")
+
+        # Poll for fill — record actual fill price, not limit price
+        filled_qty, filled_price = _wait_for_fill(client, order, shares, est_price)
+        if filled_qty == 0:
+            log_trade(action, ticker, shares, est_price, rationale, f"NOT FILLED — order {order.id} did not fill within 30s")
+            return None
+        actual_value = filled_qty * filled_price
+        log_trade(action, ticker, filled_qty, filled_price, rationale, f"FILLED (order {order.id}) — {filled_qty}@${filled_price:.4f}=${actual_value:,.2f}")
+        return {"shares": filled_qty, "price": filled_price, "value": actual_value,
+                "order_id": str(order.id), "dry_run": False}
 
     except Exception as e:
         log_trade(action, ticker, shares, est_price, rationale, f"ERROR — {e}")
-        return False
+        return None
 
 
 # ---------------------------------------------------------------------------
@@ -374,11 +417,11 @@ def execute_signals(client, signals_file, dry_run, force, max_order, portfolio_n
             if shares <= 0:
                 print(f"  ⚠️  Skipping {ticker} — insufficient cash")
                 continue
-            ok = place_order(client, ticker, OrderSide.BUY, shares, limit_price=price,
+            result = place_order(client, ticker, OrderSide.BUY, shares, limit_price=price,
                            dry_run=dry_run, max_order=max_order, rationale=rationale)
-            if ok and not dry_run:
-                db_update_buy(pf_id, ticker, shares, price, rationale)
-                cash -= shares * price
+            if result and not dry_run:
+                db_update_buy(pf_id, ticker, result["shares"], result["price"], rationale)
+                cash -= result["value"]
 
         elif score <= -5:
             # STRONG SELL — 100%
@@ -390,10 +433,10 @@ def execute_signals(client, signals_file, dry_run, force, max_order, portfolio_n
             if shares <= 0:
                 continue
             price = get_current_price(ticker) or holding[1]
-            ok = place_order(client, ticker, OrderSide.SELL, shares,
+            result = place_order(client, ticker, OrderSide.SELL, shares,
                            dry_run=dry_run, max_order=max_order, rationale=rationale)
-            if ok and not dry_run:
-                db_update_sell(pf_id, ticker, shares, price, rationale)
+            if result and not dry_run:
+                db_update_sell(pf_id, ticker, result["shares"], result["price"], rationale)
 
         elif score <= -3:
             # TRIM — 50%
@@ -403,10 +446,10 @@ def execute_signals(client, signals_file, dry_run, force, max_order, portfolio_n
                 continue
             shares = max(1, int(holding[0] * 0.5))
             price = get_current_price(ticker) or holding[1]
-            ok = place_order(client, ticker, OrderSide.SELL, shares,
+            result = place_order(client, ticker, OrderSide.SELL, shares,
                            dry_run=dry_run, max_order=max_order, rationale=rationale)
-            if ok and not dry_run:
-                db_update_sell(pf_id, ticker, shares, price, rationale)
+            if result and not dry_run:
+                db_update_sell(pf_id, ticker, result["shares"], result["price"], rationale)
         else:
             print(f"  ℹ️  {ticker}: score {score} — HOLD (no action)")
 
@@ -682,26 +725,25 @@ def main():
                 print("❌ --shares required for manual buy")
                 return
             limit_price = args.limit or get_prev_close(args.buy)
-            ok = place_order(client, args.buy, OrderSide.BUY, args.shares,
+            result = place_order(client, args.buy, OrderSide.BUY, args.shares,
                            limit_price=limit_price, dry_run=args.dry_run,
                            max_order=args.max_order, rationale="Manual buy order")
-            if ok and not args.dry_run:
+            if result and not args.dry_run:
                 pf = get_portfolio(args.portfolio)
                 if pf:
-                    db_update_buy(pf[0], args.buy, args.shares, limit_price or 0, "Manual buy order")
+                    db_update_buy(pf[0], args.buy, result["shares"], result["price"], "Manual buy order")
 
         elif args.sell:
             if not args.shares:
                 print("❌ --shares required for manual sell")
                 return
-            ok = place_order(client, args.sell, OrderSide.SELL, args.shares,
+            result = place_order(client, args.sell, OrderSide.SELL, args.shares,
                            limit_price=args.limit, dry_run=args.dry_run,
                            max_order=args.max_order, rationale="Manual sell order")
-            if ok and not args.dry_run:
-                price = args.limit or get_current_price(args.sell) or 0
+            if result and not args.dry_run:
                 pf = get_portfolio(args.portfolio)
                 if pf:
-                    db_update_sell(pf[0], args.sell, args.shares, price, "Manual sell order")
+                    db_update_sell(pf[0], args.sell, result["shares"], result["price"], "Manual sell order")
 
         elif args.create_portfolio:
             create_portfolio(client, args.create_portfolio, args.dry_run, args.force, args.max_order)
