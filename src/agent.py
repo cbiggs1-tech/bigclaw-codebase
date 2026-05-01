@@ -104,6 +104,12 @@ class BigClawAgent:
 
         # Make the Opus API call
         try:
+            import time as _time
+            try:
+                from llm_logger import log_call as _log_call
+            except ImportError:
+                _log_call = None
+            _t0 = _time.time()
             response = self.client.messages.create(
                 model=OPUS_MODEL,
                 max_tokens=4096,
@@ -115,6 +121,8 @@ Always conclude with a clear VERDICT (BUY/HOLD/PASS), CONFIDENCE level, KEY FACT
 Remember to include the disclaimer that this is for educational purposes only, not financial advice.""",
                 messages=[{"role": "user", "content": user_message}]
             )
+            if _log_call:
+                _log_call("bot.agent.strategy", response, _time.time() - _t0)
 
             # Extract text response
             for block in response.content:
@@ -163,10 +171,17 @@ Remember to include the disclaimer that this is for educational purposes only, n
         tools = get_claude_tools()
         self._pending_images = []  # Reset for each run
 
+        import time as _time
+        try:
+            from llm_logger import log_call as _log_call
+        except ImportError:
+            _log_call = None
+
         for iteration in range(MAX_TOOL_ITERATIONS):
             logger.info(f"Agent iteration {iteration + 1}")
 
             # Call Claude
+            _t0 = _time.time()
             response = self.client.messages.create(
                 model=self.model,
                 max_tokens=2048,
@@ -174,6 +189,8 @@ Remember to include the disclaimer that this is for educational purposes only, n
                 tools=tools,
                 messages=messages
             )
+            if _log_call:
+                _log_call("bot.agent.loop", response, _time.time() - _t0)
 
             logger.info(f"Claude stop_reason: {response.stop_reason}")
 
