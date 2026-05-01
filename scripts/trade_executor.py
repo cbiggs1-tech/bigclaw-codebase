@@ -199,6 +199,8 @@ def db_update_sell(portfolio_id, ticker, shares, price, rationale):
         if new_shares <= 0.001:
             c.execute("DELETE FROM holdings WHERE portfolio_id=? AND ticker=?",
                       (portfolio_id, ticker))
+            c.execute("DELETE FROM trailing_stops WHERE portfolio_id=? AND ticker=?",
+                      (portfolio_id, ticker))
         else:
             c.execute("UPDATE holdings SET shares=? WHERE portfolio_id=? AND ticker=?",
                       (new_shares, portfolio_id, ticker))

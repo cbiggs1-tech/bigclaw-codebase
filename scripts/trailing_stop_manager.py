@@ -158,8 +158,11 @@ def initialize_stops(dry_run=False):
         if dry_run:
             logger.info(f"DRY-INIT | {pname} | {ticker} | HWM=${hwm:.2f} trail={trail_pct:.0%} trigger=${trigger:.2f}")
         else:
+            # Clear any leftover non-active row for this (portfolio_id, ticker) so the new
+            # active stop wins. Without this, INSERT silently fails on UNIQUE constraint.
+            c.execute("DELETE FROM trailing_stops WHERE portfolio_id = ? AND ticker = ?", (pid, ticker))
             c.execute("""
-                INSERT OR IGNORE INTO trailing_stops
+                INSERT INTO trailing_stops
                 (portfolio_id, ticker, high_water_mark, hwm_date, trail_pct, trigger_price)
                 VALUES (?, ?, ?, ?, ?, ?)
             """, (pid, ticker, hwm, today_str, trail_pct, trigger))
@@ -365,25 +368,28 @@ def tighten_stops(factor, portfolio_id=None, dry_run=False):
 
 
 def remove_stale_stops():
-    """Deactivate stops for holdings that no longer exist (sold outside of stop system)."""
+    """Delete trailing stop rows for holdings that no longer exist.
+
+    Was previously marking rows as status='stale' but leaving them in the table —
+    the stale rows then blocked new INSERTs (UNIQUE constraint), which left
+    re-bought positions unprotected. Now actually removes them.
+    """
     conn = db_conn()
     c = conn.cursor()
     c.execute("""
-        UPDATE trailing_stops
-        SET status = 'stale', updated_at = CURRENT_TIMESTAMP
-        WHERE status = 'active'
-          AND NOT EXISTS (
-              SELECT 1 FROM holdings h
-              WHERE h.portfolio_id = trailing_stops.portfolio_id
-                AND h.ticker = trailing_stops.ticker
-                AND h.shares > 0
-          )
+        DELETE FROM trailing_stops
+        WHERE NOT EXISTS (
+            SELECT 1 FROM holdings h
+            WHERE h.portfolio_id = trailing_stops.portfolio_id
+              AND h.ticker = trailing_stops.ticker
+              AND h.shares > 0
+        )
     """)
     removed = c.rowcount
     conn.commit()
     conn.close()
     if removed:
-        logger.info(f"Removed {removed} stale trailing stops (holdings sold)")
+        logger.info(f"Removed {removed} trailing stops for sold positions")
     return removed
 
 
@@ -519,7 +525,8 @@ def execute_stop_sells(triggered, dry_run=False):
 
             conn = db_conn()
             c = conn.cursor()
-            c.execute("UPDATE holdings SET shares = 0 WHERE portfolio_id = ? AND ticker = ?", (pid, ticker))
+            c.execute("DELETE FROM holdings WHERE portfolio_id = ? AND ticker = ?", (pid, ticker))
+            c.execute("DELETE FROM trailing_stops WHERE portfolio_id = ? AND ticker = ?", (pid, ticker))
             c.execute("UPDATE portfolios SET current_cash = current_cash + ? WHERE id = ?", (sell_value, pid))
             c.execute("INSERT INTO transactions (portfolio_id, ticker, action, shares, price, total_value, rationale) VALUES (?,?,?,?,?,?,?)",
                      (pid, ticker, "sell", filled_qty, filled_price, sell_value, reason))

@@ -416,6 +416,15 @@ def _record_trade_with_retry(pid, pname, ticker, action, shares, price, total_va
                         "DELETE FROM holdings WHERE portfolio_id = ? AND ticker = ? AND shares <= 0.001",
                         (pid, ticker)
                     )
+                # If position is now fully closed, remove its trailing stop too
+                c.execute("""
+                    DELETE FROM trailing_stops
+                    WHERE portfolio_id = ? AND ticker = ?
+                      AND NOT EXISTS (
+                          SELECT 1 FROM holdings
+                          WHERE portfolio_id = ? AND ticker = ? AND shares > 0.001
+                      )
+                """, (pid, ticker, pid, ticker))
 
             # RULE 2: Recalculate cash from ALL transactions (never incremental)
             c.execute("""
