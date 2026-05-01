@@ -444,21 +444,20 @@ GATE_FUNCTIONS = {
 }
 
 
-def passes_style_gate(ticker, portfolio_name, info=None, use_ai_reasoning=True, context="pre_buy"):
+def passes_style_gate(ticker, portfolio_name, info=None, context="pre_buy"):
     """Check if a ticker passes the style gate for a specific portfolio.
 
-    For borderline failures (severity='gate'), escalates to Opus for AI reasoning.
-    Hard rejects (severity='reject') are never escalated — they're clear-cut.
+    The IPS criteria from the 4-LLM thesis debate (April 1) are authoritative.
+    A failure is a failure; the 20-dim scoring engine handles dynamic re-entry.
 
     Args:
         ticker: Stock ticker symbol
         portfolio_name: Name of the portfolio to check against
         info: yfinance .info dict (if None, will be fetched)
-        use_ai_reasoning: Whether to escalate borderline cases to Opus (default True)
+        context: Label for logging only — pre_buy, holding_audit, candidate_screen
 
     Returns:
         dict with keys: pass (bool), reason (str), severity (str or None)
-        If AI reasoning was used, also includes: ai_decision, ai_reason, ai_model
     """
     if info is None:
         try:
@@ -480,48 +479,15 @@ def passes_style_gate(ticker, portfolio_name, info=None, use_ai_reasoning=True, 
         log.error(f"Gate check error for {ticker}/{portfolio_name}: {e}")
         return {"pass": True, "reason": f"gate check error: {e}", "severity": None}
 
-    # If it passed or is a hard reject, return as-is — no AI needed
-    if result["pass"] or result.get("severity") == "reject":
-        return result
-
-    # Borderline failure (severity='gate') — escalate to Opus for reasoning
-    if use_ai_reasoning and result.get("severity") == "gate":
-        try:
-            from gate_reasoning import reason_borderline_gate
-            ai_result = reason_borderline_gate(ticker, portfolio_name, result, info, context=context)
-            if ai_result:
-                if ai_result["decision"] == "ALLOW":
-                    log.info(f"AI OVERRIDE: {ticker}/{portfolio_name} — gate said BLOCK, Opus says ALLOW: {ai_result['reason']}")
-                    return {
-                        "pass": True,
-                        "reason": f"AI override: {ai_result['reason']}",
-                        "severity": None,
-                        "ai_decision": "ALLOW",
-                        "ai_reason": ai_result["reason"],
-                        "ai_model": ai_result["model"],
-                        "ai_tokens": ai_result.get("input_tokens", 0) + ai_result.get("output_tokens", 0),
-                        "original_gate_reason": result["reason"],
-                    }
-                else:
-                    log.info(f"AI CONFIRMED: {ticker}/{portfolio_name} — Opus agrees BLOCK: {ai_result['reason']}")
-                    result["ai_decision"] = "BLOCK"
-                    result["ai_reason"] = ai_result["reason"]
-                    result["ai_model"] = ai_result["model"]
-                    return result
-        except ImportError:
-            log.warning("gate_reasoning module not available — using rule-based gate only")
-        except Exception as e:
-            log.error(f"AI reasoning failed for {ticker}/{portfolio_name}: {e} — defaulting to gate result")
-
+    # IPS criteria are authoritative — no AI override layer.
+    # If a stock fails any gate, it fails. The 20-dim scoring engine handles
+    # dynamic re-evaluation; if a stock's metrics improve later, it passes the
+    # gate next screen and gets re-evaluated for entry.
     return result
 
 
-def check_all_gates(ticker, info=None, use_ai_reasoning=False):
-    """Check a ticker against ALL portfolio gates. Returns dict of portfolio -> result.
-
-    AI reasoning is OFF by default for bulk checks (CLI testing, audits).
-    The autonomous trader calls passes_style_gate() directly with AI ON.
-    """
+def check_all_gates(ticker, info=None):
+    """Check a ticker against ALL portfolio gates. Returns dict of portfolio -> result."""
     if info is None:
         try:
             import yfinance as yf
@@ -531,7 +497,7 @@ def check_all_gates(ticker, info=None, use_ai_reasoning=False):
 
     results = {}
     for pname in GATE_FUNCTIONS:
-        results[pname] = passes_style_gate(ticker, pname, info, use_ai_reasoning=use_ai_reasoning)
+        results[pname] = passes_style_gate(ticker, pname, info)
     return results
 
 

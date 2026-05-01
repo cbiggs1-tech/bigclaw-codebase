@@ -30,7 +30,6 @@ import yfinance as yf
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from style_gates import passes_style_gate
-from gate_reasoning import clear_session_cache
 
 logging.basicConfig(
     level=logging.INFO,
@@ -221,7 +220,7 @@ def run_finviz_screen(filters_dict):
         return []
 
 
-def screen_portfolio(portfolio_name, current_holdings, use_ai=True):
+def screen_portfolio(portfolio_name, current_holdings):
     """Screen for new candidates for a specific portfolio.
 
     Returns list of dicts: [{"ticker": str, "gate_result": dict}, ...]
@@ -261,10 +260,9 @@ def screen_portfolio(portfolio_name, current_holdings, use_ai=True):
         except Exception:
             continue
 
-        # Run style gate with AI reasoning for borderline cases
+        # Run IPS style gate — criteria are authoritative, no AI override
         gate_result = passes_style_gate(
             ticker, portfolio_name, info,
-            use_ai_reasoning=use_ai,
             context="candidate_screen"
         )
 
@@ -326,14 +324,10 @@ def main():
     parser = argparse.ArgumentParser(description="BigClaw Candidate Screener")
     parser.add_argument("--dry-run", action="store_true", help="Show candidates without updating universes")
     parser.add_argument("--portfolio", type=str, help="Screen a single portfolio")
-    parser.add_argument("--no-ai", action="store_true", help="Skip AI reasoning for borderline cases")
     args = parser.parse_args()
 
     log.info("=== BigClaw Candidate Screener ===")
     log.info(f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
-
-    # Clear AI reasoning cache for fresh session
-    clear_session_cache()
 
     current_holdings = get_current_holdings()
     universes = load_current_universes()
@@ -342,20 +336,15 @@ def main():
 
     summary = []
     total_new = 0
-    total_ai_calls = 0
 
     for pname in portfolios:
         log.info(f"\nScreening: {pname}")
-        candidates = screen_portfolio(pname, current_holdings, use_ai=not args.no_ai)
+        candidates = screen_portfolio(pname, current_holdings)
 
         if args.dry_run:
             log.info(f"  [DRY RUN] Would add {len(candidates)} candidates:")
             for c in candidates:
-                ai_note = ""
-                if c["gate_result"].get("ai_decision"):
-                    ai_note = f" [AI: {c['gate_result']['ai_decision']}]"
-                    total_ai_calls += 1
-                log.info(f"    {c['ticker']:6s} — {c['sector']} / {c['industry']}{ai_note}")
+                log.info(f"    {c['ticker']:6s} — {c['sector']} / {c['industry']}")
         else:
             added, removed = update_universes(pname, candidates, current_holdings, universes)
             total_new += len(added)
@@ -364,13 +353,9 @@ def main():
             if removed:
                 log.info(f"  Removed (stale): {', '.join(sorted(removed))}")
 
-        ai_count = sum(1 for c in candidates if c["gate_result"].get("ai_decision"))
-        total_ai_calls += ai_count
-
         summary.append({
             "portfolio": pname,
             "screened": len(candidates),
-            "ai_calls": ai_count,
         })
 
     if not args.dry_run:
@@ -378,14 +363,14 @@ def main():
         with open(UNIVERSES_PATH, "w") as f:
             json.dump(universes, f, indent=2)
         log.info(f"\nUpdated {UNIVERSES_PATH}")
-        log.info(f"Total: {total_new} new candidates across {len(portfolios)} portfolios, {total_ai_calls} AI calls")
+        log.info(f"Total: {total_new} new candidates across {len(portfolios)} portfolios")
     else:
-        log.info(f"\n[DRY RUN] No changes made. {total_ai_calls} AI calls would have been made.")
+        log.info(f"\n[DRY RUN] No changes made.")
 
     # Print summary table
     log.info("\n=== Screening Summary ===")
     for s in summary:
-        log.info(f"  {s['portfolio']:28s} — {s['screened']:3d} candidates ({s['ai_calls']} AI)")
+        log.info(f"  {s['portfolio']:28s} — {s['screened']:3d} candidates")
 
     return summary
 

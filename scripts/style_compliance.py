@@ -323,7 +323,6 @@ def run_audit():
             # Use the unified gate check — same gates as pre-buy, applied to current holdings
             gate_result = passes_style_gate(
                 ticker, pname, info,
-                use_ai_reasoning=True,
                 context="holding_audit"
             )
 
