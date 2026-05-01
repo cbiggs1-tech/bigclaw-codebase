@@ -90,12 +90,68 @@ def check_db_health():
     return issues
 
 
+def check_orphan_holdings():
+    """Detect holdings rows with shares <= 0.001 or NULL.
+
+    Sell code paths must DELETE the row when position fully closes. Any row
+    matching this query means a code path bypassed the DELETE logic.
+    """
+    issues = []
+    try:
+        conn = sqlite3.connect(str(DB_PATH), timeout=5)
+        rows = conn.execute("""
+            SELECT p.name, h.ticker, h.shares
+            FROM holdings h
+            JOIN portfolios p ON p.id = h.portfolio_id
+            WHERE h.shares <= 0.001 OR h.shares IS NULL
+        """).fetchall()
+        conn.close()
+        for name, ticker, shares in rows:
+            issues.append(f"ORPHAN HOLDING: {name} | {ticker} | shares={shares}")
+    except Exception as e:
+        issues.append(f"ORPHAN HOLDING check failed: {e}")
+    return issues
+
+
+def check_orphan_trailing_stops():
+    """Detect held positions without active stop, or active stops without position."""
+    issues = []
+    try:
+        conn = sqlite3.connect(str(DB_PATH), timeout=5)
+        rows = conn.execute("""
+            SELECT p.name, h.ticker
+            FROM holdings h
+            JOIN portfolios p ON p.id = h.portfolio_id
+            LEFT JOIN trailing_stops ts ON ts.portfolio_id = h.portfolio_id
+                AND ts.ticker = h.ticker AND ts.status = 'active'
+            WHERE h.shares > 0.001 AND h.ticker != 'SGOV'
+                AND p.is_active = 1 AND ts.id IS NULL
+        """).fetchall()
+        for name, ticker in rows:
+            issues.append(f"UNPROTECTED POSITION: {name} | {ticker} (no active trailing stop)")
+        rows = conn.execute("""
+            SELECT p.name, ts.ticker, ts.status FROM trailing_stops ts
+            JOIN portfolios p ON p.id = ts.portfolio_id
+            LEFT JOIN holdings h ON h.portfolio_id = ts.portfolio_id
+                AND h.ticker = ts.ticker AND h.shares > 0.001
+            WHERE h.portfolio_id IS NULL
+        """).fetchall()
+        for name, ticker, status in rows:
+            issues.append(f"ORPHAN STOP: {name} | {ticker} ({status})")
+        conn.close()
+    except Exception as e:
+        issues.append(f"ORPHAN STOP check failed: {e}")
+    return issues
+
+
 def run_health_check():
     """Run all health checks and return report."""
     all_issues = []
     all_issues.extend(check_data_freshness())
     all_issues.extend(check_cron_health())
     all_issues.extend(check_db_health())
+    all_issues.extend(check_orphan_holdings())
+    all_issues.extend(check_orphan_trailing_stops())
     return all_issues
 
 
@@ -116,7 +172,7 @@ def post_slack_alert(issues):
     if not issues:
         return
 
-    critical = [i for i in issues if "MISSING" in i or "CRON ERROR" in i or "DB:" in i]
+    critical = [i for i in issues if "MISSING" in i or "CRON ERROR" in i or "DB:" in i or "ORPHAN" in i or "UNPROTECTED" in i]
     if not critical:
         return  # Only alert on critical issues, not stale data
 

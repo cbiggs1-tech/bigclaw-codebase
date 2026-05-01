@@ -175,6 +175,52 @@ def get_position_count(pid):
     return count
 
 
+def assert_no_orphan_holdings():
+    """Return list of holdings rows that violate the no-orphans invariant.
+
+    Sell paths must DELETE the row when shares fully close out. Any row with
+    shares <= 0.001 or NULL means a code path bypassed the DELETE logic.
+    Empty list = healthy.
+    """
+    conn = db_conn()
+    conn.row_factory = sqlite3.Row
+    rows = conn.execute("""
+        SELECT p.name AS portfolio, h.ticker, h.shares
+        FROM holdings h
+        JOIN portfolios p ON p.id = h.portfolio_id
+        WHERE h.shares <= 0.001 OR h.shares IS NULL
+        ORDER BY p.name, h.ticker
+    """).fetchall()
+    conn.close()
+    return rows
+
+
+def post_orphan_alert(orphans):
+    """Send Slack alert when holdings invariant is violated."""
+    import json as _json
+    import urllib.request as _urllib_request
+    import os as _os
+    token = _os.environ.get("SLACK_BOT_TOKEN", "")
+    if not token:
+        return
+    lines = ["\U0001f6a8 *Holdings Invariant VIOLATED*"]
+    lines.append(f"*Orphan rows ({len(orphans)})* — shares <= 0.001 or NULL after trader run:")
+    for r in orphans:
+        lines.append(f"  * {r['portfolio']} | {r['ticker']} | shares={r['shares']}")
+    lines.append("\nA sell or update bypassed the DELETE logic. Investigate which code path.")
+    payload = _json.dumps({"channel": "D0ADHLUJ400", "text": "\n".join(lines)}).encode()
+    req = _urllib_request.Request(
+        "https://slack.com/api/chat.postMessage",
+        data=payload,
+        headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"},
+    )
+    try:
+        _urllib_request.urlopen(req, timeout=10)
+        logger.error("Slack orphan-holdings alert sent")
+    except Exception as e:
+        logger.warning(f"Slack orphan-holdings alert failed: {e}")
+
+
 def get_portfolio_market_value(pid):
     """Return total portfolio value (cash + holdings at cost basis).
     Cost basis is used as proxy — monthly rebalance uses live prices."""
@@ -1109,6 +1155,19 @@ def execute_trades(client, data, dry_run=False, seed_mode=False):
         reconcile_with_alpaca(client)
     except Exception as e:
         logger.error(f"Post-trade reconciliation failed: {e}")
+
+    # RULE 5.5: Holdings invariant assertion
+    # Sell paths should DELETE rows when position fully closes. If we find
+    # rows with shares <= 0.001 here, a code path bypassed the DELETE logic.
+    try:
+        orphans = assert_no_orphan_holdings()
+        if orphans:
+            logger.error(f"HOLDINGS INVARIANT VIOLATED: {len(orphans)} orphan rows")
+            for o in orphans:
+                logger.error(f"  ORPHAN: {o['portfolio']} | {o['ticker']} | shares={o['shares']}")
+            post_orphan_alert(orphans)
+    except Exception as e:
+        logger.error(f"Orphan-holdings check failed: {e}")
 
     # RULE 6: Post-trade compliance verification
     # Verify each portfolio conforms to design: holds its top-scoring stocks,
