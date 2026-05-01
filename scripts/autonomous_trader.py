@@ -1156,6 +1156,15 @@ def execute_trades(client, data, dry_run=False, seed_mode=False):
     except Exception as e:
         logger.error(f"Post-trade reconciliation failed: {e}")
 
+    # RULE 5.25: Initialize trailing stops for any newly-bought positions.
+    # Without this, new positions are unprotected for up to 15 minutes
+    # (until the next stop_check cron fires).
+    try:
+        from trailing_stop_manager import initialize_stops as _init_stops
+        _init_stops()
+    except Exception as e:
+        logger.error(f"Post-trade trailing-stop init failed: {e}")
+
     # RULE 5.5: Holdings invariant assertion
     # Sell paths should DELETE rows when position fully closes. If we find
     # rows with shares <= 0.001 here, a code path bypassed the DELETE logic.
