@@ -101,6 +101,69 @@ def notify_slack(sells):
         logger.warning("Slack notify failed: {}".format(e))
 
 
+def assert_invariants():
+    """Verify trailing-stop coverage invariant.
+
+    Returns (unprotected, orphans) — both lists of (portfolio, ticker[, status]).
+    Empty = system healthy.
+
+    Invariant: every held non-SGOV active-portfolio position has exactly
+    one active trailing stop, and no active stops exist for not-held tickers.
+    Violations indicate a sell/buy code path that bypassed the stop system.
+    """
+    conn = sqlite3.connect(str(DB_PATH), timeout=10)
+    conn.row_factory = sqlite3.Row
+    c = conn.cursor()
+    unprotected = c.execute("""
+        SELECT p.name AS portfolio, h.ticker
+        FROM holdings h
+        JOIN portfolios p ON p.id = h.portfolio_id
+        LEFT JOIN trailing_stops ts ON ts.portfolio_id = h.portfolio_id
+            AND ts.ticker = h.ticker AND ts.status = 'active'
+        WHERE h.shares > 0.001 AND h.ticker != 'SGOV'
+            AND p.is_active = 1 AND ts.id IS NULL
+    """).fetchall()
+    orphans = c.execute("""
+        SELECT p.name AS portfolio, ts.ticker, ts.status
+        FROM trailing_stops ts
+        JOIN portfolios p ON p.id = ts.portfolio_id
+        LEFT JOIN holdings h ON h.portfolio_id = ts.portfolio_id
+            AND h.ticker = ts.ticker AND h.shares > 0.001
+        WHERE h.portfolio_id IS NULL
+    """).fetchall()
+    conn.close()
+    return unprotected, orphans
+
+
+def post_invariant_alert(unprotected, orphans):
+    """Send a Slack alert when trailing-stop invariant is violated."""
+    secrets = load_secrets()
+    token = secrets.get("SLACK_BOT_TOKEN")
+    if not token:
+        return
+    lines = ["\U0001f6a8 *Trailing Stop Invariant VIOLATED*"]
+    if unprotected:
+        lines.append("\n*Held positions WITHOUT active stop ({}):*".format(len(unprotected)))
+        for r in unprotected:
+            lines.append("  * {} | {}".format(r["portfolio"], r["ticker"]))
+    if orphans:
+        lines.append("\n*Active stops on NOT-held tickers ({}):*".format(len(orphans)))
+        for r in orphans:
+            lines.append("  * {} | {} ({})".format(r["portfolio"], r["ticker"], r["status"]))
+    lines.append("\nA sell or buy bypassed the stop system. Investigate which code path.")
+    payload = json.dumps({"channel": SLACK_CHANNEL, "text": "\n".join(lines)}).encode()
+    req = urllib.request.Request(
+        "https://slack.com/api/chat.postMessage",
+        data=payload,
+        headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"},
+    )
+    try:
+        urllib.request.urlopen(req, timeout=10)
+        logger.error("Slack invariant alert sent")
+    except Exception as e:
+        logger.warning("Slack invariant alert failed: {}".format(e))
+
+
 def main():
     parser = argparse.ArgumentParser(description="Lightweight trailing stop checker")
     parser.add_argument("--dry-run", action="store_true", help="Preview without executing")
@@ -125,6 +188,22 @@ def main():
     remove_stale_stops()
     initialize_stops()
     ratchet_stops(prices=prices)
+
+    # Invariant check — after self-healing maintenance ran, anything still
+    # broken is a real bug. Log loudly and Slack-alert. Don't halt — still
+    # run check_triggers on whatever stops DO exist for actively-protected positions.
+    unprotected, orphans = assert_invariants()
+    if unprotected or orphans:
+        logger.error(
+            "INVARIANT VIOLATED: {} unprotected positions, {} orphan stops".format(
+                len(unprotected), len(orphans)
+            )
+        )
+        for r in unprotected:
+            logger.error("  UNPROTECTED: {} | {}".format(r["portfolio"], r["ticker"]))
+        for r in orphans:
+            logger.error("  ORPHAN: {} | {} ({})".format(r["portfolio"], r["ticker"], r["status"]))
+        post_invariant_alert(unprotected, orphans)
 
     # Check triggers
     triggered = check_triggers(prices=prices, dry_run=args.dry_run)
