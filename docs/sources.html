@@ -702,7 +702,7 @@
             <div class="source-card-top">
                 <div class="source-name">Style Gate Engine</div>
             </div>
-            <div class="source-desc">Hard pre-buy filters per portfolio — sector gates, fundamental thresholds (P/E, ROE, PEG, dividend yield), and entity-type awareness (REITs, MLPs, banks). Runs before scoring to prevent portfolio convergence.</div>
+            <div class="source-desc">Deterministic pre-buy filters per portfolio defined by the April 2026 four-LLM thesis debate. Authoritative — a ticker either passes or fails. No AI override layer. Failures are rejected; the 20-dim scoring engine handles dynamic re-evaluation when metrics improve later.</div>
             <div class="source-tags">
                 <span class="tag tag-lib">style_gates.py</span>
                 <span class="tag tag-free">Zero Cost</span>
@@ -710,22 +710,22 @@
         </div>
         <div class="source-card">
             <div class="source-card-top">
-                <div class="source-name">AI Gate Reasoning</div>
+                <div class="source-name">Candidate Discovery Screener</div>
             </div>
-            <div class="source-desc">Borderline gate failures escalate to Claude Opus 4.6 for AI judgment. Sends gate failure + style rules + earnings analysis + fundamentals. Returns BLOCK/ALLOW with reasoning. ~$0.02/call.</div>
+            <div class="source-desc">Weekly Finviz screening with portfolio-specific filters, then deterministic IPS gate filtering. Top survivors enter the candidate universe (max 10 per portfolio, matching the holding cap) and compete against current holdings via best-in-class score-based rotation.</div>
             <div class="source-tags">
-                <span class="tag tag-api">Anthropic API</span>
-                <span class="tag tag-lib">gate_reasoning.py</span>
+                <span class="tag tag-lib">candidate_screener.py</span>
+                <span class="tag tag-free">Saturday 9 AM CT</span>
             </div>
         </div>
         <div class="source-card">
             <div class="source-card-top">
-                <div class="source-name">Candidate Discovery Screener</div>
+                <div class="source-name">LLM Token Surveillance</div>
             </div>
-            <div class="source-desc">Weekly Finviz screening with portfolio-specific filters, style gate filtering, and AI reasoning for near-misses. Discovers fresh candidates and updates portfolio universes automatically.</div>
+            <div class="source-desc">Daily aggregator over <code>logs/llm_calls.jsonl</code>. Posts per-script token+cost breakdown to Slack at 6 AM CT. Alerts if any single script exceeds 1M tokens or $5 in one day — catches a new heavy consumer before it bills hundreds undetected.</div>
             <div class="source-tags">
-                <span class="tag tag-lib">candidate_screener.py</span>
-                <span class="tag tag-free">Saturday 9 AM CT</span>
+                <span class="tag tag-lib">llm_token_report.py</span>
+                <span class="tag tag-free">Daily 6 AM CT</span>
             </div>
         </div>
     </div>

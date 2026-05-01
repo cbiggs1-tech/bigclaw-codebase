@@ -353,6 +353,8 @@ Each portfolio operates within a curated universe of allowed tickers stored in `
 
 Universe files can be updated without touching core code. The decision engine's `--rescreen` mode evaluates all candidates in each universe and recommends swaps when a candidate outscores the weakest current holding by 3 or more points.
 
+**Treasury Reserve (retired May 1, 2026).** An eighth portfolio held $300K of SGOV as a money-market reserve. It was retired after per-portfolio cash walls (full reset April 10) made a separate cash-bucket portfolio unnecessary, and after Alpaca paper trading was confirmed not to credit dividends — making the SGOV strategy unable to validate in paper mode. The portfolio row remains in the DB with `is_active=0` for historical preservation; no transactions are accepted while inactive. All website and report logic filters by `is_active=1` so retired portfolios are invisible.
+
 ---
 
 ## 6. Decision Engine & Scoring System
@@ -468,34 +470,26 @@ Style gates are hard pre-buy filters that run **before** the scoring engine. A t
 
 **Entity-type awareness:** REITs, MLPs, and ETFs are exempt from payout ratio checks. Banks are exempt from FCF checks. Companies with negative book equity (aggressive buybacks like LOW) are exempt from ROE checks.
 
-### 6.6 AI Gate Reasoning (`gate_reasoning.py`)
+### 6.6 IPS Criteria Are Authoritative (`gate_reasoning` removed May 2026)
 
-When a ticker receives a `gate` severity (borderline failure), the decision is escalated to Claude Opus 4.6 for AI reasoning. The model receives:
+Style gates are pure deterministic rules from each portfolio's IPS, defined by the April 2026 four-LLM thesis debate. A ticker either passes a gate or fails it; there is no AI override layer.
 
-1. The specific gate failure reason
-2. The portfolio's style rules (from `PORTFOLIO_STYLES.md`)
-3. Full earnings analysis output (from `earnings_analyzer.py`)
-4. Key yfinance metrics (20+ fundamentals)
+A previous design had a `gate_reasoning.py` module that escalated borderline failures to Claude Opus 4.6 for a BLOCK/ALLOW decision. That module was retired May 1, 2026 and moved to `scripts/attic/`. Reasons:
+- It generated ~470 Opus calls per Saturday (~$28/run, ~$1,460/year) for what amounted to second-guessing the IPS design
+- The 20-dimension scoring engine already handles dynamic re-evaluation — when a held stock's metrics deteriorate, its score drops and best-in-class rotation kicks it out
+- Design principle: if a stock fails today's gate, it fails. If its metrics improve later, it passes the next screen and is re-evaluated for entry. No need for an AI to second-guess each case.
 
-Opus returns a `BLOCK` or `ALLOW` decision with a 1–3 sentence rationale. This handles data artifacts that pure rules cannot — one-quarter EPS blips, REIT payout ratios that look broken under GAAP, negative equity from buybacks, etc.
-
-**Three contexts where AI reasoning fires:**
-- `pre_buy` — Before the autonomous trader executes a buy
-- `holding_audit` — During the weekly style compliance audit
-- `candidate_screen` — During the weekly candidate screener discovery
-
-**Cost:** ~$0.02/call, 2–5 calls/day typical, ~$20–30/year. A session cache prevents duplicate calls for the same ticker+portfolio+context combination.
+The four-LLM debate produced explicit criteria for each portfolio (Value Picks: P/E ≤ 25 + ROE ≥ 15%; Income Dividends: 10-year streak + Chowder Rule + yield ≥ 1.5%; Nuclear and AI Defense use whitelists). Those criteria are the design. Anything that fails them is rejected; anything that passes is scored by the 20-dim engine and considered for entry by best-in-class rotation.
 
 ### 6.7 Candidate Discovery Screener (`candidate_screener.py`)
 
 The candidate screener is a weekly pipeline that discovers new stocks for each portfolio. It runs every Saturday at 9:00 AM CT and follows this flow:
 
 1. **Screen** — Finviz screener with portfolio-specific filters (2–3 filter sets per portfolio)
-2. **Gate** — Style gate checks filter raw results. Hard rejects are dropped.
-3. **AI Reason** — Borderline near-misses are escalated to Opus for judgment
-4. **Update** — Survivors are added to `portfolio_universes.json` as candidates (max 20 per portfolio)
-5. **Compare** — The daily rescreen (`decision_engine --rescreen`) scores new candidates against holdings
-6. **Swap** — If a candidate outscores the weakest holding by ≥ 3 points (`SWAP_THRESHOLD`), the swap fires: sell incumbent, buy challenger
+2. **Gate** — Deterministic IPS-criteria gate checks filter raw results. Failures are dropped — no AI override.
+3. **Update** — Survivors are added to `portfolio_universes.json` as candidates (max 10 per portfolio, matching the holding cap)
+4. **Compare** — The daily rescreen (`decision_engine --rescreen`) scores new candidates against holdings
+5. **Swap** — If a candidate outscores the weakest holding by ≥ 3 points (`SWAP_THRESHOLD`), the swap fires: sell incumbent, buy challenger
 
 This closes the loop on candidate freshness — the portfolio universes are no longer static hand-curated lists but are refreshed weekly with market-wide discovery.
 
@@ -547,7 +541,17 @@ These rules must never be relaxed:
 
 ## 8. Risk Management — Trailing Stops
 
-Every new position automatically receives a style-specific trailing stop. The stop only ever moves upward (high-water-mark ratcheting) — never down. The `stop_check.py` script runs every 15 minutes during market hours with a single yfinance batch call (near-zero cost). Under extreme stress a one-line `tighten_stops(factor)` call can halve all trail percentages instantly. When a position is sold outside the stop system, the stop record is automatically deactivated. This combination of ratcheting logic + frequent lightweight checks is one of the most important capital-preservation mechanisms in the entire system.
+Every held position automatically receives a style-specific trailing stop. The stop only ever moves upward (high-water-mark ratcheting) — never down. `stop_check.py` runs every 15 minutes during market hours with a single yfinance batch call (near-zero cost). Under extreme stress a one-line `tighten_stops(factor)` call can halve all trail percentages instantly. This combination of ratcheting logic + frequent lightweight checks is one of the most important capital-preservation mechanisms in the entire system.
+
+The architecture has three defensive layers, hardened in May 2026 after a bug-class audit found 22 of 60 held positions had broken (stale or triggered) trailing stops:
+
+**Layer 1 — Code prevention.** Every sell path (autonomous_trader rotation, trailing-stop trigger, trade_executor manual) DELETEs the trailing_stops row when the position fully closes. New buys create a fresh active stop via `initialize_stops` which DELETEs any leftover row first, then INSERTs (replacing the prior `INSERT OR IGNORE` that silently dropped new stops when stale rows already existed for the ticker).
+
+**Layer 2 — Invariant assertion.** `stop_check.py` runs `assert_invariants()` after each maintenance pass. If any held non-SGOV position lacks an active stop, OR any active stop exists for a ticker no longer held, a Slack DM alert fires loudly. Surveillance catches anything Layer 1 misses.
+
+**Layer 3 — Self-heal.** `remove_stale_stops()` actually DELETEs orphan rows (was previously just marking them `status='stale'` and leaving them in place — that buggy pattern blocked new INSERTs and is what produced the original 22 broken stops). The autonomous_trader also calls `initialize_stops` at the end of its run so positions bought at 10:00 CT don't sit unprotected for up to 15 minutes waiting for the next stop_check fire.
+
+The same orphan invariant for `holdings` is checked by `data_health_check.py` every 2 hours and at end of each autonomous_trader run.
 
 ### 8.1 Trail Percentages by Portfolio
 
@@ -563,19 +567,19 @@ Every new position automatically receives a style-specific trailing stop. The st
 
 ### 8.2 Stop Lifecycle
 
-1. **Initialize**: When a new holding is added, a stop is created with HWM = max(current_price, avg_cost)
-2. **Ratchet**: Every 2 hours (price refresh) and every 15 minutes (stop check), if price > HWM, the HWM moves up and the trigger price moves up proportionally
-3. **Trigger**: If price <= trigger_price, the position is sold at market
-4. **Tighten**: During market stress, the `tighten_stops(factor)` function can cut all trail bands (e.g., factor=0.5 cuts 18% to 9%). This is designed for circuit-breaker scenarios.
-5. **Stale cleanup**: When a position is sold outside the stop system, the stop is automatically deactivated
+1. **Initialize**: When a new holding is added (or buy completes via autonomous_trader), `initialize_stops` DELETEs any leftover row for the ticker and INSERTs a fresh active stop with HWM = max(current_price, avg_cost). This always produces a clean active row even if a stale entry existed from a prior position.
+2. **Ratchet**: Every 2 hours (price refresh) and every 15 minutes (stop check), if price > HWM, the HWM moves up and the trigger price moves up proportionally.
+3. **Trigger**: If price ≤ trigger_price, position is sold at market and the trailing_stops row is DELETEd in the same transaction.
+4. **Tighten**: During market stress, `tighten_stops(factor)` cuts all trail bands (e.g., factor=0.5 cuts 18% to 9%). Circuit-breaker mechanism.
+5. **Cleanup**: When a position is sold by any path (rotation, trim, manual, trigger), the matching trailing_stops row is DELETEd in the same DB transaction. `remove_stale_stops()` also runs each cycle and DELETEs any orphan rows.
 
 ### 8.3 Intraday Stop Monitor (`stop_check.py`)
 
 Lightweight Python script that runs every 15 minutes during market hours via system crontab. Zero LLM token cost.
 
-- Fetches prices for all ~44 held tickers (one `yf.download` call, ~3 seconds)
-- Runs full stop cycle: cleanup stale stops, initialize new ones, ratchet HWMs, check triggers
-- If a stop triggers: executes Alpaca market sell, updates DB, posts to Slack
+- Fetches prices for all held tickers in one `yf.download` batch call (~3 seconds)
+- Runs full stop cycle: `remove_stale_stops` (DELETEs orphans), `initialize_stops` (creates new), `ratchet_stops` (move HWMs up), `assert_invariants` (Slack alerts on coverage gap), `check_triggers` (fire stops)
+- If a stop triggers: executes Alpaca market sell, updates DB (DELETEs holdings + DELETEs trailing_stops + INSERTs sell transaction), posts to Slack
 - Enforces same 10 AM – 4 PM ET trading window as all other components
 
 ---
@@ -661,6 +665,16 @@ Two runtime guardrails reinforce this:
 - **Output Guardrail** (`src/services/output_guardrail.py`): Scans every outbound message for `$XXX.XX` patterns and corrects any deviation > 2% against the oracle.
 
 This pipeline is the reason BigClaw's reports remain trustworthy even when LLMs are involved.
+
+### Trade Recording Integrity
+
+All sell paths (autonomous_trader rotation, trailing-stop trigger, trade_executor manual) wait for Alpaca fill confirmation, then record the actual `filled_avg_price` into the `transactions` table — not the originally submitted limit price. This was hardened May 2026 after a cash-drift audit found ~$47K of accumulated misrecording from older trades that had been logged at limit price; limit orders fill at-or-below limit, so historical trades systematically over-recorded cash spent.
+
+Historical drift is bounded (no new contributions). Per-portfolio cash accounting (`starting_cash − SUM(buys) + SUM(sells) + SUM(dividends)`) is correct going forward — each portfolio sees only its own trades, and the cash wall isolation ensures one portfolio cannot spend another's cash.
+
+### LLM Token Surveillance
+
+`scripts/llm_token_report.py` runs daily at 6 AM CT, aggregates the previous day's calls from `logs/llm_calls.jsonl`, and posts a Slack DM with per-script breakdown. Alerts loudly if any single script exceeds 1M tokens or $5 in one day. Catches the pattern of a heavy LLM consumer creeping into the codebase undetected — the way `gate_reasoning` did before it was found burning ~$1,460/year.
 
 ---
 
