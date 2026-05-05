@@ -42,6 +42,7 @@ from zoneinfo import ZoneInfo
 from bigclaw_logging import get_logger
 from bigclaw_retry import retry
 from alpaca_symbols import to_alpaca, from_alpaca
+from stop_cooldown import is_blocked as is_in_cooldown
 
 ET = ZoneInfo("America/New_York")
 logger = get_logger("trader")
@@ -1114,6 +1115,11 @@ def execute_trades(client, data, dry_run=False, seed_mode=False):
 
             if check_round_trips(ticker, pid):
                 log_trade(f"SKIP | {pname} | BUY {ticker} | round-trip limit")
+                continue
+
+            blocked, reason_block = is_in_cooldown(pid, pname, ticker, s.get("score"))
+            if blocked:
+                log_trade(f"SKIP | {pname} | BUY {ticker} | {reason_block}")
                 continue
 
             # Position sizing

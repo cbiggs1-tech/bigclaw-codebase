@@ -738,6 +738,16 @@
                 <span class="tag tag-free">Boundary helper</span>
             </div>
         </div>
+        <div class="source-card">
+            <div class="source-card-top">
+                <div class="source-name">Stop-Sell Cooldown</div>
+            </div>
+            <div class="source-desc">After a trailing stop fires, the (portfolio, ticker) pair is blocked from rebuy until 10 days elapse AND the score has risen ≥2 points above the score at trigger. Prevents the round-trip pattern where a stop locks in a loss and the IPS engine immediately rebuys at the same price.</div>
+            <div class="source-tags">
+                <span class="tag tag-lib">stop_cooldown.py</span>
+                <span class="tag tag-free">Risk gate</span>
+            </div>
+        </div>
     </div>
 
     <!-- Frontend -->

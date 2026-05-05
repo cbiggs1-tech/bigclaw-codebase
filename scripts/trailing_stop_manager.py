@@ -37,6 +37,7 @@ import yfinance as yf
 sys.path.insert(0, str(Path.home() / "bigclaw-ai" / "src"))
 sys.path.insert(0, str(Path(__file__).parent))
 from alpaca_symbols import to_alpaca, from_alpaca
+from stop_cooldown import record_stop_trigger
 
 from bigclaw_logging import get_logger
 
@@ -533,6 +534,12 @@ def execute_stop_sells(triggered, dry_run=False):
                      (pid, ticker, "sell", filled_qty, filled_price, sell_value, reason))
             conn.commit()
             conn.close()
+
+            try:
+                record_stop_trigger(pid, pname, ticker, note=reason[:200])
+                _log_trade(f"STOP-COOLDOWN | {pname} | {ticker} | recorded — blocked from rebuy for 10d AND until score +2")
+            except Exception as _e:
+                _log_trade(f"STOP-COOLDOWN | WARN | {pname} | {ticker} | record failed: {_e}")
 
             executed.append({"portfolio": pname, "action": "STOP-SELL", "ticker": ticker,
                             "shares": filled_qty, "price": filled_price, "reason": reason,

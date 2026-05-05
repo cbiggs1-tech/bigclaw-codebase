@@ -584,6 +584,21 @@ Lightweight Python script that runs every 15 minutes during market hours via sys
 
 ---
 
+### Stop-Sell Cooldown (Anti–Round-Trip)
+
+When a trailing stop fires, the IPS scoring engine often still flags the same ticker as top-10 minutes later, leading to immediate rebuy at near-identical price. The May 1 2026 AI Defense incident — LMT/NOC/RTX sold and re-bought within 73 minutes for ~$4.9K of crystallized losses — exposed this.
+
+The `stop_cooldowns` table records every (portfolio, ticker) that exits via trailing stop, along with the score-at-trigger from the latest `signals.json`. The buy gate in `autonomous_trader._execute_buy_order`'s caller blocks rebuys until **BOTH**:
+
+1. **At least 10 days have elapsed** since the stop trigger.
+2. **The current score is at least 2 points above the score at trigger.**
+
+If score never recovers, the position stays blocked indefinitely — the right behavior for a genuinely deteriorated name. The cooldown row is auto-deleted the moment both conditions clear, so the gate is single-firing.
+
+The gate sits at the rotation buy site only — it does not block sells, manual `trade_executor` buys, or rebalance trims. Implementation: `scripts/stop_cooldown.py`.
+
+---
+
 ## 9. Scheduled Operations & Automation
 
 All recurring work is defined in OpenClaw's `cron/jobs.json`. Disabled jobs are explicitly listed so no one accidentally re-enables them.
