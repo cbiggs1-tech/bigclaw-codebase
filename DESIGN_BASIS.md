@@ -835,7 +835,7 @@ All JSON data in `docs/data/` is auto-refreshed and pushed to GitHub Pages:
 | `news.json` | Financial news headlines (Motley Fool RSS) | 1×/day |
 | `options_flow.json` | Per-ticker max pain, IV rank, bullish/bearish premium; sector ETF flow; dark pool blocks | Via options_intelligence.py |
 | `metadata.json` | Last update timestamps, export status | Every refresh |
-| `performance_chart.png` | Portfolio performance comparison chart | 1×/day |
+| `performance_chart.png` | Portfolio performance vs S&P 500 (SPY), rebased to Apr 16 2026 refactor baseline | 1×/day |
 
 **Note**: `price_refresh.py` preserves sector data in `market.json` when refreshing index prices — it merges rather than overwrites.
 

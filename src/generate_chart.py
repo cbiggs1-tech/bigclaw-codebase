@@ -1,4 +1,5 @@
-"""Generate portfolio performance chart from daily_snapshots table."""
+"""Generate portfolio performance chart from daily_snapshots, rebased to the
+April 16 2026 refactor baseline, with an S&P 500 (SPY) overlay for comparison."""
 
 import os
 import sqlite3
@@ -7,10 +8,38 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+import yfinance as yf
 
 REPO_ROOT = os.path.expanduser("~/bigclaw-ai")
 DB_PATH = os.path.join(REPO_ROOT, 'src', 'portfolios.db')
 CHART_PATH = os.path.join(REPO_ROOT, 'docs', 'data', 'performance_chart.png')
+
+# Refactor baseline: portfolios were reset / IPS rules went live week of April 16
+BASELINE_DATE = '2026-04-16'
+
+
+def fetch_spy_returns(start_date: str, end_date: str):
+    """Pull SPY closes from yfinance and rebase to 0% at start_date.
+
+    Returns (dates_list, return_pct_list). On failure returns ([], []) so the
+    chart still renders without the benchmark line.
+    """
+    try:
+        # yfinance end is exclusive; pad a day to ensure we get end_date close
+        from datetime import timedelta as _td
+        end_inclusive = (datetime.strptime(end_date, '%Y-%m-%d') + _td(days=1)).strftime('%Y-%m-%d')
+        df = yf.download('SPY', start=start_date, end=end_inclusive,
+                         progress=False, auto_adjust=True)
+        if df.empty:
+            return [], []
+        closes = df['Close'].squeeze()  # collapse single-ticker MultiIndex if present
+        baseline = float(closes.iloc[0])
+        dates = [d.to_pydatetime() for d in closes.index]
+        returns = [((float(c) - baseline) / baseline) * 100 for c in closes.values]
+        return dates, returns
+    except Exception as e:
+        print(f"SPY fetch failed: {e}")
+        return [], []
 
 
 def main():
@@ -19,40 +48,55 @@ def main():
     conn.execute("PRAGMA busy_timeout=30000")
     c = conn.cursor()
 
-    # Get portfolio names
-    c.execute("SELECT id, name, starting_cash FROM portfolios WHERE is_active = 1 ORDER BY id")
-    portfolios = {row[0]: {"name": row[1], "starting": row[2]} for row in c.fetchall()}
+    c.execute("SELECT id, name FROM portfolios WHERE is_active = 1 ORDER BY id")
+    portfolios = {row[0]: {"name": row[1]} for row in c.fetchall()}
 
-    # Get all snapshots
     c.execute("""
         SELECT portfolio_id, snapshot_date, total_value
         FROM daily_snapshots
+        WHERE snapshot_date >= ?
         ORDER BY snapshot_date
-    """)
-    snapshots = c.fetchall()
+    """, (BASELINE_DATE,))
+    rows = c.fetchall()
     conn.close()
 
-    # Organize by portfolio
-    data = {pid: {"dates": [], "returns": []} for pid in portfolios}
-    for pid, date_str, total_value in snapshots:
+    # Per-portfolio: take the earliest snapshot on/after BASELINE_DATE as the
+    # baseline value, then compute % return relative to that.
+    by_pid = {pid: [] for pid in portfolios}
+    for pid, date_str, total_value in rows:
         if pid not in portfolios or not total_value:
             continue
-        starting = portfolios[pid]["starting"]
-        ret_pct = ((total_value - starting) / starting) * 100
-        data[pid]["dates"].append(datetime.strptime(date_str[:10], "%Y-%m-%d"))
-        data[pid]["returns"].append(ret_pct)
+        by_pid[pid].append((datetime.strptime(date_str[:10], "%Y-%m-%d"), float(total_value)))
 
-    # Check we have data
+    data = {}
+    for pid, series in by_pid.items():
+        if not series:
+            data[pid] = {"dates": [], "returns": []}
+            continue
+        baseline = series[0][1]
+        data[pid] = {
+            "dates": [d for d, _ in series],
+            "returns": [((v - baseline) / baseline) * 100 for _, v in series],
+        }
+
     has_data = any(len(d["dates"]) > 0 for d in data.values())
     if not has_data:
         print("No snapshot data to chart")
         return False
 
     for pid in portfolios:
-        print(f"  {portfolios[pid]['name']}: {len(data[pid]['dates'])} data points, "
-              f"latest return: {data[pid]['returns'][-1]:+.2f}%" if data[pid]['returns'] else "no data")
+        if data[pid]['returns']:
+            print(f"  {portfolios[pid]['name']}: {len(data[pid]['dates'])} pts, "
+                  f"latest: {data[pid]['returns'][-1]:+.2f}%")
 
-    # Generate chart
+    # SPY benchmark: align to portfolio date range
+    all_dates = [d for s in data.values() for d in s["dates"]]
+    spy_start = BASELINE_DATE
+    spy_end = max(all_dates).strftime('%Y-%m-%d')
+    spy_dates, spy_returns = fetch_spy_returns(spy_start, spy_end)
+    if spy_returns:
+        print(f"  S&P 500 (SPY): {len(spy_dates)} pts, latest: {spy_returns[-1]:+.2f}%")
+
     plt.style.use('dark_background')
     fig, ax = plt.subplots(figsize=(12, 6))
     fig.patch.set_facecolor('#1a1a2e')
@@ -79,25 +123,28 @@ def main():
                 label=f"{name} ({last_ret:+.1f}%)",
                 linewidth=2.5, color=color, marker='o', markersize=5)
 
-    ax.set_xlabel('Date', fontsize=11, color='#e5e5e5')
-    ax.set_ylabel('Return (%)', fontsize=11, color='#e5e5e5')
+    if spy_returns:
+        ax.plot(spy_dates, spy_returns,
+                label=f"S&P 500 ({spy_returns[-1]:+.1f}%)",
+                linewidth=2.5, color='#ffffff', linestyle='--',
+                marker='s', markersize=4, alpha=0.85)
 
-    # Dynamic date range in title
-    all_dates = []
-    for d in data.values():
-        all_dates.extend(d["dates"])
+    ax.set_xlabel('Date', fontsize=11, color='#e5e5e5')
+    ax.set_ylabel('Return since Apr 16 (%)', fontsize=11, color='#e5e5e5')
+
     if all_dates:
         start = min(all_dates).strftime('%b %d')
         end = max(all_dates).strftime('%b %d, %Y')
-        ax.set_title(f'Portfolio Performance ({start} - {end})',
+        ax.set_title(f'Portfolio Performance vs S&P 500 ({start} - {end})',
                      fontsize=14, fontweight='bold', color='white', pad=15)
 
     ax.axhline(y=0, color='#4a4a6a', linestyle='--', linewidth=1, alpha=0.7)
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %d'))
-    ax.xaxis.set_major_locator(mdates.DayLocator(interval=1))
+    ax.xaxis.set_major_locator(mdates.DayLocator(interval=2))
     plt.xticks(rotation=45, ha='right')
     ax.grid(True, alpha=0.2, color='#4a4a6a')
-    ax.legend(loc='best', framealpha=0.9, facecolor='#1a1a2e', edgecolor='#4a4a6a')
+    ax.legend(loc='best', framealpha=0.9, facecolor='#1a1a2e',
+              edgecolor='#4a4a6a', ncol=2, fontsize=9)
 
     for spine in ax.spines.values():
         spine.set_color('#4a4a6a')
