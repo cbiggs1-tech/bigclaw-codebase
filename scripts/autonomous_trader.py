@@ -605,7 +605,7 @@ def sync_with_alpaca(client):
             if unfilled:
                 logger.info(f"Found {len(unfilled)} expired/canceled orders:")
                 for o in unfilled[:10]:
-                    logger.info(f"  {o.side} {o.qty} {o.symbol} @ {o.limit_price or 'MKT'} — {o.status} ({o.created_at.strftime('%m/%d')})")
+                    logger.info(f"  {o.side} {o.qty} {from_alpaca(o.symbol)} @ {o.limit_price or 'MKT'} — {o.status} ({o.created_at.strftime('%m/%d')})")
         except Exception as e:
             logger.warning(f"Could not check order history: {e}")
     else:
@@ -1274,7 +1274,7 @@ def post_trade_sync_check(client):
     positions = retry(lambda: client.get_all_positions(), attempts=3, delay=5, label="alpaca.post_check")
     alpaca_positions = {}
     for p in positions:
-        alpaca_positions[p.symbol] = float(p.qty)
+        alpaca_positions[from_alpaca(p.symbol)] = float(p.qty)
 
     conn = db_conn()
     c = conn.cursor()
@@ -1353,9 +1353,9 @@ def show_status(client):
 
     positions = client.get_all_positions()
     logger.info(f"Alpaca Positions ({len(positions)}):")
-    for p in sorted(positions, key=lambda x: x.symbol):
+    for p in sorted(positions, key=lambda x: from_alpaca(x.symbol)):
         pl_pct = float(p.unrealized_plpc) * 100
-        logger.info(f"  {p.symbol:6s} {float(p.qty):6.0f} shares @ ${float(p.avg_entry_price):8.2f} → ${float(p.current_price):8.2f}  {pl_pct:+6.1f}%")
+        logger.info(f"  {from_alpaca(p.symbol):6s} {float(p.qty):6.0f} shares @ ${float(p.avg_entry_price):8.2f} → ${float(p.current_price):8.2f}  {pl_pct:+6.1f}%")
 
     conn = db_conn()
     c = conn.cursor()
@@ -1386,7 +1386,7 @@ def reconcile_with_alpaca(client):
     logger.info("== POST-TRADE RECONCILIATION ==")
 
     positions = retry(lambda: client.get_all_positions(), attempts=3, delay=5, label="alpaca.reconcile")
-    alpaca = {p.symbol: {"qty": float(p.qty), "avg_entry": float(p.avg_entry_price),
+    alpaca = {from_alpaca(p.symbol): {"qty": float(p.qty), "avg_entry": float(p.avg_entry_price),
                          "current_price": float(p.current_price)} for p in positions}
 
     conn = db_conn()
