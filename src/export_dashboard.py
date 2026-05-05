@@ -893,6 +893,22 @@ def export_dashboard(sentiment_data: Optional[dict] = None) -> bool:
         except Exception as e:
             logger.warning(f"Chart data export failed (non-fatal): {e}")
 
+        # Re-inject planned_actions and executed_this_week into signals.json — the
+        # daily morning rebuild wipes both, leaving the dashboard "no trades planned
+        # or executed this week" until autonomous_trader runs at 10 AM ET.
+        try:
+            import sys as _sys
+            _scripts_path = os.path.expanduser('~/bigclaw-ai/scripts')
+            if _scripts_path not in _sys.path:
+                _sys.path.insert(0, _scripts_path)
+            from build_planned_actions import inject_planned_actions
+            from fix_executed_tracking import inject_executed_trades
+            inject_planned_actions()
+            inject_executed_trades()
+            logger.info("Injected planned_actions + executed_this_week into signals.json")
+        except Exception as e:
+            logger.warning(f"Could not inject planned/executed into signals.json: {e}")
+
         # Push to GitHub
         success = push_to_github()
 
