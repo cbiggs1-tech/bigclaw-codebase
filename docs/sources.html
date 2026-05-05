@@ -728,6 +728,16 @@
                 <span class="tag tag-free">Daily 6 AM CT</span>
             </div>
         </div>
+        <div class="source-card">
+            <div class="source-card-top">
+                <div class="source-name">Alpaca Symbol Translation</div>
+            </div>
+            <div class="source-desc">BigClaw stores tickers in Yahoo/Finviz hyphen format (BRK-B, BF-A); Alpaca uses dots (BRK.B, BF.A). <code>to_alpaca()</code> / <code>from_alpaca()</code> applied at every <code>submit_order</code> and <code>get_all_positions</code> call site. The DB and signals never see the dot format.</div>
+            <div class="source-tags">
+                <span class="tag tag-lib">alpaca_symbols.py</span>
+                <span class="tag tag-free">Boundary helper</span>
+            </div>
+        </div>
     </div>
 
     <!-- Frontend -->

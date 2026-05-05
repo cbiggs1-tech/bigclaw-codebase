@@ -41,6 +41,7 @@ from zoneinfo import ZoneInfo
 
 from bigclaw_logging import get_logger
 from bigclaw_retry import retry
+from alpaca_symbols import to_alpaca, from_alpaca
 
 ET = ZoneInfo("America/New_York")
 logger = get_logger("trader")
@@ -289,7 +290,7 @@ def _execute_sell_order(client, pid, pname, ticker, shares, reason, dry_run=Fals
     from alpaca.trading.enums import OrderSide, TimeInForce
     try:
         order = client.submit_order(MarketOrderRequest(
-            symbol=ticker, qty=shares, side=OrderSide.SELL, time_in_force=TimeInForce.DAY,
+            symbol=to_alpaca(ticker), qty=shares, side=OrderSide.SELL, time_in_force=TimeInForce.DAY,
         ))
         filled_qty, filled_price = _wait_for_fill(client, order, shares, est_price, ticker, pname, "SELL")
         actual_value = filled_qty * filled_price
@@ -366,7 +367,7 @@ def _execute_buy_order(client, pid, pname, ticker, alloc, reason, starting, rese
     from alpaca.trading.enums import OrderSide, TimeInForce
     try:
         order = client.submit_order(MarketOrderRequest(
-            symbol=ticker, qty=num_shares, side=OrderSide.BUY, time_in_force=TimeInForce.DAY,
+            symbol=to_alpaca(ticker), qty=num_shares, side=OrderSide.BUY, time_in_force=TimeInForce.DAY,
         ))
         filled_qty, filled_price = _wait_for_fill(client, order, num_shares, price, ticker, pname, "BUY")
         actual_cost = filled_qty * filled_price
@@ -522,7 +523,7 @@ def sync_with_alpaca(client):
     positions = retry(lambda: client.get_all_positions(), attempts=3, delay=5, label="alpaca.get_positions")
     alpaca_positions = {}
     for p in positions:
-        alpaca_positions[p.symbol] = {
+        alpaca_positions[from_alpaca(p.symbol)] = {
             "qty": float(p.qty),
             "avg_entry": float(p.avg_entry_price),
             "current_price": float(p.current_price),
@@ -779,7 +780,7 @@ def check_concentration(client, dry_run=False):
 
             try:
                 req = MarketOrderRequest(
-                    symbol=ticker, qty=trim_shares,
+                    symbol=to_alpaca(ticker), qty=trim_shares,
                     side=OrderSide.SELL, time_in_force=TimeInForce.DAY
                 )
                 order = client.submit_order(req)
@@ -918,7 +919,7 @@ def execute_trades(client, data, dry_run=False, seed_mode=False):
 
             try:
                 req = MarketOrderRequest(
-                    symbol=ticker_stop, qty=int(shares_stop),
+                    symbol=to_alpaca(ticker_stop), qty=int(shares_stop),
                     side=OrderSide.SELL, time_in_force=TimeInForce.DAY,
                 )
                 order = client.submit_order(req)

@@ -20,6 +20,8 @@ import sqlite3
 import sys
 import time
 from datetime import datetime
+sys.path.insert(0, str(__import__("pathlib").Path(__file__).parent))
+from alpaca_symbols import to_alpaca
 from pathlib import Path
 from zoneinfo import ZoneInfo
 

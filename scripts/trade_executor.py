@@ -12,6 +12,9 @@ import re
 import sqlite3
 import sys
 from datetime import datetime, timedelta
+
+sys.path.insert(0, str(__import__("pathlib").Path(__file__).parent))
+from alpaca_symbols import to_alpaca, from_alpaca
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -295,20 +298,22 @@ def place_order(client, ticker, side, shares, limit_price=None, dry_run=False, m
             if not limit_price:
                 log_trade(action, ticker, shares, 0, rationale, "BLOCKED — no limit price available")
                 return None
+            alpaca_sym = to_alpaca(ticker)
             req = LimitOrderRequest(
-                symbol=ticker, qty=shares, side=OrderSide.BUY,
+                symbol=alpaca_sym, qty=shares, side=OrderSide.BUY,
                 time_in_force=TimeInForce.DAY, limit_price=round(limit_price, 2)
             )
         else:
             # Market for sells (default), limit if specified
+            alpaca_sym = to_alpaca(ticker)
             if limit_price:
                 req = LimitOrderRequest(
-                    symbol=ticker, qty=shares, side=OrderSide.SELL,
+                    symbol=alpaca_sym, qty=shares, side=OrderSide.SELL,
                     time_in_force=TimeInForce.DAY, limit_price=round(limit_price, 2)
                 )
             else:
                 req = MarketOrderRequest(
-                    symbol=ticker, qty=shares, side=OrderSide.SELL,
+                    symbol=alpaca_sym, qty=shares, side=OrderSide.SELL,
                     time_in_force=TimeInForce.DAY
                 )
 
@@ -640,7 +645,7 @@ def show_status(client):
             pl = float(p.unrealized_pl)
             pl_pct = float(p.unrealized_plpc) * 100
             emoji = "🟢" if pl >= 0 else "🔴"
-            print(f"| {p.symbol} | {p.qty} | ${float(p.avg_entry_price):,.2f} | ${float(p.current_price):,.2f} | {emoji} ${pl:,.2f} | {pl_pct:+.1f}% |")
+            print(f"| {from_alpaca(p.symbol)} | {p.qty} | ${float(p.avg_entry_price):,.2f} | ${float(p.current_price):,.2f} | {emoji} ${pl:,.2f} | {pl_pct:+.1f}% |")
     else:
         print("\n*No open positions*")
 
@@ -653,7 +658,7 @@ def show_status(client):
         print("|--------|------|-----|------|-------|--------|")
         for o in open_orders:
             lp = f"${float(o.limit_price):,.2f}" if o.limit_price else "MKT"
-            print(f"| {o.symbol} | {o.side} | {o.qty} | {o.order_type} | {lp} | {o.status} |")
+            print(f"| {from_alpaca(o.symbol)} | {o.side} | {o.qty} | {o.order_type} | {lp} | {o.status} |")
     else:
         print("\n*No open orders*")
 

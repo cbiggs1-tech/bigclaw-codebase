@@ -36,6 +36,7 @@ import yfinance as yf
 
 sys.path.insert(0, str(Path.home() / "bigclaw-ai" / "src"))
 sys.path.insert(0, str(Path(__file__).parent))
+from alpaca_symbols import to_alpaca, from_alpaca
 
 from bigclaw_logging import get_logger
 
@@ -510,7 +511,7 @@ def execute_stop_sells(triggered, dry_run=False):
 
         try:
             req = MarketOrderRequest(
-                symbol=ticker, qty=shares,
+                symbol=to_alpaca(ticker), qty=shares,
                 side=OrderSide.SELL, time_in_force=TimeInForce.DAY,
             )
             order = client.submit_order(req)

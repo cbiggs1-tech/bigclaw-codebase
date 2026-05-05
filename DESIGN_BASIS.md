@@ -676,6 +676,10 @@ Historical drift is bounded (no new contributions). Per-portfolio cash accountin
 
 `scripts/llm_token_report.py` runs daily at 6 AM CT, aggregates the previous day's calls from `logs/llm_calls.jsonl`, and posts a Slack DM with per-script breakdown. Alerts loudly if any single script exceeds 1M tokens or $5 in one day. Catches the pattern of a heavy LLM consumer creeping into the codebase undetected — the way `gate_reasoning` did before it was found burning ~$1,460/year.
 
+### Symbol Format at the Alpaca Boundary
+
+BigClaw stores tickers using the Yahoo/Finviz convention with hyphens for class-share suffixes (`BRK-B`, `BF-A`, `BF-B`, `MOG-A`). Alpaca uses dots (`BRK.B`, `BF.A`). `scripts/alpaca_symbols.py` provides `to_alpaca()` and `from_alpaca()` for translation at the API boundary — applied at every `submit_order` site (autonomous_trader, trade_executor, trailing_stop_manager, bigclaw_full_reset) and at `get_all_positions()` reads (so reconciliation compares apples to apples). The DB and the rest of the codebase only ever see the hyphen format. Added May 4 2026 after Income Dividends BUY orders for BF-A and BF-B were rejected by Alpaca with `asset not found`.
+
 ---
 
 ## 11. Data Feeds & External APIs
