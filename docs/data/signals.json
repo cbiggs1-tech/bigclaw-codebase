@@ -1,5 +1,5 @@
 {
-  "date": "2026-05-04 19:59",
+  "date": "2026-05-05 09:04",
   "signals": [
     {
       "ticker": "AAL",
@@ -11,16 +11,16 @@
         "below 200-day SMA",
         "death cross (50<200)",
         "revenue growth 11%",
-        "P/E improving (5.4 < 38.1)",
+        "P/E improving (5.5 < 38.7)",
         "no dividend",
-        "FCF yield 11.0% (strong)",
+        "FCF yield 10.8% (strong)",
         "gross margin 23% (thin)",
         "insider net selling (0B/2S)",
         "outperforming XLI by 4.5%",
         "bond mkt +2 (wt 0.75x)",
         "\u26a1 VALUE OVERRIDE: +1 (21% below target)"
       ],
-      "price": 11.8100004196167,
+      "price": 12.02,
       "value_override": {
         "total_score": 1,
         "base_score_before": 1.0,
@@ -31,7 +31,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (21% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "AAOI",
@@ -50,7 +52,9 @@
         "outperforming XLK by 42.5%",
         "bond mkt +2 (wt 1.25x)"
       ],
-      "price": 172.97999572753906
+      "price": 177.0,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "ABT",
@@ -63,8 +67,8 @@
         "death cross (50<200)",
         "earnings growth -20%",
         "revenue growth 8%",
-        "P/E improving (14.4 < 25.1)",
-        "yield 282.0%",
+        "P/E improving (14.3 < 24.3)",
+        "yield 288.0%",
         "PEG N/A (negative growth)",
         "FCF positive ($6.3B)",
         "gross margin 57% (wide moat)",
@@ -73,7 +77,7 @@
         "bond mkt +2 (wt 1.5x)",
         "\u26a1 VALUE OVERRIDE: +4 (26% below target, RSI 26 oversold)"
       ],
-      "price": 87.54000091552734,
+      "price": 86.67,
       "value_override": {
         "total_score": 4,
         "base_score_before": 7.5,
@@ -88,7 +92,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +4 (26% below target, RSI 26 oversold)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "ACN",
@@ -100,18 +106,18 @@
         "death cross (50<200)",
         "earnings growth 4%",
         "revenue growth 8%",
-        "P/E improving (12.1 < 14.8)",
-        "yield 363.0%",
-        "PEG 3.69 (expensive)",
+        "P/E improving (11.7 < 14.3)",
+        "yield 362.0%",
+        "PEG 3.57 (expensive)",
         "ROE 25% (excellent)",
-        "FCF yield 11.0% (strong)",
+        "FCF yield 11.4% (strong)",
         "payout ratio 51% (safe)",
         "insider net selling (0B/20S)",
         "underperforming XLK by 27.2%",
         "bond mkt +2 (wt 1.5x)",
         "\u26a1 VALUE OVERRIDE: +3 (28% below target, RSI 39 oversold)"
       ],
-      "price": 180.1199951171875,
+      "price": 174.23,
       "value_override": {
         "total_score": 3,
         "base_score_before": 13.0,
@@ -126,7 +132,27 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +3 (28% below target, RSI 39 oversold)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "Income Dividends",
+          "shares": 60.0,
+          "position_pct": 12.0,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": [
+        {
+          "action": "SWAP IN",
+          "portfolio": "Income Dividends",
+          "sell": "AVY",
+          "sell_score": 10,
+          "buy": "ACN",
+          "buy_score": 13,
+          "score_diff": 3
+        }
+      ]
     },
     {
       "ticker": "ADP",
@@ -138,16 +164,26 @@
         "death cross (50<200)",
         "earnings growth 10%",
         "revenue growth 7%",
-        "P/E improving (17.4 < 19.7)",
-        "yield 317.0%",
+        "P/E improving (17.2 < 19.4)",
+        "yield 322.0%",
         "ROE 71% (excellent)",
-        "FCF yield 5.6% (strong)",
+        "FCF yield 5.7% (strong)",
         "gross margin 48% (wide moat)",
         "insider net selling (0B/19S)",
         "underperforming XLK by 15.1%",
         "bond mkt +2 (wt 1.5x)"
       ],
-      "price": 211.32000732421875
+      "price": 207.68,
+      "held_in": [
+        {
+          "portfolio": "Income Dividends",
+          "shares": 59.0,
+          "position_pct": 12.1,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "ADPT",
@@ -167,7 +203,7 @@
         "bond mkt +2 (wt 1.25x)",
         "\u26a1 VALUE OVERRIDE: +2 (30% below target)"
       ],
-      "price": 14.5,
+      "price": 14.01,
       "value_override": {
         "total_score": 2,
         "base_score_before": 8.0,
@@ -178,7 +214,27 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (30% below target)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "Innovation Fund",
+          "shares": 821.0,
+          "position_pct": 11.1,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": [
+        {
+          "action": "SWAP IN",
+          "portfolio": "Innovation Fund",
+          "sell": "ARQT",
+          "sell_score": 4,
+          "buy": "ADPT",
+          "buy_score": 8,
+          "score_diff": 4
+        }
+      ]
     },
     {
       "ticker": "ADSK",
@@ -190,18 +246,18 @@
         "death cross (50<200)",
         "earnings growth 6%",
         "revenue growth 19%",
-        "P/E improving (17.6 < 46.7)",
+        "P/E improving (17.5 < 47.2)",
         "no dividend",
-        "PEG 7.41 (expensive)",
+        "PEG 7.49 (expensive)",
         "ROE 40% (excellent)",
-        "FCF yield 5.3% (strong)",
+        "FCF yield 5.4% (strong)",
         "gross margin 92% (wide moat)",
         "insider net selling (0B/19S)",
         "underperforming XLK by 14.3%",
         "bond mkt +2 (wt 1.25x)",
         "\u26a1 VALUE OVERRIDE: +1 (24% below target)"
       ],
-      "price": 247.5399932861328,
+      "price": 247.04,
       "value_override": {
         "total_score": 1,
         "base_score_before": 4.5,
@@ -212,7 +268,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (24% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "AEE",
@@ -224,16 +282,18 @@
         "golden cross (50>200)",
         "earnings growth 20%",
         "revenue growth -9%",
-        "P/E improving (19.4 < 21.2)",
+        "P/E improving (19.4 < 21.0)",
         "D/E ratio 147",
-        "yield 264.0%",
+        "yield 267.0%",
         "FCF negative ($-1.5B)",
         "gross margin 49% (wide moat)",
         "payout ratio 53% (safe)",
         "insider net selling (0B/20S)",
         "bond mkt +2 (wt 1.5x)"
       ],
-      "price": 112.38999938964844
+      "price": 112.43,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "AEP",
@@ -245,9 +305,9 @@
         "golden cross (50>200)",
         "earnings growth -13%",
         "revenue growth 13%",
-        "P/E improving (19.6 < 20.6)",
+        "P/E improving (19.9 < 20.5)",
         "D/E ratio 154",
-        "yield 278.0%",
+        "yield 282.0%",
         "PEG N/A (negative growth)",
         "FCF negative ($-5.1B)",
         "gross margin 48% (wide moat)",
@@ -255,7 +315,9 @@
         "insider net selling (0B/20S)",
         "bond mkt +2 (wt 1.5x)"
       ],
-      "price": 134.66000366210938
+      "price": 137.15,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "AES",
@@ -277,7 +339,9 @@
         "payout ratio 54% (safe)",
         "bond mkt +2 (wt 1.5x)"
       ],
-      "price": 14.279999732971191
+      "price": 14.31,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "AFG",
@@ -289,8 +353,8 @@
         "death cross (50<200)",
         "earnings growth 25%",
         "revenue growth 0%",
-        "P/E improving (10.9 < 12.5)",
-        "yield 267.0%",
+        "P/E improving (11.0 < 12.6)",
+        "yield 268.0%",
         "PEG 0.51 (attractive)",
         "ROE 19% (good)",
         "gross margin 19% (thin)",
@@ -298,7 +362,9 @@
         "insider net selling (0B/9S)",
         "bond mkt +2 (wt 1.5x)"
       ],
-      "price": 131.39999389648438
+      "price": 132.07,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "AFL",
@@ -310,8 +376,8 @@
         "golden cross (50>200)",
         "earnings growth 3860%",
         "revenue growth 28%",
-        "forward P/E (14.8) > trailing (13.0)",
-        "yield 216.0%",
+        "forward P/E (14.8) > trailing (12.9)",
+        "yield 215.0%",
         "PEG 0.00 (attractive)",
         "ROE 16% (good)",
         "gross margin 50% (wide moat)",
@@ -319,7 +385,9 @@
         "insider net selling (0B/20S)",
         "bond mkt +2 (wt 1.5x)"
       ],
-      "price": 113.33000183105469
+      "price": 113.39,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "AFRM",
@@ -331,7 +399,7 @@
         "death cross (50<200)",
         "earnings growth 59%",
         "revenue growth 30%",
-        "P/E improving (17.1 < 83.8)",
+        "P/E improving (17.1 < 82.6)",
         "D/E ratio 259",
         "no dividend",
         "ROE 9% (weak)",
@@ -342,7 +410,7 @@
         "bond mkt +2 (wt 1.25x)",
         "\u26a1 VALUE OVERRIDE: +1 (15% below target)"
       ],
-      "price": 67.08000183105469,
+      "price": 67.41,
       "value_override": {
         "total_score": 1,
         "base_score_before": 5.5,
@@ -353,7 +421,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (15% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "AIG",
@@ -367,7 +437,7 @@
         "earnings growth 22%",
         "revenue growth 1%",
         "P/E improving (8.8 < 13.7)",
-        "yield 254.0%",
+        "yield 258.0%",
         "PEG 0.63 (attractive)",
         "ROE 8% (weak)",
         "FCF yield 23.0% (strong)",
@@ -375,7 +445,9 @@
         "insider net buying (7B/4S)",
         "bond mkt +2 (wt 1.5x)"
       ],
-      "price": 77.55999755859375
+      "price": 77.49,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "AJG",
@@ -387,9 +459,9 @@
         "death cross (50<200)",
         "earnings growth 16%",
         "revenue growth 35%",
-        "P/E improving (13.9 < 33.5)",
+        "P/E improving (13.8 < 33.2)",
         "yield 135.0%",
-        "PEG 2.07 (expensive)",
+        "PEG 2.05 (expensive)",
         "ROE 7% (weak)",
         "gross margin 43% (wide moat)",
         "payout ratio 43% (safe)",
@@ -398,7 +470,7 @@
         "bond mkt +2 (wt 0.75x)",
         "\u26a1 VALUE OVERRIDE: +2 (23% below target, RSI 37 oversold)"
       ],
-      "price": 207.02999877929688,
+      "price": 205.46,
       "value_override": {
         "total_score": 2,
         "base_score_before": 2.5,
@@ -413,7 +485,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (23% below target, RSI 37 oversold)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "ALAB",
@@ -425,9 +499,10 @@
         "death cross (50<200)",
         "earnings growth 84%",
         "revenue growth 92%",
-        "P/E improving (56.0 < 166.3)",
+        "P/E improving (58.4 < 170.5)",
         "short interest 10.5%",
         "no dividend",
+        "PEG 2.04 (expensive)",
         "ROE 19% (good)",
         "FCF positive ($0.2B)",
         "gross margin 76% (wide moat)",
@@ -435,7 +510,9 @@
         "outperforming XLK by 52.1%",
         "bond mkt +2 (wt 1.25x)"
       ],
-      "price": 201.25
+      "price": 212.32,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "ALGM",
@@ -456,7 +533,9 @@
         "outperforming XLK by 32.3%",
         "bond mkt +2 (wt 0.75x)"
       ],
-      "price": 49.47999954223633
+      "price": 49.51,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "ALHC",
@@ -467,17 +546,17 @@
         "above 200-day SMA",
         "golden cross (50>200)",
         "revenue growth 33%",
-        "P/E improving (26.7 < 214.0)",
+        "P/E improving (25.6 < 185.3)",
         "D/E ratio 159",
         "no dividend",
-        "FCF yield 5.9% (strong)",
+        "FCF yield 6.1% (strong)",
         "gross margin 12% (thin)",
         "insider net selling (0B/20S)",
         "outperforming XLV by 4.2%",
         "bond mkt +2 (wt 1.25x)",
         "\u26a1 VALUE OVERRIDE: +1 (25% below target)"
       ],
-      "price": 19.260000228881836,
+      "price": 18.51,
       "value_override": {
         "total_score": 1,
         "base_score_before": 4.5,
@@ -488,7 +567,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (25% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "ALL",
@@ -501,53 +582,61 @@
         "golden cross (50>200)",
         "earnings growth 338%",
         "revenue growth 3%",
-        "forward P/E (8.4) > trailing (4.9)",
-        "yield 199.0%",
+        "forward P/E (8.5) > trailing (4.9)",
+        "yield 196.0%",
         "PEG 0.01 (attractive)",
         "ROE 45% (excellent)",
-        "FCF yield 22.0% (strong)",
+        "FCF yield 21.8% (strong)",
         "payout ratio 9% (safe)",
         "insider net selling (0B/6S)",
         "outperforming XLF by 2.1%",
         "bond mkt +2 (wt 1.5x)"
       ],
-      "price": 219.8699951171875
+      "price": 221.09,
+      "held_in": [
+        {
+          "portfolio": "Income Dividends",
+          "shares": 55.0,
+          "position_pct": 12.1,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "ALLY",
-      "score": 6,
+      "score": 5,
       "label": "\ud83d\udfe2 STRONG BUY / ADD",
       "reasons": [
         "above 50-day SMA",
         "above 200-day SMA",
         "death cross (50<200)",
         "revenue growth 20%",
-        "P/E improving (6.7 < 10.4)",
-        "yield 276.0%",
+        "P/E improving (6.7 < 10.6)",
+        "yield 279.0%",
         "ROE 9% (weak)",
         "gross margin 0% (thin)",
         "payout ratio 29% (safe)",
         "insider net selling (2B/4S)",
         "outperforming XLF by 4.0%",
         "bond mkt +2 (wt 1.5x)",
-        "\u26a1 VALUE OVERRIDE: +2 (20% below target, P/B 1.00)"
+        "\u26a1 VALUE OVERRIDE: +1 (20% below target)"
       ],
-      "price": 43.029998779296875,
+      "price": 43.51,
       "value_override": {
-        "total_score": 2,
-        "base_score_before": 5.5,
+        "total_score": 1,
+        "base_score_before": 5.0,
         "components": {
           "analyst_target": {
             "score": 1,
             "reason": "20% below analyst target $54.01"
-          },
-          "below_book": {
-            "score": 1,
-            "reason": "P/B 1.00 (below book value)"
           }
         },
-        "summary": "\u26a1 VALUE OVERRIDE: +2 (20% below target, P/B 1.00)"
-      }
+        "summary": "\u26a1 VALUE OVERRIDE: +1 (20% below target)"
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "ALNY",
@@ -558,7 +647,7 @@
         "below 200-day SMA",
         "death cross (50<200)",
         "revenue growth 96%",
-        "P/E improving (21.4 < 74.7)",
+        "P/E improving (21.6 < 75.3)",
         "D/E ratio 276",
         "no dividend",
         "ROE 90% (excellent)",
@@ -569,7 +658,7 @@
         "bond mkt +2 (wt 1.25x)",
         "\u26a1 VALUE OVERRIDE: +2 (34% below target)"
       ],
-      "price": 297.92498779296875,
+      "price": 299.17,
       "value_override": {
         "total_score": 2,
         "base_score_before": 6.0,
@@ -580,7 +669,17 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (34% below target)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "Innovation Fund",
+          "shares": 39.0,
+          "position_pct": 11.0,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "AMBA",
@@ -601,7 +700,7 @@
         "bond mkt +2 (wt 1.25x)",
         "\u26a1 VALUE OVERRIDE: +1 (20% below target)"
       ],
-      "price": 70.72000122070312,
+      "price": 71.23,
       "value_override": {
         "total_score": 1,
         "base_score_before": 6.0,
@@ -612,7 +711,17 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (20% below target)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "Innovation Fund",
+          "shares": 201.0,
+          "position_pct": 11.1,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "AMD",
@@ -624,9 +733,9 @@
         "golden cross (50>200)",
         "earnings growth 217%",
         "revenue growth 34%",
-        "P/E improving (30.4 < 138.8)",
+        "P/E improving (31.0 < 133.6)",
         "no dividend",
-        "PEG 0.64 (attractive)",
+        "PEG 0.62 (attractive)",
         "ROE 7% (weak)",
         "FCF positive ($4.6B)",
         "gross margin 52% (wide moat)",
@@ -634,7 +743,9 @@
         "outperforming XLK by 36.6%",
         "bond mkt +2 (wt 1.25x)"
       ],
-      "price": 341.5400085449219
+      "price": 348.73,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "AMG",
@@ -647,8 +758,8 @@
         "golden cross (50>200)",
         "earnings growth 74%",
         "revenue growth 10%",
-        "P/E improving (7.7 < 11.9)",
-        "PEG 0.16 (attractive)",
+        "P/E improving (7.8 < 12.3)",
+        "PEG 0.17 (attractive)",
         "ROE 22% (excellent)",
         "gross margin 49% (wide moat)",
         "payout ratio 0% (safe)",
@@ -656,7 +767,7 @@
         "outperforming XLF by 7.9%",
         "\u26a1 VALUE OVERRIDE: +1 (21% below target)"
       ],
-      "price": 297.5299987792969,
+      "price": 300.88,
       "value_override": {
         "total_score": 1,
         "base_score_before": 10.5,
@@ -667,7 +778,17 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (21% below target)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "Value Picks",
+          "shares": 40.0,
+          "position_pct": 12.2,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "AMGN",
@@ -679,10 +800,10 @@
         "golden cross (50>200)",
         "earnings growth 4%",
         "revenue growth 6%",
-        "P/E improving (13.8 < 22.9)",
+        "P/E improving (13.7 < 22.5)",
         "D/E ratio 624",
-        "yield 306.0%",
-        "PEG 5.21 (expensive)",
+        "yield 311.0%",
+        "PEG 5.11 (expensive)",
         "ROE 101% (excellent)",
         "FCF positive ($7.4B)",
         "gross margin 71% (wide moat)",
@@ -691,7 +812,7 @@
         "bond mkt +2 (wt 1.5x)",
         "\u26a1 VALUE OVERRIDE: +1 (RSI 32 oversold)"
       ],
-      "price": 323.8500061035156,
+      "price": 321.99,
       "value_override": {
         "total_score": 1,
         "base_score_before": 9.5,
@@ -702,7 +823,17 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (RSI 32 oversold)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "Income Dividends",
+          "shares": 34.0,
+          "position_pct": 12.1,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "AMP",
@@ -714,16 +845,45 @@
         "death cross (50<200)",
         "earnings growth 66%",
         "revenue growth 9%",
-        "P/E improving (9.9 < 11.6)",
-        "yield 146.0%",
+        "P/E improving (9.9 < 11.7)",
+        "yield 145.0%",
         "PEG 0.18 (attractive)",
         "ROE 67% (excellent)",
         "gross margin 57% (wide moat)",
         "payout ratio 16% (safe)",
         "insider net selling (0B/15S)",
-        "outperforming XLF by 5.5%"
+        "outperforming XLF by 5.9%"
       ],
-      "price": 468.5899963378906
+      "price": 470.97,
+      "held_in": [
+        {
+          "portfolio": "Value Picks",
+          "shares": 24.0,
+          "position_pct": 11.6,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": [
+        {
+          "action": "SWAP OUT",
+          "portfolio": "Value Picks",
+          "sell": "AMP",
+          "sell_score": 10,
+          "buy": "BVN",
+          "buy_score": 14,
+          "score_diff": 4
+        },
+        {
+          "action": "SWAP OUT",
+          "portfolio": "Value Picks",
+          "sell": "AMP",
+          "sell_score": 10,
+          "buy": "BHP",
+          "buy_score": 13,
+          "score_diff": 3
+        }
+      ]
     },
     {
       "ticker": "AMX",
@@ -735,16 +895,33 @@
         "golden cross (50>200)",
         "earnings growth 26%",
         "revenue growth 2%",
-        "P/E improving (12.9 < 15.9)",
+        "P/E improving (13.2 < 16.3)",
         "D/E ratio 171",
-        "yield 214.0%",
-        "PEG 0.62 (attractive)",
+        "yield 213.0%",
+        "PEG 0.63 (attractive)",
         "ROE 21% (excellent)",
-        "FCF yield 175.9% (strong)",
+        "FCF yield 172.0% (strong)",
         "gross margin 43% (wide moat)",
         "payout ratio 36% (safe)"
       ],
-      "price": 26.510000228881836
+      "price": 27.23,
+      "held_in": [
+        {
+          "portfolio": "Value Picks",
+          "shares": 458.0,
+          "position_pct": 12.3,
+          "at_max_position": false,
+          "at_max_holdings": false
+        },
+        {
+          "portfolio": "Growth Value",
+          "shares": 451.0,
+          "position_pct": 12.2,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "ANET",
@@ -757,9 +934,9 @@
         "golden cross (50>200)",
         "earnings growth 19%",
         "revenue growth 29%",
-        "P/E improving (40.0 < 62.8)",
+        "P/E improving (39.9 < 63.0)",
         "no dividend",
-        "PEG 3.29 (expensive)",
+        "PEG 3.30 (expensive)",
         "ROE 31% (excellent)",
         "FCF positive ($3.4B)",
         "gross margin 64% (wide moat)",
@@ -767,7 +944,17 @@
         "outperforming XLK by 18.3%",
         "bond mkt +2 (wt 0.75x)"
       ],
-      "price": 172.6199951171875
+      "price": 173.52,
+      "held_in": [
+        {
+          "portfolio": "Momentum Growth",
+          "shares": 73.0,
+          "position_pct": 13.4,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "ANF",
@@ -779,16 +966,16 @@
         "death cross (50<200)",
         "earnings growth 3%",
         "revenue growth 5%",
-        "P/E improving (6.7 < 8.1)",
+        "P/E improving (6.7 < 7.6)",
         "no dividend",
-        "PEG 2.69 (expensive)",
+        "PEG 2.52 (expensive)",
         "ROE 37% (excellent)",
         "FCF yield 7.4% (strong)",
         "gross margin 61% (wide moat)",
         "underperforming XLY by 26.9%",
         "\u26a1 VALUE OVERRIDE: +3 (34% below target, RSI 31 oversold)"
       ],
-      "price": 78.97000122070312,
+      "price": 79.25,
       "value_override": {
         "total_score": 3,
         "base_score_before": 12.0,
@@ -803,7 +990,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +3 (34% below target, RSI 31 oversold)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "APA",
@@ -816,16 +1005,18 @@
         "earnings growth -18%",
         "revenue growth -28%",
         "P/E improving (10.4 < 10.5)",
-        "yield 249.0%",
+        "yield 238.0%",
         "PEG N/A (negative growth)",
         "ROE 25% (excellent)",
-        "FCF yield 13.2% (strong)",
+        "FCF yield 13.3% (strong)",
         "gross margin 68% (wide moat)",
         "payout ratio 25% (safe)",
         "insider net selling (0B/2S)",
         "bond mkt +2 (wt 1.5x)"
       ],
-      "price": 42.02000045776367
+      "price": 41.78,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "APLD",
@@ -847,7 +1038,7 @@
         "bond mkt +2 (wt 1.25x)",
         "\u26a1 VALUE OVERRIDE: +2 (34% below target)"
       ],
-      "price": 35.630001068115234,
+      "price": 36.01,
       "value_override": {
         "total_score": 2,
         "base_score_before": 4.5,
@@ -858,7 +1049,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (34% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "APP",
@@ -870,10 +1063,10 @@
         "death cross (50<200)",
         "earnings growth 85%",
         "revenue growth 66%",
-        "P/E improving (22.3 < 45.8)",
+        "P/E improving (22.3 < 47.3)",
         "D/E ratio 172",
         "no dividend",
-        "PEG 0.54 (attractive)",
+        "PEG 0.56 (attractive)",
         "ROE 213% (excellent)",
         "FCF positive ($2.7B)",
         "gross margin 88% (wide moat)",
@@ -882,7 +1075,7 @@
         "bond mkt +2 (wt 1.25x)",
         "\u26a1 VALUE OVERRIDE: +2 (26% below target)"
       ],
-      "price": 475.0,
+      "price": 475.43,
       "value_override": {
         "total_score": 2,
         "base_score_before": 7.5,
@@ -893,7 +1086,27 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (26% below target)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "Innovation Fund",
+          "shares": 26.0,
+          "position_pct": 10.9,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": [
+        {
+          "action": "SWAP IN",
+          "portfolio": "Innovation Fund",
+          "sell": "ARQT",
+          "sell_score": 4,
+          "buy": "APP",
+          "buy_score": 8,
+          "score_diff": 4
+        }
+      ]
     },
     {
       "ticker": "APPF",
@@ -905,7 +1118,7 @@
         "death cross (50<200)",
         "earnings growth 37%",
         "revenue growth 20%",
-        "P/E improving (21.1 < 41.1)",
+        "P/E improving (20.7 < 40.6)",
         "short interest 10.3%",
         "no dividend",
         "ROE 33% (excellent)",
@@ -916,7 +1129,7 @@
         "bond mkt +2 (wt 1.25x)",
         "\u26a1 VALUE OVERRIDE: +1 (24% below target)"
       ],
-      "price": 173.6300048828125,
+      "price": 170.4,
       "value_override": {
         "total_score": 1,
         "base_score_before": 3.5,
@@ -927,7 +1140,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (24% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "ARGX",
@@ -939,7 +1154,7 @@
         "death cross (50<200)",
         "earnings growth -32%",
         "revenue growth 73%",
-        "P/E improving (24.4 < 40.0)",
+        "P/E improving (24.1 < 40.9)",
         "no dividend",
         "PEG N/A (negative growth)",
         "ROE 20% (excellent)",
@@ -949,18 +1164,28 @@
         "bond mkt +2 (wt 1.25x)",
         "\u26a1 VALUE OVERRIDE: +1 (22% below target)"
       ],
-      "price": 811.0900268554688,
+      "price": 801.21,
       "value_override": {
         "total_score": 1,
         "base_score_before": 6.5,
         "components": {
           "analyst_target": {
             "score": 1,
-            "reason": "22% below analyst target $1033.29"
+            "reason": "22% below analyst target $1033.89"
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (22% below target)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "Innovation Fund",
+          "shares": 15.0,
+          "position_pct": 10.5,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "ARM",
@@ -972,7 +1197,7 @@
         "golden cross (50>200)",
         "earnings growth -12%",
         "revenue growth 26%",
-        "P/E improving (95.0 < 278.4)",
+        "P/E improving (96.3 < 274.6)",
         "no dividend",
         "PEG N/A (negative growth)",
         "FCF positive ($0.8B)",
@@ -981,7 +1206,9 @@
         "outperforming XLK by 18.2%",
         "bond mkt +2 (wt 1.25x)"
       ],
-      "price": 203.25999450683594
+      "price": 205.16,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "AROC",
@@ -994,10 +1221,10 @@
         "golden cross (50>200)",
         "earnings growth 95%",
         "revenue growth 16%",
-        "P/E improving (17.0 < 21.2)",
+        "P/E improving (17.2 < 21.5)",
         "D/E ratio 163",
         "yield 226.0%",
-        "PEG 0.22 (attractive)",
+        "PEG 0.23 (attractive)",
         "ROE 23% (excellent)",
         "FCF positive ($0.0B)",
         "gross margin 66% (wide moat)",
@@ -1005,7 +1232,17 @@
         "insider net selling (3B/12S)",
         "outperforming XLE by 11.9%"
       ],
-      "price": 38.869998931884766
+      "price": 39.41,
+      "held_in": [
+        {
+          "portfolio": "Value Picks",
+          "shares": 331.0,
+          "position_pct": 12.3,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "ARQT",
@@ -1025,7 +1262,7 @@
         "bond mkt +2 (wt 1.25x)",
         "\u26a1 VALUE OVERRIDE: +2 (32% below target)"
       ],
-      "price": 23.489999771118164,
+      "price": 23.46,
       "value_override": {
         "total_score": 2,
         "base_score_before": 4.0,
@@ -1036,7 +1273,45 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (32% below target)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "Innovation Fund",
+          "shares": 458.0,
+          "position_pct": 9.9,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": [
+        {
+          "action": "SWAP OUT",
+          "portfolio": "Innovation Fund",
+          "sell": "ARQT",
+          "sell_score": 4,
+          "buy": "ADPT",
+          "buy_score": 8,
+          "score_diff": 4
+        },
+        {
+          "action": "SWAP OUT",
+          "portfolio": "Innovation Fund",
+          "sell": "ARQT",
+          "sell_score": 4,
+          "buy": "APP",
+          "buy_score": 8,
+          "score_diff": 4
+        },
+        {
+          "action": "SWAP OUT",
+          "portfolio": "Innovation Fund",
+          "sell": "ARQT",
+          "sell_score": 4,
+          "buy": "BLLN",
+          "buy_score": 7,
+          "score_diff": 3
+        }
+      ]
     },
     {
       "ticker": "ARW",
@@ -1049,7 +1324,7 @@
         "golden cross (50>200)",
         "earnings growth 100%",
         "revenue growth 20%",
-        "P/E improving (11.6 < 16.9)",
+        "P/E improving (11.7 < 17.2)",
         "no dividend",
         "PEG 0.17 (attractive)",
         "ROE 9% (weak)",
@@ -1059,7 +1334,9 @@
         "outperforming XLK by 7.5%",
         "bond mkt +2 (wt 1.25x)"
       ],
-      "price": 185.52000427246094
+      "price": 189.39,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "ARWR",
@@ -1079,7 +1356,9 @@
         "outperforming XLV by 26.0%",
         "bond mkt +2 (wt 1.25x)"
       ],
-      "price": 76.38999938964844
+      "price": 76.75,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "ASND",
@@ -1097,18 +1376,20 @@
         "bond mkt +2 (wt 1.25x)",
         "\u26a1 VALUE OVERRIDE: +1 (23% below target)"
       ],
-      "price": 228.7100067138672,
+      "price": 227.01,
       "value_override": {
         "total_score": 1,
         "base_score_before": 5.0,
         "components": {
           "analyst_target": {
             "score": 1,
-            "reason": "23% below analyst target $296.90"
+            "reason": "23% below analyst target $297.11"
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (23% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "ASTS",
@@ -1129,7 +1410,7 @@
         "bond mkt +2 (wt 1.25x)",
         "\u26a1 VALUE OVERRIDE: +2 (21% below target, RSI 37 oversold)"
       ],
-      "price": 68.43000030517578,
+      "price": 65.83,
       "value_override": {
         "total_score": 2,
         "base_score_before": 3.5,
@@ -1144,7 +1425,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (21% below target, RSI 37 oversold)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "ATAT",
@@ -1156,11 +1439,11 @@
         "death cross (50<200)",
         "earnings growth 46%",
         "revenue growth 34%",
-        "P/E improving (14.2 < 22.4)",
-        "yield 206.0%",
+        "P/E improving (14.2 < 22.2)",
+        "yield 209.0%",
         "PEG 0.49 (attractive)",
         "ROE 50% (excellent)",
-        "FCF yield 32.6% (strong)",
+        "FCF yield 32.4% (strong)",
         "gross margin 45% (wide moat)",
         "payout ratio 48% (safe)",
         "insider net selling (0B/1S)",
@@ -1168,18 +1451,28 @@
         "bond mkt +2 (wt 0.75x)",
         "\u26a1 VALUE OVERRIDE: +2 (26% below target)"
       ],
-      "price": 37.400001525878906,
+      "price": 37.76,
       "value_override": {
         "total_score": 2,
         "base_score_before": 9.5,
         "components": {
           "analyst_target": {
             "score": 2,
-            "reason": "26% below analyst target $50.58"
+            "reason": "26% below analyst target $50.60"
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (26% below target)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "Growth Value",
+          "shares": 317.0,
+          "position_pct": 12.2,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "ATO",
@@ -1191,9 +1484,9 @@
         "golden cross (50>200)",
         "earnings growth 9%",
         "revenue growth 14%",
-        "P/E improving (21.2 < 24.6)",
-        "yield 212.0%",
-        "PEG 2.61 (expensive)",
+        "P/E improving (21.1 < 24.5)",
+        "yield 213.0%",
+        "PEG 2.60 (expensive)",
         "ROE 9% (weak)",
         "FCF negative ($-1.9B)",
         "gross margin 58% (wide moat)",
@@ -1201,7 +1494,9 @@
         "insider net selling (0B/4S)",
         "bond mkt +2 (wt 1.5x)"
       ],
-      "price": 187.77000427246094
+      "price": 187.82,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "ATS",
@@ -1213,16 +1508,18 @@
         "golden cross (50>200)",
         "earnings growth 358%",
         "revenue growth 17%",
-        "P/E improving (20.9 < 229.4)",
+        "P/E improving (21.2 < 232.8)",
         "no dividend",
-        "PEG 0.64 (attractive)",
+        "PEG 0.65 (attractive)",
         "ROE 1% (weak)",
-        "FCF yield 11.3% (strong)",
+        "FCF yield 11.2% (strong)",
         "gross margin 26% (thin)",
         "outperforming XLI by 7.9%",
         "bond mkt +2 (wt 0.75x)"
       ],
-      "price": 32.11000061035156
+      "price": 33.22,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "AU",
@@ -1234,22 +1531,22 @@
         "golden cross (50>200)",
         "earnings growth 63%",
         "revenue growth 75%",
-        "P/E improving (9.2 < 17.5)",
-        "yield 459.0%",
+        "P/E improving (9.4 < 17.9)",
+        "yield 469.0%",
         "PEG 0.28 (attractive)",
         "ROE 34% (excellent)",
-        "FCF yield 5.7% (strong)",
+        "FCF yield 5.5% (strong)",
         "gross margin 49% (wide moat)",
         "payout ratio 49% (safe)",
         "insider net selling (0B/17S)",
         "underperforming XLB by 11.5%",
         "bond mkt +2 (wt 1.5x)",
         "\u26a1 VALUE OVERRIDE: +2 (25% below target, RSI 39 oversold)",
-        "correlated with BVN (0.82)",
         "correlated with B (0.86)",
-        "correlated with HMY (0.82)"
+        "correlated with HMY (0.82)",
+        "correlated with BVN (0.82)"
       ],
-      "price": 90.69000244140625,
+      "price": 92.69,
       "value_override": {
         "total_score": 2,
         "base_score_before": 13.5,
@@ -1264,7 +1561,27 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (25% below target, RSI 39 oversold)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "Income Dividends",
+          "shares": 129.0,
+          "position_pct": 12.2,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": [
+        {
+          "action": "SWAP IN",
+          "portfolio": "Income Dividends",
+          "sell": "AVY",
+          "sell_score": 10,
+          "buy": "AU",
+          "buy_score": 14,
+          "score_diff": 4
+        }
+      ]
     },
     {
       "ticker": "AVGO",
@@ -1277,9 +1594,9 @@
         "golden cross (50>200)",
         "earnings growth 32%",
         "revenue growth 30%",
-        "P/E improving (23.0 < 81.0)",
+        "P/E improving (23.3 < 82.5)",
         "yield 62.0%",
-        "PEG 2.56 (expensive)",
+        "PEG 2.61 (expensive)",
         "ROE 33% (excellent)",
         "FCF positive ($25.5B)",
         "gross margin 77% (wide moat)",
@@ -1288,7 +1605,17 @@
         "outperforming XLK by 14.0%",
         "bond mkt +2 (wt 0.75x)"
       ],
-      "price": 416.5
+      "price": 422.54,
+      "held_in": [
+        {
+          "portfolio": "Momentum Growth",
+          "shares": 29.0,
+          "position_pct": 13.1,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "AVY",
@@ -1300,10 +1627,10 @@
         "death cross (50<200)",
         "earnings growth 4%",
         "revenue growth 7%",
-        "P/E improving (14.4 < 18.3)",
+        "P/E improving (14.4 < 18.2)",
         "D/E ratio 165",
-        "yield 245.0%",
-        "PEG 4.26 (expensive)",
+        "yield 249.0%",
+        "PEG 4.22 (expensive)",
         "ROE 31% (excellent)",
         "FCF yield 6.2% (strong)",
         "gross margin 29% (thin)",
@@ -1313,7 +1640,7 @@
         "bond mkt +2 (wt 1.5x)",
         "\u26a1 VALUE OVERRIDE: +2 (20% below target, RSI 35 oversold)"
       ],
-      "price": 160.4600067138672,
+      "price": 161.41,
       "value_override": {
         "total_score": 2,
         "base_score_before": 10.0,
@@ -1328,7 +1655,45 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (20% below target, RSI 35 oversold)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "Income Dividends",
+          "shares": 73.0,
+          "position_pct": 12.1,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": [
+        {
+          "action": "SWAP OUT",
+          "portfolio": "Income Dividends",
+          "sell": "AVY",
+          "sell_score": 10,
+          "buy": "AU",
+          "buy_score": 14,
+          "score_diff": 4
+        },
+        {
+          "action": "SWAP OUT",
+          "portfolio": "Income Dividends",
+          "sell": "AVY",
+          "sell_score": 10,
+          "buy": "B",
+          "buy_score": 14,
+          "score_diff": 4
+        },
+        {
+          "action": "SWAP OUT",
+          "portfolio": "Income Dividends",
+          "sell": "AVY",
+          "sell_score": 10,
+          "buy": "ACN",
+          "buy_score": 13,
+          "score_diff": 3
+        }
+      ]
     },
     {
       "ticker": "AWK",
@@ -1340,9 +1705,9 @@
         "golden cross (50>200)",
         "earnings growth -5%",
         "revenue growth 6%",
-        "P/E improving (19.3 < 22.6)",
+        "P/E improving (19.1 < 22.3)",
         "D/E ratio 142",
-        "yield 281.0%",
+        "yield 282.0%",
         "PEG N/A (negative growth)",
         "FCF negative ($-1.9B)",
         "gross margin 61% (wide moat)",
@@ -1352,7 +1717,7 @@
         "bond mkt +2 (wt 1.5x)",
         "\u26a1 VALUE OVERRIDE: +1 (RSI 36 oversold)"
       ],
-      "price": 126.8499984741211,
+      "price": 125.7,
       "value_override": {
         "total_score": 1,
         "base_score_before": 2.5,
@@ -1363,7 +1728,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (RSI 36 oversold)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "AXON",
@@ -1375,7 +1742,7 @@
         "death cross (50<200)",
         "earnings growth -98%",
         "revenue growth 38%",
-        "P/E improving (37.6 < 262.5)",
+        "P/E improving (36.4 < 254.1)",
         "no dividend",
         "PEG N/A (negative growth)",
         "ROE 4% (weak)",
@@ -1385,7 +1752,7 @@
         "underperforming XLI by 8.5%",
         "\u26a1 VALUE OVERRIDE: +2 (44% below target)"
       ],
-      "price": 393.75,
+      "price": 382.23,
       "value_override": {
         "total_score": 2,
         "base_score_before": 6.0,
@@ -1396,7 +1763,17 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (44% below target)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "AI Defense & Autonomous",
+          "shares": 23.0,
+          "position_pct": 10.3,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "AXSM",
@@ -1407,17 +1784,18 @@
         "above 50-day SMA",
         "above 200-day SMA",
         "golden cross (50>200)",
-        "revenue growth 65%",
-        "D/E ratio 247",
+        "revenue growth 57%",
+        "D/E ratio 397",
         "no dividend",
-        "ROE -252% (negative)",
-        "FCF negative ($-0.0B)",
+        "ROE -349% (negative)",
         "gross margin 93% (wide moat)",
         "insider net selling (0B/12S)",
         "outperforming XLV by 32.8%",
         "bond mkt +2 (wt 1.25x)"
       ],
-      "price": 223.6999969482422
+      "price": 229.93,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "AXTI",
@@ -1437,7 +1815,9 @@
         "outperforming XLK by 134.0%",
         "bond mkt +2 (wt 1.25x)"
       ],
-      "price": 106.0
+      "price": 104.55,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "B",
@@ -1449,21 +1829,21 @@
         "golden cross (50>200)",
         "earnings growth 150%",
         "revenue growth 64%",
-        "P/E improving (8.5 < 13.3)",
-        "yield 433.0%",
+        "P/E improving (8.6 < 13.3)",
+        "yield 438.0%",
         "PEG 0.09 (attractive)",
         "ROE 21% (excellent)",
-        "FCF yield 6.3% (strong)",
+        "FCF yield 6.2% (strong)",
         "gross margin 51% (wide moat)",
         "payout ratio 18% (safe)",
         "underperforming XLB by 7.5%",
         "bond mkt +2 (wt 1.5x)",
         "\u26a1 VALUE OVERRIDE: +3 (33% below target, RSI 38 oversold)",
-        "correlated with BVN (0.82)",
+        "correlated with HMY (0.84)",
         "correlated with AU (0.86)",
-        "correlated with HMY (0.84)"
+        "correlated with BVN (0.82)"
       ],
-      "price": 38.34000015258789,
+      "price": 38.81,
       "value_override": {
         "total_score": 3,
         "base_score_before": 14.5,
@@ -1478,7 +1858,34 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +3 (33% below target, RSI 38 oversold)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "Income Dividends",
+          "shares": 280.0,
+          "position_pct": 12.2,
+          "at_max_position": false,
+          "at_max_holdings": false
+        },
+        {
+          "portfolio": "Growth Value",
+          "shares": 277.0,
+          "position_pct": 11.7,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": [
+        {
+          "action": "SWAP IN",
+          "portfolio": "Income Dividends",
+          "sell": "AVY",
+          "sell_score": 10,
+          "buy": "B",
+          "buy_score": 14,
+          "score_diff": 4
+        }
+      ]
     },
     {
       "ticker": "BAC",
@@ -1490,16 +1897,16 @@
         "death cross (50<200)",
         "earnings growth 24%",
         "revenue growth 8%",
-        "P/E improving (10.4 < 13.2)",
-        "yield 210.0%",
-        "PEG 0.54 (attractive)",
+        "P/E improving (10.5 < 13.4)",
+        "yield 215.0%",
+        "PEG 0.55 (attractive)",
         "gross margin 0% (thin)",
         "payout ratio 27% (safe)",
         "insider net selling (5B/15S)",
         "bond mkt +2 (wt 1.5x)",
         "\u26a1 VALUE OVERRIDE: +1 (17% below target)"
       ],
-      "price": 52.189998626708984,
+      "price": 52.88,
       "value_override": {
         "total_score": 1,
         "base_score_before": 8.0,
@@ -1510,7 +1917,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (17% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "BAH",
@@ -1522,19 +1931,19 @@
         "death cross (50<200)",
         "earnings growth 12%",
         "revenue growth -10%",
-        "forward P/E (12.4) > trailing (11.6)",
+        "forward P/E (12.2) > trailing (11.4)",
         "D/E ratio 404",
-        "yield 301.0%",
-        "PEG 0.94 (attractive)",
+        "yield 303.0%",
+        "PEG 0.92 (attractive)",
         "ROE 75% (excellent)",
-        "FCF yield 8.6% (strong)",
+        "FCF yield 8.8% (strong)",
         "gross margin 22% (thin)",
         "payout ratio 33% (safe)",
         "insider net selling (1B/4S)",
         "underperforming XLI by 10.9%",
         "\u26a1 VALUE OVERRIDE: +1 (20% below target)"
       ],
-      "price": 77.83999633789062,
+      "price": 76.76,
       "value_override": {
         "total_score": 1,
         "base_score_before": 0.5,
@@ -1545,7 +1954,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (20% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "BAP",
@@ -1557,8 +1968,8 @@
         "golden cross (50>200)",
         "earnings growth 42%",
         "revenue growth 5%",
-        "P/E improving (9.8 < 13.2)",
-        "yield 443.0%",
+        "P/E improving (9.9 < 13.3)",
+        "yield 446.0%",
         "PEG 0.31 (attractive)",
         "ROE 19% (good)",
         "gross margin 0% (thin)",
@@ -1566,7 +1977,17 @@
         "underperforming XLF by 9.0%",
         "bond mkt +2 (wt 1.5x)"
       ],
-      "price": 319.9800109863281
+      "price": 322.67,
+      "held_in": [
+        {
+          "portfolio": "Growth Value",
+          "shares": 3.0,
+          "position_pct": 1.0,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "BATRA",
@@ -1586,7 +2007,9 @@
         "outperforming XLC by 5.1%",
         "bond mkt +2 (wt 1.25x)"
       ],
-      "price": 53.13999938964844
+      "price": 53.04,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "BATRK",
@@ -1606,7 +2029,7 @@
         "bond mkt +2 (wt 1.25x)",
         "\u26a1 VALUE OVERRIDE: +1 (17% below target)"
       ],
-      "price": 49.45000076293945,
+      "price": 49.31,
       "value_override": {
         "total_score": 1,
         "base_score_before": 5.0,
@@ -1617,7 +2040,17 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (17% below target)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "Innovation Fund",
+          "shares": 239.0,
+          "position_pct": 11.1,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "BBD",
@@ -1629,13 +2062,15 @@
         "golden cross (50>200)",
         "earnings growth 57%",
         "revenue growth 6%",
-        "P/E improving (7.3 < 8.9)",
-        "yield 559.0%",
+        "P/E improving (7.4 < 8.9)",
+        "yield 583.0%",
         "PEG 0.16 (attractive)",
         "gross margin 0% (thin)",
         "bond mkt +2 (wt 1.5x)"
       ],
-      "price": 3.75
+      "price": 3.83,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "BBIO",
@@ -1655,7 +2090,7 @@
         "bond mkt +2 (wt 1.25x)",
         "\u26a1 VALUE OVERRIDE: +2 (32% below target)"
       ],
-      "price": 68.98999786376953,
+      "price": 69.34,
       "value_override": {
         "total_score": 2,
         "base_score_before": 3.5,
@@ -1666,7 +2101,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (32% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "BBVA",
@@ -1678,16 +2115,18 @@
         "golden cross (50>200)",
         "earnings growth 13%",
         "revenue growth 12%",
-        "P/E improving (9.3 < 9.8)",
-        "yield 490.0%",
-        "PEG 0.74 (attractive)",
+        "P/E improving (9.5 < 9.9)",
+        "yield 517.0%",
+        "PEG 0.75 (attractive)",
         "ROE 19% (good)",
         "gross margin 0% (thin)",
         "payout ratio 40% (safe)",
         "underperforming XLF by 5.0%",
         "bond mkt +2 (wt 1.5x)"
       ],
-      "price": 20.829999923706055
+      "price": 21.21,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "BCE",
@@ -1699,18 +2138,32 @@
         "golden cross (50>200)",
         "earnings growth 26%",
         "revenue growth -0%",
-        "forward P/E (11.9) > trailing (4.8)",
+        "forward P/E (12.0) > trailing (4.8)",
         "D/E ratio 176",
         "yield 531.0%",
         "PEG 0.18 (attractive)",
         "ROE 32% (excellent)",
-        "FCF yield 14.9% (strong)",
+        "FCF yield 14.8% (strong)",
         "gross margin 45% (wide moat)",
         "payout ratio 34% (safe)",
         "underperforming XLC by 5.2%",
-        "bond mkt +2 (wt 1.5x)"
+        "bond mkt +2 (wt 1.5x)",
+        "\u26a1 VALUE OVERRIDE: +1 (15% below target)"
       ],
-      "price": 23.93000030517578
+      "price": 24.01,
+      "value_override": {
+        "total_score": 1,
+        "base_score_before": 8.0,
+        "components": {
+          "analyst_target": {
+            "score": 1,
+            "reason": "15% below analyst target $28.16"
+          }
+        },
+        "summary": "\u26a1 VALUE OVERRIDE: +1 (15% below target)"
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "BCH",
@@ -1722,8 +2175,8 @@
         "golden cross (50>200)",
         "earnings growth -18%",
         "revenue growth -8%",
-        "P/E improving (11.7 < 14.8)",
-        "yield 590.0%",
+        "P/E improving (11.8 < 14.9)",
+        "yield 602.0%",
         "PEG N/A (negative growth)",
         "ROE 21% (excellent)",
         "gross margin 0% (thin)",
@@ -1731,7 +2184,7 @@
         "underperforming XLF by 4.8%",
         "\u26a1 VALUE OVERRIDE: +1 (P/B 0.65)"
       ],
-      "price": 36.349998474121094,
+      "price": 36.7,
       "value_override": {
         "total_score": 1,
         "base_score_before": 0.0,
@@ -1742,7 +2195,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (P/B 0.65)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "BCS",
@@ -1754,15 +2209,15 @@
         "golden cross (50>200)",
         "earnings growth 8%",
         "revenue growth 4%",
-        "P/E improving (6.7 < 10.0)",
-        "yield 196.0%",
+        "P/E improving (6.8 < 9.7)",
+        "yield 201.0%",
         "ROE 10% (weak)",
         "gross margin 0% (thin)",
         "payout ratio 20% (safe)",
         "bond mkt +2 (wt 1.5x)",
-        "\u26a1 VALUE OVERRIDE: +2 (15% below target, P/B 0.90)"
+        "\u26a1 VALUE OVERRIDE: +2 (15% below target, P/B 0.91)"
       ],
-      "price": 22.850000381469727,
+      "price": 22.96,
       "value_override": {
         "total_score": 2,
         "base_score_before": 8.0,
@@ -1773,11 +2228,13 @@
           },
           "below_book": {
             "score": 1,
-            "reason": "P/B 0.90 (below book value)"
+            "reason": "P/B 0.91 (below book value)"
           }
         },
-        "summary": "\u26a1 VALUE OVERRIDE: +2 (15% below target, P/B 0.90)"
-      }
+        "summary": "\u26a1 VALUE OVERRIDE: +2 (15% below target, P/B 0.91)"
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "BDX",
@@ -1789,18 +2246,18 @@
         "golden cross (50>200)",
         "earnings growth 29%",
         "revenue growth 2%",
-        "P/E improving (10.8 < 24.4)",
-        "yield 281.0%",
-        "PEG 0.85 (attractive)",
+        "P/E improving (10.7 < 23.6)",
+        "yield 287.0%",
+        "PEG 0.82 (attractive)",
         "ROE 7% (weak)",
-        "FCF yield 7.5% (strong)",
+        "FCF yield 7.6% (strong)",
         "gross margin 47% (wide moat)",
         "insider net selling (0B/19S)",
         "underperforming XLV by 4.7%",
         "bond mkt +2 (wt 1.5x)",
         "\u26a1 VALUE OVERRIDE: +2 (24% below target, RSI 33 oversold)"
       ],
-      "price": 146.30999755859375,
+      "price": 144.25,
       "value_override": {
         "total_score": 2,
         "base_score_before": 9.5,
@@ -1815,7 +2272,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (24% below target, RSI 33 oversold)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "BEAM",
@@ -1836,7 +2295,7 @@
         "bond mkt +2 (wt 1.25x)",
         "\u26a1 VALUE OVERRIDE: +2 (41% below target)"
       ],
-      "price": 30.079999923706055,
+      "price": 30.39,
       "value_override": {
         "total_score": 2,
         "base_score_before": 4.0,
@@ -1847,7 +2306,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (41% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "BF-A",
@@ -1859,10 +2320,10 @@
         "death cross (50<200)",
         "earnings growth 1%",
         "revenue growth 2%",
-        "yield 353.0%",
-        "PEG 11.73 (expensive)",
+        "yield 367.0%",
+        "PEG 11.52 (expensive)",
         "ROE 20% (excellent)",
-        "FCF yield 5.2% (strong)",
+        "FCF yield 5.1% (strong)",
         "gross margin 59% (wide moat)",
         "payout ratio 53% (safe)",
         "insider net selling (0B/7S)",
@@ -1870,7 +2331,7 @@
         "bond mkt +2 (wt 1.5x)",
         "\u26a1 VALUE OVERRIDE: +1 (RSI 35 oversold)"
       ],
-      "price": 25.15999984741211,
+      "price": 25.76,
       "value_override": {
         "total_score": 1,
         "base_score_before": 12.0,
@@ -1881,7 +2342,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (RSI 35 oversold)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "BF-B",
@@ -1893,12 +2356,12 @@
         "death cross (50<200)",
         "earnings growth 1%",
         "revenue growth 2%",
-        "forward P/E (14.5) > trailing (14.3)",
+        "forward P/E (14.9) > trailing (14.7)",
         "short interest 10.7%",
-        "yield 358.0%",
-        "PEG 11.03 (expensive)",
+        "yield 371.0%",
+        "PEG 11.31 (expensive)",
         "ROE 20% (excellent)",
-        "FCF yield 5.3% (strong)",
+        "FCF yield 5.2% (strong)",
         "gross margin 59% (wide moat)",
         "payout ratio 53% (safe)",
         "insider net selling (0B/7S)",
@@ -1906,7 +2369,7 @@
         "bond mkt +2 (wt 1.5x)",
         "\u26a1 VALUE OVERRIDE: +1 (RSI 35 oversold)"
       ],
-      "price": 24.65999984741211,
+      "price": 25.21,
       "value_override": {
         "total_score": 1,
         "base_score_before": 11.0,
@@ -1917,7 +2380,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (RSI 35 oversold)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "BHP",
@@ -1929,16 +2394,36 @@
         "golden cross (50>200)",
         "earnings growth 28%",
         "revenue growth 11%",
-        "P/E improving (14.6 < 19.7)",
-        "yield 336.0%",
-        "PEG 0.72 (attractive)",
+        "P/E improving (14.9 < 19.6)",
+        "yield 342.0%",
+        "PEG 0.71 (attractive)",
         "ROE 25% (excellent)",
         "FCF positive ($8.1B)",
         "gross margin 83% (wide moat)",
         "payout ratio 55% (safe)",
         "outperforming XLB by 6.1%"
       ],
-      "price": 77.87000274658203
+      "price": 79.18,
+      "held_in": [
+        {
+          "portfolio": "Value Picks",
+          "shares": 150.0,
+          "position_pct": 12.2,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": [
+        {
+          "action": "SWAP IN",
+          "portfolio": "Value Picks",
+          "sell": "AMP",
+          "sell_score": 10,
+          "buy": "BHP",
+          "buy_score": 13,
+          "score_diff": 3
+        }
+      ]
     },
     {
       "ticker": "BKE",
@@ -1950,18 +2435,28 @@
         "golden cross (50>200)",
         "earnings growth 3%",
         "revenue growth 5%",
-        "P/E improving (11.6 < 13.4)",
+        "P/E improving (11.7 < 13.0)",
         "short interest 11.8%",
-        "yield 253.0%",
-        "PEG 4.05 (expensive)",
+        "yield 263.0%",
+        "PEG 3.95 (expensive)",
         "ROE 49% (excellent)",
-        "FCF yield 5.5% (strong)",
+        "FCF yield 5.4% (strong)",
         "gross margin 59% (wide moat)",
         "payout ratio 34% (safe)",
         "insider net selling (0B/20S)",
         "underperforming XLY by 2.9%"
       ],
-      "price": 53.189998626708984
+      "price": 53.99,
+      "held_in": [
+        {
+          "portfolio": "Value Picks",
+          "shares": 201.0,
+          "position_pct": 11.5,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "BKNG",
@@ -1973,8 +2468,8 @@
         "death cross (50<200)",
         "earnings growth 240%",
         "revenue growth 16%",
-        "P/E improving (13.5 < 21.8)",
-        "yield 95.0%",
+        "P/E improving (13.5 < 21.9)",
+        "yield 97.0%",
         "PEG 0.09 (attractive)",
         "FCF yield 5.5% (strong)",
         "gross margin 87% (wide moat)",
@@ -1984,7 +2479,7 @@
         "bond mkt +2 (wt 0.75x)",
         "\u26a1 VALUE OVERRIDE: +3 (26% below target, RSI 39 oversold)"
       ],
-      "price": 165.5800018310547,
+      "price": 165.91,
       "value_override": {
         "total_score": 3,
         "base_score_before": 8.5,
@@ -1999,7 +2494,17 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +3 (26% below target, RSI 39 oversold)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "Growth Value",
+          "shares": 70.0,
+          "position_pct": 12.1,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "BLLN",
@@ -2008,7 +2513,7 @@
       "reasons": [
         "below 50-day SMA",
         "revenue growth 113%",
-        "P/E improving (80.6 < 515.1)",
+        "P/E improving (84.8 < 542.2)",
         "no dividend",
         "ROE 2% (weak)",
         "FCF positive ($0.0B)",
@@ -2017,7 +2522,7 @@
         "bond mkt +2 (wt 1.25x)",
         "\u26a1 VALUE OVERRIDE: +2 (38% below target)"
       ],
-      "price": 72.12000274658203,
+      "price": 77.04,
       "value_override": {
         "total_score": 2,
         "base_score_before": 7.0,
@@ -2028,7 +2533,27 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (38% below target)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "Innovation Fund",
+          "shares": 158.0,
+          "position_pct": 11.1,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": [
+        {
+          "action": "SWAP IN",
+          "portfolio": "Innovation Fund",
+          "sell": "ARQT",
+          "sell_score": 4,
+          "buy": "BLLN",
+          "buy_score": 7,
+          "score_diff": 3
+        }
+      ]
     },
     {
       "ticker": "BMRN",
@@ -2039,7 +2564,7 @@
         "below 200-day SMA",
         "golden cross (50>200)",
         "revenue growth 17%",
-        "P/E improving (8.2 < 30.8)",
+        "P/E improving (8.2 < 39.3)",
         "no dividend",
         "ROE 6% (weak)",
         "FCF positive ($0.4B)",
@@ -2048,7 +2573,7 @@
         "bond mkt +2 (wt 0.75x)",
         "\u26a1 VALUE OVERRIDE: +2 (38% below target)"
       ],
-      "price": 55.459999084472656,
+      "price": 54.74,
       "value_override": {
         "total_score": 2,
         "base_score_before": 2.0,
@@ -2059,7 +2584,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (38% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "BMY",
@@ -2071,16 +2598,18 @@
         "golden cross (50>200)",
         "earnings growth 9%",
         "revenue growth 3%",
-        "P/E improving (9.4 < 16.3)",
+        "P/E improving (9.3 < 16.1)",
         "D/E ratio 231",
-        "yield 433.0%",
+        "yield 439.0%",
         "ROE 39% (excellent)",
         "FCF yield 8.4% (strong)",
         "gross margin 72% (wide moat)",
         "insider net selling (0B/2S)",
         "underperforming XLV by 2.2%"
       ],
-      "price": 57.380001068115234
+      "price": 57.21,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "BN",
@@ -2092,7 +2621,7 @@
         "death cross (50<200)",
         "earnings growth 80%",
         "revenue growth 4%",
-        "P/E improving (7.7 < 91.8)",
+        "P/E improving (7.7 < 92.6)",
         "D/E ratio 164",
         "yield 62.0%",
         "ROE 2% (weak)",
@@ -2102,7 +2631,7 @@
         "bond mkt +2 (wt 0.75x)",
         "\u26a1 VALUE OVERRIDE: +1 (16% below target)"
       ],
-      "price": 44.97999954223633,
+      "price": 45.43,
       "value_override": {
         "total_score": 1,
         "base_score_before": 4.75,
@@ -2113,7 +2642,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (16% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "BOOT",
@@ -2125,7 +2656,7 @@
         "death cross (50<200)",
         "earnings growth 15%",
         "revenue growth 16%",
-        "P/E improving (19.7 < 24.1)",
+        "P/E improving (19.6 < 23.4)",
         "no dividend",
         "ROE 18% (good)",
         "FCF positive ($0.0B)",
@@ -2134,7 +2665,7 @@
         "bond mkt +2 (wt 0.75x)",
         "\u26a1 VALUE OVERRIDE: +2 (29% below target)"
       ],
-      "price": 167.66000366210938,
+      "price": 169.54,
       "value_override": {
         "total_score": 2,
         "base_score_before": 5.0,
@@ -2145,7 +2676,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (29% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "BR",
@@ -2157,17 +2690,17 @@
         "death cross (50<200)",
         "earnings growth 15%",
         "revenue growth 8%",
-        "P/E improving (14.8 < 16.6)",
+        "P/E improving (14.5 < 16.1)",
         "D/E ratio 121",
-        "yield 251.0%",
+        "yield 253.0%",
         "ROE 42% (excellent)",
-        "FCF yield 6.7% (strong)",
+        "FCF yield 6.8% (strong)",
         "payout ratio 41% (safe)",
         "insider net selling (1B/15S)",
         "underperforming XLK by 23.8%",
         "\u26a1 VALUE OVERRIDE: +3 (31% below target, RSI 39 oversold)"
       ],
-      "price": 153.85000610351562,
+      "price": 150.54,
       "value_override": {
         "total_score": 3,
         "base_score_before": 12.0,
@@ -2182,7 +2715,17 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +3 (31% below target, RSI 39 oversold)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "Value Picks",
+          "shares": 75.0,
+          "position_pct": 12.2,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "BSAC",
@@ -2194,15 +2737,17 @@
         "golden cross (50>200)",
         "earnings growth -1%",
         "revenue growth -3%",
-        "P/E improving (9.9 < 12.9)",
-        "yield 485.0%",
+        "P/E improving (10.0 < 13.1)",
+        "yield 497.0%",
         "PEG N/A (negative growth)",
         "ROE 22% (excellent)",
         "gross margin 0% (thin)",
-        "payout ratio 58% (safe)",
+        "payout ratio 59% (safe)",
         "underperforming XLF by 6.7%"
       ],
-      "price": 30.610000610351562
+      "price": 30.82,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "BTG",
@@ -2213,8 +2758,8 @@
         "below 200-day SMA",
         "golden cross (50>200)",
         "revenue growth 111%",
-        "P/E improving (3.6 < 15.9)",
-        "yield 183.0%",
+        "P/E improving (3.6 < 15.4)",
+        "yield 187.0%",
         "FCF yield 10.4% (strong)",
         "gross margin 64% (wide moat)",
         "payout ratio 29% (safe)",
@@ -2222,7 +2767,7 @@
         "bond mkt +2 (wt 0.75x)",
         "\u26a1 VALUE OVERRIDE: +3 (35% below target, RSI 38 oversold)"
       ],
-      "price": 4.28000020980835,
+      "price": 4.3,
       "value_override": {
         "total_score": 3,
         "base_score_before": 5.5,
@@ -2237,7 +2782,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +3 (35% below target, RSI 38 oversold)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "BVN",
@@ -2249,30 +2796,50 @@
         "golden cross (50>200)",
         "earnings growth 139%",
         "revenue growth 103%",
-        "P/E improving (9.3 < 9.6)",
-        "yield 350.0%",
+        "P/E improving (9.5 < 9.7)",
+        "yield 360.0%",
         "PEG 0.07 (attractive)",
         "ROE 26% (excellent)",
         "FCF positive ($0.2B)",
         "gross margin 59% (wide moat)",
         "payout ratio 13% (safe)",
         "underperforming XLB by 11.4%",
-        "\u26a1 VALUE OVERRIDE: +1 (21% below target)",
-        "correlated with AU (0.82)",
-        "correlated with B (0.82)"
+        "\u26a1 VALUE OVERRIDE: +1 (20% below target)",
+        "correlated with B (0.82)",
+        "correlated with AU (0.82)"
       ],
-      "price": 31.530000686645508,
+      "price": 32.39,
       "value_override": {
         "total_score": 1,
         "base_score_before": 14.0,
         "components": {
           "analyst_target": {
             "score": 1,
-            "reason": "21% below analyst target $40.08"
+            "reason": "20% below analyst target $39.58"
           }
         },
-        "summary": "\u26a1 VALUE OVERRIDE: +1 (21% below target)"
-      }
+        "summary": "\u26a1 VALUE OVERRIDE: +1 (20% below target)"
+      },
+      "held_in": [
+        {
+          "portfolio": "Value Picks",
+          "shares": 375.0,
+          "position_pct": 12.3,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": [
+        {
+          "action": "SWAP IN",
+          "portfolio": "Value Picks",
+          "sell": "AMP",
+          "sell_score": 10,
+          "buy": "BVN",
+          "buy_score": 14,
+          "score_diff": 4
+        }
+      ]
     },
     {
       "ticker": "BWXT",
@@ -2284,18 +2851,38 @@
         "golden cross (50>200)",
         "earnings growth 31%",
         "revenue growth 19%",
-        "P/E improving (41.9 < 60.2)",
+        "P/E improving (41.6 < 57.3)",
         "D/E ratio 167",
         "yield 47.0%",
         "ROE 29% (excellent)",
         "FCF positive ($0.1B)",
         "gross margin 23% (thin)",
-        "payout ratio 28% (safe)",
+        "payout ratio 27% (safe)",
         "insider net selling (0B/2S)",
         "underperforming XLI by 3.5%",
         "bond mkt +2 (wt 1.0x)"
       ],
-      "price": 216.67999267578125
+      "price": 216.72,
+      "held_in": [
+        {
+          "portfolio": "Nuclear Renaissance",
+          "shares": 50.0,
+          "position_pct": 11.8,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": [
+        {
+          "action": "SWAP IN",
+          "portfolio": "Nuclear Renaissance",
+          "sell": "LEU",
+          "sell_score": 0,
+          "buy": "BWXT",
+          "buy_score": 4,
+          "score_diff": 4
+        }
+      ]
     },
     {
       "ticker": "BYD",
@@ -2307,10 +2894,10 @@
         "golden cross (50>200)",
         "earnings growth 5%",
         "revenue growth 1%",
-        "forward P/E (10.5) > trailing (3.7)",
+        "forward P/E (10.7) > trailing (3.7)",
         "D/E ratio 115",
-        "yield 88.0%",
-        "PEG 0.75 (attractive)",
+        "yield 89.0%",
+        "PEG 0.79 (attractive)",
         "ROE 94% (excellent)",
         "FCF yield 7.7% (strong)",
         "gross margin 59% (wide moat)",
@@ -2318,7 +2905,9 @@
         "insider net selling (0B/19S)",
         "underperforming XLY by 9.6%"
       ],
-      "price": 82.88999938964844
+      "price": 83.69,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "BZ",
@@ -2331,8 +2920,8 @@
         "earnings growth 44%",
         "revenue growth 14%",
         "P/E improving (9.4 < 16.0)",
-        "yield 123.0%",
-        "PEG 0.36 (attractive)",
+        "yield 122.0%",
+        "PEG 0.37 (attractive)",
         "ROE 15% (good)",
         "FCF yield 53.9% (strong)",
         "gross margin 85% (wide moat)",
@@ -2341,7 +2930,7 @@
         "bond mkt +2 (wt 0.75x)",
         "\u26a1 VALUE OVERRIDE: +2 (36% below target)"
       ],
-      "price": 13.779999732971191,
+      "price": 13.84,
       "value_override": {
         "total_score": 2,
         "base_score_before": 9.5,
@@ -2352,7 +2941,17 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (36% below target)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "Growth Value",
+          "shares": 881.0,
+          "position_pct": 12.2,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "CALM",
@@ -2364,9 +2963,9 @@
         "death cross (50<200)",
         "earnings growth -90%",
         "revenue growth -53%",
-        "forward P/E (20.7) > trailing (5.3)",
+        "forward P/E (20.8) > trailing (5.2)",
         "short interest 12.5%",
-        "yield 630.0%",
+        "yield 642.0%",
         "PEG N/A (negative growth)",
         "ROE 27% (excellent)",
         "FCF yield 9.3% (strong)",
@@ -2375,7 +2974,7 @@
         "underperforming XLP by 6.0%",
         "\u26a1 VALUE OVERRIDE: +1 (15% below target)"
       ],
-      "price": 74.75,
+      "price": 74.95,
       "value_override": {
         "total_score": 1,
         "base_score_before": 2.0,
@@ -2386,7 +2985,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (15% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "CAT",
@@ -2398,9 +2999,9 @@
         "golden cross (50>200)",
         "earnings growth 30%",
         "revenue growth 22%",
-        "P/E improving (30.0 < 43.5)",
+        "P/E improving (30.9 < 44.8)",
         "D/E ratio 231",
-        "yield 68.0%",
+        "yield 69.0%",
         "ROE 51% (excellent)",
         "FCF positive ($3.7B)",
         "gross margin 29% (thin)",
@@ -2409,7 +3010,9 @@
         "outperforming XLI by 17.6%",
         "bond mkt +2 (wt 0.75x)"
       ],
-      "price": 874.780029296875
+      "price": 901.6,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "CB",
@@ -2430,7 +3033,17 @@
         "insider net selling (0B/18S)",
         "underperforming XLF by 4.0%"
       ],
-      "price": 325.1199951171875
+      "price": 324.22,
+      "held_in": [
+        {
+          "portfolio": "Value Picks",
+          "shares": 4.0,
+          "position_pct": 1.3,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "CCJ",
@@ -2442,9 +3055,9 @@
         "golden cross (50>200)",
         "earnings growth 45%",
         "revenue growth 2%",
-        "P/E improving (60.5 < 121.9)",
-        "yield 14.0%",
-        "PEG 2.69 (expensive)",
+        "P/E improving (62.2 < 122.8)",
+        "yield 15.0%",
+        "PEG 2.71 (expensive)",
         "ROE 9% (weak)",
         "FCF positive ($0.5B)",
         "payout ratio 18% (safe)",
@@ -2452,7 +3065,27 @@
         "outperforming XLE by 7.5%",
         "bond mkt +2 (wt 1.0x)"
       ],
-      "price": 118.26000213623047
+      "price": 120.29,
+      "held_in": [
+        {
+          "portfolio": "Nuclear Renaissance",
+          "shares": 98.0,
+          "position_pct": 11.9,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": [
+        {
+          "action": "SWAP IN",
+          "portfolio": "Nuclear Renaissance",
+          "sell": "LEU",
+          "sell_score": 0,
+          "buy": "CCJ",
+          "buy_score": 6,
+          "score_diff": 6
+        }
+      ]
     },
     {
       "ticker": "CEG",
@@ -2464,8 +3097,8 @@
         "death cross (50<200)",
         "earnings growth -49%",
         "revenue growth 13%",
-        "P/E improving (23.6 < 41.6)",
-        "yield 55.0%",
+        "P/E improving (23.6 < 41.7)",
+        "yield 53.0%",
         "PEG N/A (negative growth)",
         "ROE 16% (good)",
         "FCF positive ($1.3B)",
@@ -2474,7 +3107,27 @@
         "outperforming XLU by 16.2%",
         "bond mkt +2 (wt 1.0x)"
       ],
-      "price": 321.04998779296875
+      "price": 322.74,
+      "held_in": [
+        {
+          "portfolio": "Nuclear Renaissance",
+          "shares": 40.0,
+          "position_pct": 11.7,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": [
+        {
+          "action": "SWAP IN",
+          "portfolio": "Nuclear Renaissance",
+          "sell": "LEU",
+          "sell_score": 0,
+          "buy": "CEG",
+          "buy_score": 5,
+          "score_diff": 5
+        }
+      ]
     },
     {
       "ticker": "CELH",
@@ -2485,7 +3138,7 @@
         "below 200-day SMA",
         "death cross (50<200)",
         "revenue growth 117%",
-        "P/E improving (16.6 < 134.3)",
+        "P/E improving (16.2 < 131.0)",
         "short interest 10.9%",
         "no dividend",
         "ROE 5% (weak)",
@@ -2496,7 +3149,7 @@
         "bond mkt +2 (wt 1.25x)",
         "\u26a1 VALUE OVERRIDE: +2 (49% below target)"
       ],
-      "price": 33.56999969482422,
+      "price": 32.87,
       "value_override": {
         "total_score": 2,
         "base_score_before": 5.5,
@@ -2507,7 +3160,17 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (49% below target)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "Innovation Fund",
+          "shares": 338.0,
+          "position_pct": 11.1,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "CINF",
@@ -2518,15 +3181,17 @@
         "above 200-day SMA",
         "golden cross (50>200)",
         "revenue growth 12%",
-        "forward P/E (17.4) > trailing (9.3)",
-        "yield 219.0%",
+        "forward P/E (17.4) > trailing (9.1)",
+        "yield 236.0%",
         "ROE 19% (good)",
         "FCF yield 11.1% (strong)",
         "gross margin 28% (thin)",
         "payout ratio 20% (safe)",
         "underperforming XLF by 3.7%"
       ],
-      "price": 159.57000732421875
+      "price": 159.97,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "CLS",
@@ -2539,7 +3204,7 @@
         "golden cross (50>200)",
         "earnings growth 147%",
         "revenue growth 53%",
-        "P/E improving (28.0 < 51.0)",
+        "P/E improving (28.6 < 52.1)",
         "no dividend",
         "PEG 0.35 (attractive)",
         "ROE 52% (excellent)",
@@ -2549,7 +3214,9 @@
         "outperforming XLK by 25.5%",
         "bond mkt +2 (wt 0.75x)"
       ],
-      "price": 420.7300109863281
+      "price": 430.63,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "CMCSA",
@@ -2561,9 +3228,9 @@
         "golden cross (50>200)",
         "earnings growth -33%",
         "revenue growth 5%",
-        "forward P/E (7.1) > trailing (5.3)",
+        "forward P/E (7.0) > trailing (5.2)",
         "D/E ratio 107",
-        "yield 485.0%",
+        "yield 488.0%",
         "PEG N/A (negative growth)",
         "ROE 21% (excellent)",
         "FCF positive ($4.0B)",
@@ -2573,7 +3240,7 @@
         "underperforming XLC by 6.0%",
         "\u26a1 VALUE OVERRIDE: +1 (18% below target)"
       ],
-      "price": 27.06999969482422,
+      "price": 26.57,
       "value_override": {
         "total_score": 1,
         "base_score_before": 3.0,
@@ -2584,7 +3251,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (18% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "CNX",
@@ -2594,17 +3263,19 @@
         "below 50-day SMA",
         "above 200-day SMA",
         "golden cross (50>200)",
-        "revenue growth 29%",
-        "forward P/E (8.6) > trailing (5.1)",
+        "revenue growth 28%",
+        "forward P/E (8.5) > trailing (5.1)",
         "short interest 14.0%",
         "no dividend",
         "ROE 28% (excellent)",
         "FCF yield 7.6% (strong)",
-        "gross margin 80% (wide moat)",
+        "gross margin 75% (wide moat)",
         "insider net selling (1B/5S)",
         "underperforming XLE by 3.0%"
       ],
-      "price": 38.310001373291016
+      "price": 37.93,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "CRM",
@@ -2616,9 +3287,9 @@
         "death cross (50<200)",
         "earnings growth 18%",
         "revenue growth 12%",
-        "P/E improving (12.4 < 23.8)",
-        "yield 96.0%",
-        "FCF yield 10.8% (strong)",
+        "P/E improving (12.2 < 23.2)",
+        "yield 95.0%",
+        "FCF yield 11.0% (strong)",
         "gross margin 78% (wide moat)",
         "payout ratio 21% (safe)",
         "insider net buying (2B/0S)",
@@ -2626,7 +3297,7 @@
         "bond mkt +2 (wt 0.75x)",
         "\u26a1 VALUE OVERRIDE: +2 (31% below target)"
       ],
-      "price": 185.47999572753906,
+      "price": 182.57,
       "value_override": {
         "total_score": 2,
         "base_score_before": 8.5,
@@ -2637,7 +3308,17 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (31% below target)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "Growth Value",
+          "shares": 65.0,
+          "position_pct": 12.2,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "CRS",
@@ -2649,9 +3330,9 @@
         "golden cross (50>200)",
         "earnings growth 47%",
         "revenue growth 12%",
-        "P/E improving (33.6 < 45.1)",
+        "P/E improving (34.0 < 45.6)",
         "yield 19.0%",
-        "PEG 0.95 (attractive)",
+        "PEG 0.96 (attractive)",
         "ROE 25% (excellent)",
         "FCF positive ($0.3B)",
         "gross margin 30% (thin)",
@@ -2660,29 +3341,33 @@
         "outperforming XLI by 4.5%",
         "bond mkt +2 (wt 0.75x)"
       ],
-      "price": 427.6300048828125
+      "price": 433.19,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "D",
-      "score": 2,
-      "label": "\ud83d\udfe2 BUY / HOLD",
+      "score": 0,
+      "label": "\u26aa HOLD",
       "reasons": [
         "above 50-day SMA",
         "above 200-day SMA",
         "golden cross (50>200)",
-        "earnings growth 366%",
-        "revenue growth 20%",
-        "P/E improving (16.5 < 18.4)",
-        "D/E ratio 150",
-        "yield 414.0%",
-        "PEG 0.05 (attractive)",
+        "earnings growth -10%",
+        "revenue growth 23%",
+        "P/E improving (16.6 < 18.6)",
+        "D/E ratio 155",
+        "yield 424.0%",
+        "PEG N/A (negative growth)",
         "ROE 10% (weak)",
-        "FCF negative ($-9.0B)",
-        "gross margin 49% (wide moat)",
+        "FCF negative ($-9.9B)",
+        "gross margin 47% (wide moat)",
         "insider net buying (1B/0S)",
         "bond mkt +2 (wt 1.0x)"
       ],
-      "price": 62.95000076293945
+      "price": 63.05,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "DELL",
@@ -2694,9 +3379,9 @@
         "golden cross (50>200)",
         "earnings growth 57%",
         "revenue growth 40%",
-        "P/E improving (14.4 < 24.2)",
-        "yield 120.0%",
-        "PEG 0.42 (attractive)",
+        "P/E improving (14.6 < 24.7)",
+        "yield 119.0%",
+        "PEG 0.43 (attractive)",
         "FCF positive ($6.6B)",
         "gross margin 20% (thin)",
         "payout ratio 24% (safe)",
@@ -2704,7 +3389,9 @@
         "outperforming XLK by 4.1%",
         "bond mkt +2 (wt 0.75x)"
       ],
-      "price": 211.63999938964844
+      "price": 214.62,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "DNN",
@@ -2724,7 +3411,7 @@
         "bond mkt +2 (wt 1.0x)",
         "\u26a1 VALUE OVERRIDE: +1 (25% below target)"
       ],
-      "price": 3.759999990463257,
+      "price": 3.73,
       "value_override": {
         "total_score": 1,
         "base_score_before": 0.5,
@@ -2735,7 +3422,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (25% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "EBC",
@@ -2745,8 +3434,8 @@
         "above 50-day SMA",
         "above 200-day SMA",
         "golden cross (50>200)",
-        "P/E improving (9.2 < 11.2)",
-        "yield 267.0%",
+        "P/E improving (9.3 < 11.1)",
+        "yield 271.0%",
         "ROE 9% (weak)",
         "gross margin 0% (thin)",
         "payout ratio 29% (safe)",
@@ -2754,7 +3443,9 @@
         "underperforming XLF by 4.0%",
         "bond mkt +2 (wt 0.75x)"
       ],
-      "price": 19.920000076293945
+      "price": 20.05,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "ENVA",
@@ -2766,10 +3457,10 @@
         "golden cross (50>200)",
         "earnings growth 29%",
         "revenue growth 26%",
-        "P/E improving (8.4 < 13.3)",
+        "P/E improving (8.6 < 13.7)",
         "D/E ratio 347",
         "no dividend",
-        "PEG 0.47 (attractive)",
+        "PEG 0.48 (attractive)",
         "ROE 25% (excellent)",
         "gross margin 83% (wide moat)",
         "insider net selling (0B/14S)",
@@ -2777,7 +3468,7 @@
         "bond mkt +2 (wt 0.75x)",
         "\u26a1 VALUE OVERRIDE: +1 (19% below target)"
       ],
-      "price": 163.91000366210938,
+      "price": 168.87,
       "value_override": {
         "total_score": 1,
         "base_score_before": 10.5,
@@ -2788,7 +3479,17 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (19% below target)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "Momentum Growth",
+          "shares": 72.0,
+          "position_pct": 13.3,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "ERIC",
@@ -2800,28 +3501,30 @@
         "golden cross (50>200)",
         "earnings growth -78%",
         "revenue growth -10%",
-        "forward P/E (16.3) > trailing (14.4)",
-        "yield 266.0%",
+        "forward P/E (16.7) > trailing (14.8)",
+        "yield 269.0%",
         "PEG N/A (negative growth)",
         "ROE 27% (excellent)",
-        "FCF yield 76.1% (strong)",
+        "FCF yield 74.2% (strong)",
         "gross margin 48% (wide moat)",
         "payout ratio 39% (safe)",
         "underperforming XLK by 17.7%",
-        "\u26a1 VALUE OVERRIDE: +1 (P/B 0.38)"
+        "\u26a1 VALUE OVERRIDE: +1 (P/B 0.39)"
       ],
-      "price": 11.630000114440918,
+      "price": 11.95,
       "value_override": {
         "total_score": 1,
         "base_score_before": 3.0,
         "components": {
           "below_book": {
             "score": 1,
-            "reason": "P/B 0.38 (below book value)"
+            "reason": "P/B 0.39 (below book value)"
           }
         },
-        "summary": "\u26a1 VALUE OVERRIDE: +1 (P/B 0.38)"
-      }
+        "summary": "\u26a1 VALUE OVERRIDE: +1 (P/B 0.39)"
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "ETR",
@@ -2831,18 +3534,20 @@
         "above 50-day SMA",
         "above 200-day SMA",
         "golden cross (50>200)",
-        "earnings growth 2%",
+        "earnings growth 1%",
         "revenue growth 12%",
-        "P/E improving (23.3 < 29.7)",
+        "P/E improving (23.5 < 30.0)",
         "D/E ratio 193",
         "yield 220.0%",
-        "PEG 17.47 (expensive)",
+        "PEG 24.97 (expensive)",
         "FCF negative ($-3.9B)",
         "gross margin 47% (wide moat)",
         "insider net selling (1B/17S)",
         "bond mkt +2 (wt 1.0x)"
       ],
-      "price": 116.4000015258789
+      "price": 117.52,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "EVRG",
@@ -2856,15 +3561,17 @@
         "revenue growth 7%",
         "P/E improving (18.1 < 22.5)",
         "D/E ratio 150",
-        "yield 337.0%",
-        "PEG 4.80 (expensive)",
+        "yield 339.0%",
+        "PEG 4.78 (expensive)",
         "ROE 9% (weak)",
         "FCF negative ($-0.9B)",
         "gross margin 52% (wide moat)",
         "insider net selling (0B/9S)",
         "bond mkt +2 (wt 1.0x)"
       ],
-      "price": 82.08000183105469
+      "price": 82.14,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "EXE",
@@ -2875,17 +3582,17 @@
         "below 200-day SMA",
         "death cross (50<200)",
         "revenue growth 41%",
-        "forward P/E (10.3) > trailing (7.4)",
-        "yield 319.0%",
+        "forward P/E (10.1) > trailing (7.4)",
+        "yield 316.0%",
         "ROE 18% (good)",
-        "FCF yield 7.0% (strong)",
+        "FCF yield 7.1% (strong)",
         "gross margin 48% (wide moat)",
         "payout ratio 24% (safe)",
         "insider net selling (4B/8S)",
         "underperforming XLE by 2.2%",
         "\u26a1 VALUE OVERRIDE: +1 (24% below target)"
       ],
-      "price": 100.7699966430664,
+      "price": 99.14,
       "value_override": {
         "total_score": 1,
         "base_score_before": 7.0,
@@ -2896,7 +3603,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (24% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "FCFS",
@@ -2908,10 +3617,10 @@
         "golden cross (50>200)",
         "earnings growth 30%",
         "revenue growth 26%",
-        "P/E improving (17.8 < 27.6)",
+        "P/E improving (18.1 < 28.2)",
         "D/E ratio 114",
         "yield 76.0%",
-        "PEG 0.92 (attractive)",
+        "PEG 0.94 (attractive)",
         "ROE 16% (good)",
         "FCF positive ($0.2B)",
         "gross margin 59% (wide moat)",
@@ -2920,7 +3629,17 @@
         "outperforming XLF by 12.9%",
         "bond mkt +2 (wt 0.75x)"
       ],
-      "price": 221.50999450683594
+      "price": 224.17,
+      "held_in": [
+        {
+          "portfolio": "Momentum Growth",
+          "shares": 56.0,
+          "position_pct": 13.4,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "FIX",
@@ -2933,7 +3652,7 @@
         "golden cross (50>200)",
         "earnings growth 39%",
         "revenue growth 1%",
-        "P/E improving (36.1 < 53.8)",
+        "P/E improving (37.4 < 55.7)",
         "yield 14.0%",
         "ROE 53% (excellent)",
         "FCF positive ($1.1B)",
@@ -2943,7 +3662,17 @@
         "outperforming XLI by 28.1%",
         "bond mkt +2 (wt 0.75x)"
       ],
-      "price": 1891.949951171875
+      "price": 1962.0,
+      "held_in": [
+        {
+          "portfolio": "Momentum Growth",
+          "shares": 7.0,
+          "position_pct": 13.0,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "FN",
@@ -2955,9 +3684,8 @@
         "golden cross (50>200)",
         "earnings growth 31%",
         "revenue growth 36%",
-        "P/E improving (43.0 < 67.6)",
+        "P/E improving (40.6 < 59.2)",
         "no dividend",
-        "PEG 2.20 (expensive)",
         "ROE 19% (good)",
         "FCF negative ($-0.0B)",
         "gross margin 12% (thin)",
@@ -2965,7 +3693,9 @@
         "outperforming XLK by 11.0%",
         "bond mkt +2 (wt 0.75x)"
       ],
-      "price": 717.7999877929688
+      "price": 696.16,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "FNF",
@@ -2976,10 +3706,10 @@
         "below 200-day SMA",
         "death cross (50<200)",
         "revenue growth 12%",
-        "P/E improving (7.9 < 23.3)",
-        "yield 403.0%",
+        "P/E improving (8.0 < 23.3)",
+        "yield 407.0%",
         "ROE 8% (weak)",
-        "FCF yield 14.9% (strong)",
+        "FCF yield 14.8% (strong)",
         "gross margin 54% (wide moat)",
         "payout ratio 91% (stretched)",
         "insider net selling (0B/8S)",
@@ -2987,7 +3717,7 @@
         "bond mkt +2 (wt 0.75x)",
         "\u26a1 VALUE OVERRIDE: +1 (21% below target)"
       ],
-      "price": 51.099998474121094,
+      "price": 51.47,
       "value_override": {
         "total_score": 1,
         "base_score_before": 2.5,
@@ -2998,7 +3728,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (21% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "FTI",
@@ -3011,18 +3743,20 @@
         "golden cross (50>200)",
         "earnings growth 94%",
         "revenue growth 12%",
-        "P/E improving (21.6 < 28.6)",
-        "yield 26.0%",
-        "PEG 0.30 (attractive)",
+        "P/E improving (22.0 < 29.1)",
+        "yield 27.0%",
+        "PEG 0.31 (attractive)",
         "ROE 33% (excellent)",
-        "FCF positive ($1.2B)",
-        "gross margin 22% (thin)",
+        "FCF positive ($1.0B)",
+        "gross margin 23% (thin)",
         "payout ratio 8% (safe)",
         "insider net selling (0B/18S)",
         "outperforming XLE by 4.7%",
         "bond mkt +2 (wt 0.75x)"
       ],
-      "price": 74.5999984741211
+      "price": 76.17,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "GD",
@@ -3034,8 +3768,8 @@
         "golden cross (50>200)",
         "earnings growth 12%",
         "revenue growth 10%",
-        "P/E improving (19.3 < 22.0)",
-        "yield 176.0%",
+        "P/E improving (19.2 < 21.8)",
+        "yield 174.0%",
         "ROE 18% (good)",
         "FCF yield 5.6% (strong)",
         "gross margin 15% (thin)",
@@ -3043,7 +3777,17 @@
         "insider net selling (0B/15S)",
         "underperforming XLI by 4.1%"
       ],
-      "price": 349.0799865722656
+      "price": 346.77,
+      "held_in": [
+        {
+          "portfolio": "AI Defense & Autonomous",
+          "shares": 35.0,
+          "position_pct": 13.1,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "GEV",
@@ -3055,7 +3799,7 @@
         "golden cross (50>200)",
         "earnings growth 1816%",
         "revenue growth 16%",
-        "forward P/E (44.3) > trailing (31.4)",
+        "forward P/E (45.5) > trailing (32.1)",
         "yield 14.0%",
         "PEG 0.02 (attractive)",
         "ROE 76% (excellent)",
@@ -3066,7 +3810,34 @@
         "outperforming XLI by 15.8%",
         "bond mkt +2 (wt 0.75x)"
       ],
-      "price": 1073.949951171875
+      "price": 1101.29,
+      "held_in": [
+        {
+          "portfolio": "Momentum Growth",
+          "shares": 11.0,
+          "position_pct": 12.3,
+          "at_max_position": false,
+          "at_max_holdings": false
+        },
+        {
+          "portfolio": "Nuclear Renaissance",
+          "shares": 11.0,
+          "position_pct": 11.0,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": [
+        {
+          "action": "SWAP IN",
+          "portfolio": "Nuclear Renaissance",
+          "sell": "LEU",
+          "sell_score": 0,
+          "buy": "GEV",
+          "buy_score": 6,
+          "score_diff": 6
+        }
+      ]
     },
     {
       "ticker": "GL",
@@ -3087,7 +3858,9 @@
         "insider net selling (0B/13S)",
         "outperforming XLF by 3.1%"
       ],
-      "price": 152.64999389648438
+      "price": 153.65,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "GPOR",
@@ -3098,7 +3871,7 @@
         "above 200-day SMA",
         "golden cross (50>200)",
         "revenue growth 25%",
-        "P/E improving (6.4 < 9.1)",
+        "P/E improving (6.4 < 9.0)",
         "no dividend",
         "ROE 24% (excellent)",
         "FCF positive ($0.1B)",
@@ -3107,7 +3880,7 @@
         "underperforming XLE by 4.9%",
         "\u26a1 VALUE OVERRIDE: +1 (20% below target)"
       ],
-      "price": 194.75999450683594,
+      "price": 194.04,
       "value_override": {
         "total_score": 1,
         "base_score_before": 8.0,
@@ -3118,7 +3891,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (20% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "HMY",
@@ -3130,19 +3905,19 @@
         "death cross (50<200)",
         "earnings growth 23%",
         "revenue growth 20%",
-        "P/E improving (4.7 < 10.1)",
-        "yield 257.0%",
-        "PEG 0.44 (attractive)",
+        "P/E improving (4.8 < 10.3)",
+        "yield 259.0%",
+        "PEG 0.45 (attractive)",
         "ROE 33% (excellent)",
-        "FCF yield 154.7% (strong)",
+        "FCF yield 151.3% (strong)",
         "gross margin 44% (wide moat)",
         "payout ratio 15% (safe)",
         "bond mkt +2 (wt 0.75x)",
         "\u26a1 VALUE OVERRIDE: +2 (33% below target)",
-        "correlated with AU (0.82)",
-        "correlated with B (0.84)"
+        "correlated with B (0.84)",
+        "correlated with AU (0.82)"
       ],
-      "price": 15.489999771118164,
+      "price": 15.82,
       "value_override": {
         "total_score": 2,
         "base_score_before": 10.5,
@@ -3153,7 +3928,17 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (33% below target)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "Growth Value",
+          "shares": 762.0,
+          "position_pct": 12.2,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "HRB",
@@ -3164,17 +3949,17 @@
         "below 200-day SMA",
         "death cross (50<200)",
         "revenue growth 11%",
-        "P/E improving (5.6 < 7.3)",
+        "P/E improving (5.5 < 7.1)",
         "short interest 12.0%",
-        "yield 538.0%",
-        "FCF yield 10.7% (strong)",
+        "yield 541.0%",
+        "FCF yield 10.9% (strong)",
         "gross margin 44% (wide moat)",
         "payout ratio 37% (safe)",
         "insider net selling (0B/4S)",
         "underperforming XLY by 12.8%",
         "\u26a1 VALUE OVERRIDE: +1 (24% below target)"
       ],
-      "price": 31.079999923706055,
+      "price": 30.45,
       "value_override": {
         "total_score": 1,
         "base_score_before": 9.0,
@@ -3185,7 +3970,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (24% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "IBM",
@@ -3197,9 +3984,9 @@
         "death cross (50<200)",
         "earnings growth 14%",
         "revenue growth 10%",
-        "P/E improving (17.1 < 20.3)",
+        "P/E improving (17.0 < 20.2)",
         "D/E ratio 211",
-        "yield 291.0%",
+        "yield 295.0%",
         "ROE 36% (excellent)",
         "FCF yield 6.1% (strong)",
         "gross margin 58% (wide moat)",
@@ -3209,7 +3996,7 @@
         "bond mkt +2 (wt 1.5x)",
         "\u26a1 VALUE OVERRIDE: +1 (18% below target)"
       ],
-      "price": 229.47999572753906,
+      "price": 227.53,
       "value_override": {
         "total_score": 1,
         "base_score_before": 12.5,
@@ -3220,7 +4007,17 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (18% below target)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "Income Dividends",
+          "shares": 47.0,
+          "position_pct": 12.0,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "INTR",
@@ -3232,9 +4029,9 @@
         "death cross (50<200)",
         "earnings growth 36%",
         "revenue growth 26%",
-        "P/E improving (6.6 < 12.6)",
-        "yield 150.0%",
-        "PEG 0.36 (attractive)",
+        "P/E improving (6.8 < 13.1)",
+        "yield 157.0%",
+        "PEG 0.37 (attractive)",
         "gross margin 0% (thin)",
         "payout ratio 16% (safe)",
         "insider net selling (0B/7S)",
@@ -3242,7 +4039,7 @@
         "bond mkt +2 (wt 0.75x)",
         "\u26a1 VALUE OVERRIDE: +3 (31% below target, RSI 31 oversold)"
       ],
-      "price": 7.210000038146973,
+      "price": 7.43,
       "value_override": {
         "total_score": 3,
         "base_score_before": 5.5,
@@ -3257,7 +4054,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +3 (31% below target, RSI 31 oversold)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "IREN",
@@ -3268,7 +4067,7 @@
         "above 200-day SMA",
         "golden cross (50>200)",
         "revenue growth 59%",
-        "forward P/E (39.1) > trailing (34.4)",
+        "forward P/E (39.1) > trailing (34.3)",
         "D/E ratio 153",
         "short interest 19.6%",
         "no dividend",
@@ -3279,7 +4078,7 @@
         "outperforming XLF by 37.4%",
         "\u26a1 VALUE OVERRIDE: +2 (30% below target)"
       ],
-      "price": 49.47999954223633,
+      "price": 49.75,
       "value_override": {
         "total_score": 2,
         "base_score_before": 2.5,
@@ -3290,7 +4089,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (30% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "J",
@@ -3301,17 +4102,17 @@
         "below 200-day SMA",
         "death cross (50<200)",
         "revenue growth 12%",
-        "P/E improving (16.3 < 34.5)",
-        "yield 112.0%",
+        "P/E improving (16.1 < 34.1)",
+        "yield 110.0%",
         "ROE 10% (weak)",
-        "FCF yield 7.1% (strong)",
+        "FCF yield 7.2% (strong)",
         "gross margin 24% (thin)",
         "payout ratio 34% (safe)",
         "insider net buying (4B/2S)",
         "bond mkt +2 (wt 0.75x)",
         "\u26a1 VALUE OVERRIDE: +1 (16% below target)"
       ],
-      "price": 130.74000549316406,
+      "price": 129.2,
       "value_override": {
         "total_score": 1,
         "base_score_before": 3.5,
@@ -3322,7 +4123,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (16% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "JBL",
@@ -3336,10 +4139,10 @@
         "golden cross (50>200)",
         "earnings growth 96%",
         "revenue growth 23%",
-        "P/E improving (23.4 < 46.1)",
+        "P/E improving (24.0 < 47.1)",
         "D/E ratio 329",
         "yield 9.0%",
-        "PEG 0.48 (attractive)",
+        "PEG 0.49 (attractive)",
         "ROE 60% (excellent)",
         "FCF positive ($1.2B)",
         "gross margin 9% (thin)",
@@ -3348,7 +4151,9 @@
         "outperforming XLK by 8.9%",
         "bond mkt +2 (wt 0.75x)"
       ],
-      "price": 340.79998779296875
+      "price": 351.08,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "KEYS",
@@ -3360,16 +4165,26 @@
         "golden cross (50>200)",
         "earnings growth 68%",
         "revenue growth 23%",
-        "P/E improving (34.0 < 62.1)",
+        "P/E improving (34.5 < 62.6)",
         "no dividend",
-        "PEG 0.91 (attractive)",
+        "PEG 0.92 (attractive)",
         "ROE 17% (good)",
         "FCF positive ($1.1B)",
         "gross margin 62% (wide moat)",
         "insider net selling (0B/20S)",
         "bond mkt +2 (wt 0.75x)"
       ],
-      "price": 351.3500061035156
+      "price": 356.94,
+      "held_in": [
+        {
+          "portfolio": "Momentum Growth",
+          "shares": 15.0,
+          "position_pct": 5.7,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "KTOS",
@@ -3381,9 +4196,9 @@
         "death cross (50<200)",
         "earnings growth 19%",
         "revenue growth 22%",
-        "P/E improving (57.3 < 476.4)",
+        "P/E improving (55.2 < 458.7)",
         "no dividend",
-        "PEG 25.61 (expensive)",
+        "PEG 24.66 (expensive)",
         "ROE 1% (weak)",
         "FCF negative ($-0.1B)",
         "gross margin 23% (thin)",
@@ -3391,7 +4206,7 @@
         "underperforming XLI by 20.3%",
         "\u26a1 VALUE OVERRIDE: +3 (47% below target, RSI 37 oversold)"
       ],
-      "price": 61.93000030517578,
+      "price": 59.8,
       "value_override": {
         "total_score": 3,
         "base_score_before": 5.0,
@@ -3406,7 +4221,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +3 (47% below target, RSI 37 oversold)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "LDOS",
@@ -3418,19 +4235,19 @@
         "death cross (50<200)",
         "earnings growth 20%",
         "revenue growth -4%",
-        "P/E improving (11.3 < 13.4)",
+        "P/E improving (11.1 < 13.1)",
         "D/E ratio 108",
-        "yield 115.0%",
-        "PEG 0.68 (attractive)",
+        "yield 116.0%",
+        "PEG 0.67 (attractive)",
         "ROE 31% (excellent)",
-        "FCF yield 5.9% (strong)",
+        "FCF yield 6.0% (strong)",
         "gross margin 18% (thin)",
         "payout ratio 15% (safe)",
         "insider net selling (0B/9S)",
         "underperforming XLK by 25.2%",
         "\u26a1 VALUE OVERRIDE: +3 (25% below target, RSI 39 oversold)"
       ],
-      "price": 148.80999755859375,
+      "price": 146.49,
       "value_override": {
         "total_score": 3,
         "base_score_before": 7.5,
@@ -3445,7 +4262,17 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +3 (25% below target, RSI 39 oversold)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "AI Defense & Autonomous",
+          "shares": 64.0,
+          "position_pct": 11.1,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "LEU",
@@ -3457,7 +4284,7 @@
         "death cross (50<200)",
         "earnings growth -75%",
         "revenue growth -4%",
-        "P/E improving (47.1 < 52.9)",
+        "P/E improving (46.3 < 52.4)",
         "D/E ratio 159",
         "short interest 23.6%",
         "no dividend",
@@ -3470,7 +4297,7 @@
         "bond mkt +2 (wt 1.0x)",
         "\u26a1 VALUE OVERRIDE: +1 (23% below target)"
       ],
-      "price": 206.9199981689453,
+      "price": 205.24,
       "value_override": {
         "total_score": 1,
         "base_score_before": -0.5,
@@ -3481,7 +4308,90 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (23% below target)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "Nuclear Renaissance",
+          "shares": 25.0,
+          "position_pct": 5.1,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": [
+        {
+          "action": "SWAP OUT",
+          "portfolio": "Nuclear Renaissance",
+          "sell": "LEU",
+          "sell_score": 0,
+          "buy": "CCJ",
+          "buy_score": 6,
+          "score_diff": 6
+        },
+        {
+          "action": "SWAP OUT",
+          "portfolio": "Nuclear Renaissance",
+          "sell": "LEU",
+          "sell_score": 0,
+          "buy": "GEV",
+          "buy_score": 6,
+          "score_diff": 6
+        },
+        {
+          "action": "SWAP OUT",
+          "portfolio": "Nuclear Renaissance",
+          "sell": "LEU",
+          "sell_score": 0,
+          "buy": "PCG",
+          "buy_score": 6,
+          "score_diff": 6
+        },
+        {
+          "action": "SWAP OUT",
+          "portfolio": "Nuclear Renaissance",
+          "sell": "LEU",
+          "sell_score": 0,
+          "buy": "CEG",
+          "buy_score": 5,
+          "score_diff": 5
+        },
+        {
+          "action": "SWAP OUT",
+          "portfolio": "Nuclear Renaissance",
+          "sell": "LEU",
+          "sell_score": 0,
+          "buy": "BWXT",
+          "buy_score": 4,
+          "score_diff": 4
+        },
+        {
+          "action": "SWAP OUT",
+          "portfolio": "Nuclear Renaissance",
+          "sell": "LEU",
+          "sell_score": 0,
+          "buy": "TLN",
+          "buy_score": 4,
+          "score_diff": 4
+        },
+        {
+          "action": "SWAP OUT",
+          "portfolio": "Nuclear Renaissance",
+          "sell": "LEU",
+          "sell_score": 0,
+          "buy": "VST",
+          "buy_score": 4,
+          "score_diff": 4
+        },
+        {
+          "action": "SWAP OUT",
+          "portfolio": "Nuclear Renaissance",
+          "sell": "LEU",
+          "sell_score": 0,
+          "buy": "SMR",
+          "buy_score": 3,
+          "score_diff": 3
+        }
+      ]
     },
     {
       "ticker": "LHX",
@@ -3494,15 +4404,15 @@
         "golden cross (50>200)",
         "earnings growth -6%",
         "revenue growth 190%",
-        "P/E improving (22.7 < 33.5)",
-        "yield 160.0%",
+        "P/E improving (22.5 < 33.8)",
+        "yield 162.0%",
         "PEG N/A (negative growth)",
         "payout ratio 53% (safe)",
         "insider net selling (0B/12S)",
         "underperforming XLI by 17.8%",
         "\u26a1 VALUE OVERRIDE: +3 (20% below target, RSI 27 oversold)"
       ],
-      "price": 308.6199951171875,
+      "price": 306.31,
       "value_override": {
         "total_score": 3,
         "base_score_before": 6.5,
@@ -3517,7 +4427,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +3 (20% below target, RSI 27 oversold)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "LITE",
@@ -3529,7 +4441,7 @@
         "above 200-day SMA",
         "golden cross (50>200)",
         "revenue growth 66%",
-        "P/E improving (59.5 < 278.1)",
+        "P/E improving (60.0 < 288.1)",
         "D/E ratio 392",
         "short interest 13.0%",
         "no dividend",
@@ -3539,7 +4451,9 @@
         "outperforming XLK by 7.9%",
         "bond mkt +2 (wt 0.75x)"
       ],
-      "price": 976.1799926757812
+      "price": 983.39,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "LMT",
@@ -3552,9 +4466,9 @@
         "golden cross (50>200)",
         "earnings growth -12%",
         "revenue growth 0%",
-        "P/E improving (16.1 < 25.1)",
+        "P/E improving (16.1 < 24.9)",
         "D/E ratio 276",
-        "yield 263.0%",
+        "yield 261.0%",
         "PEG N/A (negative growth)",
         "ROE 68% (excellent)",
         "FCF positive ($4.0B)",
@@ -3563,7 +4477,7 @@
         "underperforming XLI by 22.6%",
         "\u26a1 VALUE OVERRIDE: +3 (19% below target, RSI 27 oversold)"
       ],
-      "price": 518.1500244140625,
+      "price": 514.76,
       "value_override": {
         "total_score": 3,
         "base_score_before": 7.0,
@@ -3578,7 +4492,17 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +3 (19% below target, RSI 27 oversold)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "AI Defense & Autonomous",
+          "shares": 18.0,
+          "position_pct": 10.3,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "LNTH",
@@ -3590,7 +4514,7 @@
         "above 200-day SMA",
         "golden cross (50>200)",
         "revenue growth 4%",
-        "P/E improving (13.9 < 25.1)",
+        "P/E improving (13.6 < 25.1)",
         "no dividend",
         "ROE 21% (excellent)",
         "FCF positive ($0.3B)",
@@ -3599,7 +4523,9 @@
         "outperforming XLV by 16.7%",
         "bond mkt +2 (wt 0.75x)"
       ],
-      "price": 87.77999877929688
+      "price": 85.54,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "LRCX",
@@ -3611,8 +4537,8 @@
         "golden cross (50>200)",
         "earnings growth 41%",
         "revenue growth 24%",
-        "P/E improving (32.7 < 48.5)",
-        "yield 41.0%",
+        "P/E improving (34.7 < 51.8)",
+        "yield 40.0%",
         "ROE 67% (excellent)",
         "FCF positive ($4.4B)",
         "gross margin 50% (wide moat)",
@@ -3621,7 +4547,7 @@
         "bond mkt +2 (wt 0.75x)",
         "\u26a1 VALUE OVERRIDE: +1 (17% below target)"
       ],
-      "price": 258.57000732421875,
+      "price": 273.96,
       "value_override": {
         "total_score": 1,
         "base_score_before": 9.5,
@@ -3632,7 +4558,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (17% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "LYFT",
@@ -3645,17 +4573,17 @@
         "death cross (50<200)",
         "earnings growth 4511%",
         "revenue growth 3%",
-        "forward P/E (7.5) > trailing (2.1)",
+        "forward P/E (7.6) > trailing (2.1)",
         "short interest 19.3%",
         "no dividend",
         "PEG 0.00 (attractive)",
         "ROE 141% (excellent)",
-        "FCF yield 22.1% (strong)",
+        "FCF yield 22.0% (strong)",
         "insider net selling (2B/18S)",
         "underperforming XLK by 15.8%",
         "\u26a1 VALUE OVERRIDE: +2 (28% below target)"
       ],
-      "price": 14.0600004196167,
+      "price": 14.1,
       "value_override": {
         "total_score": 2,
         "base_score_before": 6.0,
@@ -3666,7 +4594,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (28% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "MAT",
@@ -3677,17 +4607,17 @@
         "below 200-day SMA",
         "death cross (50<200)",
         "revenue growth 4%",
-        "forward P/E (9.6) > trailing (9.6)",
+        "forward P/E (9.4) > trailing (9.4)",
         "D/E ratio 127",
         "no dividend",
         "ROE 24% (excellent)",
-        "FCF yield 6.9% (strong)",
+        "FCF yield 7.3% (strong)",
         "gross margin 48% (wide moat)",
         "insider net selling (1B/2S)",
         "underperforming XLY by 5.6%",
         "\u26a1 VALUE OVERRIDE: +1 (20% below target)"
       ],
-      "price": 14.850000381469727,
+      "price": 14.65,
       "value_override": {
         "total_score": 1,
         "base_score_before": 2.5,
@@ -3698,7 +4628,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (20% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "MCK",
@@ -3712,7 +4644,7 @@
         "earnings growth 38%",
         "revenue growth 11%",
         "P/E improving (18.3 < 23.3)",
-        "yield 40.0%",
+        "yield 41.0%",
         "PEG 0.61 (attractive)",
         "FCF yield 9.3% (strong)",
         "gross margin 3% (thin)",
@@ -3722,7 +4654,7 @@
         "bond mkt +2 (wt 0.75x)",
         "\u26a1 VALUE OVERRIDE: +3 (18% below target, RSI 28 oversold)"
       ],
-      "price": 807.8499755859375,
+      "price": 803.47,
       "value_override": {
         "total_score": 3,
         "base_score_before": 6.5,
@@ -3737,7 +4669,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +3 (18% below target, RSI 28 oversold)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "MFG",
@@ -3750,15 +4684,17 @@
         "golden cross (50>200)",
         "earnings growth 16%",
         "revenue growth 6%",
-        "P/E improving (6.1 < 16.2)",
-        "yield 231.0%",
-        "PEG 0.99 (attractive)",
+        "P/E improving (6.1 < 15.7)",
+        "yield 234.0%",
+        "PEG 0.96 (attractive)",
         "ROE 10% (weak)",
         "gross margin 0% (thin)",
         "payout ratio 35% (safe)",
         "bond mkt +2 (wt 0.75x)"
       ],
-      "price": 8.40999984741211
+      "price": 8.48,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "MGA",
@@ -3770,16 +4706,18 @@
         "above 200-day SMA",
         "golden cross (50>200)",
         "revenue growth 3%",
-        "P/E improving (7.9 < 25.7)",
-        "yield 325.0%",
+        "P/E improving (7.9 < 25.3)",
+        "yield 333.0%",
         "ROE 6% (weak)",
-        "FCF yield 12.6% (strong)",
+        "FCF yield 12.7% (strong)",
         "gross margin 15% (thin)",
         "payout ratio 82% (stretched)",
         "insider net selling (0B/7S)",
         "bond mkt +2 (wt 0.75x)"
       ],
-      "price": 59.540000915527344
+      "price": 60.28,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "MKC",
@@ -3792,8 +4730,8 @@
         "death cross (50<200)",
         "earnings growth 528%",
         "revenue growth 17%",
-        "forward P/E (14.4) > trailing (7.9)",
-        "yield 382.0%",
+        "forward P/E (14.3) > trailing (7.8)",
+        "yield 400.0%",
         "PEG 0.01 (attractive)",
         "ROE 25% (excellent)",
         "FCF positive ($0.4B)",
@@ -3802,7 +4740,7 @@
         "underperforming XLP by 5.7%",
         "\u26a1 VALUE OVERRIDE: +2 (23% below target, RSI 32 oversold)"
       ],
-      "price": 48.02000045776367,
+      "price": 47.84,
       "value_override": {
         "total_score": 2,
         "base_score_before": 9.0,
@@ -3817,7 +4755,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (23% below target, RSI 32 oversold)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "MPWR",
@@ -3829,9 +4769,9 @@
         "golden cross (50>200)",
         "earnings growth 40%",
         "revenue growth 26%",
-        "P/E improving (52.2 < 113.6)",
+        "P/E improving (52.3 < 112.7)",
         "yield 51.0%",
-        "PEG 2.80 (expensive)",
+        "PEG 2.78 (expensive)",
         "ROE 20% (good)",
         "gross margin 55% (wide moat)",
         "payout ratio 48% (safe)",
@@ -3839,7 +4779,9 @@
         "outperforming XLK by 14.9%",
         "bond mkt +2 (wt 0.75x)"
       ],
-      "price": 1573.300048828125
+      "price": 1575.66,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "MRVL",
@@ -3852,7 +4794,7 @@
         "golden cross (50>200)",
         "earnings growth 106%",
         "revenue growth 22%",
-        "P/E improving (30.1 < 53.8)",
+        "P/E improving (30.5 < 53.9)",
         "yield 15.0%",
         "PEG 0.51 (attractive)",
         "ROE 19% (good)",
@@ -3863,7 +4805,17 @@
         "outperforming XLK by 31.0%",
         "bond mkt +2 (wt 0.75x)"
       ],
-      "price": 163.66000366210938
+      "price": 165.57,
+      "held_in": [
+        {
+          "portfolio": "Momentum Growth",
+          "shares": 78.0,
+          "position_pct": 13.4,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "MSFT",
@@ -3876,7 +4828,7 @@
         "death cross (50<200)",
         "earnings growth 23%",
         "revenue growth 18%",
-        "P/E improving (21.4 < 24.7)",
+        "P/E improving (21.1 < 24.4)",
         "yield 88.0%",
         "ROE 34% (excellent)",
         "FCF positive ($37.0B)",
@@ -3887,7 +4839,7 @@
         "bond mkt +2 (wt 0.75x)",
         "\u26a1 VALUE OVERRIDE: +2 (26% below target)"
       ],
-      "price": 413.6199951171875,
+      "price": 411.73,
       "value_override": {
         "total_score": 2,
         "base_score_before": 7.5,
@@ -3898,7 +4850,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (26% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "NBIX",
@@ -3910,9 +4864,9 @@
         "death cross (50<200)",
         "earnings growth 48%",
         "revenue growth 28%",
-        "P/E improving (10.1 < 28.6)",
+        "P/E improving (10.2 < 28.9)",
         "no dividend",
-        "PEG 0.60 (attractive)",
+        "PEG 0.61 (attractive)",
         "ROE 16% (good)",
         "FCF positive ($0.4B)",
         "gross margin 63% (wide moat)",
@@ -3920,7 +4874,7 @@
         "bond mkt +2 (wt 0.75x)",
         "\u26a1 VALUE OVERRIDE: +2 (28% below target)"
       ],
-      "price": 134.07000732421875,
+      "price": 135.16,
       "value_override": {
         "total_score": 2,
         "base_score_before": 9.0,
@@ -3931,7 +4885,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (28% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "NEE",
@@ -3943,9 +4899,9 @@
         "golden cross (50>200)",
         "earnings growth 160%",
         "revenue growth 7%",
-        "P/E improving (21.8 < 24.6)",
+        "P/E improving (21.9 < 24.4)",
         "D/E ratio 157",
-        "yield 257.0%",
+        "yield 261.0%",
         "PEG 0.15 (attractive)",
         "FCF negative ($-18.5B)",
         "gross margin 61% (wide moat)",
@@ -3954,7 +4910,9 @@
         "outperforming XLU by 2.6%",
         "bond mkt +2 (wt 1.0x)"
       ],
-      "price": 95.51000213623047
+      "price": 96.03,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "NOC",
@@ -3967,7 +4925,7 @@
         "golden cross (50>200)",
         "earnings growth 85%",
         "revenue growth 4%",
-        "forward P/E (18.8) > trailing (17.8)",
+        "forward P/E (18.5) > trailing (17.5)",
         "D/E ratio 103",
         "yield 163.0%",
         "PEG 0.21 (attractive)",
@@ -3979,7 +4937,7 @@
         "underperforming XLI by 22.4%",
         "\u26a1 VALUE OVERRIDE: +3 (21% below target, RSI 21 oversold)"
       ],
-      "price": 567.0,
+      "price": 558.89,
       "value_override": {
         "total_score": 3,
         "base_score_before": 8.5,
@@ -3994,7 +4952,17 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +3 (21% below target, RSI 21 oversold)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "AI Defense & Autonomous",
+          "shares": 20.0,
+          "position_pct": 12.8,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "NVDA",
@@ -4017,7 +4985,7 @@
         "bond mkt +2 (wt 0.75x)",
         "\u26a1 VALUE OVERRIDE: +2 (26% below target)"
       ],
-      "price": 198.47999572753906,
+      "price": 198.84,
       "value_override": {
         "total_score": 2,
         "base_score_before": 9.0,
@@ -4028,7 +4996,17 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (26% below target)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "Growth Value",
+          "shares": 59.0,
+          "position_pct": 12.1,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": []
     },
     {
       "ticker": "NXE",
@@ -4046,22 +5024,24 @@
         "bond mkt +2 (wt 1.0x)",
         "\u26a1 VALUE OVERRIDE: +2 (37% below target)"
       ],
-      "price": 12.460000038146973,
+      "price": 12.37,
       "value_override": {
         "total_score": 2,
         "base_score_before": 2.0,
         "components": {
           "analyst_target": {
             "score": 2,
-            "reason": "37% below analyst target $19.65"
+            "reason": "37% below analyst target $19.67"
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (37% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "OMF",
-      "score": 8,
+      "score": 9,
       "label": "\ud83d\udfe2 STRONG BUY / ADD",
       "reasons": [
         "above 50-day SMA",
@@ -4069,19 +5049,20 @@
         "death cross (50<200)",
         "earnings growth 8%",
         "revenue growth 9%",
-        "P/E improving (6.3 < 8.4)",
+        "P/E improving (6.4 < 8.3)",
         "D/E ratio 663",
-        "yield 742.0%",
+        "yield 761.0%",
+        "PEG 0.98 (attractive)",
         "ROE 24% (excellent)",
         "gross margin 93% (wide moat)",
         "insider net selling (0B/20S)",
         "underperforming XLF by 3.0%",
         "\u26a1 VALUE OVERRIDE: +1 (18% below target)"
       ],
-      "price": 55.189998626708984,
+      "price": 55.43,
       "value_override": {
         "total_score": 1,
-        "base_score_before": 8.5,
+        "base_score_before": 9.0,
         "components": {
           "analyst_target": {
             "score": 1,
@@ -4089,7 +5070,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (18% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "PCG",
@@ -4101,9 +5084,9 @@
         "golden cross (50>200)",
         "earnings growth 40%",
         "revenue growth 15%",
-        "P/E improving (9.0 < 12.8)",
+        "P/E improving (9.1 < 12.7)",
         "D/E ratio 188",
-        "yield 122.0%",
+        "yield 123.0%",
         "PEG 0.32 (attractive)",
         "ROE 9% (weak)",
         "FCF negative ($-5.6B)",
@@ -4113,7 +5096,7 @@
         "bond mkt +2 (wt 1.0x)",
         "\u26a1 VALUE OVERRIDE: +3 (29% below target, RSI 33 oversold)"
       ],
-      "price": 16.209999084472656,
+      "price": 16.42,
       "value_override": {
         "total_score": 3,
         "base_score_before": 6.0,
@@ -4128,7 +5111,27 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +3 (29% below target, RSI 33 oversold)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "Nuclear Renaissance",
+          "shares": 700.0,
+          "position_pct": 11.7,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": [
+        {
+          "action": "SWAP IN",
+          "portfolio": "Nuclear Renaissance",
+          "sell": "LEU",
+          "sell_score": 0,
+          "buy": "PCG",
+          "buy_score": 6,
+          "score_diff": 6
+        }
+      ]
     },
     {
       "ticker": "PEG",
@@ -4140,15 +5143,17 @@
         "golden cross (50>200)",
         "earnings growth 10%",
         "revenue growth 18%",
-        "P/E improving (17.1 < 19.0)",
+        "P/E improving (17.2 < 19.1)",
         "D/E ratio 143",
-        "yield 334.0%",
+        "yield 333.0%",
         "FCF negative ($-0.1B)",
         "payout ratio 60% (safe)",
         "insider net selling (0B/10S)",
         "bond mkt +2 (wt 1.0x)"
       ],
-      "price": 80.44999694824219
+      "price": 80.73,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "PLTR",
@@ -4160,9 +5165,9 @@
         "death cross (50<200)",
         "earnings growth 648%",
         "revenue growth 70%",
-        "P/E improving (78.2 < 231.8)",
+        "P/E improving (74.3 < 155.8)",
         "no dividend",
-        "PEG 0.36 (attractive)",
+        "PEG 0.24 (attractive)",
         "ROE 26% (excellent)",
         "FCF positive ($1.3B)",
         "gross margin 82% (wide moat)",
@@ -4170,7 +5175,7 @@
         "underperforming XLK by 19.8%",
         "\u26a1 VALUE OVERRIDE: +1 (19% below target)"
       ],
-      "price": 146.02999877929688,
+      "price": 138.35,
       "value_override": {
         "total_score": 1,
         "base_score_before": 10.0,
@@ -4181,7 +5186,27 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (19% below target)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "AI Defense & Autonomous",
+          "shares": 81.0,
+          "position_pct": 13.3,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": [
+        {
+          "action": "SWAP IN",
+          "portfolio": "AI Defense & Autonomous",
+          "sell": "TXT",
+          "sell_score": 6,
+          "buy": "PLTR",
+          "buy_score": 10,
+          "score_diff": 4
+        }
+      ]
     },
     {
       "ticker": "RSI",
@@ -4194,7 +5219,7 @@
         "golden cross (50>200)",
         "earnings growth 67%",
         "revenue growth 41%",
-        "P/E improving (33.0 < 84.1)",
+        "P/E improving (33.9 < 83.7)",
         "no dividend",
         "ROE 35% (excellent)",
         "FCF positive ($0.1B)",
@@ -4202,7 +5227,9 @@
         "outperforming XLY by 17.5%",
         "bond mkt +2 (wt 0.75x)"
       ],
-      "price": 27.75
+      "price": 28.5,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "RTX",
@@ -4215,8 +5242,8 @@
         "golden cross (50>200)",
         "earnings growth 32%",
         "revenue growth 9%",
-        "P/E improving (22.9 < 32.5)",
-        "yield 159.0%",
+        "P/E improving (22.9 < 32.4)",
+        "yield 160.0%",
         "PEG 1.00 (attractive)",
         "FCF positive ($7.2B)",
         "gross margin 20% (thin)",
@@ -4225,7 +5252,7 @@
         "underperforming XLI by 16.7%",
         "\u26a1 VALUE OVERRIDE: +2 (20% below target, RSI 30 oversold)"
       ],
-      "price": 172.89999389648438,
+      "price": 172.41,
       "value_override": {
         "total_score": 2,
         "base_score_before": 9.5,
@@ -4240,7 +5267,27 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (20% below target, RSI 30 oversold)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "AI Defense & Autonomous",
+          "shares": 69.0,
+          "position_pct": 13.4,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": [
+        {
+          "action": "SWAP IN",
+          "portfolio": "AI Defense & Autonomous",
+          "sell": "TXT",
+          "sell_score": 6,
+          "buy": "RTX",
+          "buy_score": 10,
+          "score_diff": 4
+        }
+      ]
     },
     {
       "ticker": "SMR",
@@ -4260,7 +5307,7 @@
         "bond mkt +2 (wt 1.0x)",
         "\u26a1 VALUE OVERRIDE: +2 (28% below target)"
       ],
-      "price": 12.180000305175781,
+      "price": 11.7,
       "value_override": {
         "total_score": 2,
         "base_score_before": 3.0,
@@ -4271,7 +5318,27 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (28% below target)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "Nuclear Renaissance",
+          "shares": 1020.0,
+          "position_pct": 12.8,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": [
+        {
+          "action": "SWAP IN",
+          "portfolio": "Nuclear Renaissance",
+          "sell": "LEU",
+          "sell_score": 0,
+          "buy": "SMR",
+          "buy_score": 3,
+          "score_diff": 3
+        }
+      ]
     },
     {
       "ticker": "TLN",
@@ -4285,14 +5352,14 @@
         "D/E ratio 625",
         "no dividend",
         "ROE -18% (negative)",
-        "FCF yield 6.2% (strong)",
+        "FCF yield 6.1% (strong)",
         "insider net selling (0B/3S)",
         "outperforming XLU by 18.2%",
         "bond mkt +2 (wt 1.0x)",
         "\u26a1 VALUE OVERRIDE: +1 (18% below target)",
         "correlated with VST (0.85)"
       ],
-      "price": 384.6400146484375,
+      "price": 389.73,
       "value_override": {
         "total_score": 1,
         "base_score_before": 4.0,
@@ -4303,7 +5370,27 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (18% below target)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "Nuclear Renaissance",
+          "shares": 34.0,
+          "position_pct": 12.2,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": [
+        {
+          "action": "SWAP IN",
+          "portfolio": "Nuclear Renaissance",
+          "sell": "LEU",
+          "sell_score": 0,
+          "buy": "TLN",
+          "buy_score": 4,
+          "score_diff": 4
+        }
+      ]
     },
     {
       "ticker": "TXN",
@@ -4316,7 +5403,7 @@
         "golden cross (50>200)",
         "earnings growth 31%",
         "revenue growth 19%",
-        "P/E improving (30.6 < 48.1)",
+        "P/E improving (30.3 < 47.8)",
         "yield 202.0%",
         "ROE 32% (excellent)",
         "FCF positive ($1.1B)",
@@ -4326,7 +5413,9 @@
         "outperforming XLK by 22.4%",
         "bond mkt +2 (wt 0.75x)"
       ],
-      "price": 280.8900146484375
+      "price": 277.7,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "TXT",
@@ -4336,16 +5425,45 @@
         "below 50-day SMA",
         "above 200-day SMA",
         "golden cross (50>200)",
-        "earnings growth 10%",
+        "earnings growth 11%",
         "revenue growth 12%",
-        "P/E improving (12.5 < 17.4)",
-        "yield 8.0%",
-        "FCF yield 8.6% (strong)",
+        "P/E improving (12.4 < 17.3)",
+        "yield 9.0%",
+        "FCF positive ($0.6B)",
         "gross margin 18% (thin)",
         "payout ratio 2% (safe)",
         "insider net selling (1B/12S)"
       ],
-      "price": 90.94000244140625
+      "price": 90.77,
+      "held_in": [
+        {
+          "portfolio": "AI Defense & Autonomous",
+          "shares": 129.0,
+          "position_pct": 13.3,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": [
+        {
+          "action": "SWAP OUT",
+          "portfolio": "AI Defense & Autonomous",
+          "sell": "TXT",
+          "sell_score": 6,
+          "buy": "PLTR",
+          "buy_score": 10,
+          "score_diff": 4
+        },
+        {
+          "action": "SWAP OUT",
+          "portfolio": "AI Defense & Autonomous",
+          "sell": "TXT",
+          "sell_score": 6,
+          "buy": "RTX",
+          "buy_score": 10,
+          "score_diff": 4
+        }
+      ]
     },
     {
       "ticker": "VIK",
@@ -4357,7 +5475,7 @@
         "golden cross (50>200)",
         "earnings growth 227%",
         "revenue growth 28%",
-        "P/E improving (19.1 < 31.7)",
+        "P/E improving (19.5 < 31.4)",
         "D/E ratio 512",
         "no dividend",
         "PEG 0.14 (attractive)",
@@ -4367,7 +5485,9 @@
         "insider net selling (0B/20S)",
         "bond mkt +2 (wt 0.75x)"
       ],
-      "price": 79.02999877929688
+      "price": 80.83,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "VRT",
@@ -4379,9 +5499,9 @@
         "golden cross (50>200)",
         "earnings growth 136%",
         "revenue growth 30%",
-        "P/E improving (38.4 < 82.7)",
+        "P/E improving (38.9 < 84.4)",
         "yield 8.0%",
-        "PEG 0.61 (attractive)",
+        "PEG 0.62 (attractive)",
         "ROE 45% (excellent)",
         "FCF positive ($2.0B)",
         "payout ratio 5% (safe)",
@@ -4389,7 +5509,9 @@
         "outperforming XLI by 24.1%",
         "bond mkt +2 (wt 0.75x)"
       ],
-      "price": 330.9700012207031
+      "price": 335.23,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "VST",
@@ -4401,9 +5523,9 @@
         "death cross (50<200)",
         "earnings growth -52%",
         "revenue growth 14%",
-        "P/E improving (14.4 < 71.5)",
+        "P/E improving (14.5 < 74.0)",
         "D/E ratio 400",
-        "yield 59.0%",
+        "yield 57.0%",
         "PEG N/A (negative growth)",
         "ROE 18% (good)",
         "FCF negative ($-0.5B)",
@@ -4414,7 +5536,7 @@
         "\u26a1 VALUE OVERRIDE: +2 (30% below target)",
         "correlated with TLN (0.85)"
       ],
-      "price": 160.85000610351562,
+      "price": 162.61,
       "value_override": {
         "total_score": 2,
         "base_score_before": 3.5,
@@ -4425,7 +5547,27 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (30% below target)"
-      }
+      },
+      "held_in": [
+        {
+          "portfolio": "Nuclear Renaissance",
+          "shares": 61.0,
+          "position_pct": 9.9,
+          "at_max_position": false,
+          "at_max_holdings": false
+        }
+      ],
+      "pending_swaps": [
+        {
+          "action": "SWAP IN",
+          "portfolio": "Nuclear Renaissance",
+          "sell": "LEU",
+          "sell_score": 0,
+          "buy": "VST",
+          "buy_score": 4,
+          "score_diff": 4
+        }
+      ]
     },
     {
       "ticker": "WDC",
@@ -4436,20 +5578,22 @@
         "above 50-day SMA",
         "above 200-day SMA",
         "golden cross (50>200)",
-        "earnings growth 477%",
+        "earnings growth 483%",
         "revenue growth 46%",
-        "P/E improving (25.4 < 25.8)",
+        "P/E improving (27.2 < 28.3)",
         "yield 14.0%",
-        "PEG 0.05 (attractive)",
+        "PEG 0.06 (attractive)",
         "ROE 86% (excellent)",
-        "FCF positive ($2.0B)",
+        "FCF positive ($2.1B)",
         "gross margin 45% (wide moat)",
         "payout ratio 3% (safe)",
         "insider net selling (0B/11S)",
         "outperforming XLK by 27.0%",
         "bond mkt +2 (wt 0.75x)"
       ],
-      "price": 442.3599853515625
+      "price": 473.84,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "XEL",
@@ -4461,17 +5605,19 @@
         "golden cross (50>200)",
         "earnings growth 6%",
         "revenue growth 3%",
-        "P/E improving (17.9 < 23.4)",
+        "P/E improving (18.0 < 23.5)",
         "D/E ratio 165",
-        "yield 287.0%",
-        "PEG 3.90 (expensive)",
+        "yield 292.0%",
+        "PEG 3.91 (expensive)",
         "ROE 10% (weak)",
         "FCF negative ($-7.5B)",
         "gross margin 46% (wide moat)",
         "insider net selling (0B/4S)",
         "bond mkt +2 (wt 1.0x)"
       ],
-      "price": 81.16999816894531
+      "price": 81.5,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "XPO",
@@ -4483,7 +5629,7 @@
         "golden cross (50>200)",
         "earnings growth 47%",
         "revenue growth 7%",
-        "P/E improving (33.7 < 74.1)",
+        "P/E improving (35.0 < 71.1)",
         "D/E ratio 221",
         "no dividend",
         "ROE 20% (good)",
@@ -4492,7 +5638,9 @@
         "underperforming XLI by 6.4%",
         "bond mkt +2 (wt 0.75x)"
       ],
-      "price": 199.9499969482422
+      "price": 208.24,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "AVAV",
@@ -4513,7 +5661,7 @@
         "underperforming XLI by 8.6%",
         "\u26a1 VALUE OVERRIDE: +2 (42% below target)"
       ],
-      "price": 180.25999450683594,
+      "price": 171.98,
       "value_override": {
         "total_score": 2,
         "base_score_before": -0.5,
@@ -4524,7 +5672,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (42% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "BEKE",
@@ -4536,8 +5686,8 @@
         "death cross (50<200)",
         "earnings growth -87%",
         "revenue growth -29%",
-        "P/E improving (17.4 < 44.8)",
-        "yield 162.0%",
+        "P/E improving (18.0 < 47.5)",
+        "yield 158.0%",
         "PEG N/A (negative growth)",
         "ROE 4% (weak)",
         "FCF negative ($-0.9B)",
@@ -4548,7 +5698,7 @@
         "bond mkt +2 (wt 1.5x)",
         "\u26a1 VALUE OVERRIDE: +1 (15% below target)"
       ],
-      "price": 17.459999084472656,
+      "price": 18.08,
       "value_override": {
         "total_score": 1,
         "base_score_before": -5.0,
@@ -4559,7 +5709,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (15% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "DUK",
@@ -4572,9 +5724,9 @@
         "golden cross (50>200)",
         "earnings growth -2%",
         "revenue growth 8%",
-        "P/E improving (17.8 < 20.2)",
+        "P/E improving (17.9 < 20.3)",
         "D/E ratio 172",
-        "yield 331.0%",
+        "yield 334.0%",
         "PEG N/A (negative growth)",
         "ROE 10% (weak)",
         "FCF negative ($-2.0B)",
@@ -4583,7 +5735,9 @@
         "underperforming XLU by 3.4%",
         "bond mkt +2 (wt 1.0x)"
       ],
-      "price": 127.44999694824219
+      "price": 128.2,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "EIX",
@@ -4595,9 +5749,9 @@
         "golden cross (50>200)",
         "earnings growth -63%",
         "revenue growth 8%",
-        "forward P/E (10.6) > trailing (7.5)",
+        "forward P/E (10.7) > trailing (7.6)",
         "D/E ratio 226",
-        "yield 502.0%",
+        "yield 509.0%",
         "PEG N/A (negative growth)",
         "ROE 19% (good)",
         "FCF negative ($-1.1B)",
@@ -4606,7 +5760,9 @@
         "insider net selling (0B/9S)",
         "underperforming XLU by 5.5%"
       ],
-      "price": 69.0
+      "price": 69.54,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "ENPH",
@@ -4617,7 +5773,7 @@
         "below 200-day SMA",
         "golden cross (50>200)",
         "revenue growth -21%",
-        "P/E improving (13.2 < 33.5)",
+        "P/E improving (13.5 < 32.6)",
         "short interest 20.7%",
         "no dividend",
         "FCF positive ($0.1B)",
@@ -4627,7 +5783,7 @@
         "bond mkt +2 (wt 0.75x)",
         "\u26a1 VALUE OVERRIDE: +1 (20% below target)"
       ],
-      "price": 32.540000915527344,
+      "price": 33.01,
       "value_override": {
         "total_score": 1,
         "base_score_before": -1.0,
@@ -4638,7 +5794,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (20% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "EXC",
@@ -4650,9 +5808,9 @@
         "golden cross (50>200)",
         "earnings growth -9%",
         "revenue growth -1%",
-        "P/E improving (15.3 < 17.0)",
+        "P/E improving (15.2 < 17.0)",
         "D/E ratio 174",
-        "yield 361.0%",
+        "yield 360.0%",
         "PEG N/A (negative growth)",
         "ROE 10% (weak)",
         "FCF negative ($-2.1B)",
@@ -4661,7 +5819,9 @@
         "underperforming XLU by 5.2%",
         "bond mkt +2 (wt 1.0x)"
       ],
-      "price": 46.61000061035156
+      "price": 46.35,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "LUNR",
@@ -4681,7 +5841,9 @@
         "insider net selling (0B/20S)",
         "outperforming XLI by 6.7%"
       ],
-      "price": 25.350000381469727
+      "price": 24.23,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "NNE",
@@ -4701,7 +5863,7 @@
         "bond mkt +2 (wt 1.0x)",
         "\u26a1 VALUE OVERRIDE: +2 (50% below target)"
       ],
-      "price": 23.31999969482422,
+      "price": 22.2,
       "value_override": {
         "total_score": 2,
         "base_score_before": 0.0,
@@ -4712,7 +5874,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (50% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "OKLO",
@@ -4732,7 +5896,7 @@
         "bond mkt +2 (wt 1.0x)",
         "\u26a1 VALUE OVERRIDE: +1 (25% below target)"
       ],
-      "price": 68.5999984741211,
+      "price": 66.17,
       "value_override": {
         "total_score": 1,
         "base_score_before": -2.0,
@@ -4743,7 +5907,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (25% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "PNW",
@@ -4753,17 +5919,19 @@
         "above 50-day SMA",
         "above 200-day SMA",
         "golden cross (50>200)",
-        "revenue growth 3%",
-        "P/E improving (18.3 < 20.5)",
-        "D/E ratio 202",
-        "yield 352.0%",
-        "ROE 9% (weak)",
-        "FCF negative ($-0.6B)",
+        "revenue growth 11%",
+        "P/E improving (18.3 < 19.0)",
+        "D/E ratio 213",
+        "yield 357.0%",
+        "ROE 10% (weak)",
+        "FCF negative ($-0.8B)",
         "gross margin 42% (wide moat)",
         "insider net selling (0B/4S)",
         "bond mkt +2 (wt 1.0x)"
       ],
-      "price": 101.81999969482422
+      "price": 101.89,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "RCAT",
@@ -4782,7 +5950,7 @@
         "underperforming XLI by 19.6%",
         "\u26a1 VALUE OVERRIDE: +2 (49% below target)"
       ],
-      "price": 11.0,
+      "price": 10.54,
       "value_override": {
         "total_score": 2,
         "base_score_before": -2.5,
@@ -4793,7 +5961,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (49% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "RDW",
@@ -4813,7 +5983,7 @@
         "underperforming XLI by 16.7%",
         "\u26a1 VALUE OVERRIDE: +2 (39% below target)"
       ],
-      "price": 8.640000343322754,
+      "price": 8.4,
       "value_override": {
         "total_score": 2,
         "base_score_before": -0.5,
@@ -4824,7 +5994,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +2 (39% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "SO",
@@ -4836,16 +6008,18 @@
         "golden cross (50>200)",
         "earnings growth -1%",
         "revenue growth 8%",
-        "P/E improving (19.5 < 24.7)",
+        "P/E improving (19.6 < 24.6)",
         "D/E ratio 190",
-        "yield 314.0%",
+        "yield 317.0%",
         "PEG N/A (negative growth)",
         "FCF negative ($-4.0B)",
         "gross margin 48% (wide moat)",
         "insider net selling (0B/10S)",
         "bond mkt +2 (wt 1.0x)"
       ],
-      "price": 95.98999786376953
+      "price": 96.23,
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "UEC",
@@ -4866,7 +6040,7 @@
         "bond mkt +2 (wt 1.0x)",
         "\u26a1 VALUE OVERRIDE: +1 (23% below target)"
       ],
-      "price": 14.819999694824219,
+      "price": 14.74,
       "value_override": {
         "total_score": 1,
         "base_score_before": -3.5,
@@ -4877,7 +6051,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (23% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     },
     {
       "ticker": "UUUU",
@@ -4898,7 +6074,7 @@
         "bond mkt +2 (wt 1.0x)",
         "\u26a1 VALUE OVERRIDE: +1 (19% below target)"
       ],
-      "price": 21.6200008392334,
+      "price": 21.88,
       "value_override": {
         "total_score": 1,
         "base_score_before": -3.5,
@@ -4909,7 +6085,9 @@
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (19% below target)"
-      }
+      },
+      "held_in": [],
+      "pending_swaps": []
     }
   ],
   "portfolio_signals": {
@@ -5191,7 +6369,7 @@
         "label": "\ud83d\udfe2 STRONG BUY / ADD"
       },
       "ALLY": {
-        "score": 6,
+        "score": 5,
         "label": "\ud83d\udfe2 STRONG BUY / ADD"
       },
       "AMGN": {
@@ -5289,8 +6467,8 @@
         "label": "\ud83d\udfe2 STRONG BUY / ADD"
       },
       "D": {
-        "score": 2,
-        "label": "\ud83d\udfe2 BUY / HOLD"
+        "score": 0,
+        "label": "\u26aa HOLD"
       },
       "DNN": {
         "score": 0,
@@ -5605,7 +6783,7 @@
         "label": "\ud83d\udfe2 STRONG BUY / ADD"
       },
       "OMF": {
-        "score": 8,
+        "score": 9,
         "label": "\ud83d\udfe2 STRONG BUY / ADD"
       }
     },
@@ -5682,304 +6860,274 @@
   },
   "earnings": [
     {
-      "ticker": "LDOS",
-      "date": "2026-05-05",
-      "days_away": 0,
-      "eps_est": 2.91
+      "ticker": "AAOI",
+      "date": "May 07",
+      "days": 1
     },
     {
-      "ticker": "CCJ",
-      "date": "2026-05-05",
-      "days_away": 0,
-      "eps_est": 0.34
+      "ticker": "AES",
+      "date": "May 07",
+      "days": 1
     },
     {
-      "ticker": "AROC",
-      "date": "2026-05-05",
-      "days_away": 0,
-      "eps_est": 0.48
+      "ticker": "AFRM",
+      "date": "May 07",
+      "days": 1
     },
     {
-      "ticker": "LEU",
-      "date": "2026-05-05",
-      "days_away": 0,
-      "eps_est": 0.27
+      "ticker": "ALGM",
+      "date": "May 07",
+      "days": 1
     },
     {
-      "ticker": "TLN",
-      "date": "2026-05-05",
-      "days_away": 0,
-      "eps_est": 4.25
-    },
-    {
-      "ticker": "ANET",
-      "date": "2026-05-05",
-      "days_away": 0,
-      "eps_est": 0.81
-    },
-    {
-      "ticker": "ADPT",
-      "date": "2026-05-05",
-      "days_away": 0,
-      "eps_est": null
+      "ticker": "APA",
+      "date": "May 06",
+      "days": 0
     },
     {
       "ticker": "APP",
-      "date": "2026-05-06",
-      "days_away": 1,
-      "eps_est": 3.64
-    },
-    {
-      "ticker": "ARQT",
-      "date": "2026-05-06",
-      "days_away": 1,
-      "eps_est": null
-    },
-    {
-      "ticker": "BLLN",
-      "date": "2026-05-06",
-      "days_away": 1,
-      "eps_est": 0.06
-    },
-    {
-      "ticker": "AXON",
-      "date": "2026-05-06",
-      "days_away": 1,
-      "eps_est": 1.6
+      "date": "May 06",
+      "days": 0
     },
     {
       "ticker": "ARGX",
-      "date": "2026-05-07",
-      "days_away": 2,
-      "eps_est": 4.19
+      "date": "May 07",
+      "days": 1
     },
     {
-      "ticker": "VST",
-      "date": "2026-05-07",
-      "days_away": 2,
-      "eps_est": 1.46
+      "ticker": "ARM",
+      "date": "May 06",
+      "days": 0
     },
     {
-      "ticker": "SMR",
-      "date": "2026-05-07",
-      "days_away": 2,
-      "eps_est": null
+      "ticker": "ARQT",
+      "date": "May 06",
+      "days": 0
     },
     {
-      "ticker": "CELH",
-      "date": "2026-05-07",
-      "days_away": 2,
-      "eps_est": 0.3
+      "ticker": "ARW",
+      "date": "May 07",
+      "days": 1
     },
     {
-      "ticker": "AU",
-      "date": "2026-05-08",
-      "days_away": 3,
-      "eps_est": 2.24
+      "ticker": "ARWR",
+      "date": "May 07",
+      "days": 1
     },
     {
-      "ticker": "BATRK",
-      "date": "2026-05-11",
-      "days_away": 6,
-      "eps_est": null
-    },
-    {
-      "ticker": "B",
-      "date": "2026-05-11",
-      "days_away": 6,
-      "eps_est": 0.81
-    },
-    {
-      "ticker": "CEG",
-      "date": "2026-05-11",
-      "days_away": 6,
-      "eps_est": 2.61
+      "ticker": "ASTS",
+      "date": "May 11",
+      "days": 5
     },
     {
       "ticker": "ATAT",
-      "date": "2026-05-13",
-      "days_away": 8,
-      "eps_est": 2.84
+      "date": "May 13",
+      "days": 7
+    },
+    {
+      "ticker": "ATO",
+      "date": "May 06",
+      "days": 0
+    },
+    {
+      "ticker": "AU",
+      "date": "May 08",
+      "days": 2
+    },
+    {
+      "ticker": "AXON",
+      "date": "May 06",
+      "days": 0
+    },
+    {
+      "ticker": "B",
+      "date": "May 11",
+      "days": 5
     },
     {
       "ticker": "BAP",
-      "date": "2026-05-14",
-      "days_away": 9,
-      "eps_est": 7.26
+      "date": "May 14",
+      "days": 8
+    },
+    {
+      "ticker": "BATRA",
+      "date": "May 11",
+      "days": 5
+    },
+    {
+      "ticker": "BATRK",
+      "date": "May 11",
+      "days": 5
+    },
+    {
+      "ticker": "BBD",
+      "date": "May 06",
+      "days": 0
+    },
+    {
+      "ticker": "BBIO",
+      "date": "May 07",
+      "days": 1
+    },
+    {
+      "ticker": "BCE",
+      "date": "May 07",
+      "days": 1
+    },
+    {
+      "ticker": "BDX",
+      "date": "May 07",
+      "days": 1
+    },
+    {
+      "ticker": "BEKE",
+      "date": "May 14",
+      "days": 8
+    },
+    {
+      "ticker": "BLLN",
+      "date": "May 06",
+      "days": 0
+    },
+    {
+      "ticker": "BN",
+      "date": "May 14",
+      "days": 8
+    },
+    {
+      "ticker": "BOOT",
+      "date": "May 13",
+      "days": 7
+    },
+    {
+      "ticker": "BTG",
+      "date": "May 06",
+      "days": 0
+    },
+    {
+      "ticker": "CEG",
+      "date": "May 11",
+      "days": 5
+    },
+    {
+      "ticker": "CELH",
+      "date": "May 07",
+      "days": 1
+    },
+    {
+      "ticker": "DNN",
+      "date": "May 11",
+      "days": 5
+    },
+    {
+      "ticker": "EVRG",
+      "date": "May 07",
+      "days": 1
+    },
+    {
+      "ticker": "EXC",
+      "date": "May 06",
+      "days": 0
+    },
+    {
+      "ticker": "FNF",
+      "date": "May 06",
+      "days": 0
+    },
+    {
+      "ticker": "HRB",
+      "date": "May 06",
+      "days": 0
+    },
+    {
+      "ticker": "INTR",
+      "date": "May 07",
+      "days": 1
+    },
+    {
+      "ticker": "IREN",
+      "date": "May 07",
+      "days": 1
     },
     {
       "ticker": "KEYS",
-      "date": "2026-05-19",
-      "days_away": 14,
-      "eps_est": 2.32
+      "date": "May 19",
+      "days": 13
+    },
+    {
+      "ticker": "KTOS",
+      "date": "May 06",
+      "days": 0
+    },
+    {
+      "ticker": "LNTH",
+      "date": "May 07",
+      "days": 1
+    },
+    {
+      "ticker": "LUNR",
+      "date": "May 14",
+      "days": 8
+    },
+    {
+      "ticker": "LYFT",
+      "date": "May 07",
+      "days": 1
+    },
+    {
+      "ticker": "MCK",
+      "date": "May 07",
+      "days": 1
+    },
+    {
+      "ticker": "MFG",
+      "date": "May 15",
+      "days": 9
+    },
+    {
+      "ticker": "NNE",
+      "date": "May 14",
+      "days": 8
     },
     {
       "ticker": "NVDA",
-      "date": "2026-05-20",
-      "days_away": 15,
-      "eps_est": 1.77
+      "date": "May 20",
+      "days": 14
     },
     {
-      "ticker": "BKE",
-      "date": "2026-05-22",
-      "days_away": 17,
-      "eps_est": 0.74
+      "ticker": "OKLO",
+      "date": "May 12",
+      "days": 6
     },
     {
-      "ticker": "MRVL",
-      "date": "2026-05-27",
-      "days_away": 22,
-      "eps_est": 0.8
+      "ticker": "RCAT",
+      "date": "May 07",
+      "days": 1
     },
     {
-      "ticker": "CRM",
-      "date": "2026-05-27",
-      "days_away": 22,
-      "eps_est": 3.12
+      "ticker": "RDW",
+      "date": "May 06",
+      "days": 0
     },
     {
-      "ticker": "AMBA",
-      "date": "2026-05-28",
-      "days_away": 23,
-      "eps_est": 0.1
+      "ticker": "SMR",
+      "date": "May 07",
+      "days": 1
     },
     {
-      "ticker": "AVGO",
-      "date": "2026-06-03",
-      "days_away": 29,
-      "eps_est": 2.39
+      "ticker": "UUUU",
+      "date": "May 06",
+      "days": 0
     },
     {
-      "ticker": "ACN",
-      "date": "2026-06-18",
-      "days_away": 44,
-      "eps_est": 3.73
+      "ticker": "VIK",
+      "date": "May 14",
+      "days": 8
     },
     {
-      "ticker": "ENVA",
-      "date": "2026-07-21",
-      "days_away": 77,
-      "eps_est": 3.97
-    },
-    {
-      "ticker": "NOC",
-      "date": "2026-07-21",
-      "days_away": 77,
-      "eps_est": 6.82
-    },
-    {
-      "ticker": "LMT",
-      "date": "2026-07-21",
-      "days_away": 77,
-      "eps_est": 7.15
-    },
-    {
-      "ticker": "RTX",
-      "date": "2026-07-21",
-      "days_away": 77,
-      "eps_est": 1.66
-    },
-    {
-      "ticker": "AVY",
-      "date": "2026-07-21",
-      "days_away": 77,
-      "eps_est": 2.47
-    },
-    {
-      "ticker": "AMX",
-      "date": "2026-07-21",
-      "days_away": 77,
-      "eps_est": 0.45
-    },
-    {
-      "ticker": "GD",
-      "date": "2026-07-22",
-      "days_away": 78,
-      "eps_est": 3.91
-    },
-    {
-      "ticker": "IBM",
-      "date": "2026-07-22",
-      "days_away": 78,
-      "eps_est": 2.98
-    },
-    {
-      "ticker": "BVN",
-      "date": "2026-07-23",
-      "days_away": 79,
-      "eps_est": 0.76
-    },
-    {
-      "ticker": "AMP",
-      "date": "2026-07-23",
-      "days_away": 79,
-      "eps_est": 10.58
-    },
-    {
-      "ticker": "FIX",
-      "date": "2026-07-23",
-      "days_away": 79,
-      "eps_est": 10.4
-    },
-    {
-      "ticker": "TXT",
-      "date": "2026-07-23",
-      "days_away": 79,
-      "eps_est": 1.58
-    },
-    {
-      "ticker": "CB",
-      "date": "2026-07-28",
-      "days_away": 84,
-      "eps_est": 6.69
-    },
-    {
-      "ticker": "BKNG",
-      "date": "2026-07-29",
-      "days_away": 85,
-      "eps_est": 2.45
-    },
-    {
-      "ticker": "ADP",
-      "date": "2026-07-29",
-      "days_away": 85,
-      "eps_est": 2.59
-    },
-    {
-      "ticker": "GEV",
-      "date": "2026-07-29",
-      "days_away": 85,
-      "eps_est": 2.91
-    },
-    {
-      "ticker": "ALNY",
-      "date": "2026-07-30",
-      "days_away": 86,
-      "eps_est": 2.07
-    },
-    {
-      "ticker": "AMG",
-      "date": "2026-07-30",
-      "days_away": 86,
-      "eps_est": 7.63
-    },
-    {
-      "ticker": "BWXT",
-      "date": "2026-08-03",
-      "days_away": 90,
-      "eps_est": 1.1
-    },
-    {
-      "ticker": "PLTR",
-      "date": "2026-08-03",
-      "days_away": 90,
-      "eps_est": 0.28
-    },
-    {
-      "ticker": "AMGN",
-      "date": "2026-08-04",
-      "days_away": 91,
-      "eps_est": 5.64
+      "ticker": "VST",
+      "date": "May 07",
+      "days": 1
     }
   ],
   "overlap": [
@@ -6008,30 +7156,35 @@
   "concentration": [],
   "bond_signals": {
     "yield_curve": {
-      "two_year": 4.093,
-      "ten_year": 4.446,
-      "spread": 0.353,
-      "date": "2026-05-05",
+      "two_year": 3.88,
+      "ten_year": 4.39,
+      "spread": 0.51,
+      "spread_1mo_ago": 0.52,
+      "spread_change": -0.01,
+      "date": "2026-05-01",
       "assessment": "Normal & steepening \u2014 bullish"
     },
     "credit_spreads": {
-      "current_bps": 292.0,
-      "date": "2026-05-05",
-      "assessment": "Tight (292bps) \u2014 bullish"
+      "current_bps": 277.0,
+      "raw_value": 2.77,
+      "prev_value": 3.17,
+      "change": -0.4,
+      "date": "2026-05-01",
+      "assessment": "Tight (277bps) \u2014 bullish"
     },
     "ten_year": {
-      "current": 4.446,
-      "prev": 4.354,
-      "change_bps": 9.2,
-      "date": "2026-05-05",
-      "assessment": "Elevated \u2014 bearish"
+      "current": 4.39,
+      "prev": 4.31,
+      "change_bps": 8.0,
+      "date": "2026-05-01",
+      "assessment": "Stable \u2014 neutral"
     },
     "scores": {
       "yield_curve": 1,
       "credit_spreads": 1,
-      "ten_year_level": -1
+      "ten_year_level": 0
     },
-    "combined_score": 1
+    "combined_score": 2
   },
   "portfolio_optimization": {
     "Value Picks": {
@@ -6186,7 +7339,7 @@
         {
           "ticker": "ALNY",
           "score": 6,
-          "value": 11619.074523925781,
+          "value": 11619.269714355469,
           "position_size": {
             "category": "full",
             "range": "12-15%"
@@ -6829,13 +7982,80 @@
       ]
     }
   },
-  "rates": {
-    "fed_funds": "4.25\u20134.50%",
-    "ten_year": 4.446,
-    "two_year": 4.093,
-    "yield_spread": 0.353,
-    "inverted": false
-  },
+  "planned_actions": [
+    {
+      "portfolio": "Momentum Growth",
+      "action": "SELL",
+      "ticker": "FIX",
+      "shares": 7,
+      "score": 9,
+      "reason": "Not in top 10 (score 9)"
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "SELL",
+      "ticker": "KEYS",
+      "shares": 15,
+      "score": 9,
+      "reason": "Not in top 10 (score 9)"
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "SELL",
+      "ticker": "ARQT",
+      "shares": 458,
+      "score": 4,
+      "reason": "Not in top 10 (score 4)"
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "SELL",
+      "ticker": "LEU",
+      "shares": 25,
+      "score": 0,
+      "reason": "Not in top 10 (score 0)"
+    },
+    {
+      "portfolio": "Income Dividends",
+      "action": "BUY",
+      "ticker": "BF-A",
+      "score": 12,
+      "reason": "Score 12 \u2014 new position (top 10)",
+      "est_allocation": 1187
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "CAT",
+      "score": 10,
+      "reason": "Score 10 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "CLS",
+      "score": 10,
+      "reason": "Score 10 \u2014 new position (top 10)",
+      "est_allocation": 4939
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "BUY",
+      "ticker": "AFRM",
+      "score": 6,
+      "reason": "Score 6 \u2014 new position (top 10)",
+      "est_allocation": 11156
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "BUY",
+      "ticker": "NEE",
+      "score": 2,
+      "reason": "Score 2 \u2014 new position (top 10)",
+      "est_allocation": 5226
+    }
+  ],
   "executed_this_week": [
     {
       "portfolio": "Income Dividends",
@@ -7377,78 +8597,5 @@
       "executed": true
     }
   ],
-  "planned_actions": [
-    {
-      "portfolio": "Momentum Growth",
-      "action": "SELL",
-      "ticker": "FIX",
-      "shares": 7,
-      "score": 9,
-      "reason": "Not in top 10 (score 9)"
-    },
-    {
-      "portfolio": "Momentum Growth",
-      "action": "SELL",
-      "ticker": "KEYS",
-      "shares": 15,
-      "score": 9,
-      "reason": "Not in top 10 (score 9)"
-    },
-    {
-      "portfolio": "Innovation Fund",
-      "action": "SELL",
-      "ticker": "ARQT",
-      "shares": 458,
-      "score": 4,
-      "reason": "Not in top 10 (score 4)"
-    },
-    {
-      "portfolio": "Nuclear Renaissance",
-      "action": "SELL",
-      "ticker": "LEU",
-      "shares": 25,
-      "score": 0,
-      "reason": "Not in top 10 (score 0)"
-    },
-    {
-      "portfolio": "Income Dividends",
-      "action": "BUY",
-      "ticker": "BF-A",
-      "score": 12,
-      "reason": "Score 12 \u2014 new position (top 10)",
-      "est_allocation": 1187
-    },
-    {
-      "portfolio": "Momentum Growth",
-      "action": "BUY",
-      "ticker": "CAT",
-      "score": 10,
-      "reason": "Score 10 \u2014 new position (top 10)",
-      "est_allocation": 12000
-    },
-    {
-      "portfolio": "Momentum Growth",
-      "action": "BUY",
-      "ticker": "CLS",
-      "score": 10,
-      "reason": "Score 10 \u2014 new position (top 10)",
-      "est_allocation": 4939
-    },
-    {
-      "portfolio": "Innovation Fund",
-      "action": "BUY",
-      "ticker": "AFRM",
-      "score": 6,
-      "reason": "Score 6 \u2014 new position (top 10)",
-      "est_allocation": 11156
-    },
-    {
-      "portfolio": "Nuclear Renaissance",
-      "action": "BUY",
-      "ticker": "D",
-      "score": 2,
-      "reason": "Score 2 \u2014 new position (top 10)",
-      "est_allocation": 5226
-    }
-  ]
+  "priceRefreshedAt": "2026-05-05T14:04:45.423234Z"
 }
