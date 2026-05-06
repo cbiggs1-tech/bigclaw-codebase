@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-05-05T16:38:56.958771",
+  "timestamp": "2026-05-06T06:30:12.365671",
   "context": {
     "ticker": null,
     "sector": null,
@@ -22,7 +22,7 @@
     },
     "Nasdaq": {
       "ticker": "^IXIC",
-      "price": 25326.12,
+      "price": 25326.13,
       "ytd": 8.97,
       "1mo": 15.75,
       "3mo": 10.57
@@ -42,9 +42,9 @@
       "3mo": 8.4
     },
     "VIX": {
-      "level": 17.38,
+      "level": 16.36,
       "classification": "Moderate",
-      "1mo_change": -27.19
+      "1mo_change": -32.31
     }
   },
   "sectors": [
@@ -63,6 +63,15 @@
       "price": 118.07,
       "1mo": 9.17,
       "3mo": -1.49,
+      "above_50sma": "True",
+      "above_200sma": "True"
+    },
+    {
+      "etf": "XLRE",
+      "sector": "Real Estate",
+      "price": 44.17,
+      "1mo": 6.15,
+      "3mo": 7.25,
       "above_50sma": "True",
       "above_200sma": "True"
     },
@@ -137,21 +146,13 @@
       "3mo": -6.49,
       "above_50sma": "False",
       "above_200sma": "False"
-    },
-    {
-      "etf": "XLRE",
-      "sector": "Real Estate",
-      "1mo": null,
-      "3mo": null,
-      "above_50sma": null,
-      "above_200sma": null
     }
   ],
   "risk": {
     "vix": {
-      "level": 17.38,
+      "level": 16.36,
       "classification": "Moderate",
-      "1mo_change": -27.19
+      "1mo_change": -32.31
     },
     "Gold (GLD)": {
       "price": 418.27,
@@ -162,8 +163,8 @@
       "1mo": -1.29
     },
     "Bitcoin": {
-      "price": 81459.43,
-      "1mo": 18.09
+      "price": 82686.32,
+      "1mo": 20.08
     },
     "yield_curve": {
       "spread": 0.616,
@@ -182,11 +183,11 @@
       "mom_change": -3.3
     },
     "fear_greed": {
-      "score": 66.9,
+      "score": 67.3,
       "rating": "greed",
-      "previous": 62.9,
-      "1w_ago": 63.7,
-      "1m_ago": 23.7
+      "previous": 66.9,
+      "1w_ago": 63.4,
+      "1m_ago": 22.5
     },
     "saving_rate": {
       "current": 3.6,
@@ -210,19 +211,19 @@
       "two_year": 4.072,
       "ten_year": 4.416,
       "spread": 0.344,
-      "date": "2026-05-05",
+      "date": "2026-05-06",
       "assessment": "Normal & steepening \u2014 bullish"
     },
     "credit_spreads": {
       "current_bps": 292.0,
-      "date": "2026-05-05",
+      "date": "2026-05-06",
       "assessment": "Tight (292bps) \u2014 bullish"
     },
     "ten_year": {
       "current": 4.416,
       "prev": 4.418,
       "change_bps": -0.2,
-      "date": "2026-05-05",
+      "date": "2026-05-06",
       "assessment": "Elevated \u2014 bearish"
     },
     "scores": {
