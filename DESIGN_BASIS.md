@@ -599,6 +599,21 @@ The gate sits at the rotation buy site only — it does not block sells, manual 
 
 ---
 
+### Order Fill Discipline
+
+`scripts/order_fill.py` is the single source of truth for waiting on Alpaca order fills. The May 6 2026 ANET incident exposed the bug class: a sell order for 73 shares filled fully on Alpaca, but `trailing_stop_manager.py` checked the order one second later, saw 37 of 73 filled (status `partially_filled`), substring-matched on "filled," and recorded only 37 shares to the DB. Alpaca filled the remaining 36 a moment later — DB never updated, $5,281 of cash drift.
+
+`wait_for_fill()` enforces a strict contract: **the returned `(filled_qty, filled_price)` match Alpaca's terminal state for the order, period.** Implementation:
+
+- Polls every 2s up to `timeout_s` (default 30s) for terminal status (`filled` / `canceled` / `expired` / `rejected` / `done_for_day`).
+- On primary timeout, requests cancel of the open remainder.
+- Polls every 0.5s for up to 10s after cancel (cancel is async; the open quantity can race-fill or race-cancel — both produce a deterministic terminal state).
+- Returns the filled quantity at the terminal moment. No "Alpaca fills more shares later that the DB doesn't see" drift is possible.
+
+All five fill-recording paths use this module: `autonomous_trader._execute_sell_order`, `autonomous_trader._execute_buy_order`, the REBALANCE-SELL block, the in-trader STOP-SELL block, `trailing_stop_manager.execute_stop_sells`, and `trade_executor.place_order`. Zero local copies of fill-wait logic remain.
+
+---
+
 ## 9. Scheduled Operations & Automation
 
 All recurring work is defined in OpenClaw's `cron/jobs.json`. Disabled jobs are explicitly listed so no one accidentally re-enables them.

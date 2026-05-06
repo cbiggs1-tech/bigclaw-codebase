@@ -748,6 +748,16 @@
                 <span class="tag tag-free">Risk gate</span>
             </div>
         </div>
+        <div class="source-card">
+            <div class="source-card-top">
+                <div class="source-name">Order Fill Discipline</div>
+            </div>
+            <div class="source-desc">Single source of truth for waiting on Alpaca order fills. <code>wait_for_fill()</code> polls until terminal state, cancels open remainders on timeout, and guarantees the returned (qty, price) matches Alpaca’s permanent record — no "Alpaca fills more shares later than DB sees" drift. Used by all 5 fill-recording paths.</div>
+            <div class="source-tags">
+                <span class="tag tag-lib">order_fill.py</span>
+                <span class="tag tag-free">Cash integrity</span>
+            </div>
+        </div>
     </div>
 
     <!-- Frontend -->

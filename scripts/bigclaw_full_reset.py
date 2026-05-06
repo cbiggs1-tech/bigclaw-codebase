@@ -128,14 +128,15 @@ def main():
             if r["order_id"] and r["order_id"] != "dry-run":
                 try:
                     updated = client.get_order_by_id(r["order_id"])
-                    status = str(updated.status).lower()
-                    if "filled" in status:
+                    status = str(updated.status).lower().rsplit('.', 1)[-1]
+                    # Terminal 'filled' only — exclude 'partially_filled'
+                    if status == 'filled':
                         filled += 1
-                        r["status"] = "filled"
-                        r["filled_price"] = float(updated.filled_avg_price or 0)
+                        r['status'] = 'filled'
+                        r['filled_price'] = float(updated.filled_avg_price or 0)
                     else:
-                        r["status"] = status
-                        if "cancel" in status or "expire" in status:
+                        r['status'] = status
+                        if status in ('canceled', 'expired', 'rejected'):
                             failed += 1
                 except Exception as e:
                     r["status"] = f"check_error: {e}"

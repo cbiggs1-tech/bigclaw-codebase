@@ -38,6 +38,7 @@ sys.path.insert(0, str(Path.home() / "bigclaw-ai" / "src"))
 sys.path.insert(0, str(Path(__file__).parent))
 from alpaca_symbols import to_alpaca, from_alpaca
 from stop_cooldown import record_stop_trigger
+from order_fill import wait_for_fill
 
 from bigclaw_logging import get_logger
 
@@ -516,11 +517,10 @@ def execute_stop_sells(triggered, dry_run=False):
                 side=OrderSide.SELL, time_in_force=TimeInForce.DAY,
             )
             order = client.submit_order(req)
-            time.sleep(1)
-            updated = client.get_order_by_id(str(order.id))
-            status = str(updated.status).lower()
-            filled_qty = int(float(updated.filled_qty or 0)) if "filled" in status else shares
-            filled_price = float(updated.filled_avg_price or price) if "filled" in status else price
+            filled_qty, filled_price = wait_for_fill(
+                client, order, shares, price,
+                ticker=ticker, pname=pname, side="STOP-SELL"
+            )
             sell_value = filled_qty * filled_price
 
             _log_trade(f"STOP-SELL | {pname} | {ticker} | {filled_qty} @ ${filled_price:,.2f} = ${sell_value:,.2f} | {reason} | order={order.id}")

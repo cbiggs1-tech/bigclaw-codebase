@@ -15,6 +15,7 @@ from datetime import datetime, timedelta
 
 sys.path.insert(0, str(__import__("pathlib").Path(__file__).parent))
 from alpaca_symbols import to_alpaca, from_alpaca
+from order_fill import wait_for_fill
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -214,39 +215,6 @@ def db_update_sell(portfolio_id, ticker, shares, price, rationale):
     conn.close()
 
 
-# ---------------------------------------------------------------------------
-# Order execution
-# ---------------------------------------------------------------------------
-
-def _wait_for_fill(client, order, expected_qty, expected_price, timeout_s=30):
-    """Poll an Alpaca order until filled, canceled, or timeout. Returns (filled_qty, filled_price).
-
-    Returns (0, 0.0) if order didn't fill within timeout — caller treats this as not-filled.
-    """
-    import time
-    start = time.time()
-    poll_interval = 2
-    while time.time() - start < timeout_s:
-        try:
-            o = client.get_order_by_id(str(order.id))
-            status = str(o.status).lower()
-            if "filled" in status and "partial" not in status:
-                fq = int(float(o.filled_qty or 0))
-                fp = float(o.filled_avg_price or expected_price)
-                return (fq, fp)
-            if status in ("canceled", "rejected", "expired", "done_for_day"):
-                return (0, 0.0)
-        except Exception:
-            pass
-        time.sleep(poll_interval)
-    # Timed out — read whatever's there
-    try:
-        o = client.get_order_by_id(str(order.id))
-        fq = int(float(o.filled_qty or 0))
-        fp = float(o.filled_avg_price or expected_price) if fq > 0 else 0.0
-        return (fq, fp)
-    except Exception:
-        return (0, 0.0)
 
 
 def place_order(client, ticker, side, shares, limit_price=None, dry_run=False, max_order=DEFAULT_MAX_ORDER, rationale="manual"):
@@ -321,7 +289,7 @@ def place_order(client, ticker, side, shares, limit_price=None, dry_run=False, m
         log_trade(action, ticker, shares, est_price, rationale, f"SUBMITTED (order {order.id}) — awaiting fill...")
 
         # Poll for fill — record actual fill price, not limit price
-        filled_qty, filled_price = _wait_for_fill(client, order, shares, est_price)
+        filled_qty, filled_price = wait_for_fill(client, order, shares, est_price, ticker=ticker, side=action)
         if filled_qty == 0:
             log_trade(action, ticker, shares, est_price, rationale, f"NOT FILLED — order {order.id} did not fill within 30s")
             return None

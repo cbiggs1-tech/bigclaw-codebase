@@ -43,6 +43,7 @@ from bigclaw_logging import get_logger
 from bigclaw_retry import retry
 from alpaca_symbols import to_alpaca, from_alpaca
 from stop_cooldown import is_blocked as is_in_cooldown
+from order_fill import wait_for_fill
 
 ET = ZoneInfo("America/New_York")
 logger = get_logger("trader")
@@ -238,36 +239,6 @@ def get_portfolio_market_value(pid):
     return cash + holdings_val
 
 
-def _wait_for_fill(client, order, ordered_qty, est_price, ticker, pname, side):
-    """Shared fill polling for BOTH buy and sell orders.
-
-    Market orders can partial-fill over multiple seconds. A single 1-second
-    poll captures a partial fill as 'filled' (substring match) and records
-    the wrong quantity. This function waits for full fill.
-
-    Returns (filled_qty, filled_price). Both may be None if no fill confirmed.
-    """
-    import time
-    time.sleep(3)
-    for _poll in range(10):
-        updated = client.get_order_by_id(str(order.id))
-        status = str(updated.status).lower()
-        alp_filled = int(float(updated.filled_qty or 0))
-        if status == "orderstatus.filled" or alp_filled >= ordered_qty:
-            return (alp_filled, float(updated.filled_avg_price or est_price or 0))
-        if "partial" in status and alp_filled > 0:
-            logger.info(f"Partial {side} fill: {ticker} {alp_filled}/{ordered_qty} — waiting...")
-        time.sleep(2)
-
-    # Final check — accept whatever Alpaca actually filled
-    updated = client.get_order_by_id(str(order.id))
-    alp_filled = int(float(updated.filled_qty or 0))
-    if alp_filled > 0:
-        log_trade(f"WARN | {pname} | {side} {ticker} | partial fill after polling: {alp_filled}/{ordered_qty}")
-        return (alp_filled, float(updated.filled_avg_price or est_price or 0))
-    log_trade(f"WARN | {pname} | {side} {ticker} | no fill confirmed, using ordered qty={ordered_qty}")
-    return (ordered_qty, est_price or 0)
-
 
 def _execute_sell_order(client, pid, pname, ticker, shares, reason, dry_run=False):
     """Execute a sell order through Alpaca and record to DB.
@@ -293,7 +264,7 @@ def _execute_sell_order(client, pid, pname, ticker, shares, reason, dry_run=Fals
         order = client.submit_order(MarketOrderRequest(
             symbol=to_alpaca(ticker), qty=shares, side=OrderSide.SELL, time_in_force=TimeInForce.DAY,
         ))
-        filled_qty, filled_price = _wait_for_fill(client, order, shares, est_price, ticker, pname, "SELL")
+        filled_qty, filled_price = wait_for_fill(client, order, shares, est_price, ticker=ticker, pname=pname, side="SELL")
         actual_value = filled_qty * filled_price
         log_trade(f"SELL | {pname} | {ticker} | {filled_qty} @ ${filled_price:,.2f} = ${actual_value:,.2f} | {reason} | order={order.id}")
 
@@ -370,7 +341,7 @@ def _execute_buy_order(client, pid, pname, ticker, alloc, reason, starting, rese
         order = client.submit_order(MarketOrderRequest(
             symbol=to_alpaca(ticker), qty=num_shares, side=OrderSide.BUY, time_in_force=TimeInForce.DAY,
         ))
-        filled_qty, filled_price = _wait_for_fill(client, order, num_shares, price, ticker, pname, "BUY")
+        filled_qty, filled_price = wait_for_fill(client, order, num_shares, price, ticker=ticker, pname=pname, side="BUY")
         actual_cost = filled_qty * filled_price
         log_trade(f"BUY | {pname} | {ticker} | {filled_qty} @ ${filled_price:,.2f} = ${actual_cost:,.2f} | {reason} | order={order.id}")
 
@@ -785,13 +756,10 @@ def check_concentration(client, dry_run=False):
                     side=OrderSide.SELL, time_in_force=TimeInForce.DAY
                 )
                 order = client.submit_order(req)
-
-                import time
-                time.sleep(1)
-                updated = client.get_order_by_id(str(order.id))
-                status = str(updated.status).lower()
-                filled_qty = int(float(updated.filled_qty or 0)) if "filled" in status else trim_shares
-                filled_price = float(updated.filled_avg_price or price) if "filled" in status else price
+                filled_qty, filled_price = wait_for_fill(
+                    client, order, trim_shares, price,
+                    ticker=ticker, pname=pname, side="REBALANCE-SELL"
+                )
                 sell_value = filled_qty * filled_price
 
                 log_trade(f"REBALANCE-SELL | {pname} | {ticker} | {filled_qty} @ ${filled_price:,.2f} = ${sell_value:,.2f} | {reason} | order={order.id}")
@@ -924,13 +892,11 @@ def execute_trades(client, data, dry_run=False, seed_mode=False):
                     side=OrderSide.SELL, time_in_force=TimeInForce.DAY,
                 )
                 order = client.submit_order(req)
-
-                import time
-                time.sleep(1)
-                updated = client.get_order_by_id(str(order.id))
-                status = str(updated.status).lower()
-                filled_qty = int(float(updated.filled_qty or 0)) if "filled" in status else int(shares_stop)
-                filled_price = float(updated.filled_avg_price or price_stop) if "filled" in status else price_stop
+                filled_qty, filled_price = wait_for_fill(
+                    client, order, int(shares_stop), price_stop,
+                    ticker=ticker_stop,
+                    pname=st.get("portfolio_name", ""), side="STOP-SELL"
+                )
                 sell_value = filled_qty * filled_price
 
                 log_trade(f"STOP-SELL | {st['portfolio_name']} | {ticker_stop} | "
