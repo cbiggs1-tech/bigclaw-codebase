@@ -594,9 +594,12 @@ def run_decision_engine():
     """Run decision_engine.py --json --rescreen and return signals."""
     logger.info("== STEP 2: Running Decision Engine ==")
 
+    # 1800s = 30 min. Decision engine grew to ~15-25 min after the May 8
+    # alphabetic-bias fix lifted the candidate cap. 600s was below the new
+    # floor and triggered timeouts.
     result = subprocess.run(
         [sys.executable, str(SCRIPTS_DIR / "decision_engine.py"), "--json", "--rescreen"],
-        capture_output=True, text=True, timeout=600,
+        capture_output=True, text=True, timeout=1800,
         cwd=str(SCRIPTS_DIR),
         env={**os.environ},
     )

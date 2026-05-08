@@ -112,7 +112,9 @@ def run_script(cmd, output_file, label):
     print(f"[export_signals] Running {label}...", file=sys.stderr)
     try:
         result = subprocess.run(
-            cmd, capture_output=True, text=True, timeout=600,
+            # 1800s = 30 min. Decision engine subprocess can run 15-25 min
+            # after the May 8 bias fix lifted the candidate cap.
+            cmd, capture_output=True, text=True, timeout=1800,
             cwd=SCRIPTS_DIR,
             env={**os.environ}
         )
