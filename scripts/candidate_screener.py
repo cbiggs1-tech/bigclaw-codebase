@@ -40,7 +40,8 @@ log = logging.getLogger("screener")
 
 DB_PATH = os.path.expanduser("~/bigclaw-ai/src/portfolios.db")
 UNIVERSES_PATH = os.path.expanduser("~/.openclaw/workspace/config/portfolio_universes.json")
-MAX_CANDIDATES_PER_PORTFOLIO = 20
+# (Removed MAX_CANDIDATES_PER_PORTFOLIO cap May 2026 — gates are the screening
+# method, not gates+alphabetic-truncation. Decision engine handles top-N.)
 FINVIZ_DELAY = 1.0  # seconds between finviz requests to avoid rate limiting
 
 # ─── Finviz Screen Definitions Per Portfolio ─────────────────────────────────
@@ -281,10 +282,9 @@ def screen_portfolio(portfolio_name, current_holdings):
 
     log.info(f"  {portfolio_name}: {len(candidates)} pass gates ({gate_blocked} blocked, {gate_ai_allowed} AI-allowed)")
 
-    # Cap at MAX_CANDIDATES_PER_PORTFOLIO
-    # (If we had scores, we'd sort by score. For now, keep all that pass the gate.)
-    if len(candidates) > MAX_CANDIDATES_PER_PORTFOLIO:
-        candidates = candidates[:MAX_CANDIDATES_PER_PORTFOLIO]
+    # No cap: gates are the screening method. The decision engine scores all
+    # candidates and selects top N for trading. Truncating here introduced an
+    # alphabetic bias (sorted() + [:N] = alphabetically first N).
 
     return candidates
 
@@ -303,12 +303,9 @@ def update_universes(portfolio_name, new_candidates, current_holdings, universes
     # Remove any that are now holdings (promoted from candidate)
     merged = [t for t in merged if t not in set(held_tickers)]
 
-    # Cap total candidates
-    if len(merged) > MAX_CANDIDATES_PER_PORTFOLIO:
-        # Prefer new candidates over stale ones
-        new_list = [t for t in merged if t in new_tickers]
-        old_list = [t for t in merged if t not in new_tickers]
-        merged = (new_list + old_list)[:MAX_CANDIDATES_PER_PORTFOLIO]
+    # No cap on merged universe: union of old + new gate-passers, deduplicated.
+    # Each Saturday's screen contributes whatever it finds; the decision engine
+    # scores everything and picks the top 10 to actually hold per portfolio.
 
     universes[portfolio_name] = {
         "holdings": held_tickers,

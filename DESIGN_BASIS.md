@@ -614,6 +614,24 @@ All five fill-recording paths use this module: `autonomous_trader._execute_sell_
 
 ---
 
+### Screening Method — Consistent Application
+
+The screening pipeline has exactly three stages and N-selection happens only at the third:
+
+1. **Finviz query** (`candidate_screener.py`) — broad sector/cap/valuation filter producing raw candidates.
+2. **IPS gates** (`style_gates.py`) — hard per-portfolio filters (Buffett value, Wood innovation, O'Neil momentum, etc.). Every ticker that passes a portfolio's gates is a legitimate candidate for that portfolio.
+3. **Decision-engine scoring + top-N selection** — every gate-passing ticker is scored on the 20-dimension scoring model. The trader holds the top 10 by score; everything else is a candidate the model can rotate into.
+
+**Hard rule**: stage 2's output is the universe. There is no cap, no truncation, no secondary filter between stages 2 and 3. Selection by score happens once, in stage 3.
+
+The May 8 2026 alphabetic-bias incident was caused by a hidden stage 2.5: a `MAX_CANDIDATES_PER_PORTFOLIO = 20` cap combined with `sorted()` iteration, which silently kept only the alphabetically-first 20 of however many gate-passers existed. Innovation Fund's 158 gate-passers were reduced to 20 starting A or B; 138 valid C-Z candidates were never seen by the scoring engine. Same bug bit Income Dividends, Value Picks, and Growth Value with varying severity.
+
+The fix removes the cap entirely. Decision-engine compute scales linearly with universe size; current measurement: ~1.4s per ticker, ~400-500 unique tickers across 7 portfolios after the fix → ~10-12 minute decision-engine runs (vs ~4 min before). The cron schedule has 60-150 minute gaps between runs — comfortably accommodates the slower runs.
+
+If gate-pass counts grow beyond what compute permits, the answer is parallelization or batching (Finviz scraping is the bottleneck), not reintroducing a screener cap. **A cap that drops gate-passers by criteria other than the gate criteria is by definition inconsistent screening.**
+
+---
+
 ## 9. Scheduled Operations & Automation
 
 All recurring work is defined in OpenClaw's `cron/jobs.json`. Disabled jobs are explicitly listed so no one accidentally re-enables them.
