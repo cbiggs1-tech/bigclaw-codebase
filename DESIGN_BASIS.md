@@ -632,6 +632,36 @@ If gate-pass counts grow beyond what compute permits, the answer is parallelizat
 
 ---
 
+### Accounting Integrity — Three Invariants
+
+The simplified accounting model: **transactions are the single source of truth**. Per-portfolio cash and holdings are recomputable views of the transaction log, not independently mutated state. The audit verifies this with three invariants that must always hold:
+
+**Invariant 1 — Per-portfolio cash double-entry**
+```
+starting_cash − Σ(buys.total_value) + Σ(sells.total_value) = current_cash
+```
+Tolerance: $0.01. Failure means the shadow ledger has drifted from its own transaction log (a write went wrong).
+
+**Invariant 2 — DB shares match Alpaca shares (per ticker)**
+```
+Σ(holdings.shares) for ticker T = Alpaca position qty for T
+```
+Tolerance: 0 shares. Failure means a buy or sell did not record the right qty (partial-fill bug, lost write, or double-write).
+
+**Invariant 3 — Aggregate cash matches Alpaca account cash**
+```
+Σ(per-portfolio current_cash) ≈ Alpaca.account.cash − unclaimed_setup_cash
+```
+Tolerance: $5 noise. The Alpaca paper account may have pre-existing setup cash that no portfolio claims. Any unexplained gap beyond setup cash means real money has gone unaccounted.
+
+`scripts/accounting_audit.py` runs all three daily at 06:15 CT (before daily_export). Failure writes `logs/ALPACA_MISMATCH.flag` and posts a CRITICAL Slack alert. Pass posts a green check daily so you can see the audit ran.
+
+**Why this matters**: in May 2026 the trailing-stop partial-fill bug silently siphoned $5,281 from Momentum Growth (recording 37 shares sold when Alpaca filled 73). The existing reconciliation only checked share counts (Invariant 2) — both DB and Alpaca read 0 shares post-sell, the share check passed, the cash discrepancy went undetected. Invariant 1 + 3 together would have caught it the next day.
+
+The May 11 2026 reset (`scripts/full_reset_monday.py`) liquidates all positions, wipes the shadow ledger, and re-establishes each portfolio at $100K starting cash. Both ledgers start equal; the audit verifies they stay equal.
+
+---
+
 ## 9. Scheduled Operations & Automation
 
 All recurring work is defined in OpenClaw's `cron/jobs.json`. Disabled jobs are explicitly listed so no one accidentally re-enables them.
