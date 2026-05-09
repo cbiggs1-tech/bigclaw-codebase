@@ -44,6 +44,7 @@ from bigclaw_retry import retry
 from alpaca_symbols import to_alpaca, from_alpaca
 from stop_cooldown import is_blocked as is_in_cooldown
 from order_fill import wait_for_fill
+from trade_recorder import record_trade
 
 ET = ZoneInfo("America/New_York")
 logger = get_logger("trader")
@@ -270,7 +271,7 @@ def _execute_sell_order(client, pid, pname, ticker, shares, reason, dry_run=Fals
 
         db_ok = _record_trade_with_retry(
             pid, pname, ticker, "sell", filled_qty, filled_price, actual_value, reason,
-            sell_all=(filled_qty >= shares)
+            sell_all=(filled_qty >= shares), order_id=str(order.id),
         )
         if not db_ok:
             log_trade(f"CIRCUIT BREAKER | {pname} | DB write failed on SELL {ticker}")
@@ -354,7 +355,8 @@ def _execute_buy_order(client, pid, pname, ticker, alloc, reason, starting, rese
 
         db_ok = _record_trade_with_retry(
             pid, pname, ticker, "buy", filled_qty, filled_price, actual_cost, reason,
-            existing_shares=existing[0] if existing and existing[0] > 0 else 0
+            existing_shares=existing[0] if existing and existing[0] > 0 else 0,
+            order_id=str(order.id),
         )
         if not db_ok:
             log_trade(f"CIRCUIT BREAKER | {pname} | DB write failed on BUY {ticker}")
@@ -374,111 +376,12 @@ def _execute_buy_order(client, pid, pname, ticker, alloc, reason, starting, rese
 
 
 def _record_trade_with_retry(pid, pname, ticker, action, shares, price, total_value, reason,
-                              existing_shares=0, sell_all=False, max_retries=10):
-    """Record a trade to DB with aggressive retry. Alpaca already executed — we MUST record this.
-
-    ABSOLUTE RULES:
-    - Every Alpaca execution gets a transaction record
-    - Holdings are updated to match
-    - Cash is recalculated from transactions (never direct-written with arbitrary values)
-    """
-    import time as _time
-
-    for attempt in range(max_retries):
-        try:
-            conn = db_conn()
-            c = conn.cursor()
-
-            # Record the transaction FIRST (this is the source of truth)
-            c.execute(
-                "INSERT INTO transactions (portfolio_id, ticker, action, shares, price, total_value, rationale) "
-                "VALUES (?,?,?,?,?,?,?)",
-                (pid, ticker, action, shares, price, total_value, reason)
-            )
-
-            # Update holdings
-            if action == "buy":
-                # Check if a row exists for this ticker (even with shares=0 from previous sell)
-                c.execute("SELECT shares, avg_cost FROM holdings WHERE portfolio_id = ? AND ticker = ?", (pid, ticker))
-                _existing = c.fetchone()
-                if _existing is not None:
-                    # Row exists — UPDATE it (handles both shares>0 and shares=0 cases)
-                    old_shares = _existing[0] or 0
-                    old_avg = _existing[1] or price
-                    if old_shares > 0:
-                        new_shares = old_shares + shares
-                        new_avg = ((old_shares * old_avg) + (shares * price)) / new_shares
-                    else:
-                        # Was zeroed from a sell — treat as fresh position
-                        new_shares = shares
-                        new_avg = price
-                    c.execute(
-                        "UPDATE holdings SET shares = ?, avg_cost = ?, last_bought_at = CURRENT_TIMESTAMP "
-                        "WHERE portfolio_id = ? AND ticker = ?",
-                        (new_shares, round(new_avg, 4), pid, ticker)
-                    )
-                else:
-                    # No row at all — INSERT new
-                    c.execute(
-                        "INSERT INTO holdings (portfolio_id, ticker, shares, avg_cost, rationale) VALUES (?,?,?,?,?)",
-                        (pid, ticker, shares, price, reason)
-                    )
-            elif action == "sell":
-                if sell_all:
-                    c.execute("DELETE FROM holdings WHERE portfolio_id = ? AND ticker = ?", (pid, ticker))
-                else:
-                    c.execute(
-                        "UPDATE holdings SET shares = shares - ? WHERE portfolio_id = ? AND ticker = ?",
-                        (shares, pid, ticker)
-                    )
-                    c.execute(
-                        "DELETE FROM holdings WHERE portfolio_id = ? AND ticker = ? AND shares <= 0.001",
-                        (pid, ticker)
-                    )
-                # If position is now fully closed, remove its trailing stop too
-                c.execute("""
-                    DELETE FROM trailing_stops
-                    WHERE portfolio_id = ? AND ticker = ?
-                      AND NOT EXISTS (
-                          SELECT 1 FROM holdings
-                          WHERE portfolio_id = ? AND ticker = ? AND shares > 0.001
-                      )
-                """, (pid, ticker, pid, ticker))
-
-            # RULE 2: Recalculate cash from ALL transactions (never incremental)
-            c.execute("""
-                SELECT COALESCE(SUM(CASE WHEN action='buy' THEN total_value ELSE 0 END), 0) as buys,
-                       COALESCE(SUM(CASE WHEN action='sell' THEN total_value ELSE 0 END), 0) as sells,
-                       COALESCE(SUM(CASE WHEN action='dividend' THEN total_value ELSE 0 END), 0) as dividends
-                FROM transactions WHERE portfolio_id = ?
-            """, (pid,))
-            row = c.fetchone()
-            c.execute("SELECT starting_cash FROM portfolios WHERE id = ?", (pid,))
-            starting = c.fetchone()[0]
-            correct_cash = starting - row[0] + row[1] + row[2]
-            c.execute("UPDATE portfolios SET current_cash = ? WHERE id = ?", (round(correct_cash, 2), pid))
-
-            conn.commit()
-            conn.close()
-            logger.info(f"DB recorded: {action.upper()} {shares} {ticker} for {pname} (attempt {attempt + 1})")
-            return True
-
-        except Exception as e:
-            err_str = str(e)
-            retryable = "database is locked" in err_str or "UNIQUE constraint" in err_str
-            if retryable and attempt < max_retries - 1:
-                wait = 3 * (attempt + 1)
-                logger.warning(f"DB error recording {action} {ticker} for {pname}: {err_str}")
-                logger.warning(f"  Retry {attempt + 1}/{max_retries} in {wait}s...")
-                _time.sleep(wait)
-                # On UNIQUE constraint retry, the holdings logic above will re-check
-                # and find the existing row on the next attempt
-            else:
-                logger.error(f"CRITICAL: Failed to record {action} {ticker} for {pname} after {attempt + 1} attempts: {e}")
-                logger.error(f"ALPACA EXECUTED BUT DB NOT RECORDED — needs manual reconciliation")
-                log_trade(f"UNRECORDED | {pname} | {action.upper()} {shares} {ticker} @ ${price:,.2f} = ${total_value:,.2f} | DB WRITE FAILED: {e}")
-                return False
-
+                              existing_shares=0, sell_all=False, max_retries=10, order_id=None):
+    """Back-compat wrapper. The canonical recorder is trade_recorder.record_trade."""
+    return record_trade(
+        pid, pname, ticker, action, shares, price, total_value, reason,
+        order_id=order_id, sell_all=sell_all, max_retries=max_retries,
+    )
 
 
 def sync_with_alpaca(client):
@@ -771,7 +674,7 @@ def check_concentration(client, dry_run=False):
                 sell_all = (max(0, int(shares) - filled_qty) == 0)
                 _record_trade_with_retry(
                     pid, pname, ticker, "sell", filled_qty, filled_price, sell_value, reason,
-                    sell_all=sell_all
+                    sell_all=sell_all, order_id=str(order.id),
                 )
 
                 executed.append({"portfolio": pname, "action": "REBALANCE-SELL", "ticker": ticker,
@@ -905,11 +808,13 @@ def execute_trades(client, data, dry_run=False, seed_mode=False):
                 log_trade(f"STOP-SELL | {st['portfolio_name']} | {ticker_stop} | "
                          f"{filled_qty} @ ${filled_price:,.2f} = ${sell_value:,.2f} | {reason_stop} | order={order.id}")
 
-                # RULE 3: Record stop-sell with retry — Alpaca already executed
+                # Compute sell_all from actual fill (was hardcoded True before May 9)
+                _stop_sell_all = (filled_qty >= int(shares_stop))
                 _record_trade_with_retry(
                     pid_stop, st["portfolio_name"], ticker_stop, "sell",
                     filled_qty, filled_price, sell_value, reason_stop,
-                    sell_all=True
+                    sell_all=_stop_sell_all,
+                    order_id=str(order.id),
                 )
 
                 executed.append({"portfolio": st["portfolio_name"], "action": "STOP-SELL",

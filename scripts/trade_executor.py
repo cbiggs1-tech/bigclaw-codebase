@@ -15,6 +15,7 @@ from datetime import datetime, timedelta
 
 sys.path.insert(0, str(__import__("pathlib").Path(__file__).parent))
 from alpaca_symbols import to_alpaca, from_alpaca
+from trade_recorder import record_trade
 from order_fill import wait_for_fill
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -171,50 +172,35 @@ def get_holding(portfolio_id, ticker):
     return row  # (shares, avg_cost) or None
 
 
-def db_update_buy(portfolio_id, ticker, shares, price, rationale):
-    conn = db_conn()
-    c = conn.cursor()
-    total = shares * price
-    existing = get_holding(portfolio_id, ticker)
-    if existing:
-        old_shares, old_avg = existing
-        new_shares = old_shares + shares
-        new_avg = ((old_shares * old_avg) + (shares * price)) / new_shares
-        c.execute("UPDATE holdings SET shares=?, avg_cost=?, last_bought_at=CURRENT_TIMESTAMP WHERE portfolio_id=? AND ticker=?",
-                  (new_shares, round(new_avg, 4), portfolio_id, ticker))
-    else:
-        c.execute("INSERT INTO holdings (portfolio_id, ticker, shares, avg_cost, rationale) VALUES (?,?,?,?,?)",
-                  (portfolio_id, ticker, shares, price, rationale))
-    c.execute("UPDATE portfolios SET current_cash = current_cash - ? WHERE id=?", (total, portfolio_id))
-    c.execute("INSERT INTO transactions (portfolio_id, ticker, action, shares, price, total_value, rationale) VALUES (?,?,?,?,?,?,?)",
-              (portfolio_id, ticker, "buy", shares, price, total, rationale))
-    conn.commit()
-    conn.close()
+def db_update_buy(portfolio_id, ticker, shares, price, rationale, order_id=None):
+    """Record a manual buy via the canonical recorder."""
+    import sqlite3 as _sq
+    _conn = _sq.connect(DB_PATH); _conn.execute("PRAGMA journal_mode=WAL")
+    _name_row = _conn.execute("SELECT name FROM portfolios WHERE id=?", (portfolio_id,)).fetchone()
+    _conn.close()
+    pname = _name_row[0] if _name_row else f"portfolio_{portfolio_id}"
+    record_trade(
+        portfolio_id, pname, ticker, "buy", shares, price,
+        round(shares * price, 2), rationale, order_id=order_id,
+    )
 
 
-def db_update_sell(portfolio_id, ticker, shares, price, rationale):
-    conn = db_conn()
-    c = conn.cursor()
-    total = shares * price
-    existing = get_holding(portfolio_id, ticker)
-    if existing:
-        old_shares, old_avg = existing
-        new_shares = max(0, old_shares - shares)
-        if new_shares <= 0.001:
-            c.execute("DELETE FROM holdings WHERE portfolio_id=? AND ticker=?",
-                      (portfolio_id, ticker))
-            c.execute("DELETE FROM trailing_stops WHERE portfolio_id=? AND ticker=?",
-                      (portfolio_id, ticker))
-        else:
-            c.execute("UPDATE holdings SET shares=? WHERE portfolio_id=? AND ticker=?",
-                      (new_shares, portfolio_id, ticker))
-    c.execute("UPDATE portfolios SET current_cash = current_cash + ? WHERE id=?", (total, portfolio_id))
-    c.execute("INSERT INTO transactions (portfolio_id, ticker, action, shares, price, total_value, rationale) VALUES (?,?,?,?,?,?,?)",
-              (portfolio_id, ticker, "sell", shares, price, total, rationale))
-    conn.commit()
-    conn.close()
-
-
+def db_update_sell(portfolio_id, ticker, shares, price, rationale, order_id=None):
+    """Record a manual sell via the canonical recorder."""
+    import sqlite3 as _sq
+    _conn = _sq.connect(DB_PATH); _conn.execute("PRAGMA journal_mode=WAL")
+    _name_row = _conn.execute("SELECT name FROM portfolios WHERE id=?", (portfolio_id,)).fetchone()
+    _existing = _conn.execute(
+        "SELECT shares FROM holdings WHERE portfolio_id=? AND ticker=?",
+        (portfolio_id, ticker),
+    ).fetchone()
+    _conn.close()
+    pname = _name_row[0] if _name_row else f"portfolio_{portfolio_id}"
+    sell_all = (_existing is not None and shares >= _existing[0])
+    record_trade(
+        portfolio_id, pname, ticker, "sell", shares, price,
+        round(shares * price, 2), rationale, order_id=order_id, sell_all=sell_all,
+    )
 
 
 def place_order(client, ticker, side, shares, limit_price=None, dry_run=False, max_order=DEFAULT_MAX_ORDER, rationale="manual"):

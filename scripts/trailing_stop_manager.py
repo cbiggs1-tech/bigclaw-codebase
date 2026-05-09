@@ -39,6 +39,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from alpaca_symbols import to_alpaca, from_alpaca
 from stop_cooldown import record_stop_trigger
 from order_fill import wait_for_fill
+from trade_recorder import record_trade
 
 from bigclaw_logging import get_logger
 
@@ -525,15 +526,22 @@ def execute_stop_sells(triggered, dry_run=False):
 
             _log_trade(f"STOP-SELL | {pname} | {ticker} | {filled_qty} @ ${filled_price:,.2f} = ${sell_value:,.2f} | {reason} | order={order.id}")
 
-            conn = db_conn()
-            c = conn.cursor()
-            c.execute("DELETE FROM holdings WHERE portfolio_id = ? AND ticker = ?", (pid, ticker))
-            c.execute("DELETE FROM trailing_stops WHERE portfolio_id = ? AND ticker = ?", (pid, ticker))
-            c.execute("UPDATE portfolios SET current_cash = current_cash + ? WHERE id = ?", (sell_value, pid))
-            c.execute("INSERT INTO transactions (portfolio_id, ticker, action, shares, price, total_value, rationale) VALUES (?,?,?,?,?,?,?)",
-                     (pid, ticker, "sell", filled_qty, filled_price, sell_value, reason))
-            conn.commit()
-            conn.close()
+            # Use canonical recorder so cash is recomputed from transactions log,
+            # not additively updated. sell_all = (filled fully covers requested).
+            _stop_sell_all = (filled_qty >= shares)
+            record_trade(
+                pid, pname, ticker, "sell", filled_qty, filled_price, sell_value, reason,
+                order_id=str(order.id), sell_all=_stop_sell_all,
+            )
+            if not _stop_sell_all:
+                conn = db_conn()
+                conn.cursor().execute(
+                    "UPDATE trailing_stops SET shares = shares - ? "
+                    "WHERE portfolio_id = ? AND ticker = ?",
+                    (filled_qty, pid, ticker),
+                )
+                conn.commit()
+                conn.close()
 
             try:
                 record_stop_trigger(pid, pname, ticker, note=reason[:200])

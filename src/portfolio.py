@@ -11,6 +11,10 @@ import os
 import sqlite3
 import logging
 from datetime import datetime
+import sys as _sys
+_sys.path.insert(0, str(Path("/home/cbiggs90/bigclaw-ai/scripts")))
+from trade_recorder import record_trade
+
 from typing import Optional
 import json
 
@@ -198,148 +202,93 @@ class Portfolio:
         return dict(row) if row else None
 
     def buy(self, ticker: str, shares: float, price: float, rationale: str = "") -> dict:
-        """Execute a buy order."""
+        """Execute a buy order via the canonical trade_recorder.
+
+        All cash/holdings writes go through record_trade so cash is recomputed
+        from the transactions log (no additive drift). Action recorded as
+        lowercase 'buy' to match the rest of the codebase.
+        """
         ticker = ticker.upper()
         total_cost = shares * price
 
         if total_cost > self.current_cash:
             return {
                 "success": False,
-                "error": f"Insufficient cash. Need ${total_cost:,.2f}, have ${self.current_cash:,.2f}"
+                "error": f"Insufficient cash. Need ${total_cost:,.2f}, have ${self.current_cash:,.2f}",
             }
 
-        conn = get_db_connection(immediate=True)
-        cursor = conn.cursor()
+        ok = record_trade(
+            self.id, self.name, ticker, "buy", shares, price, total_cost, rationale,
+        )
+        if not ok:
+            return {"success": False, "error": "DB recording failed"}
 
-        try:
-            # Update cash
-            new_cash = self.current_cash - total_cost
-            cursor.execute(
-                "UPDATE portfolios SET current_cash = ? WHERE id = ?",
-                (new_cash, self.id)
-            )
+        # Re-read current_cash (recomputed by record_trade)
+        conn = get_db_connection()
+        row = conn.execute("SELECT current_cash FROM portfolios WHERE id = ?", (self.id,)).fetchone()
+        conn.close()
+        self.current_cash = row["current_cash"]
 
-            # Check if we already hold this stock
-            cursor.execute(
-                "SELECT shares, avg_cost FROM holdings WHERE portfolio_id = ? AND ticker = ?",
-                (self.id, ticker)
-            )
-            existing = cursor.fetchone()
+        return {
+            "success": True,
+            "action": "BUY",
+            "ticker": ticker,
+            "shares": shares,
+            "price": price,
+            "total_cost": total_cost,
+            "remaining_cash": self.current_cash,
+        }
 
-            if existing and existing["shares"] > 0:
-                # Update existing position (average cost)
-                old_shares = existing["shares"]
-                old_cost = existing["avg_cost"]
-                new_shares = old_shares + shares
-                new_avg_cost = ((old_shares * old_cost) + (shares * price)) / new_shares
-
-                cursor.execute("""
-                    UPDATE holdings
-                    SET shares = ?, avg_cost = ?, last_bought_at = CURRENT_TIMESTAMP, rationale = ?
-                    WHERE portfolio_id = ? AND ticker = ?
-                """, (new_shares, new_avg_cost, rationale, self.id, ticker))
-            else:
-                # New position
-                cursor.execute("""
-                    INSERT OR REPLACE INTO holdings (portfolio_id, ticker, shares, avg_cost, rationale)
-                    VALUES (?, ?, ?, ?, ?)
-                """, (self.id, ticker, shares, price, rationale))
-
-            # Record transaction
-            cursor.execute("""
-                INSERT INTO transactions (portfolio_id, ticker, action, shares, price, total_value, rationale)
-                VALUES (?, ?, 'BUY', ?, ?, ?, ?)
-            """, (self.id, ticker, shares, price, total_cost, rationale))
-
-            conn.commit()
-            self.current_cash = new_cash
-
-            return {
-                "success": True,
-                "action": "BUY",
-                "ticker": ticker,
-                "shares": shares,
-                "price": price,
-                "total_cost": total_cost,
-                "remaining_cash": new_cash,
-                "rationale": rationale
-            }
-
-        except Exception as e:
-            conn.rollback()
-            logger.error(f"Buy error: {e}")
-            return {"success": False, "error": str(e)}
-        finally:
-            conn.close()
 
     def sell(self, ticker: str, shares: float, price: float, rationale: str = "") -> dict:
-        """Execute a sell order."""
+        """Execute a sell order via the canonical trade_recorder.
+
+        Same delegation pattern as buy(). Computes sell_all from current
+        holdings to use DELETE on full close, decrement on partial.
+        """
         ticker = ticker.upper()
+        total_value = shares * price
 
-        holding = self.get_holding(ticker)
-        if not holding:
-            return {"success": False, "error": f"No position in {ticker}"}
+        # Look up current holdings to determine sell_all
+        conn = get_db_connection()
+        row = conn.execute(
+            "SELECT shares FROM holdings WHERE portfolio_id = ? AND ticker = ?",
+            (self.id, ticker),
+        ).fetchone()
+        conn.close()
 
-        if shares > holding["shares"]:
+        if not row or row["shares"] < shares - 0.001:
+            held = row["shares"] if row else 0
             return {
                 "success": False,
-                "error": f"Insufficient shares. Have {holding['shares']}, trying to sell {shares}"
+                "error": f"Insufficient shares. Have {held}, trying to sell {shares}",
             }
 
-        total_value = shares * price
-        profit = (price - holding["avg_cost"]) * shares
+        sell_all = (shares >= row["shares"] - 0.001)
 
-        conn = get_db_connection(immediate=True)
-        cursor = conn.cursor()
+        ok = record_trade(
+            self.id, self.name, ticker, "sell", shares, price, total_value, rationale,
+            sell_all=sell_all,
+        )
+        if not ok:
+            return {"success": False, "error": "DB recording failed"}
 
-        try:
-            # Update cash
-            new_cash = self.current_cash + total_value
-            cursor.execute(
-                "UPDATE portfolios SET current_cash = ? WHERE id = ?",
-                (new_cash, self.id)
-            )
+        # Re-read current_cash (recomputed by record_trade)
+        conn = get_db_connection()
+        row = conn.execute("SELECT current_cash FROM portfolios WHERE id = ?", (self.id,)).fetchone()
+        conn.close()
+        self.current_cash = row["current_cash"]
 
-            # Update holdings
-            new_shares = holding["shares"] - shares
-            if new_shares <= 0:
-                cursor.execute(
-                    "DELETE FROM holdings WHERE portfolio_id = ? AND ticker = ?",
-                    (self.id, ticker)
-                )
-            else:
-                cursor.execute(
-                    "UPDATE holdings SET shares = ? WHERE portfolio_id = ? AND ticker = ?",
-                    (new_shares, self.id, ticker)
-                )
+        return {
+            "success": True,
+            "action": "SELL",
+            "ticker": ticker,
+            "shares": shares,
+            "price": price,
+            "total_value": total_value,
+            "remaining_cash": self.current_cash,
+        }
 
-            # Record transaction
-            cursor.execute("""
-                INSERT INTO transactions (portfolio_id, ticker, action, shares, price, total_value, rationale)
-                VALUES (?, ?, 'SELL', ?, ?, ?, ?)
-            """, (self.id, ticker, shares, price, total_value, rationale))
-
-            conn.commit()
-            self.current_cash = new_cash
-
-            return {
-                "success": True,
-                "action": "SELL",
-                "ticker": ticker,
-                "shares": shares,
-                "price": price,
-                "total_value": total_value,
-                "profit": profit,
-                "remaining_cash": new_cash,
-                "rationale": rationale
-            }
-
-        except Exception as e:
-            conn.rollback()
-            logger.error(f"Sell error: {e}")
-            return {"success": False, "error": str(e)}
-        finally:
-            conn.close()
 
     def get_transactions(self, limit: int = 20) -> list[dict]:
         """Get recent transactions."""
