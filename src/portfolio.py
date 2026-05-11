@@ -217,8 +217,18 @@ class Portfolio:
                 "error": f"Insufficient cash. Need ${total_cost:,.2f}, have ${self.current_cash:,.2f}",
             }
 
+        # Fetch analyst target at entry for target-price discipline
+        target_price = None
+        try:
+            import yfinance as _yf
+            _info = _yf.Ticker(ticker).info or {}
+            target_price = _info.get("targetMeanPrice")
+        except Exception:
+            pass
         ok = record_trade(
             self.id, self.name, ticker, "buy", shares, price, total_cost, rationale,
+            target_price=target_price,
+            target_source="yfinance_mean" if target_price else None,
         )
         if not ok:
             return {"success": False, "error": "DB recording failed"}

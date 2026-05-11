@@ -38,7 +38,8 @@ def _conn():
 
 
 def record_trade(pid, pname, ticker, action, shares, price, total_value,
-                 rationale, order_id=None, sell_all=False, max_retries=10):
+                 rationale, order_id=None, sell_all=False, max_retries=10,
+                 target_price=None, target_source=None):
     """Record one trade to the DB (transactions log + holdings + recomputed cash).
 
     Args:
@@ -101,10 +102,17 @@ def record_trade(pid, pname, ticker, action, shares, price, total_value,
                         (new_shares, round(new_avg, 4), pid, ticker),
                     )
                 else:
+                    # First buy of this position — capture target_price.
+                    # Targets set here persist for life of position (not updated on adds).
                     c.execute(
-                        "INSERT INTO holdings (portfolio_id, ticker, shares, avg_cost, rationale) "
-                        "VALUES (?,?,?,?,?)",
-                        (pid, ticker, shares, price, rationale),
+                        "INSERT INTO holdings "
+                        "(portfolio_id, ticker, shares, avg_cost, rationale, "
+                        " target_price, target_set_at, target_source) "
+                        "VALUES (?,?,?,?,?,?,"
+                        " CASE WHEN ? IS NOT NULL THEN CURRENT_TIMESTAMP ELSE NULL END,"
+                        " ?)",
+                        (pid, ticker, shares, price, rationale,
+                         target_price, target_price, target_source),
                     )
             elif action == "sell":
                 if sell_all:

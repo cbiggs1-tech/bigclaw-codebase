@@ -291,13 +291,19 @@ def _execute_buy_order(client, pid, pname, ticker, alloc, reason, starting, rese
     CRITICAL: Cash is verified and allocation is capped BEFORE calculating shares.
     This prevents the WAL read-visibility race where rapid sequential buys each
     see the full balance because prior commits aren't visible yet.
+
+    Also captures analyst mean target price at entry time so the position has
+    a thesis-completion sell target persisted from day one (target-price
+    discipline). Stored on holdings.target_price for new positions only.
     """
     import yfinance as yf
     try:
         info = retry(lambda: yf.Ticker(ticker).info, attempts=2, delay=3, label=f"yf.info({ticker})")
         price = info.get("currentPrice") or info.get("regularMarketPrice") or info.get("previousClose")
+        target_price = info.get("targetMeanPrice")  # captured at entry, never overwritten
     except Exception:
         price = None
+        target_price = None
 
     if not price or price <= 0:
         log_trade(f"SKIP | {pname} | BUY {ticker} | no price data")
@@ -357,6 +363,8 @@ def _execute_buy_order(client, pid, pname, ticker, alloc, reason, starting, rese
             pid, pname, ticker, "buy", filled_qty, filled_price, actual_cost, reason,
             existing_shares=existing[0] if existing and existing[0] > 0 else 0,
             order_id=str(order.id),
+            target_price=target_price,
+            target_source="yfinance_mean" if target_price else None,
         )
         if not db_ok:
             log_trade(f"CIRCUIT BREAKER | {pname} | DB write failed on BUY {ticker}")
@@ -376,11 +384,13 @@ def _execute_buy_order(client, pid, pname, ticker, alloc, reason, starting, rese
 
 
 def _record_trade_with_retry(pid, pname, ticker, action, shares, price, total_value, reason,
-                              existing_shares=0, sell_all=False, max_retries=10, order_id=None):
+                              existing_shares=0, sell_all=False, max_retries=10, order_id=None,
+                              target_price=None, target_source=None):
     """Back-compat wrapper. The canonical recorder is trade_recorder.record_trade."""
     return record_trade(
         pid, pname, ticker, action, shares, price, total_value, reason,
         order_id=order_id, sell_all=sell_all, max_retries=max_retries,
+        target_price=target_price, target_source=target_source,
     )
 
 

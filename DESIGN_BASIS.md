@@ -662,6 +662,28 @@ The May 11 2026 reset (`scripts/full_reset_monday.py`) liquidates all positions,
 
 ---
 
+### Target-Price Capture at Entry
+
+Every new position records `target_price` on the holdings row at entry time.
+Source: yfinance `info["targetMeanPrice"]` — analyst consensus 12-month target.
+Also recorded: `target_set_at` (timestamp) and `target_source` ("yfinance_mean").
+
+Semantics:
+- **Captured on first buy** of a position (when no holdings row exists yet)
+- **Preserved on subsequent adds** — adding to the position does not overwrite the original target
+- **Cleared when position fully closes** (holdings row deleted)
+
+The target is captured now (schema migration 2026-05-11) so future Phase 2 work
+can activate a target-price hold discipline without retrofitting historical data.
+Phase 2 will define rules like "hold until current_price >= target_price * 0.90,
+sell only on thesis break before then, or trim if position > 15% of portfolio."
+
+Phase 2 is not yet active — daily-rotation discipline remains the rule. But every
+position bought from 2026-05-11 forward has the target persisted, so when Phase 2
+flips on we have the data we need.
+
+---
+
 ## 9. Scheduled Operations & Automation
 
 All recurring work is defined in OpenClaw's `cron/jobs.json`. Disabled jobs are explicitly listed so no one accidentally re-enables them.

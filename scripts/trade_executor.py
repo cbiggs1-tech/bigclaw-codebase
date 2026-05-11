@@ -173,15 +173,24 @@ def get_holding(portfolio_id, ticker):
 
 
 def db_update_buy(portfolio_id, ticker, shares, price, rationale, order_id=None):
-    """Record a manual buy via the canonical recorder."""
+    """Record a manual buy via the canonical recorder. Captures analyst target at entry."""
     import sqlite3 as _sq
     _conn = _sq.connect(DB_PATH); _conn.execute("PRAGMA journal_mode=WAL")
     _name_row = _conn.execute("SELECT name FROM portfolios WHERE id=?", (portfolio_id,)).fetchone()
     _conn.close()
     pname = _name_row[0] if _name_row else f"portfolio_{portfolio_id}"
+    target_price = None
+    try:
+        import yfinance as _yf
+        _info = _yf.Ticker(ticker).info or {}
+        target_price = _info.get("targetMeanPrice")
+    except Exception:
+        pass
     record_trade(
         portfolio_id, pname, ticker, "buy", shares, price,
         round(shares * price, 2), rationale, order_id=order_id,
+        target_price=target_price,
+        target_source="yfinance_mean" if target_price else None,
     )
 
 
