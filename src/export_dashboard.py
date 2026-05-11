@@ -146,11 +146,18 @@ def export_portfolios() -> dict:
                 except:
                     purchased_at = purchased_at[:10] if len(purchased_at) >= 10 else purchased_at
 
+            tgt = h.get('target_price')
+            upside_pct = None
+            if tgt and current_price:
+                upside_pct = round((tgt - current_price) / current_price * 100, 1)
             holdings.append({
                 'ticker': ticker,
                 'shares': round(h['shares'], 2),
                 'avgCost': round(h['avg_cost'], 2),
                 'currentPrice': round(current_price, 2),
+                'targetPrice': round(tgt, 2) if tgt else None,
+                'targetUpsidePct': upside_pct,
+                'targetSource': h.get('target_source'),
                 'purchasedAt': purchased_at
             })
 

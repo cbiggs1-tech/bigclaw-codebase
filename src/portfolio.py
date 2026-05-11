@@ -179,7 +179,8 @@ class Portfolio:
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute("""
-            SELECT ticker, shares, avg_cost, first_bought_at, last_bought_at, rationale
+            SELECT ticker, shares, avg_cost, first_bought_at, last_bought_at, rationale,
+                   target_price, target_set_at, target_source
             FROM holdings
             WHERE portfolio_id = ? AND shares > 0
             ORDER BY ticker

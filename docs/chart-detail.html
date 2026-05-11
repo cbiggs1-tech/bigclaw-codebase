@@ -281,6 +281,8 @@
                     <th>Shares</th>
                     <th>Avg Cost</th>
                     <th>Current</th>
+                    <th>Target</th>
+                    <th>Upside</th>
                     <th>Change</th>
                     <th>Value</th>
                 </tr>
@@ -492,6 +494,8 @@
                     <td>${h.shares.toFixed(2)}</td>
                     <td>$${h.avgCost.toFixed(2)}</td>
                     <td>$${h.currentPrice.toFixed(2)}</td>
+                    <td>${h.targetPrice ? "$" + h.targetPrice.toFixed(2) : "—"}</td>
+                    <td class="change ${h.targetUpsidePct !== null && h.targetUpsidePct !== undefined && h.targetUpsidePct >= 0 ? 'positive' : 'negative'}">${h.targetUpsidePct !== null && h.targetUpsidePct !== undefined ? (h.targetUpsidePct >= 0 ? '+' : '') + h.targetUpsidePct.toFixed(1) + '%' : '—'}</td>
                     <td class="change ${change >= 0 ? 'positive' : 'negative'}">
                         ${change >= 0 ? '+' : ''}${change.toFixed(2)}%
                     </td>
