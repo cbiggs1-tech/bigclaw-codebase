@@ -12,7 +12,7 @@ import sqlite3
 import logging
 from datetime import datetime
 import sys as _sys
-_sys.path.insert(0, str(Path("/home/cbiggs90/bigclaw-ai/scripts")))
+_sys.path.insert(0, "/home/cbiggs90/bigclaw-ai/scripts")
 from trade_recorder import record_trade
 
 from typing import Optional
