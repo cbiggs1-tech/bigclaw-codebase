@@ -258,7 +258,12 @@ fetch('data/portfolios.json')
 
         const totalInvested = holdings.reduce((s, h) => s + h.cost, 0);
         const totalValue = holdings.reduce((s, h) => s + h.value, 0);
-        const cashRemaining = (p.startingCash || 0) - totalInvested;
+        // CASH: read directly from JSON (the DB's authoritative current_cash).
+        // Falls back to the legacy cost-basis derivation only if 'cash' is missing
+        // (older JSON files before this fix). New behavior: trust the DB.
+        const cashRemaining = (typeof p.cash === 'number')
+            ? p.cash
+            : (p.startingCash || 0) - totalInvested;
 
         // Sort by weight desc
         holdings.sort((a, b) => b.value - a.value);

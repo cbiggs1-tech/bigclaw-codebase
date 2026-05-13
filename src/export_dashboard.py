@@ -172,6 +172,8 @@ def export_portfolios() -> dict:
             'totalValue': round(total_value, 2),
             'prevTotalValue': round(prev_total_value, 2),
             'startingCash': round(p['starting_cash'], 2),
+            'cash': round(p['current_cash'], 2),
+            'holdingsValue': round(holdings_value, 2),
             'totalReturn': round(total_return, 2),
             'dailyReturn': round(daily_return, 2),
             'createdAt': p['created_at'],
