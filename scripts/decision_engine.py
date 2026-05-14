@@ -57,6 +57,8 @@ STYLE_WEIGHTS = {
         "EarningsGrowth": 2.0, "RevenueGrowth": 1.0, "PE": 2.0, "DebtEquity": 1.5, "ShortInterest": 0.0,
         "Insider": 0.5, "BondMkt": 1.0, "DividendYield": 1.0, "ValueOverride": 1.0,
         "PEG": 0.5, "ROE": 2.0, "FCF": 2.0, "GrossMargin": 1.5, "PayoutSafety": 1.0
+    ,
+        "Extension90d": 1.5, "ExtensionMA": 1.5, "Breakout": 0.5, "VolContract": 0.5, "MAReclaim": 0.5
     },
     # Cathie Wood — Disruptive Innovation: Revenue growth and TAM matter.
     "Innovation Fund": {
@@ -64,6 +66,8 @@ STYLE_WEIGHTS = {
         "EarningsGrowth": 0.0, "RevenueGrowth": 2.0, "PE": 0.0, "DebtEquity": 0.5, "ShortInterest": 1.0,
         "Insider": 0.5, "BondMkt": 0.0, "DividendYield": 0.0, "ValueOverride": 2.0,
         "PEG": 0.0, "ROE": 0.0, "FCF": 1.0, "GrossMargin": 0.5, "PayoutSafety": 0.0
+    ,
+        "Extension90d": 1.5, "ExtensionMA": 1.5, "Breakout": 1.5, "VolContract": 1.5, "MAReclaim": 1.5
     },
     # Peter Lynch — GARP: PEG is the single most important metric.
     "Growth Value": {
@@ -71,6 +75,8 @@ STYLE_WEIGHTS = {
         "EarningsGrowth": 2.0, "RevenueGrowth": 1.0, "PE": 1.5, "DebtEquity": 1.5, "ShortInterest": 0.0,
         "Insider": 1.0, "BondMkt": 0.0, "DividendYield": 0.5, "ValueOverride": 0.0,
         "PEG": 2.0, "ROE": 1.0, "FCF": 1.0, "GrossMargin": 1.0, "PayoutSafety": 0.5
+    ,
+        "Extension90d": 1.5, "ExtensionMA": 1.5, "Breakout": 1.0, "VolContract": 1.0, "MAReclaim": 1.0
     },
     # Dividend Aristocrats — Income: Yield, payout safety, bond sensitivity.
     "Income Dividends": {
@@ -78,6 +84,8 @@ STYLE_WEIGHTS = {
         "EarningsGrowth": 2.0, "RevenueGrowth": 1.0, "PE": 1.0, "DebtEquity": 1.5, "ShortInterest": 0.0,
         "Insider": 0.5, "BondMkt": 0.5, "DividendYield": 2.0, "ValueOverride": 0.5,
         "PEG": 0.0, "ROE": 1.0, "FCF": 2.0, "GrossMargin": 1.0, "PayoutSafety": 2.0
+    ,
+        "Extension90d": 1.5, "ExtensionMA": 1.5, "Breakout": 0.5, "VolContract": 0.5, "MAReclaim": 0.5
     },
     # William O'Neil — CANSLIM: Technical momentum + earnings acceleration.
     "Momentum Growth": {
@@ -85,6 +93,8 @@ STYLE_WEIGHTS = {
         "EarningsGrowth": 2.0, "RevenueGrowth": 1.5, "PE": 0.0, "DebtEquity": 0.5, "ShortInterest": 0.5,
         "Insider": 0.5, "BondMkt": 0.0, "DividendYield": 0.0, "ValueOverride": 0.5,
         "PEG": 0.0, "ROE": 1.5, "FCF": 0.5, "GrossMargin": 0.5, "PayoutSafety": 0.0
+    ,
+        "Extension90d": 0.5, "ExtensionMA": 0.5, "Breakout": 2.0, "VolContract": 2.0, "MAReclaim": 2.0
     },
     # Nuclear Renaissance — Domain expertise + fundamentals + catalyst-driven.
     "Nuclear Renaissance": {
@@ -92,6 +102,8 @@ STYLE_WEIGHTS = {
         "EarningsGrowth": 1.5, "RevenueGrowth": 1.5, "PE": 0.5, "DebtEquity": 1.0, "ShortInterest": 1.0,
         "Insider": 1.0, "BondMkt": 0.5, "DividendYield": 0.5, "ValueOverride": 2.0,
         "PEG": 0.0, "ROE": 0.5, "FCF": 2.0, "GrossMargin": 0.5, "PayoutSafety": 0.5
+    ,
+        "Extension90d": 1.0, "ExtensionMA": 1.0, "Breakout": 1.0, "VolContract": 1.0, "MAReclaim": 1.0
     },
     # AI Defense & Autonomous — Thematic / catalyst-driven (Pentagon spending).
     "AI Defense & Autonomous": {
@@ -99,6 +111,8 @@ STYLE_WEIGHTS = {
         "EarningsGrowth": 1.5, "RevenueGrowth": 2.0, "PE": 1.5, "DebtEquity": 1.0, "ShortInterest": 1.0,
         "Insider": 1.0, "BondMkt": 0.0, "DividendYield": 0.0, "ValueOverride": 2.0,
         "PEG": 0.5, "ROE": 1.0, "FCF": 2.0, "GrossMargin": 1.0, "PayoutSafety": 0.5
+    ,
+        "Extension90d": 1.0, "ExtensionMA": 1.0, "Breakout": 1.0, "VolContract": 1.0, "MAReclaim": 1.0
     },
 }
 
@@ -108,6 +122,9 @@ DEFAULT_STYLE_WEIGHTS = {k: 1.0 for k in [
     "EarningsGrowth", "RevenueGrowth", "PE", "DebtEquity",
     "ShortInterest", "Insider", "BondMkt", "ValueOverride", "DividendYield",
     "PEG", "ROE", "FCF", "GrossMargin", "PayoutSafety", "EarningsProximity",
+    # Entry-timing signals (added 2026-05-14)
+    "Extension90d", "ExtensionMA",  # penalties for late-cycle entries
+    "Breakout", "VolContract", "MAReclaim",  # rewards for early-cycle entries
 ]}
 
 # Portfolio concentration limits
@@ -331,6 +348,96 @@ def analyze_technicals(close):
             signals.append(("Cross", 1, "golden cross (50>200)"))
         else:
             signals.append(("Cross", -0.5, "death cross (50<200)"))
+
+    return signals
+
+
+def analyze_extension(close):
+    """Penalize stocks already extended (top-of-rally). Zero or negative."""
+    signals = []
+    if len(close) < 200:
+        return signals
+    current = float(close.iloc[-1])
+
+    # Extension 1: recent run-up (90-day price change)
+    if len(close) >= 90:
+        price_90d_ago = float(close.iloc[-90])
+        if price_90d_ago > 0:
+            change_pct = (current - price_90d_ago) / price_90d_ago * 100
+            if change_pct > 50:
+                signals.append(("Extension90d", -2, f"up {change_pct:.0f}% in 90d (very extended)"))
+            elif change_pct > 30:
+                signals.append(("Extension90d", -1, f"up {change_pct:.0f}% in 90d (extended)"))
+            elif change_pct > 15:
+                signals.append(("Extension90d", -0.5, f"up {change_pct:.0f}% in 90d"))
+            else:
+                signals.append(("Extension90d", 0, f"90d change {change_pct:+.0f}%"))
+
+    # Extension 2: distance above 200-day moving average
+    from ta.trend import SMAIndicator
+    sma200 = float(SMAIndicator(close, window=200).sma_indicator().iloc[-1])
+    if sma200 > 0:
+        pct_above = (current - sma200) / sma200 * 100
+        if pct_above > 30:
+            signals.append(("ExtensionMA", -2, f"{pct_above:.0f}% above 200d MA (overextended)"))
+        elif pct_above > 15:
+            signals.append(("ExtensionMA", -1, f"{pct_above:.0f}% above 200d MA (extended)"))
+        else:
+            signals.append(("ExtensionMA", 0, f"{pct_above:+.0f}% to 200d MA"))
+
+    return signals
+
+
+def analyze_breakout(close):
+    """Reward early-stage breakout patterns. Three signals:
+      Breakout    fresh punch above 60-day high
+      VolContract 30-day volatility contracted vs 1-year (coiled spring)
+      MAReclaim   fresh reclaim of 50-day MA after being below
+    """
+    signals = []
+    if len(close) < 65:
+        return signals
+    current = float(close.iloc[-1])
+
+    # Signal 1: Donchian breakout — price above 60-day high recently
+    high_60d = float(close.iloc[-65:-1].max())
+    if current > high_60d * 1.02:
+        # Freshness: was price below this level 5+ days ago?
+        close_5d_ago = float(close.iloc[-6]) if len(close) >= 6 else current
+        if close_5d_ago < high_60d:
+            signals.append(("Breakout", 2, f"fresh breakout above 60d high ${high_60d:.0f}"))
+        else:
+            signals.append(("Breakout", 1, f"above 60d high (established)"))
+    else:
+        signals.append(("Breakout", 0, f"below 60d high ${high_60d:.0f}"))
+
+    # Signal 2: Volatility contraction (Minervini VCP setup)
+    if len(close) >= 252:
+        returns = close.pct_change().dropna()
+        if len(returns) >= 252:
+            vol_30d = float(returns.iloc[-30:].std())
+            vol_1y = float(returns.iloc[-252:].std())
+            if vol_1y > 0:
+                ratio = vol_30d / vol_1y
+                if ratio < 0.6:
+                    signals.append(("VolContract", 2, f"30d vol {ratio:.0%} of 1y (coiled)"))
+                elif ratio < 0.8:
+                    signals.append(("VolContract", 1, f"30d vol {ratio:.0%} of 1y"))
+                else:
+                    signals.append(("VolContract", 0, f"30d vol {ratio:.0%} of 1y"))
+
+    # Signal 3: Fresh 50-day MA reclaim
+    if len(close) >= 50:
+        from ta.trend import SMAIndicator
+        sma50_series = SMAIndicator(close, window=50).sma_indicator()
+        sma50 = float(sma50_series.iloc[-1])
+        if current > sma50 and len(close) >= 30:
+            # Was below 50d MA at any point in last 30 days?
+            recent_below = (close.iloc[-30:] < sma50_series.iloc[-30:]).any()
+            if recent_below:
+                signals.append(("MAReclaim", 2, "fresh 50-day MA reclaim"))
+            else:
+                signals.append(("MAReclaim", 0, "above 50d MA (not fresh)"))
 
     return signals
 
@@ -752,6 +859,8 @@ def score_ticker(ticker, market_data, prices, bond_combined, bond_weight, style_
     all_signals = []
     tech_signals = analyze_technicals(close)  # Compute once, reuse
     all_signals.extend(tech_signals)
+    all_signals.extend(analyze_extension(close))
+    all_signals.extend(analyze_breakout(close))
     all_signals.extend(analyze_fundamentals(info, finviz))
     all_signals.extend(analyze_quality_fundamentals(info))
     all_signals.extend(analyze_insider(finviz))

@@ -684,6 +684,35 @@ flips on we have the data we need.
 
 ---
 
+### Entry-Timing Signals (May 14 2026)
+
+Five signal categories that shift the scoring engine from late-cycle momentum
+confirmation toward earlier-stage entry detection. Goal: stop the engine from
+buying stocks at all-time highs where the score is high precisely because the
+move is already over.
+
+**Extension penalties** (penalize buying at top-of-rally):
+- `Extension90d`: penalty when stock is up >15% in last 90 days (graduated: -0.5 to -2)
+- `ExtensionMA`: penalty when stock is >15% above 200-day MA (graduated: -1 to -2)
+
+**Breakout rewards** (reward buying at start-of-rally):
+- `Breakout`: reward when price freshly punches above 60-day high (+1 to +2)
+- `VolContract`: reward when 30-day volatility is in bottom quartile vs 1-year (+1 to +2)
+- `MAReclaim`: reward when stock freshly reclaims 50-day MA after being below (+2)
+
+**Style-tuned weights** (in `STYLE_WEIGHTS`):
+- Innovation Fund / Value Picks / Growth Value / Income Dividends: extension 1.5×, breakout 1.5×
+- Momentum Growth: extension 0.5× (riding momentum is the strategy), breakout 2.0× (catch early)
+- Nuclear / AI Defense: 1.0× across all
+
+**Validation status**: backtested against 5 pre-reset winners and 6 recent losers. Breakout signals
+correctly boosted DDOG/ARGX/AMBA at their entry points. Extension penalty correctly flagged
+ANAB at +57% as extended (though ANAB continued running — false positive on this case).
+The recent losers (HUBS/PODD/RBLX) were already falling at entry — different bug class
+(falling-knife detection) not addressed by these signals. That work belongs to a future phase.
+
+---
+
 ## 9. Scheduled Operations & Automation
 
 All recurring work is defined in OpenClaw's `cron/jobs.json`. Disabled jobs are explicitly listed so no one accidentally re-enables them.
