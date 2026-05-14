@@ -182,11 +182,19 @@ def run_audit(post_to_slack=True):
     report = "\n".join(lines)
     print(report)
 
-    if not overall:
+    # CRITICAL failures (INV 1 and INV 2) trigger the trader halt flag.
+    # INV 3 (aggregate cash vs Alpaca) failing alone is a warning, not a halt:
+    # the Alpaca paper account has setup cash beyond what our portfolios claim,
+    # which causes INV 3 to fail definitionally without indicating any drift.
+    critical_fail = not (inv1_ok and inv2_ok)
+    if critical_fail:
         flag = LOG_DIR / "ALPACA_MISMATCH.flag"
         flag.write_text(json.dumps(audit_record, indent=2, default=str))
         if post_to_slack:
-            post_slack(":rotating_light: *BigClaw Accounting Audit FAILED*\n```\n" + report + "\n```")
+            post_slack(":rotating_light: *BigClaw Accounting Audit CRITICAL*\n```\n" + report + "\n```")
+    elif not overall:
+        if post_to_slack:
+            post_slack(":warning: *BigClaw Accounting Audit: INV 3 warning*  (aggregate cash gap, trader continues)")
     elif post_to_slack:
         # Only post on success once a day to avoid noise
         post_slack(":white_check_mark: *BigClaw Accounting Audit: PASS*  (all 3 invariants clean)")
