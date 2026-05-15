@@ -61,6 +61,69 @@ MIN_CASH_RESERVE_PCT = 0.02   # Keep 2% cash reserve per portfolio ($2K on $100K
 MONEY_MARKET_TICKER = "SGOV"  # Excluded from scoring/counting (legacy — no longer traded)
 # SGOV sweep removed: idle cash stays as cash. Eliminates DB write failures from SGOV operations.
 MAX_SINGLE_ORDER = 25000.0
+# ---------------------------------------------------------------------------
+# Target-price hold discipline (Phase 2 of target_price work, May 15 2026)
+#
+# When TRUE for a portfolio: the rotation engine HOLDS positions through
+# daily score variations. Sells fire only on these triggers:
+#   1. Target proximity: current_price >= target_price * 0.90 (90% of target)
+#   2. Thesis break:     forward EPS estimate fell >25% over 90 days
+#   3. Concentration:    position market value > 15% of portfolio total value
+#
+# When FALSE: current behavior — sell anything held but not in today's top 10.
+#
+# Default: all portfolios FALSE until validated. Innovation Fund flipped ON
+# as the first test case. Flip others to True only after observing one
+# trader cycle with no unexpected behavior.
+# ---------------------------------------------------------------------------
+TARGET_PRICE_DISCIPLINE = {
+    "Value Picks": False,
+    "Innovation Fund": True,   # First portfolio under target-price discipline
+    "Growth Value": False,
+    "Income Dividends": False,
+    "Momentum Growth": False,
+    "Nuclear Renaissance": False,
+    "AI Defense & Autonomous": False,
+}
+TARGET_PROXIMITY_PCT = 0.90    # sell when within 10% of target
+TARGET_EPS_BREAK_PCT = -25.0   # sell if forward EPS fell more than this %
+TARGET_CONCENTRATION_LIMIT = 0.15  # trim if position > 15% of portfolio
+
+
+def evaluate_target_discipline_sell(pname, ticker, current_price, target_price,
+                                      shares, portfolio_total_value, fwd_eps_revision_pct=None):
+    """Check whether a held position should be sold under target-price discipline.
+
+    Returns (should_sell, reason) tuple.
+
+    All thresholds defined at module level — change them globally there if
+    discipline needs retuning. Per-portfolio enabling is via
+    TARGET_PRICE_DISCIPLINE[pname].
+    """
+    if not TARGET_PRICE_DISCIPLINE.get(pname, False):
+        return False, None
+
+    # Trigger 1: target reached
+    if target_price and current_price >= target_price * TARGET_PROXIMITY_PCT:
+        return True, (f"target reached: ${current_price:.2f} >= ${target_price:.2f} "
+                      f"* {TARGET_PROXIMITY_PCT}")
+
+    # Trigger 2: thesis break (forward EPS plummeted)
+    if fwd_eps_revision_pct is not None and fwd_eps_revision_pct <= TARGET_EPS_BREAK_PCT:
+        return True, (f"thesis break: forward EPS fell {fwd_eps_revision_pct:.0f}% "
+                      f"(threshold {TARGET_EPS_BREAK_PCT}%)")
+
+    # Trigger 3: concentration (position > 15% of portfolio value)
+    position_value = shares * current_price
+    if portfolio_total_value > 0:
+        pct = position_value / portfolio_total_value
+        if pct > TARGET_CONCENTRATION_LIMIT:
+            return True, (f"concentration: position is {pct:.0%} of portfolio "
+                          f"(threshold {TARGET_CONCENTRATION_LIMIT:.0%})")
+
+    return False, None
+
+
 MAX_HOLDINGS = 10            # Max positions per portfolio
 MIN_HOLDINGS = 7             # Min positions per portfolio (triggers swap/add)
 MAX_POSITION_PCT = 0.20      # Max 20% of portfolio value in any one stock (monthly rebalance only)
@@ -915,10 +978,58 @@ def execute_trades(client, data, dry_run=False, seed_mode=False):
         logger.info(f"{pname}: {len(held_map)} held, {len(all_scored)} scored, target={[s['ticker']+'('+str(s['score'])+')' for s in target[:5]]}...")
 
         # 4. Determine sells: held but NOT in target
+        # If TARGET_PRICE_DISCIPLINE is ON for this portfolio, replace the
+        # default "not in top 10" rule with the discipline triggers.
         to_sell = []
-        for s in ranked:
-            if s["held"] and s["ticker"] not in target_tickers:
-                to_sell.append(s)
+        if TARGET_PRICE_DISCIPLINE.get(pname, False):
+            # Target-price discipline mode: hold through score variations.
+            # Look up target_price + portfolio_value once; eval each holding.
+            conn = db_conn()
+            c = conn.cursor()
+            c.execute(
+                "SELECT ticker, shares, target_price FROM holdings "
+                "WHERE portfolio_id = ? AND shares > 0",
+                (pid,),
+            )
+            held_with_targets = {row[0]: (int(row[1]), row[2]) for row in c.fetchall()}
+            conn.close()
+
+            # Compute portfolio total value (cash + holdings × current price)
+            portfolio_total_value = 0
+            cash_now = get_verified_cash(pid)
+            portfolio_total_value += cash_now
+            for ticker_h, (shr_h, _) in held_with_targets.items():
+                sig_h = signal_map.get(ticker_h, {})
+                price_h = sig_h.get("price", 0)
+                portfolio_total_value += shr_h * (price_h if price_h > 0 else 0)
+
+            for s in ranked:
+                if not s["held"]:
+                    continue
+                shares_h, target_price_h = held_with_targets.get(s["ticker"], (0, None))
+                sig_h = signal_map.get(s["ticker"], {})
+                current_price = sig_h.get("price", 0) if sig_h else 0
+                if current_price <= 0:
+                    continue  # cant evaluate without price
+                should_sell, reason = evaluate_target_discipline_sell(
+                    pname, s["ticker"], current_price, target_price_h,
+                    shares_h, portfolio_total_value,
+                    fwd_eps_revision_pct=None,  # TODO: wire forward EPS check
+                )
+                if should_sell:
+                    to_sell.append({**s, "discipline_reason": reason})
+                    logger.info(
+                        f"{pname}: DISCIPLINE-SELL {s['ticker']} — {reason}"
+                    )
+            logger.info(
+                f"{pname}: target-price discipline ON — "
+                f"{len(to_sell)} sells from {len(held_with_targets)} holdings"
+            )
+        else:
+            # Default behavior: sell anything held but not in today's top 10
+            for s in ranked:
+                if s["held"] and s["ticker"] not in target_tickers:
+                    to_sell.append(s)
         to_sell.sort(key=lambda x: x["score"])  # Sell weakest first
 
         # 5. Determine buys: in target but NOT held (or held but underweight)
