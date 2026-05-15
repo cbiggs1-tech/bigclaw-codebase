@@ -59,6 +59,8 @@ STYLE_WEIGHTS = {
         "PEG": 0.5, "ROE": 2.0, "FCF": 2.0, "GrossMargin": 1.5, "PayoutSafety": 1.0
     ,
         "Extension90d": 1.5, "ExtensionMA": 1.5, "Breakout": 0.5, "VolContract": 0.5, "MAReclaim": 0.5
+    ,
+        "ForwardEPSTrend": 2.0, "Near52wLow": 1.5, "WeakRelStrength": 1.5
     },
     # Cathie Wood — Disruptive Innovation: Revenue growth and TAM matter.
     "Innovation Fund": {
@@ -68,6 +70,8 @@ STYLE_WEIGHTS = {
         "PEG": 0.0, "ROE": 0.0, "FCF": 1.0, "GrossMargin": 0.5, "PayoutSafety": 0.0
     ,
         "Extension90d": 1.5, "ExtensionMA": 1.5, "Breakout": 1.5, "VolContract": 1.5, "MAReclaim": 1.5
+    ,
+        "ForwardEPSTrend": 2.0, "Near52wLow": 1.5, "WeakRelStrength": 1.5
     },
     # Peter Lynch — GARP: PEG is the single most important metric.
     "Growth Value": {
@@ -77,6 +81,8 @@ STYLE_WEIGHTS = {
         "PEG": 2.0, "ROE": 1.0, "FCF": 1.0, "GrossMargin": 1.0, "PayoutSafety": 0.5
     ,
         "Extension90d": 1.5, "ExtensionMA": 1.5, "Breakout": 1.0, "VolContract": 1.0, "MAReclaim": 1.0
+    ,
+        "ForwardEPSTrend": 2.0, "Near52wLow": 1.5, "WeakRelStrength": 1.5
     },
     # Dividend Aristocrats — Income: Yield, payout safety, bond sensitivity.
     "Income Dividends": {
@@ -86,6 +92,8 @@ STYLE_WEIGHTS = {
         "PEG": 0.0, "ROE": 1.0, "FCF": 2.0, "GrossMargin": 1.0, "PayoutSafety": 2.0
     ,
         "Extension90d": 1.5, "ExtensionMA": 1.5, "Breakout": 0.5, "VolContract": 0.5, "MAReclaim": 0.5
+    ,
+        "ForwardEPSTrend": 2.0, "Near52wLow": 1.5, "WeakRelStrength": 1.0
     },
     # William O'Neil — CANSLIM: Technical momentum + earnings acceleration.
     "Momentum Growth": {
@@ -95,6 +103,8 @@ STYLE_WEIGHTS = {
         "PEG": 0.0, "ROE": 1.5, "FCF": 0.5, "GrossMargin": 0.5, "PayoutSafety": 0.0
     ,
         "Extension90d": 0.5, "ExtensionMA": 0.5, "Breakout": 2.0, "VolContract": 2.0, "MAReclaim": 2.0
+    ,
+        "ForwardEPSTrend": 1.5, "Near52wLow": 0.5, "WeakRelStrength": 0.5
     },
     # Nuclear Renaissance — Domain expertise + fundamentals + catalyst-driven.
     "Nuclear Renaissance": {
@@ -104,6 +114,8 @@ STYLE_WEIGHTS = {
         "PEG": 0.0, "ROE": 0.5, "FCF": 2.0, "GrossMargin": 0.5, "PayoutSafety": 0.5
     ,
         "Extension90d": 1.0, "ExtensionMA": 1.0, "Breakout": 1.0, "VolContract": 1.0, "MAReclaim": 1.0
+    ,
+        "ForwardEPSTrend": 1.5, "Near52wLow": 1.0, "WeakRelStrength": 1.0
     },
     # AI Defense & Autonomous — Thematic / catalyst-driven (Pentagon spending).
     "AI Defense & Autonomous": {
@@ -113,6 +125,8 @@ STYLE_WEIGHTS = {
         "PEG": 0.5, "ROE": 1.0, "FCF": 2.0, "GrossMargin": 1.0, "PayoutSafety": 0.5
     ,
         "Extension90d": 1.0, "ExtensionMA": 1.0, "Breakout": 1.0, "VolContract": 1.0, "MAReclaim": 1.0
+    ,
+        "ForwardEPSTrend": 1.5, "Near52wLow": 1.0, "WeakRelStrength": 1.0
     },
 }
 
@@ -125,6 +139,8 @@ DEFAULT_STYLE_WEIGHTS = {k: 1.0 for k in [
     # Entry-timing signals (added 2026-05-14)
     "Extension90d", "ExtensionMA",  # penalties for late-cycle entries
     "Breakout", "VolContract", "MAReclaim",  # rewards for early-cycle entries
+    # Falling-knife signals (added 2026-05-15)
+    "ForwardEPSTrend", "Near52wLow", "WeakRelStrength",
 ]}
 
 # Portfolio concentration limits
@@ -438,6 +454,92 @@ def analyze_breakout(close):
                 signals.append(("MAReclaim", 2, "fresh 50-day MA reclaim"))
             else:
                 signals.append(("MAReclaim", 0, "above 50d MA (not fresh)"))
+
+    return signals
+
+
+def analyze_falling_knife(close, info, ticker=None):
+    """Detect deteriorating fundamentals + bearish technicals (falling knives).
+
+    Three signals work together to flag stocks where fundamentals AND price
+    are both heading down — the worst combination for entry. Catches the
+    failure mode the May entry-timing signals dont address.
+
+    Args:
+        close: pandas Series of closing prices
+        info: yfinance Ticker.info dict
+        ticker: optional ticker symbol (used for sector ETF lookup)
+    """
+    signals = []
+    if len(close) < 30:
+        return signals
+    current = float(close.iloc[-1])
+
+    # Signal 1: Forward EPS revision trend (90 days, from yfinance eps_trend)
+    # This is the earliest warning — analysts cut estimates before prices fall.
+    try:
+        import yfinance as _yf
+        if ticker:
+            tk = _yf.Ticker(ticker)
+            trend = tk.eps_trend
+            if trend is not None and not trend.empty:
+                row = None
+                for idx in ["+1y", "0y", "+1q"]:
+                    if idx in trend.index:
+                        row = trend.loc[idx]
+                        break
+                if row is not None:
+                    eps_now = row.get("current")
+                    eps_90d = row.get("90daysAgo")
+                    if eps_now is not None and eps_90d is not None and float(eps_90d) != 0:
+                        pct = (float(eps_now) - float(eps_90d)) / abs(float(eps_90d)) * 100
+                        if pct >= 10:
+                            signals.append(("ForwardEPSTrend", 2, f"forward EPS up {pct:+.0f}% in 90d"))
+                        elif pct >= 5:
+                            signals.append(("ForwardEPSTrend", 1, f"forward EPS up {pct:+.0f}% in 90d"))
+                        elif pct >= -5:
+                            signals.append(("ForwardEPSTrend", 0, f"forward EPS {pct:+.0f}% in 90d"))
+                        elif pct >= -10:
+                            signals.append(("ForwardEPSTrend", -1, f"forward EPS DOWN {pct:+.0f}% in 90d"))
+                        else:
+                            signals.append(("ForwardEPSTrend", -2, f"forward EPS DOWN {pct:+.0f}% in 90d (deteriorating)"))
+    except Exception:
+        pass
+
+    # Signal 2: Near 52w low AND still falling = falling knife
+    if len(close) >= 252:
+        low_52w = float(close.iloc[-252:].min())
+        if low_52w > 0:
+            pct_above_low = (current - low_52w) / low_52w * 100
+            # 30-day price trend
+            price_30d_ago = float(close.iloc[-30]) if len(close) >= 30 else current
+            still_falling = current < price_30d_ago * 0.97  # down >3% in last 30d
+            if pct_above_low < 20 and still_falling:
+                signals.append(("Near52wLow", -1.5,
+                               f"{pct_above_low:.0f}% above 52w low AND falling 30d (falling knife risk)"))
+            elif pct_above_low < 20 and not still_falling:
+                # Near low but stabilizing — could be a bottom (no penalty)
+                signals.append(("Near52wLow", 0, f"{pct_above_low:.0f}% above 52w low (stabilizing)"))
+
+    # Signal 3: Weak relative strength vs sector
+    # Compare 60d return vs SPY 60d return as a proxy for "underperforming the market"
+    if len(close) >= 60:
+        try:
+            import yfinance as _yf
+            stock_60d_return = (current - float(close.iloc[-60])) / float(close.iloc[-60]) * 100
+            spy_hist = _yf.Ticker("SPY").history(period="3mo", auto_adjust=True)
+            if len(spy_hist) >= 60:
+                spy_close = spy_hist["Close"]
+                spy_60d_return = (float(spy_close.iloc[-1]) - float(spy_close.iloc[-60])) / float(spy_close.iloc[-60]) * 100
+                relative = stock_60d_return - spy_60d_return
+                if relative <= -15:
+                    signals.append(("WeakRelStrength", -1, f"trailing SPY by {relative:.0f}% over 60d"))
+                elif relative >= 15:
+                    signals.append(("WeakRelStrength", 1, f"beating SPY by {relative:.0f}% over 60d"))
+                else:
+                    signals.append(("WeakRelStrength", 0, f"60d vs SPY: {relative:+.0f}%"))
+        except Exception:
+            pass
 
     return signals
 
@@ -861,6 +963,7 @@ def score_ticker(ticker, market_data, prices, bond_combined, bond_weight, style_
     all_signals.extend(tech_signals)
     all_signals.extend(analyze_extension(close))
     all_signals.extend(analyze_breakout(close))
+    all_signals.extend(analyze_falling_knife(close, info, ticker))
     all_signals.extend(analyze_fundamentals(info, finviz))
     all_signals.extend(analyze_quality_fundamentals(info))
     all_signals.extend(analyze_insider(finviz))
