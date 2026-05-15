@@ -713,6 +713,37 @@ The recent losers (HUBS/PODD/RBLX) were already falling at entry — different b
 
 ---
 
+### Research Dossier Pipeline (Phase A)
+
+`scripts/research_dossier.py` generates one-page Markdown research dossiers
+for candidate tickers. Pulls data from all available sources (yfinance info,
+eps_trend, analyst revisions, signals.json, options_flow.json, holdings,
+target_price) and uses Claude Sonnet 4.6 to synthesize into a structured doc.
+
+Output format:
+- Signal snapshot (BigClaw score, analyst consensus, EPS revisions, valuation)
+- Bull case (3-4 specific points with data citations)
+- Bear case (3-4 specific points)
+- Key unknowns (questions a domain expert should ask)
+- One-line recommendation
+
+Output location: `docs/dossiers/{ticker}_{YYYYMMDD}.md`
+
+Cost: ~$0.02-0.03 per dossier (Sonnet input + output). 70 dossiers/week =
+$1-2/week or ~$78/year — comfortable within R&D budget.
+
+Usage:
+- Single ticker:   `python3 scripts/research_dossier.py --ticker AMD`
+- Whole portfolio: `python3 scripts/research_dossier.py --portfolio "Innovation Fund"`
+- All top-10:      `python3 scripts/research_dossier.py --top10`
+- Data dump only:  `python3 scripts/research_dossier.py --ticker AMD --dry-run`
+
+Phase A (manual invocation only) ships May 15. Phase B (Slack review UI) and
+Phase C (trader gates on Curtis approval) deferred until Phase A is used in
+practice for 2-4 weeks to validate the format and information density.
+
+---
+
 ## 9. Scheduled Operations & Automation
 
 All recurring work is defined in OpenClaw's `cron/jobs.json`. Disabled jobs are explicitly listed so no one accidentally re-enables them.
