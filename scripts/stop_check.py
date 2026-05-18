@@ -173,6 +173,30 @@ def main():
     if not args.force and not is_market_open():
         return  # Silent exit outside market hours
 
+    # Defer to autonomous_trader if its currently running. The trader does
+    # its own trailing-stop check at Step 1; running both concurrently can
+    # double-sell positions (Alpaca fills both, going short). May 18 2026
+    # incident: BTG double-sold within 2s, became -1836 short.
+    import os as _os
+    trader_lock = _os.path.expanduser(
+        "~/.openclaw/workspace/logs/autonomous_trader.lock"
+    )
+    if _os.path.exists(trader_lock):
+        # Check if lock is fresh (not stale from a crash)
+        import time as _t
+        lock_age = _t.time() - _os.path.getmtime(trader_lock)
+        if lock_age < 1800:  # younger than 30 min = trader actively running
+            logger.info(
+                "Autonomous trader is running (lock age %.0fs) — "
+                "deferring stop_check to avoid race condition" % lock_age
+            )
+            return
+        else:
+            logger.warning(
+                "Stale autonomous_trader lockfile (age %.0fs) — "
+                "proceeding with stop check" % lock_age
+            )
+
     tickers = get_held_tickers()
     if not tickers:
         logger.info("No held tickers")
