@@ -51,7 +51,7 @@ logger = get_logger("trailing_stops")
 # Style-specific trail percentages
 TRAIL_PCT = {
     "Value Picks":            0.18,
-    "Innovation Fund":        0.18,
+    "Innovation Fund":        0.25,  # widened May 20 2026 - target-price discipline tolerates volatility
     "Income Dividends":       0.15,
     "Growth Value":           0.12,
     "Nuclear Renaissance":    0.12,
