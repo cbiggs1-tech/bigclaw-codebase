@@ -53,9 +53,11 @@ def record_trade(pid, pname, ticker, action, shares, price, total_value,
                      for slight rounding differences from Alpaca's own arithmetic)
         rationale: human-readable reason for the trade
         order_id: Alpaca order_id string (optional but strongly recommended)
-        sell_all: if True and action='sell', DELETE the holdings row entirely.
-                  if False, decrement shares (auto-deletes when shares <= 0.001).
-                  Caller should set sell_all = (filled_qty >= requested_qty).
+        sell_all: DEPRECATED. Ignored as of May 21 2026 — record_trade always
+                  decrements shares and auto-deletes when remaining <= 0.001.
+                  The old (filled_qty >= requested_qty) pattern was wrong for
+                  partial trims; computing remaining from DB is the only
+                  reliable source of truth.
 
     Returns:
         True on success, False if all retries exhausted.
@@ -115,22 +117,22 @@ def record_trade(pid, pname, ticker, action, shares, price, total_value,
                          target_price, target_price, target_source),
                     )
             elif action == "sell":
-                if sell_all:
-                    c.execute(
-                        "DELETE FROM holdings WHERE portfolio_id = ? AND ticker = ?",
-                        (pid, ticker),
-                    )
-                else:
-                    c.execute(
-                        "UPDATE holdings SET shares = shares - ? "
-                        "WHERE portfolio_id = ? AND ticker = ?",
-                        (shares, pid, ticker),
-                    )
-                    c.execute(
-                        "DELETE FROM holdings WHERE portfolio_id = ? AND ticker = ? "
-                        "AND shares <= 0.001",
-                        (pid, ticker),
-                    )
+                # Always decrement-and-cleanup. The sell_all parameter is
+                # intentionally ignored: callers historically computed it as
+                # (filled_qty >= requested_sell_qty), which is True for
+                # partial trims and caused full holdings rows to be deleted
+                # (SHOP incident May 21 2026). Computing remaining shares
+                # from the DB itself is the only safe source of truth.
+                c.execute(
+                    "UPDATE holdings SET shares = shares - ? "
+                    "WHERE portfolio_id = ? AND ticker = ?",
+                    (shares, pid, ticker),
+                )
+                c.execute(
+                    "DELETE FROM holdings WHERE portfolio_id = ? AND ticker = ? "
+                    "AND shares <= 0.001",
+                    (pid, ticker),
+                )
                 # Clean up trailing stop if position fully closed
                 c.execute(
                     "DELETE FROM trailing_stops "

@@ -660,6 +660,8 @@ Tolerance: $5 noise. The Alpaca paper account may have pre-existing setup cash t
 
 The May 11 2026 reset (`scripts/full_reset_monday.py`) liquidates all positions, wipes the shadow ledger, and re-establishes each portfolio at $100K starting cash. Both ledgers start equal; the audit verifies they stay equal.
 
+**SHOP partial-trim bug (May 21 2026 — fixed)**: a SAFETY TRIM 50% on SHOP sold 57 of 114 shares correctly at Alpaca, but the DB deleted the entire holdings row. Root cause: every sell call site computed `sell_all = (filled_qty >= requested_sell_qty)`, which is True for any partial trim where Alpaca fills the full requested amount. For TRIMs the requested qty is half the position, so the row got deleted even though half the shares remained. Fix: `trade_recorder.record_trade` now ignores the `sell_all` parameter and always decrements with cleanup-when-zero. Computing remaining shares from the DB itself is the only reliable source of truth; caller-supplied flags were a footgun. Caught by Invariant 2 (DB shares vs Alpaca shares) the next audit cycle.
+
 ---
 
 ### Target-Price Capture at Entry
