@@ -1441,9 +1441,8 @@ def reconcile_with_alpaca(client):
         logger.error(f"  {m['ticker']}: DB={m['db']:.0f} Alpaca={m['alpaca']:.0f} diff={m['diff']:+.0f}")
 
     # Write flag file to halt next trading session
-    mismatch_file = Path.home() / "bigclaw-ai" / "logs" / "ALPACA_MISMATCH.flag"
     import json as _json
-    mismatch_file.write_text(_json.dumps(critical, indent=2))
+    MISMATCH_FLAG_PATH.write_text(_json.dumps(critical, indent=2))
     logger.error(f"Mismatch flag written — trading halted until resolved")
 
     # Post to Slack
@@ -1518,18 +1517,117 @@ def main():
             lock_file.unlink()
 
 
+# Single source of truth for the mismatch flag path. Both accounting_audit.py
+# and the post-trade sync inside this file write to this same file. Importers
+# should reference this constant rather than reconstructing the path — the
+# May 22 2026 incident was caused by hardcoding the wrong directory.
+MISMATCH_FLAG_PATH = Path.home() / "bigclaw-ai" / "logs" / "ALPACA_MISMATCH.flag"
+
+
+def _post_slack_simple(text):
+    """Best-effort Slack post for guard messages. Never raises."""
+    try:
+        import json as _json, urllib.request as _ur
+        secrets = {}
+        with open(os.path.expanduser("~/.env_secrets")) as f:
+            for line in f:
+                line = line.strip()
+                if line.startswith("export "): line = line[7:]
+                if "=" in line and not line.startswith("#"):
+                    k, v = line.split("=", 1)
+                    secrets[k.strip()] = v.strip().strip('"').strip("'")
+        token = secrets.get("SLACK_BOT_TOKEN", "")
+        if not token:
+            return
+        payload = _json.dumps({"channel": "D0ADHLUJ400", "text": text}).encode()
+        req = _ur.Request(
+            "https://slack.com/api/chat.postMessage",
+            data=payload,
+            headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"},
+        )
+        _ur.urlopen(req, timeout=10)
+    except Exception:
+        pass
+
+
+def _live_mismatch_check(client):
+    """Compare DB total shares vs Alpaca positions per ticker.
+
+    Returns list of {ticker, db, alpaca, diff} for entries that differ by
+    more than 0.5 shares. Empty list means clean. Used by the startup
+    guard to decide whether a stale flag can be self-cleared.
+    """
+    positions = retry(lambda: client.get_all_positions(), attempts=3, delay=5,
+                      label="alpaca.guard_check")
+    alpaca_map = {from_alpaca(p.symbol): float(p.qty) for p in positions}
+
+    conn = db_conn()
+    c = conn.cursor()
+    c.execute("""
+        SELECT h.ticker, SUM(h.shares) AS total
+        FROM holdings h JOIN portfolios p ON h.portfolio_id = p.id
+        WHERE p.is_active = 1 AND h.shares > 0
+        GROUP BY h.ticker
+    """)
+    db_map = {row[0]: float(row[1]) for row in c.fetchall()}
+    conn.close()
+
+    all_tickers = set(db_map) | set(alpaca_map)
+    out = []
+    for t in sorted(all_tickers):
+        d, a = db_map.get(t, 0.0), alpaca_map.get(t, 0.0)
+        if abs(a - d) > 0.5:
+            out.append({"ticker": t, "db": d, "alpaca": a, "diff": a - d})
+    return out
+
+
 def _run_main(args):
     """Actual main logic — called inside lock."""
 
-    # MISMATCH GUARD: If previous run found DB/Alpaca mismatches, refuse to trade.
-    # This prevents compounding errors. Clear the flag after manual investigation.
-    mismatch_file = Path.home() / "bigclaw-ai" / "logs" / "ALPACA_MISMATCH.flag"
-    if mismatch_file.exists() and not args.dry_run and not args.status:
-        log_trade("=== BLOCKED: Alpaca mismatch flag exists — trading halted until resolved ===")
-        logger.error(f"Previous run found DB/Alpaca mismatches. Review {mismatch_file}")
-        logger.error("After resolving, delete the flag file to resume trading:")
-        logger.error(f"  rm {mismatch_file}")
-        sys.exit(1)
+    # MISMATCH GUARD (self-healing): if a prior run wrote the flag, re-verify
+    # against live Alpaca before refusing to trade. Stale flags from already-
+    # resolved mismatches now clear themselves instead of silently halting.
+    if MISMATCH_FLAG_PATH.exists() and not args.dry_run and not args.status:
+        try:
+            _guard_client = get_trading_client()
+            remaining = _live_mismatch_check(_guard_client)
+        except Exception as e:
+            log_trade(f"=== BLOCKED: mismatch flag exists and re-verify failed ({e}) — trading halted ===")
+            logger.error(f"Could not re-check Alpaca state: {e}")
+            _post_slack_simple(
+                f":rotating_light: *BigClaw trader BLOCKED* — mismatch flag exists "
+                f"and re-verify failed: `{e}`. Manual investigation required."
+            )
+            sys.exit(1)
+
+        if not remaining:
+            # Flag is stale — state has been reconciled. Self-clear.
+            try:
+                MISMATCH_FLAG_PATH.unlink()
+            except FileNotFoundError:
+                pass
+            log_trade("=== SELF-HEAL: stale mismatch flag cleared (DB and Alpaca now match) ===")
+            logger.info("Mismatch flag was stale; DB and Alpaca match. Proceeding.")
+            _post_slack_simple(
+                ":white_check_mark: *BigClaw trader self-healed* — stale mismatch flag "
+                "cleared at startup. DB and Alpaca match. Proceeding with this cycle."
+            )
+        else:
+            # Real mismatches remain. Block, but loudly.
+            log_trade("=== BLOCKED: Alpaca mismatch flag exists AND mismatches confirmed live ===")
+            logger.error(f"Live re-check found {len(remaining)} mismatches:")
+            for m in remaining[:10]:
+                logger.error(f"  {m['ticker']}: DB={m['db']:.0f} Alpaca={m['alpaca']:.0f} diff={m['diff']:+.0f}")
+            details = "\n".join(
+                f"  {m['ticker']}: DB={m['db']:.0f} Alpaca={m['alpaca']:.0f} ({m['diff']:+.0f})"
+                for m in remaining[:10]
+            )
+            _post_slack_simple(
+                f":rotating_light: *BigClaw trader BLOCKED today* — {len(remaining)} live mismatches:\n"
+                f"```\n{details}\n```\n"
+                f"Flag at `{MISMATCH_FLAG_PATH}`. Resolve, then trader auto-clears next cycle."
+            )
+            sys.exit(1)
 
     log_trade("=== Autonomous Trader started ===")
 
