@@ -1,5 +1,5 @@
 {
-  "lastUpdate": "2026-05-25T19:06:56.758774Z",
+  "lastUpdate": "2026-05-25T19:20:12.207146Z",
   "tickers": {
     "AMX": {
       "max_pain": {
@@ -2238,9 +2238,9 @@
       },
       {
         "ticker": "GEV",
-        "type": "call",
-        "premium": "615192",
-        "size": 77,
+        "type": "put",
+        "premium": "153230",
+        "size": 19,
         "strike": 0,
         "expiry": "2026-07-17",
         "sentiment": "",
@@ -2248,9 +2248,9 @@
       },
       {
         "ticker": "GEV",
-        "type": "put",
-        "premium": "153230",
-        "size": 19,
+        "type": "call",
+        "premium": "615192",
+        "size": 77,
         "strike": 0,
         "expiry": "2026-07-17",
         "sentiment": "",
@@ -4128,6 +4128,128 @@
         "net_gamma": -2809189.5900000003
       }
     ],
+    "NVDA": [
+      {
+        "strike": "100",
+        "call_gamma": "3387622.61",
+        "put_gamma": "-4878119.06",
+        "net_gamma": -1490496.4499999997
+      },
+      {
+        "strike": "115",
+        "call_gamma": "1183156.79",
+        "put_gamma": "-3295421.43",
+        "net_gamma": -2112264.64
+      },
+      {
+        "strike": "120",
+        "call_gamma": "2897293.52",
+        "put_gamma": "-8264988.15",
+        "net_gamma": -5367694.630000001
+      },
+      {
+        "strike": "135",
+        "call_gamma": "3618242.42",
+        "put_gamma": "-6519328.07",
+        "net_gamma": -2901085.6500000004
+      },
+      {
+        "strike": "150",
+        "call_gamma": "15924573.56",
+        "put_gamma": "-32299459.98",
+        "net_gamma": -16374886.42
+      },
+      {
+        "strike": "155",
+        "call_gamma": "4207994.51",
+        "put_gamma": "-14074278.04",
+        "net_gamma": -9866283.53
+      },
+      {
+        "strike": "160",
+        "call_gamma": "21482053.67",
+        "put_gamma": "-28841475.35",
+        "net_gamma": -7359421.68
+      },
+      {
+        "strike": "165",
+        "call_gamma": "5807061.99",
+        "put_gamma": "-19306863.41",
+        "net_gamma": -13499801.42
+      },
+      {
+        "strike": "175",
+        "call_gamma": "11771022.24",
+        "put_gamma": "-28200718.42",
+        "net_gamma": -16429696.180000002
+      },
+      {
+        "strike": "180",
+        "call_gamma": "42895150.21",
+        "put_gamma": "-59481915.15",
+        "net_gamma": -16586764.939999998
+      },
+      {
+        "strike": "185",
+        "call_gamma": "24812898.37",
+        "put_gamma": "-31197926.15",
+        "net_gamma": -6385027.7799999975
+      },
+      {
+        "strike": "186",
+        "call_gamma": "1966109.45",
+        "put_gamma": "-1747277.38",
+        "net_gamma": 218832.07000000007
+      },
+      {
+        "strike": "187.5",
+        "call_gamma": "294204.55",
+        "put_gamma": "-393195.27",
+        "net_gamma": -98990.72000000003
+      },
+      {
+        "strike": "190",
+        "call_gamma": "49695088.23",
+        "put_gamma": "-46110028.85",
+        "net_gamma": 3585059.379999995
+      },
+      {
+        "strike": "192.5",
+        "call_gamma": "65224.71",
+        "put_gamma": "-1075746.61",
+        "net_gamma": -1010521.9000000001
+      },
+      {
+        "strike": "195",
+        "call_gamma": "42677413.07",
+        "put_gamma": "-68814556.2",
+        "net_gamma": -26137143.130000003
+      },
+      {
+        "strike": "197.5",
+        "call_gamma": "316535.38",
+        "put_gamma": "-2044392.74",
+        "net_gamma": -1727857.3599999999
+      },
+      {
+        "strike": "200",
+        "call_gamma": "167421570.68",
+        "put_gamma": "-128575871.56",
+        "net_gamma": 38845699.120000005
+      },
+      {
+        "strike": "202.5",
+        "call_gamma": "523107.62",
+        "put_gamma": "-8736012.98",
+        "net_gamma": -8212905.36
+      },
+      {
+        "strike": "205",
+        "call_gamma": "44308163",
+        "put_gamma": "-48293448.49",
+        "net_gamma": -3985285.490000002
+      }
+    ],
     "PCG": [
       {
         "strike": "17",
@@ -4498,6 +4620,22 @@
   "congress": [
     {
       "politician": "",
+      "ticker": "STT",
+      "transaction_type": "",
+      "amount": "",
+      "transaction_date": "2026-05-18",
+      "party": ""
+    },
+    {
+      "politician": "",
+      "ticker": "STT",
+      "transaction_type": "",
+      "amount": "",
+      "transaction_date": "2026-05-18",
+      "party": ""
+    },
+    {
+      "politician": "",
       "ticker": "T",
       "transaction_type": "",
       "amount": "",
@@ -4546,7 +4684,7 @@
     },
     {
       "politician": "",
-      "ticker": "IHG",
+      "ticker": "RYCEY",
       "transaction_type": "",
       "amount": "",
       "transaction_date": "2026-05-07",
@@ -4562,15 +4700,7 @@
     },
     {
       "politician": "",
-      "ticker": "RYCEY",
-      "transaction_type": "",
-      "amount": "",
-      "transaction_date": "2026-05-07",
-      "party": ""
-    },
-    {
-      "politician": "",
-      "ticker": "INTC",
+      "ticker": "IHG",
       "transaction_type": "",
       "amount": "",
       "transaction_date": "2026-05-07",
@@ -4587,6 +4717,14 @@
     {
       "politician": "",
       "ticker": "TMO",
+      "transaction_type": "",
+      "amount": "",
+      "transaction_date": "2026-05-07",
+      "party": ""
+    },
+    {
+      "politician": "",
+      "ticker": "INTC",
       "transaction_type": "",
       "amount": "",
       "transaction_date": "2026-05-07",
@@ -4639,22 +4777,558 @@
       "amount": "",
       "transaction_date": "2026-05-06",
       "party": ""
+    }
+  ],
+  "insider": [
+    {
+      "ticker": "UAL",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": null,
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
     },
     {
-      "politician": "",
-      "ticker": "CODI",
+      "ticker": "DBD",
+      "insider": "",
+      "title": "",
       "transaction_type": "",
-      "amount": "",
-      "transaction_date": "2026-05-05",
-      "party": ""
+      "shares": 0,
+      "price": "0.0000",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
     },
     {
-      "politician": "",
-      "ticker": "FIP",
+      "ticker": "GLXY",
+      "insider": "",
+      "title": "",
       "transaction_type": "",
-      "amount": "",
-      "transaction_date": "2026-05-05",
-      "party": ""
+      "shares": 0,
+      "price": "0.0000",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "ACLS",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "155.5100",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "LYV",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "165.5500",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "SSNC",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "66.6800",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "EPAM",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "103.1900",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "ARW",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "216.0000",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "PRM",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "31.1900",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "SSNC",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "30.4500",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "HYPR",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "0.0000",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "GSHD",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "0.0000",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "ROIV",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "0.0000",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "LND",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "3.8000",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "ELA",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "23.9400",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "MDGL",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "515.4379",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "IDR",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "0.0000",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "CVBF",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "20.4500",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "ROIV",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "3.8500",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "GRMN",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "0.0000",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "FMAO",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "27.7400",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "UAL",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "100.2600",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "ISRG",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "439.8000",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "GSHD",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "41.7680",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "ETN",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "385.0000",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "GSHD",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "0.0000",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "ROIV",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "30.2700",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "GLXY",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "16.5400",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "ICUI",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "132.2100",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "XYZ",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "68.0100",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "IDR",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "37.3500",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "BSRR",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "0.0000",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "DBD",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "0.0000",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "INSM",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "108.4700",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "WHG",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "16.0200",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "FN",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "711.9100",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "GLXY",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "28.8777",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "HYPR",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "0.0000",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "DBD",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "73.4100",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "UAL",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": null,
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "PLTR",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "137.4100",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": true
+    },
+    {
+      "ticker": "HYPR",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "0.0000",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "SRFM",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "0.0000",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "IDR",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "11.5000",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "TSM",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": null,
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "BSRR",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "27.1100",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "BRCB",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "6.8600",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "MORN",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "176.7155",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "ECOR",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "6.5000",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
+    },
+    {
+      "ticker": "EW",
+      "insider": "",
+      "title": "",
+      "transaction_type": "",
+      "shares": 0,
+      "price": "84.6000",
+      "value": 0,
+      "date": "2026-05-22",
+      "is_portfolio": false
     }
   ],
   "net_premium": {
