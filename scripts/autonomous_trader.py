@@ -1584,6 +1584,29 @@ def _live_mismatch_check(client):
 def _run_main(args):
     """Actual main logic — called inside lock."""
 
+    # MARKET-HOURS GUARD: skip on holidays/weekends. Cron fires Mon-Fri but
+    # doesn't know about US market holidays. Without this check the trader
+    # would submit orders to a closed market — Alpaca rejects them, but only
+    # after lots of error noise. Clean exit before any state mutation.
+    if not args.dry_run and not args.status:
+        try:
+            _clock_client = get_trading_client()
+            _clock = _clock_client.get_clock()
+            if not _clock.is_open:
+                log_trade(f"=== SKIP: market closed (next open {_clock.next_open}) ===")
+                logger.info(f"Market closed. Next open: {_clock.next_open}. Skipping cycle.")
+                _post_slack_simple(
+                    f":calendar: *BigClaw trader skipped* — market closed today. "
+                    f"Next open: `{_clock.next_open}`"
+                )
+                sys.exit(0)
+        except SystemExit:
+            raise
+        except Exception as e:
+            # Don't block trading on a transient clock-check failure.
+            # Holidays are rare; network blips are not.
+            logger.warning(f"Market clock check failed ({e}). Proceeding anyway.")
+
     # MISMATCH GUARD (self-healing): if a prior run wrote the flag, re-verify
     # against live Alpaca before refusing to trade. Stale flags from already-
     # resolved mismatches now clear themselves instead of silently halting.
