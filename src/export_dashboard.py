@@ -127,10 +127,20 @@ def export_portfolios() -> dict:
         holdings_value = 0
         prev_holdings_value = 0
 
+        from datetime import date as _date
+        _today_iso = _date.today().isoformat()
         for h in p['holdings_raw']:
             ticker = h['ticker']
             current_price = prices.get(ticker, h['avg_cost'])
-            prev_price = prev_closes.get(ticker, current_price)
+            # Positions bought TODAY didn't exist at yesterday's close.
+            # Use the fill price (avg_cost) as the prev-price baseline so the
+            # daily-return calc only credits us with intraday gain since fill,
+            # not the market move that happened before we owned it.
+            _bought_iso = (h.get('first_bought_at') or '')[:10]
+            if _bought_iso == _today_iso:
+                prev_price = h['avg_cost']
+            else:
+                prev_price = prev_closes.get(ticker, current_price)
             value = h['shares'] * current_price
             prev_value = h['shares'] * prev_price
             holdings_value += value
