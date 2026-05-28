@@ -760,7 +760,7 @@ All times Eastern unless noted.
 |------|-----|-------|---------|
 | 8:55 AM | Morning Data Gather | Gemini Flash Lite | Runs `morning_data_gather.py`, writes raw data to `/tmp/bigclaw_morning_data.txt` |
 | 9:00 AM | Morning Market Analysis | Claude Sonnet | Reads morning data file, produces market analysis + portfolio implications, posts to Slack |
-| 9:00, 11:00, 1:00, 3:00 PM | Price Refresh (2hr) | Gemini Flash Lite | Runs `price_refresh.py` — updates portfolio/market/signal prices, ratchets trailing stops, checks concentration limits, git push to dashboard |
+| ~~9:00, 11:00, 1:00, 3:00 PM~~ | ~~Price Refresh (2hr)~~ | — | **DISABLED May 28 2026.** Was an agent-turn cron that ran `price_refresh.py` via the LLM exec tool; broke when the OpenClaw exec-approval socket stopped being connected (every run pinged Curtis for approval). Redundant with `refresh_all.sh` (system cron, runs `price_refresh.py` 5x/day directly). Price refresh now runs solely via the native bash cron. |
 | 9:05, 11:05, 1:05, 3:05 PM | Options Intelligence (2hr) | Gemini Flash Lite | Runs `options_intelligence.py` — pulls max pain, IV rank, bullish/bearish premium, sector ETF flow, dark pool blocks for all holdings from Unusual Whales; writes `options_flow.json` + flat file for data gathers |
 | 10:30 AM | Daily Autonomous Trading | Gemini Flash Lite | Runs `autonomous_trader.py` — full decision engine + trade execution cycle |
 | 4:25 PM | Afternoon Data Gather | Gemini Flash Lite | Runs `afternoon_data_gather.py`, writes raw data to `/tmp/bigclaw_afternoon_data.txt` |
