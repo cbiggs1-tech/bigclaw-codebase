@@ -152,9 +152,8 @@ Raspberry Pi 4B — "BigClaw"
 │       ├── workspace/config/  — portfolio universes, expert overrides
 │       └── workspace/SOUL.md  — agent personality & analytical mandate
 │
-├── System crontab (2 jobs)
-│   ├── stop_check.py        — 15-min trailing stop monitor
-│   └── tsla_watchdog.py     — TSLA dark pool / options monitor
+├── System crontab (1 job)
+│   └── stop_check.py        — 15-min trailing stop monitor
 │
 ├── docs/ → GitHub Pages (bigclaw.grandpapa.net)
 │   ├── 10 HTML pages
@@ -204,7 +203,7 @@ The core application is the always-on Slack bot, the portfolio database, and the
 
 The automation layer runs as `openclaw-gateway.service` under systemd. It provides the cron engine that drives all scheduled operations, 30+ standalone Python scripts for data gathering and trading, modular agent skills, and the `SOUL.md` personality file.
 
-**Scripts (`scripts/`)** — 30+ standalone Python scripts that handle everything the LLM should not be trusted to do on its own: data gathering (`morning_data_gather.py`, `afternoon_data_gather.py`), price refresh and dashboard updates (`price_refresh.py`), autonomous trading (`autonomous_trader.py`), decision engine scoring (`decision_engine.py`, 20 signal dimensions), style gate enforcement (`style_gates.py`), AI gate reasoning (`gate_reasoning.py`), weekly candidate discovery (`candidate_screener.py`), style compliance auditing (`style_compliance.py`), options intelligence (`options_intelligence.py`), trailing stop management (`trailing_stop_manager.py`, `stop_check.py`), TSLA watchdog (`tsla_watchdog.py`), ARK tracking (`ark_itk_tracker.py`), and portfolio reconciliation. All scripts source credentials from `~/.env_secrets` and log via `bigclaw_logging.py`.
+**Scripts (`scripts/`)** — 30+ standalone Python scripts that handle everything the LLM should not be trusted to do on its own: data gathering (`morning_data_gather.py`, `afternoon_data_gather.py`), price refresh and dashboard updates (`price_refresh.py`), autonomous trading (`autonomous_trader.py`), decision engine scoring (`decision_engine.py`, 20 signal dimensions), style gate enforcement (`style_gates.py`), AI gate reasoning (`gate_reasoning.py`), weekly candidate discovery (`candidate_screener.py`), style compliance auditing (`style_compliance.py`), options intelligence (`options_intelligence.py`), trailing stop management (`trailing_stop_manager.py`, `stop_check.py`), ARK tracking (`ark_itk_tracker.py`), and portfolio reconciliation. All scripts source credentials from `~/.env_secrets` and log via `bigclaw_logging.py`.
 
 **Configuration (`config/`):**
 - `portfolio_universes.json` — Per-portfolio allowed ticker lists (holdings + candidates)
@@ -263,7 +262,7 @@ Two systemd services run permanently:
 | `bigclaw.service` | systemd (always-on) | Slack bot + Claude agent + 36 interactive tools |
 | `openclaw-gateway` | systemd (always-on) | Agent runtime, cron engine, Slack/WhatsApp gateway |
 
-A handful of lightweight crontab jobs (`stop_check.py` every 15 min during market hours and `tsla_watchdog.py`) run outside the LLM loop for zero-token-cost monitoring.
+A lightweight crontab job (`stop_check.py` every 15 min during market hours) runs outside the LLM loop for zero-token-cost monitoring.
 
 ---
 
@@ -795,7 +794,6 @@ These jobs run via the Pi's system crontab — pure Python, zero LLM cost.
 | 9:00, 10:00, 12:00, 2:00, 4:30 PM CT, weekdays | `refresh_all.sh` | Signals + prices + charts refresh: runs decision engine with rescreen (`export_signals.py`), macro scanner, price refresh (`price_refresh.py`), and per-ticker chart export (`export_charts.py`). Enriches each signal with portfolio holding context and swap recommendations. Commits and pushes to GitHub Pages. Alerts Slack on failure. |
 | 9:30 AM CT (10:30 AM ET), weekdays | `autonomous_trader.py` | Autonomous trade execution: syncs DB with Alpaca, runs decision engine with rescreen, executes sells/swaps/buys, post-trade sync check. The 9:00 AM signal refresh provides a 30-minute supervisory window before trades execute. |
 | Every 15 min, 9 AM–3 PM CT, weekdays | `stop_check.py` | Intraday trailing stop monitor (zero LLM cost) |
-| Every 15 min, 2–9 PM CT, weekdays | `tsla_watchdog.py` | TSLA dark pool / options flow monitor |
 
 ### 9.5 Disabled Jobs
 
@@ -865,7 +863,7 @@ BigClaw stores tickers using the Yahoo/Finviz convention with hyphens for class-
 |--------|--------|---------------|
 | Unusual Whales | REST API (`unusual_whales.py`, `options_intelligence.py`) | Options flow alerts (unusual volume/premium), dark pool prints, SPY gamma exposure (GEX), market tide (net call/put premium), congressional trades, SEC Form 4 insider transactions, max pain per expiry, IV rank (1-year percentile), bullish vs bearish premium per ticker, sector ETF options flow + fund flows, market-wide dark pool scanning for portfolio holdings, total market call/put volume |
 
-Unusual Whales data is pulled in three ways: (1) twice daily in morning and afternoon data gathers for narrative analysis, (2) every 2 hours via `options_intelligence.py` which collects per-ticker max pain, IV rank, and bullish/bearish premium for all ~41 held tickers plus sector ETF flow and dark pool blocks, and (3) every 15 minutes by the TSLA watchdog for real-time dark pool and options flow monitoring. The options intelligence flat file is automatically appended to the morning and afternoon data gather files so the LLM can reference it in reports.
+Unusual Whales data is pulled in two ways: (1) twice daily in morning and afternoon data gathers for narrative analysis, and (2) every 2 hours via `options_intelligence.py` which collects per-ticker max pain, IV rank, and bullish/bearish premium for all ~41 held tickers plus sector ETF flow and dark pool blocks. The options intelligence flat file is automatically appended to the morning and afternoon data gather files so the LLM can reference it in reports.
 
 ### 11.3 Sentiment & Social
 
