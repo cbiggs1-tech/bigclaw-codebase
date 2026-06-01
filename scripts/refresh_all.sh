@@ -56,14 +56,6 @@ else
     FAILED=1
 fi
 
-# Step 4b: Refresh options intelligence (Unusual Whales)
-echo "[$(TS)] Running options intelligence..." >> "$LOGFILE"
-cd /home/cbiggs90/.openclaw/workspace/scripts
-if python3 options_intelligence.py >> "$LOGFILE" 2>&1; then
-    echo "[$(TS)] Options intelligence: OK" >> "$LOGFILE"
-else
-    echo "[$(TS)] Options intelligence: FAILED (non-critical)" >> "$LOGFILE"
-fi
 
 # Step 5: Generate performance chart + export dashboard
 echo "[$(TS)] Running dashboard export..." >> "$LOGFILE"
