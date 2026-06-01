@@ -86,30 +86,6 @@ def main():
     sections.append(run("MACRO PRICES (EOD)",
         f"python3 {SCRIPTS_DIR}/macro_prices.py", timeout=30))
 
-    # Smart money EOD
-    sections.append(run("SPY GAMMA EXPOSURE (GEX EOD)",
-        f"python3 {SCRIPTS_DIR}/unusual_whales.py --gex --ticker SPY"))
-    sections.append(run("MARKET TIDE (EOD)",
-        f"python3 {SCRIPTS_DIR}/unusual_whales.py --tide"))
-    sections.append(run("INSIDER TRADES (EOD)",
-        f"python3 {SCRIPTS_DIR}/unusual_whales.py --insiders"))
-
-    # Dark pool for top movers
-    for ticker in ['TSLA', 'NVDA', 'PLTR']:
-        sections.append(run(f"DARK POOL: {ticker}",
-            f"python3 {SCRIPTS_DIR}/unusual_whales.py --dark-pool --ticker {ticker}"))
-
-    # Append options intelligence flat file if available (written by options_intelligence.py)
-    options_intel_file = "/tmp/bigclaw_options_intel.txt"
-    if os.path.exists(options_intel_file):
-        try:
-            with open(options_intel_file, "r") as oif:
-                intel_data = oif.read().strip()
-            if intel_data:
-                sections.append("=== OPTIONS INTELLIGENCE ===\n" + intel_data)
-        except Exception as e:
-            sections.append("=== OPTIONS INTELLIGENCE ===\n" + intel_data)
-
     # Count errors
     errors = sum(1 for s in sections if "ERROR:" in s)
     # Data health check

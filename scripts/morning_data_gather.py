@@ -92,24 +92,6 @@ def main():
     # Predictions
     sections.append(run("POLYMARKET", f"python3 {SCRIPTS_DIR}/polymarket.py --market-movers --limit 5"))
 
-    # Smart money
-    sections.append(run("OPTIONS FLOW ALERTS", f"python3 {SCRIPTS_DIR}/unusual_whales.py --flow-alerts"))
-    sections.append(run("CONGRESSIONAL TRADES", f"python3 {SCRIPTS_DIR}/unusual_whales.py --congress"))
-    sections.append(run("SPY GAMMA EXPOSURE (GEX)", f"python3 {SCRIPTS_DIR}/unusual_whales.py --gex --ticker SPY"))
-    sections.append(run("MARKET TIDE", f"python3 {SCRIPTS_DIR}/unusual_whales.py --tide"))
-    sections.append(run("INSIDER TRADES (SEC FORM 4)", f"python3 {SCRIPTS_DIR}/unusual_whales.py --insiders"))
-
-    # Append options intelligence flat file if available (written by options_intelligence.py)
-    options_intel_file = "/tmp/bigclaw_options_intel.txt"
-    if os.path.exists(options_intel_file):
-        try:
-            with open(options_intel_file, "r") as oif:
-                intel_data = oif.read().strip()
-            if intel_data:
-                sections.append("=== OPTIONS INTELLIGENCE ===\n" + intel_data)
-        except Exception as e:
-            sections.append("=== OPTIONS INTELLIGENCE ===\nERROR: Could not read " + str(options_intel_file) + ": " + str(e))
-
     # Count errors
     errors = sum(1 for s in sections if "ERROR:" in s)
     # Data health check

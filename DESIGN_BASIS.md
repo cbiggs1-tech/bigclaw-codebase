@@ -203,7 +203,7 @@ The core application is the always-on Slack bot, the portfolio database, and the
 
 The automation layer runs as `openclaw-gateway.service` under systemd. It provides the cron engine that drives all scheduled operations, 30+ standalone Python scripts for data gathering and trading, modular agent skills, and the `SOUL.md` personality file.
 
-**Scripts (`scripts/`)** — 30+ standalone Python scripts that handle everything the LLM should not be trusted to do on its own: data gathering (`morning_data_gather.py`, `afternoon_data_gather.py`), price refresh and dashboard updates (`price_refresh.py`), autonomous trading (`autonomous_trader.py`), decision engine scoring (`decision_engine.py`, 20 signal dimensions), style gate enforcement (`style_gates.py`), AI gate reasoning (`gate_reasoning.py`), weekly candidate discovery (`candidate_screener.py`), style compliance auditing (`style_compliance.py`), options intelligence (`options_intelligence.py`), trailing stop management (`trailing_stop_manager.py`, `stop_check.py`), ARK tracking (`ark_itk_tracker.py`), and portfolio reconciliation. All scripts source credentials from `~/.env_secrets` and log via `bigclaw_logging.py`.
+**Scripts (`scripts/`)** — 30+ standalone Python scripts that handle everything the LLM should not be trusted to do on its own: data gathering (`morning_data_gather.py`, `afternoon_data_gather.py`), price refresh and dashboard updates (`price_refresh.py`), autonomous trading (`autonomous_trader.py`), decision engine scoring (`decision_engine.py`, 20 signal dimensions), style gate enforcement (`style_gates.py`), AI gate reasoning (`gate_reasoning.py`), weekly candidate discovery (`candidate_screener.py`), style compliance auditing (`style_compliance.py`), trailing stop management (`trailing_stop_manager.py`, `stop_check.py`), ARK tracking (`ark_itk_tracker.py`), and portfolio reconciliation. All scripts source credentials from `~/.env_secrets` and log via `bigclaw_logging.py`.
 
 **Configuration (`config/`):**
 - `portfolio_universes.json` — Per-portfolio allowed ticker lists (holdings + candidates)
@@ -762,7 +762,6 @@ All times Eastern unless noted.
 | 8:55 AM | Morning Data Gather | Gemini Flash Lite | Runs `morning_data_gather.py`, writes raw data to `/tmp/bigclaw_morning_data.txt` |
 | 9:00 AM | Morning Market Analysis | Claude Sonnet | Reads morning data file, produces market analysis + portfolio implications, posts to Slack |
 | ~~9:00, 11:00, 1:00, 3:00 PM~~ | ~~Price Refresh (2hr)~~ | — | **DISABLED May 28 2026.** Was an agent-turn cron that ran `price_refresh.py` via the LLM exec tool; broke when the OpenClaw exec-approval socket stopped being connected (every run pinged Curtis for approval). Redundant with `refresh_all.sh` (system cron, runs `price_refresh.py` 5x/day directly). Price refresh now runs solely via the native bash cron. |
-| 9:05, 11:05, 1:05, 3:05 PM | Options Intelligence (2hr) | Gemini Flash Lite | Runs `options_intelligence.py` — pulls max pain, IV rank, bullish/bearish premium, sector ETF flow, dark pool blocks for all holdings from Unusual Whales; writes `options_flow.json` + flat file for data gathers |
 | 10:30 AM | Daily Autonomous Trading | Gemini Flash Lite | Runs `autonomous_trader.py` — full decision engine + trade execution cycle |
 | 4:25 PM | Afternoon Data Gather | Gemini Flash Lite | Runs `afternoon_data_gather.py`, writes raw data to `/tmp/bigclaw_afternoon_data.txt` |
 | 4:30 PM | Afternoon Portfolio Report | Gemini Flash Lite | Reads afternoon data file, produces portfolio performance report, posts to Slack |
@@ -861,9 +860,8 @@ BigClaw stores tickers using the Yahoo/Finviz convention with hyphens for class-
 
 | Source | Method | Data Provided |
 |--------|--------|---------------|
-| Unusual Whales | REST API (`unusual_whales.py`, `options_intelligence.py`) | Options flow alerts (unusual volume/premium), dark pool prints, SPY gamma exposure (GEX), market tide (net call/put premium), congressional trades, SEC Form 4 insider transactions, max pain per expiry, IV rank (1-year percentile), bullish vs bearish premium per ticker, sector ETF options flow + fund flows, market-wide dark pool scanning for portfolio holdings, total market call/put volume |
 
-Unusual Whales data is pulled in two ways: (1) twice daily in morning and afternoon data gathers for narrative analysis, and (2) every 2 hours via `options_intelligence.py` which collects per-ticker max pain, IV rank, and bullish/bearish premium for all ~41 held tickers plus sector ETF flow and dark pool blocks. The options intelligence flat file is automatically appended to the morning and afternoon data gather files so the LLM can reference it in reports.
+**Unusual Whales subscription cancelled May 31 2026.** A deep-research pass over the academic literature found that UW's flagship signals (flow, dark pool, GEX, market tide, congressional trades) have no documented forward-equity-return edge for our long-only days-to-months horizon, and a point-in-time backtest on our own buys agreed (no positive spread between bullish-UW and bearish-UW picks). The one signal with documented edge (IV skew + call-put IV spread) is derivable for free from yfinance option chains and is now collected daily by `iv_tracker.py`. The decision engine never used UW data, so trade execution is unaffected. Scripts removed: `options_intelligence.py`, `unusual_whales.py`, `uw_api_extended.py`, `tsla_watchdog.py`. Data gathers `morning_data_gather.py` and `afternoon_data_gather.py` had their UW sections removed; the rest of their data continues to feed the Slack briefings.
 
 ### 11.3 Sentiment & Social
 
@@ -997,7 +995,6 @@ All JSON data in `docs/data/` is auto-refreshed and pushed to GitHub Pages:
 | `calendar.json` | Upcoming economic events (FOMC, CPI, NFP) | 1×/day |
 | `analysis.json` | Macro market scanner report (markdown) | 1×/day |
 | `news.json` | Financial news headlines (Motley Fool RSS) | 1×/day |
-| `options_flow.json` | Per-ticker max pain, IV rank, bullish/bearish premium; sector ETF flow; dark pool blocks | Via options_intelligence.py |
 | `metadata.json` | Last update timestamps, export status | Every refresh |
 | `performance_chart.png` | Portfolio performance vs S&P 500 (SPY), rebased to Apr 16 2026 refactor baseline | 1×/day |
 

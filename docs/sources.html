@@ -392,51 +392,7 @@
     <!-- Options Flow & Dark Pool -->
     <div class="section-label">
         <span class="icon">🦈</span>
-        <h2>Options Flow &amp; Dark Pool</h2>
-        <div class="line"></div>
-    </div>
-    <div class="source-grid">
-        <div class="source-card">
-            <div class="source-card-top">
-                <div class="source-name">Unusual Whales</div>
-                <a href="https://unusualwhales.com" target="_blank" class="source-link">unusualwhales.com ↗</a>
-            </div>
-            <div class="source-desc">Institutional-grade options flow data, dark pool prints, and congressional trading disclosures. BigClaw monitors large call/put sweeps, multi-exchange flow alerts, and dark pool blocks across watched tickers in real time.</div>
-            <div class="source-tags">
-                <span class="tag tag-key">API Key</span>
-                <span class="tag tag-api">REST API</span>
-            </div>
-        </div>
-        <div class="source-card">
-            <div class="source-card-top">
-                <div class="source-name">Options Contracts Flow</div>
-            </div>
-            <div class="source-desc">Per-ticker unusual options contracts — strike, expiry, volume, sweep count, and total premium. Flags large bullish/bearish bets as they print.</div>
-            <div class="source-tags">
-                <span class="tag tag-api">Unusual Whales</span>
-            </div>
-        </div>
-        <div class="source-card">
-            <div class="source-card-top">
-                <div class="source-name">Dark Pool Prints</div>
-            </div>
-            <div class="source-desc">Real-time off-exchange (dark pool) block trades — share count, execution price, and notional value. Institutional accumulation or distribution signals.</div>
-            <div class="source-tags">
-                <span class="tag tag-api">Unusual Whales</span>
-            </div>
-        </div>
-        <div class="source-card">
-            <div class="source-card-top">
-                <div class="source-name">Congressional Trading</div>
-            </div>
-            <div class="source-desc">SEC-disclosed trades by U.S. Congress members — recent buys and sells across all tickers. Tracked as a supplemental signal for policy-adjacent stocks.</div>
-            <div class="source-tags">
-                <span class="tag tag-api">Unusual Whales</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Sentiment & Social -->
+        <!-- Sentiment & Social -->
     <div class="section-label">
         <span class="icon">🗣️</span>
         <h2>Sentiment &amp; Social</h2>
@@ -849,12 +805,6 @@
                     <td><div class="cron-publishes"><span>portfolios.json</span><span>market.json</span><span>signals.json</span></div></td>
                 </tr>
                 <tr>
-                    <td><div class="cron-name"><span class="cron-icon">🦈</span> Options Intelligence</div></td>
-                    <td><div class="cron-schedule">Every 2 hrs<br>9:05 AM – 3:05 PM ET<br>Mon – Fri</div></td>
-                    <td><div class="cron-desc">Pulls max pain, IV rank, bullish/bearish premium for all portfolio holdings, sector ETF options flow, and dark pool blocks from Unusual Whales. Publishes to dashboard and flat file for data gathers.</div></td>
-                    <td><div class="cron-publishes"><span>options_flow.json</span></div></td>
-                </tr>
-                <tr>
                     <td><div class="cron-name"><span class="cron-icon">🤖</span> Daily Autonomous Trading</div></td>
                     <td><div class="cron-schedule">10:30 AM ET<br>Mon – Fri</div></td>
                     <td><div class="cron-desc">Runs full decision engine with rescreen, executes sells first (trims, stops, swaps), then buys. Monthly rebalance on first trading day. Posts execution summary to Slack.</div></td>
@@ -876,12 +826,6 @@
                     <td><div class="cron-name"><span class="cron-icon">⏱️</span> Trailing Stop Monitor</div></td>
                     <td><div class="cron-schedule">Every 15 min<br>9 AM – 3 PM CT<br>Mon – Fri</div></td>
                     <td><div class="cron-desc">Lightweight intraday stop check — fetches prices for all held tickers, ratchets high-water marks, triggers market sells if stop price is breached. Zero LLM cost.</div></td>
-                    <td><div class="cron-publishes"><span>Slack alert</span></div></td>
-                </tr>
-                <tr>
-                    <td><div class="cron-name"><span class="cron-icon">🦈</span> TSLA Options Watchdog</div></td>
-                    <td><div class="cron-schedule">Every 15 min<br>2 – 9 PM CT<br>Mon – Fri</div></td>
-                    <td><div class="cron-desc">Polls Unusual Whales for large TSLA options sweeps, dark pool prints, and market-wide flow alerts. Flags unusual call/put activity with premium, volume, and sweep count.</div></td>
                     <td><div class="cron-publishes"><span>Slack alert</span></div></td>
                 </tr>
                 <tr>
