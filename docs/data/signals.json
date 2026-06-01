@@ -17170,98 +17170,7 @@
       }
     }
   },
-  "earnings": [
-    {
-      "ticker": "AVGO",
-      "date": "Jun 03",
-      "days": 1
-    },
-    {
-      "ticker": "BF-A",
-      "date": "Jun 04",
-      "days": 2
-    },
-    {
-      "ticker": "BF-B",
-      "date": "Jun 04",
-      "days": 2
-    },
-    {
-      "ticker": "CIEN",
-      "date": "Jun 04",
-      "days": 2
-    },
-    {
-      "ticker": "CRWD",
-      "date": "Jun 03",
-      "days": 1
-    },
-    {
-      "ticker": "DG",
-      "date": "Jun 02",
-      "days": 0
-    },
-    {
-      "ticker": "DSGX",
-      "date": "Jun 03",
-      "days": 1
-    },
-    {
-      "ticker": "GTLB",
-      "date": "Jun 02",
-      "days": 0
-    },
-    {
-      "ticker": "GWRE",
-      "date": "Jun 04",
-      "days": 2
-    },
-    {
-      "ticker": "IOT",
-      "date": "Jun 04",
-      "days": 2
-    },
-    {
-      "ticker": "JBL",
-      "date": "Jun 16",
-      "days": 14
-    },
-    {
-      "ticker": "NAVN",
-      "date": "Jun 10",
-      "days": 8
-    },
-    {
-      "ticker": "NTSK",
-      "date": "Jun 03",
-      "days": 1
-    },
-    {
-      "ticker": "RBRK",
-      "date": "Jun 04",
-      "days": 2
-    },
-    {
-      "ticker": "SAIL",
-      "date": "Jun 09",
-      "days": 7
-    },
-    {
-      "ticker": "TCOM",
-      "date": "Jun 02",
-      "days": 0
-    },
-    {
-      "ticker": "TTAN",
-      "date": "Jun 04",
-      "days": 2
-    },
-    {
-      "ticker": "UEC",
-      "date": "Jun 03",
-      "days": 1
-    }
-  ],
+  "earnings": [],
   "overlap": [
     {
       "ticker": "BBVA",
@@ -17294,33 +17203,28 @@
   ],
   "bond_signals": {
     "yield_curve": {
-      "two_year": 3.99,
-      "ten_year": 4.45,
-      "spread": 0.46,
-      "spread_1mo_ago": 0.52,
-      "spread_change": -0.06,
-      "date": "2026-05-28",
-      "assessment": "Flat \u2014 neutral"
+      "two_year": 4.226,
+      "ten_year": 4.512,
+      "spread": 0.286,
+      "date": "2026-06-01",
+      "assessment": "Flat \u2014 caution"
     },
     "credit_spreads": {
-      "current_bps": 274.0,
-      "raw_value": 2.74,
-      "prev_value": 2.77,
-      "change": -0.03,
-      "date": "2026-05-31",
-      "assessment": "Tight (274bps) \u2014 bullish"
+      "current_bps": 292.0,
+      "date": "2026-06-01",
+      "assessment": "Tight (292bps) \u2014 bullish"
     },
     "ten_year": {
-      "current": 4.45,
-      "prev": 4.36,
-      "change_bps": 9.0,
-      "date": "2026-05-28",
-      "assessment": "Stable \u2014 neutral"
+      "current": 4.512,
+      "prev": 4.493,
+      "change_bps": 1.9,
+      "date": "2026-06-01",
+      "assessment": "Elevated \u2014 bearish"
     },
     "scores": {
-      "yield_curve": 0,
+      "yield_curve": 1,
       "credit_spreads": 1,
-      "ten_year_level": 0
+      "ten_year_level": -1
     },
     "combined_score": 1
   },
@@ -20200,5 +20104,1406 @@
       ]
     }
   },
-  "priceRefreshedAt": "2026-06-01T15:09:57.625367Z"
+  "priceRefreshedAt": "2026-06-01T15:09:57.625367Z",
+  "planned_actions": [
+    {
+      "portfolio": "Innovation Fund",
+      "action": "SELL",
+      "ticker": "SHOP",
+      "shares": 57,
+      "score": 8,
+      "reason": "Not in top 10 (score 8)"
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "SELL",
+      "ticker": "CAI",
+      "shares": 619,
+      "score": 7,
+      "reason": "Not in top 10 (score 7)"
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "SELL",
+      "ticker": "GMED",
+      "shares": 157,
+      "score": 7,
+      "reason": "Not in top 10 (score 7)"
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "SELL",
+      "ticker": "PODD",
+      "shares": 64,
+      "score": 7,
+      "reason": "Not in top 10 (score 7)"
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "SELL",
+      "ticker": "HUBS",
+      "shares": 51,
+      "score": 6,
+      "reason": "Not in top 10 (score 6)"
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "SELL",
+      "ticker": "WAY",
+      "shares": 396,
+      "score": 5,
+      "reason": "Not in top 10 (score 5)"
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "SELL",
+      "ticker": "ZG",
+      "shares": 292,
+      "score": 3,
+      "reason": "Not in top 10 (score 3)"
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "BUY",
+      "ticker": "NTSK",
+      "score": 14,
+      "reason": "Score 14 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Income Dividends",
+      "action": "BUY",
+      "ticker": "GFI",
+      "score": 14,
+      "reason": "Score 14 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Income Dividends",
+      "action": "BUY",
+      "ticker": "GEN",
+      "score": 13,
+      "reason": "Score 13 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Income Dividends",
+      "action": "BUY",
+      "ticker": "GILD",
+      "score": 13,
+      "reason": "Score 13 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Income Dividends",
+      "action": "BUY",
+      "ticker": "TROW",
+      "score": 13,
+      "reason": "Score 13 \u2014 new position (top 10)",
+      "est_allocation": 9968
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "CRS",
+      "score": 13,
+      "reason": "Score 13 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Value Picks",
+      "action": "BUY",
+      "ticker": "FSM",
+      "score": 12,
+      "reason": "Score 12 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Value Picks",
+      "action": "BUY",
+      "ticker": "IAG",
+      "score": 12,
+      "reason": "Score 12 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "BUY",
+      "ticker": "FIG",
+      "score": 12,
+      "reason": "Score 12 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "BUY",
+      "ticker": "MNDY",
+      "score": 12,
+      "reason": "Score 12 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "BUY",
+      "ticker": "RDDT",
+      "score": 12,
+      "reason": "Score 12 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "BUY",
+      "ticker": "TEAM",
+      "score": 12,
+      "reason": "Score 12 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "ATRO",
+      "score": 12,
+      "reason": "Score 12 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "MU",
+      "score": 12,
+      "reason": "Score 12 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "STX",
+      "score": 12,
+      "reason": "Score 12 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "WDC",
+      "score": 12,
+      "reason": "Score 12 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "XPO",
+      "score": 12,
+      "reason": "Score 12 \u2014 new position (top 10)",
+      "est_allocation": 5920
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "BUY",
+      "ticker": "GKOS",
+      "score": 11,
+      "reason": "Score 11 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "BUY",
+      "ticker": "VEON",
+      "score": 11,
+      "reason": "Score 11 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Value Picks",
+      "action": "BUY",
+      "ticker": "AKO-B",
+      "score": 10,
+      "reason": "Score 10 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Value Picks",
+      "action": "BUY",
+      "ticker": "CB",
+      "score": 10,
+      "reason": "Score 10 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Value Picks",
+      "action": "BUY",
+      "ticker": "EXE",
+      "score": 10,
+      "reason": "Score 10 \u2014 new position (top 10)",
+      "est_allocation": 1944
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "BUY",
+      "ticker": "BWXT",
+      "score": 9,
+      "reason": "Score 9 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Growth Value",
+      "action": "BUY",
+      "ticker": "BOOT",
+      "score": 8,
+      "reason": "Score 8 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Growth Value",
+      "action": "BUY",
+      "ticker": "LYG",
+      "score": 8,
+      "reason": "Score 8 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "ADD",
+      "ticker": "CCJ",
+      "score": 8,
+      "reason": "Score 8 \u2014 add to position",
+      "est_allocation": 3614
+    },
+    {
+      "portfolio": "Growth Value",
+      "action": "BUY",
+      "ticker": "FNF",
+      "score": 7,
+      "reason": "Score 7 \u2014 new position (top 10)",
+      "est_allocation": 10185
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "BUY",
+      "ticker": "NNE",
+      "score": 6,
+      "reason": "Score 6 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "AI Defense & Autonomous",
+      "action": "ADD",
+      "ticker": "LMT",
+      "score": 6,
+      "reason": "Score 6 \u2014 add to position",
+      "est_allocation": 3464
+    },
+    {
+      "portfolio": "AI Defense & Autonomous",
+      "action": "BUY",
+      "ticker": "AVAV",
+      "score": 5,
+      "reason": "Score 5 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "ADD",
+      "ticker": "NEE",
+      "score": 4,
+      "reason": "Score 4 \u2014 add to position",
+      "est_allocation": 850
+    },
+    {
+      "portfolio": "AI Defense & Autonomous",
+      "action": "BUY",
+      "ticker": "RCAT",
+      "score": 4,
+      "reason": "Score 4 \u2014 new position (top 10)",
+      "est_allocation": 4621
+    }
+  ],
+  "rates": {
+    "fed_funds": "4.25\u20134.50%",
+    "ten_year": 4.512,
+    "two_year": 4.226,
+    "yield_spread": 0.286,
+    "inverted": false
+  },
+  "executed_this_week": [
+    {
+      "portfolio": "AI Defense & Autonomous",
+      "action": "SELL",
+      "ticker": "RTX",
+      "shares": 68,
+      "price": 174.86,
+      "total": 11890.48,
+      "reason": "Not in top 10 (score 0)",
+      "date": "2026-06-01",
+      "executed": true
+    },
+    {
+      "portfolio": "AI Defense & Autonomous",
+      "action": "SELL",
+      "ticker": "LHX",
+      "shares": 25,
+      "price": 310.27,
+      "total": 7756.75,
+      "reason": "Not in top 10 (score 0)",
+      "date": "2026-06-01",
+      "executed": true
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "SELL",
+      "ticker": "EVRG",
+      "shares": 119,
+      "price": 80.92,
+      "total": 9629.46,
+      "reason": "Not in top 10 (score 2)",
+      "date": "2026-06-01",
+      "executed": true
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "SELL",
+      "ticker": "D",
+      "shares": 119,
+      "price": 65.35,
+      "total": 7776.65,
+      "reason": "Not in top 10 (score 1)",
+      "date": "2026-06-01",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "SELL",
+      "ticker": "WMG",
+      "shares": 161,
+      "price": 30.91,
+      "total": 4976.51,
+      "reason": "Not in top 10 (score 10)",
+      "date": "2026-06-01",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "SELL",
+      "ticker": "SNDK",
+      "shares": 7,
+      "price": 1748.0,
+      "total": 12236.0,
+      "reason": "Not in top 10 (score 10)",
+      "date": "2026-06-01",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "SELL",
+      "ticker": "CLS",
+      "shares": 31,
+      "price": 397.17,
+      "total": 12312.27,
+      "reason": "Not in top 10 (score 10)",
+      "date": "2026-06-01",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "SELL",
+      "ticker": "DELL",
+      "shares": 28,
+      "price": 461.68,
+      "total": 12927.04,
+      "reason": "Not in top 10 (score 9)",
+      "date": "2026-06-01",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "SELL",
+      "ticker": "LRCX",
+      "shares": 37,
+      "price": 313.5,
+      "total": 11599.5,
+      "reason": "Not in top 10 (score 8)",
+      "date": "2026-06-01",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "SELL",
+      "ticker": "LLY",
+      "shares": 11,
+      "price": 1078.76,
+      "total": 11866.36,
+      "reason": "Not in top 10 (score 7)",
+      "date": "2026-06-01",
+      "executed": true
+    },
+    {
+      "portfolio": "Income Dividends",
+      "action": "SELL",
+      "ticker": "LTM",
+      "shares": 233,
+      "price": 51.2,
+      "total": 11929.6,
+      "reason": "Not in top 10 (score 11)",
+      "date": "2026-06-01",
+      "executed": true
+    },
+    {
+      "portfolio": "Income Dividends",
+      "action": "SELL",
+      "ticker": "EOG",
+      "shares": 75,
+      "price": 137.93,
+      "total": 10344.75,
+      "reason": "Not in top 10 (score 10)",
+      "date": "2026-06-01",
+      "executed": true
+    },
+    {
+      "portfolio": "Income Dividends",
+      "action": "SELL",
+      "ticker": "BBVA",
+      "shares": 516,
+      "price": 22.86,
+      "total": 11795.76,
+      "reason": "Not in top 10 (score 10)",
+      "date": "2026-06-01",
+      "executed": true
+    },
+    {
+      "portfolio": "Income Dividends",
+      "action": "SELL",
+      "ticker": "ZTO",
+      "shares": 528,
+      "price": 22.49,
+      "total": 11874.72,
+      "reason": "Not in top 10 (score 1)",
+      "date": "2026-06-01",
+      "executed": true
+    },
+    {
+      "portfolio": "Growth Value",
+      "action": "SELL",
+      "ticker": "ENVA",
+      "shares": 75,
+      "price": 159.29,
+      "total": 11946.75,
+      "reason": "Not in top 10 (score 6)",
+      "date": "2026-06-01",
+      "executed": true
+    },
+    {
+      "portfolio": "Growth Value",
+      "action": "SELL",
+      "ticker": "SEZL",
+      "shares": 110,
+      "price": 120.4,
+      "total": 13244.0,
+      "reason": "Not in top 10 (score 3)",
+      "date": "2026-06-01",
+      "executed": true
+    },
+    {
+      "portfolio": "Growth Value",
+      "action": "SELL",
+      "ticker": "ETSY",
+      "shares": 132,
+      "price": 68.03,
+      "total": 8979.96,
+      "reason": "Not in top 10 (score 2)",
+      "date": "2026-06-01",
+      "executed": true
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "SELL",
+      "ticker": "TEAM",
+      "shares": 138,
+      "price": 115.88,
+      "total": 15991.44,
+      "reason": "Not in top 10 (score 12)",
+      "date": "2026-06-01",
+      "executed": true
+    },
+    {
+      "portfolio": "Value Picks",
+      "action": "SELL",
+      "ticker": "BBVA",
+      "shares": 543,
+      "price": 22.84,
+      "total": 12402.12,
+      "reason": "Not in top 10 (score 9)",
+      "date": "2026-06-01",
+      "executed": true
+    },
+    {
+      "portfolio": "Value Picks",
+      "action": "SELL",
+      "ticker": "BKE",
+      "shares": 214,
+      "price": 42.95,
+      "total": 9191.3,
+      "reason": "Not in top 10 (score 8)",
+      "date": "2026-06-01",
+      "executed": true
+    },
+    {
+      "portfolio": "Value Picks",
+      "action": "SELL",
+      "ticker": "BHP",
+      "shares": 147,
+      "price": 89.3,
+      "total": 13127.1,
+      "reason": "Not in top 10 (score 8)",
+      "date": "2026-06-01",
+      "executed": true
+    },
+    {
+      "portfolio": "Value Picks",
+      "action": "SELL",
+      "ticker": "SLM",
+      "shares": 143,
+      "price": 22.05,
+      "total": 3153.15,
+      "reason": "Not in top 10 (score 6)",
+      "date": "2026-06-01",
+      "executed": true
+    },
+    {
+      "portfolio": "Value Picks",
+      "action": "SELL",
+      "ticker": "PBR",
+      "shares": 633,
+      "price": 19.07,
+      "total": 12071.31,
+      "reason": "Not in top 10 (score 6)",
+      "date": "2026-06-01",
+      "executed": true
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "SELL",
+      "ticker": "BWXT",
+      "shares": 59,
+      "price": 186.17,
+      "total": 10984.06,
+      "reason": "Trailing stop triggered: $186.57 <= $186.63 (HWM $212.08, -12.0%)",
+      "date": "2026-06-01",
+      "executed": true
+    },
+    {
+      "portfolio": "AI Defense & Autonomous",
+      "action": "BUY",
+      "ticker": "LMT",
+      "shares": 2,
+      "price": 530.92,
+      "total": 1061.84,
+      "reason": "Top 10 (score 4) \u2014 add to position",
+      "date": "2026-05-29",
+      "executed": true
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "BUY",
+      "ticker": "CCJ",
+      "shares": 75,
+      "price": 111.81,
+      "total": 8385.75,
+      "reason": "Top 10 (score 8) \u2014 new position",
+      "date": "2026-05-29",
+      "executed": true
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "BUY",
+      "ticker": "VST",
+      "shares": 75,
+      "price": 159.17,
+      "total": 11937.4,
+      "reason": "Top 10 (score 8) \u2014 new position",
+      "date": "2026-05-29",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "WMG",
+      "shares": 161,
+      "price": 31.77,
+      "total": 5114.97,
+      "reason": "Top 10 (score 13) \u2014 new position",
+      "date": "2026-05-29",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "DELL",
+      "shares": 26,
+      "price": 414.84,
+      "total": 10785.84,
+      "reason": "Top 10 (score 13) \u2014 add to position",
+      "date": "2026-05-29",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "CLS",
+      "shares": 31,
+      "price": 378.74,
+      "total": 11740.94,
+      "reason": "Top 10 (score 14) \u2014 new position",
+      "date": "2026-05-29",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "SNDK",
+      "shares": 5,
+      "price": 1670.93,
+      "total": 8354.65,
+      "reason": "Top 10 (score 14) \u2014 add to position",
+      "date": "2026-05-29",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "SELL",
+      "ticker": "LQDA",
+      "shares": 193,
+      "price": 60.97,
+      "total": 11767.76,
+      "reason": "Not in top 10 (score 12)",
+      "date": "2026-05-29",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "SELL",
+      "ticker": "AMZN",
+      "shares": 45,
+      "price": 272.27,
+      "total": 12251.95,
+      "reason": "Not in top 10 (score 12)",
+      "date": "2026-05-29",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "SELL",
+      "ticker": "MRVL",
+      "shares": 58,
+      "price": 203.88,
+      "total": 11825.04,
+      "reason": "Not in top 10 (score 8)",
+      "date": "2026-05-29",
+      "executed": true
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "BUY",
+      "ticker": "PINS",
+      "shares": 298,
+      "price": 20.59,
+      "total": 6135.82,
+      "reason": "Top 10 (score 14) \u2014 new position",
+      "date": "2026-05-29",
+      "executed": true
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "SELL",
+      "ticker": "KVYO",
+      "shares": 392,
+      "price": 15.48,
+      "total": 6068.14,
+      "reason": "EMERGENCY SELL ALL (score -5)",
+      "date": "2026-05-29",
+      "executed": true
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "BUY",
+      "ticker": "NEE",
+      "shares": 90,
+      "price": 87.95,
+      "total": 7915.56,
+      "reason": "Top 10 (score 2) \u2014 new position",
+      "date": "2026-05-28",
+      "executed": true
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "BUY",
+      "ticker": "GEV",
+      "shares": 11,
+      "price": 1006.73,
+      "total": 11074.03,
+      "reason": "Top 10 (score 6) \u2014 new position",
+      "date": "2026-05-28",
+      "executed": true
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "SELL",
+      "ticker": "XEL",
+      "shares": 123,
+      "price": 79.49,
+      "total": 9777.3,
+      "reason": "Not in top 10 (score 1)",
+      "date": "2026-05-28",
+      "executed": true
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "SELL",
+      "ticker": "AEE",
+      "shares": 90,
+      "price": 109.26,
+      "total": 9833.4,
+      "reason": "Not in top 10 (score 1)",
+      "date": "2026-05-28",
+      "executed": true
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "SELL",
+      "ticker": "AEP",
+      "shares": 76,
+      "price": 127.29,
+      "total": 9674.04,
+      "reason": "Not in top 10 (score 0)",
+      "date": "2026-05-28",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "DELL",
+      "shares": 2,
+      "price": 322.5,
+      "total": 645.0,
+      "reason": "Top 10 (score 13) \u2014 new position",
+      "date": "2026-05-28",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "SNDK",
+      "shares": 2,
+      "price": 1687.99,
+      "total": 3375.98,
+      "reason": "Top 10 (score 14) \u2014 new position",
+      "date": "2026-05-28",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "LQDA",
+      "shares": 193,
+      "price": 61.98,
+      "total": 11962.14,
+      "reason": "Top 10 (score 14) \u2014 new position",
+      "date": "2026-05-28",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "USAC",
+      "shares": 326,
+      "price": 28.96,
+      "total": 9440.96,
+      "reason": "Top 10 (score 14) \u2014 add to position",
+      "date": "2026-05-28",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "SELL",
+      "ticker": "MU",
+      "shares": 13,
+      "price": 940.06,
+      "total": 12220.76,
+      "reason": "Not in top 10 (score 12)",
+      "date": "2026-05-28",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "SELL",
+      "ticker": "NXPI",
+      "shares": 40,
+      "price": 333.6,
+      "total": 13344.0,
+      "reason": "Not in top 10 (score 7)",
+      "date": "2026-05-28",
+      "executed": true
+    },
+    {
+      "portfolio": "Income Dividends",
+      "action": "BUY",
+      "ticker": "B",
+      "shares": 260,
+      "price": 41.65,
+      "total": 10829.25,
+      "reason": "Top 10 (score 18) \u2014 new position",
+      "date": "2026-05-28",
+      "executed": true
+    },
+    {
+      "portfolio": "Income Dividends",
+      "action": "SELL",
+      "ticker": "SHEL",
+      "shares": 128,
+      "price": 84.23,
+      "total": 10781.44,
+      "reason": "Not in top 10 (score 13)",
+      "date": "2026-05-28",
+      "executed": true
+    },
+    {
+      "portfolio": "Growth Value",
+      "action": "BUY",
+      "ticker": "ETSY",
+      "shares": 132,
+      "price": 66.31,
+      "total": 8752.92,
+      "reason": "Top 10 (score 7) \u2014 new position",
+      "date": "2026-05-28",
+      "executed": true
+    },
+    {
+      "portfolio": "Growth Value",
+      "action": "BUY",
+      "ticker": "NVDA",
+      "shares": 11,
+      "price": 212.28,
+      "total": 2335.13,
+      "reason": "Top 10 (score 13) \u2014 add to position",
+      "date": "2026-05-28",
+      "executed": true
+    },
+    {
+      "portfolio": "Growth Value",
+      "action": "SELL",
+      "ticker": "BAC",
+      "shares": 217,
+      "price": 51.14,
+      "total": 11097.38,
+      "reason": "Not in top 10 (score 5)",
+      "date": "2026-05-28",
+      "executed": true
+    },
+    {
+      "portfolio": "Value Picks",
+      "action": "BUY",
+      "ticker": "SLM",
+      "shares": 143,
+      "price": 22.11,
+      "total": 3161.7,
+      "reason": "Top 10 (score 10) \u2014 new position",
+      "date": "2026-05-28",
+      "executed": true
+    },
+    {
+      "portfolio": "Value Picks",
+      "action": "BUY",
+      "ticker": "PBR",
+      "shares": 633,
+      "price": 18.94,
+      "total": 11989.02,
+      "reason": "Top 10 (score 11) \u2014 new position",
+      "date": "2026-05-28",
+      "executed": true
+    },
+    {
+      "portfolio": "Value Picks",
+      "action": "BUY",
+      "ticker": "GL",
+      "shares": 63,
+      "price": 155.45,
+      "total": 9793.35,
+      "reason": "Top 10 (score 12) \u2014 add to position",
+      "date": "2026-05-28",
+      "executed": true
+    },
+    {
+      "portfolio": "Value Picks",
+      "action": "SELL",
+      "ticker": "CB",
+      "shares": 36,
+      "price": 317.85,
+      "total": 11442.6,
+      "reason": "Not in top 10 (score 9)",
+      "date": "2026-05-28",
+      "executed": true
+    },
+    {
+      "portfolio": "Value Picks",
+      "action": "SELL",
+      "ticker": "ANF",
+      "shares": 167,
+      "price": 80.62,
+      "total": 13463.54,
+      "reason": "Not in top 10 (score 8)",
+      "date": "2026-05-28",
+      "executed": true
+    },
+    {
+      "portfolio": "AI Defense & Autonomous",
+      "action": "BUY",
+      "ticker": "RTX",
+      "shares": 68,
+      "price": 176.45,
+      "total": 11998.48,
+      "reason": "Top 10 (score 6) \u2014 new position",
+      "date": "2026-05-27",
+      "executed": true
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "BUY",
+      "ticker": "D",
+      "shares": 119,
+      "price": 67.16,
+      "total": 7992.04,
+      "reason": "Top 10 (score 2) \u2014 new position",
+      "date": "2026-05-27",
+      "executed": true
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "BUY",
+      "ticker": "BWXT",
+      "shares": 12,
+      "price": 201.75,
+      "total": 2421.0,
+      "reason": "Top 10 (score 8) \u2014 add to position",
+      "date": "2026-05-27",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "USAC",
+      "shares": 88,
+      "price": 29.14,
+      "total": 2564.32,
+      "reason": "Top 10 (score 14) \u2014 new position",
+      "date": "2026-05-27",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "NBIX",
+      "shares": 76,
+      "price": 157.0,
+      "total": 11932.0,
+      "reason": "Top 10 (score 16) \u2014 new position",
+      "date": "2026-05-27",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "HWM",
+      "shares": 10,
+      "price": 258.33,
+      "total": 2583.3,
+      "reason": "Top 10 (score 16) \u2014 add to position",
+      "date": "2026-05-27",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "SELL",
+      "ticker": "WDC",
+      "shares": 10,
+      "price": 526.46,
+      "total": 5264.6,
+      "reason": "Not in top 10 (score 12)",
+      "date": "2026-05-27",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "SELL",
+      "ticker": "TXN",
+      "shares": 37,
+      "price": 317.37,
+      "total": 11742.69,
+      "reason": "Not in top 10 (score 12)",
+      "date": "2026-05-27",
+      "executed": true
+    },
+    {
+      "portfolio": "Income Dividends",
+      "action": "BUY",
+      "ticker": "SHEL",
+      "shares": 128,
+      "price": 83.92,
+      "total": 10741.32,
+      "reason": "Top 10 (score 14) \u2014 new position",
+      "date": "2026-05-27",
+      "executed": true
+    },
+    {
+      "portfolio": "Income Dividends",
+      "action": "SELL",
+      "ticker": "GEN",
+      "shares": 437,
+      "price": 24.69,
+      "total": 10789.53,
+      "reason": "Not in top 10 (score 12)",
+      "date": "2026-05-27",
+      "executed": true
+    },
+    {
+      "portfolio": "AI Defense & Autonomous",
+      "action": "BUY",
+      "ticker": "LMT",
+      "shares": 14,
+      "price": 533.89,
+      "total": 7474.46,
+      "reason": "Top 10 (score 2) \u2014 new position",
+      "date": "2026-05-26",
+      "executed": true
+    },
+    {
+      "portfolio": "AI Defense & Autonomous",
+      "action": "BUY",
+      "ticker": "LHX",
+      "shares": 25,
+      "price": 311.86,
+      "total": 7796.5,
+      "reason": "Top 10 (score 2) \u2014 new position",
+      "date": "2026-05-26",
+      "executed": true
+    },
+    {
+      "portfolio": "AI Defense & Autonomous",
+      "action": "BUY",
+      "ticker": "BAH",
+      "shares": 126,
+      "price": 79.36,
+      "total": 9999.36,
+      "reason": "Top 10 (score 3) \u2014 new position",
+      "date": "2026-05-26",
+      "executed": true
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "BUY",
+      "ticker": "EVRG",
+      "shares": 119,
+      "price": 84.06,
+      "total": 10003.14,
+      "reason": "Top 10 (score 3) \u2014 new position",
+      "date": "2026-05-26",
+      "executed": true
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "BUY",
+      "ticker": "AEP",
+      "shares": 76,
+      "price": 131.24,
+      "total": 9974.24,
+      "reason": "Top 10 (score 3) \u2014 new position",
+      "date": "2026-05-26",
+      "executed": true
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "BUY",
+      "ticker": "AEE",
+      "shares": 90,
+      "price": 111.03,
+      "total": 9992.7,
+      "reason": "Top 10 (score 3) \u2014 new position",
+      "date": "2026-05-26",
+      "executed": true
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "BUY",
+      "ticker": "XEL",
+      "shares": 123,
+      "price": 81.02,
+      "total": 9965.46,
+      "reason": "Top 10 (score 3) \u2014 new position",
+      "date": "2026-05-26",
+      "executed": true
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "BUY",
+      "ticker": "TLN",
+      "shares": 31,
+      "price": 387.85,
+      "total": 12023.35,
+      "reason": "Top 10 (score 9) \u2014 new position",
+      "date": "2026-05-26",
+      "executed": true
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "SELL",
+      "ticker": "NEE",
+      "shares": 98,
+      "price": 87.87,
+      "total": 8611.26,
+      "reason": "Not in top 10 (score 2)",
+      "date": "2026-05-26",
+      "executed": true
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "SELL",
+      "ticker": "GEV",
+      "shares": 11,
+      "price": 1079.78,
+      "total": 11877.58,
+      "reason": "Not in top 10 (score 2)",
+      "date": "2026-05-26",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "WDC",
+      "shares": 10,
+      "price": 528.97,
+      "total": 5289.7,
+      "reason": "Top 10 (score 16) \u2014 new position",
+      "date": "2026-05-26",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "MRVL",
+      "shares": 58,
+      "price": 204.22,
+      "total": 11844.76,
+      "reason": "Top 10 (score 16) \u2014 new position",
+      "date": "2026-05-26",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "MU",
+      "shares": 13,
+      "price": 872.43,
+      "total": 11341.59,
+      "reason": "Top 10 (score 16) \u2014 new position",
+      "date": "2026-05-26",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "TXN",
+      "shares": 37,
+      "price": 323.96,
+      "total": 11986.52,
+      "reason": "Top 10 (score 16) \u2014 new position",
+      "date": "2026-05-26",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "LLY",
+      "shares": 11,
+      "price": 1078.63,
+      "total": 11864.93,
+      "reason": "Top 10 (score 16) \u2014 new position",
+      "date": "2026-05-26",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "LRCX",
+      "shares": 37,
+      "price": 317.42,
+      "total": 11744.54,
+      "reason": "Top 10 (score 17) \u2014 new position",
+      "date": "2026-05-26",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "SELL",
+      "ticker": "CACC",
+      "shares": 18,
+      "price": 552.67,
+      "total": 9948.06,
+      "reason": "Not in top 10 (score 10)",
+      "date": "2026-05-26",
+      "executed": true
+    },
+    {
+      "portfolio": "Income Dividends",
+      "action": "BUY",
+      "ticker": "GEN",
+      "shares": 437,
+      "price": 24.93,
+      "total": 10894.41,
+      "reason": "Top 10 (score 12) \u2014 new position",
+      "date": "2026-05-26",
+      "executed": true
+    },
+    {
+      "portfolio": "Income Dividends",
+      "action": "BUY",
+      "ticker": "BBVA",
+      "shares": 516,
+      "price": 23.27,
+      "total": 12007.32,
+      "reason": "Top 10 (score 13) \u2014 new position",
+      "date": "2026-05-26",
+      "executed": true
+    },
+    {
+      "portfolio": "Income Dividends",
+      "action": "BUY",
+      "ticker": "NTES",
+      "shares": 98,
+      "price": 122.33,
+      "total": 11988.34,
+      "reason": "Top 10 (score 14) \u2014 new position",
+      "date": "2026-05-26",
+      "executed": true
+    },
+    {
+      "portfolio": "Income Dividends",
+      "action": "BUY",
+      "ticker": "ZTO",
+      "shares": 528,
+      "price": 22.7,
+      "total": 11985.6,
+      "reason": "Top 10 (score 14) \u2014 new position",
+      "date": "2026-05-26",
+      "executed": true
+    },
+    {
+      "portfolio": "Income Dividends",
+      "action": "BUY",
+      "ticker": "LTM",
+      "shares": 233,
+      "price": 51.51,
+      "total": 12001.83,
+      "reason": "Top 10 (score 14) \u2014 new position",
+      "date": "2026-05-26",
+      "executed": true
+    },
+    {
+      "portfolio": "Income Dividends",
+      "action": "BUY",
+      "ticker": "AU",
+      "shares": 125,
+      "price": 95.44,
+      "total": 11930.0,
+      "reason": "Top 10 (score 15) \u2014 new position",
+      "date": "2026-05-26",
+      "executed": true
+    },
+    {
+      "portfolio": "Growth Value",
+      "action": "BUY",
+      "ticker": "BAC",
+      "shares": 217,
+      "price": 52.11,
+      "total": 11307.29,
+      "reason": "Top 10 (score 8) \u2014 new position",
+      "date": "2026-05-26",
+      "executed": true
+    },
+    {
+      "portfolio": "Growth Value",
+      "action": "BUY",
+      "ticker": "ENVA",
+      "shares": 75,
+      "price": 159.27,
+      "total": 11945.25,
+      "reason": "Top 10 (score 8) \u2014 new position",
+      "date": "2026-05-26",
+      "executed": true
+    },
+    {
+      "portfolio": "Growth Value",
+      "action": "BUY",
+      "ticker": "SEZL",
+      "shares": 110,
+      "price": 109.03,
+      "total": 11993.3,
+      "reason": "Top 10 (score 8) \u2014 new position",
+      "date": "2026-05-26",
+      "executed": true
+    },
+    {
+      "portfolio": "Growth Value",
+      "action": "BUY",
+      "ticker": "BZ",
+      "shares": 196,
+      "price": 13.33,
+      "total": 2612.68,
+      "reason": "Top 10 (score 8) \u2014 add to position",
+      "date": "2026-05-26",
+      "executed": true
+    },
+    {
+      "portfolio": "Growth Value",
+      "action": "BUY",
+      "ticker": "AMX",
+      "shares": 101,
+      "price": 25.77,
+      "total": 2602.77,
+      "reason": "Top 10 (score 10) \u2014 add to position",
+      "date": "2026-05-26",
+      "executed": true
+    },
+    {
+      "portfolio": "Growth Value",
+      "action": "BUY",
+      "ticker": "HMY",
+      "shares": 674,
+      "price": 17.79,
+      "total": 11990.46,
+      "reason": "Top 10 (score 15) \u2014 new position",
+      "date": "2026-05-26",
+      "executed": true
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "BUY",
+      "ticker": "TEAM",
+      "shares": 67,
+      "price": 84.9,
+      "total": 5688.3,
+      "reason": "Top 10 (score 14) \u2014 add to position",
+      "date": "2026-05-26",
+      "executed": true
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "SELL",
+      "ticker": "KVYO",
+      "shares": 391,
+      "price": 14.69,
+      "total": 5743.79,
+      "reason": "SAFETY TRIM 50% (score -3)",
+      "date": "2026-05-26",
+      "executed": true
+    }
+  ]
 }
