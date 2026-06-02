@@ -20997,88 +20997,7 @@
       }
     }
   },
-  "earnings": [
-    {
-      "ticker": "AVGO",
-      "date": "Jun 03",
-      "days": 0
-    },
-    {
-      "ticker": "BF-A",
-      "date": "Jun 04",
-      "days": 1
-    },
-    {
-      "ticker": "BF-B",
-      "date": "Jun 04",
-      "days": 1
-    },
-    {
-      "ticker": "CIEN",
-      "date": "Jun 04",
-      "days": 1
-    },
-    {
-      "ticker": "CRWD",
-      "date": "Jun 03",
-      "days": 0
-    },
-    {
-      "ticker": "DSGX",
-      "date": "Jun 03",
-      "days": 0
-    },
-    {
-      "ticker": "GWRE",
-      "date": "Jun 04",
-      "days": 1
-    },
-    {
-      "ticker": "IOT",
-      "date": "Jun 04",
-      "days": 1
-    },
-    {
-      "ticker": "JBL",
-      "date": "Jun 16",
-      "days": 13
-    },
-    {
-      "ticker": "NAVN",
-      "date": "Jun 10",
-      "days": 7
-    },
-    {
-      "ticker": "NTSK",
-      "date": "Jun 03",
-      "days": 0
-    },
-    {
-      "ticker": "RBRK",
-      "date": "Jun 04",
-      "days": 1
-    },
-    {
-      "ticker": "SAIL",
-      "date": "Jun 09",
-      "days": 6
-    },
-    {
-      "ticker": "TCOM",
-      "date": "Jun 04",
-      "days": 1
-    },
-    {
-      "ticker": "TTAN",
-      "date": "Jun 04",
-      "days": 1
-    },
-    {
-      "ticker": "UEC",
-      "date": "Jun 09",
-      "days": 6
-    }
-  ],
+  "earnings": [],
   "overlap": [
     {
       "ticker": "HMY",
@@ -21098,33 +21017,28 @@
   "concentration": [],
   "bond_signals": {
     "yield_curve": {
-      "two_year": 3.98,
-      "ten_year": 4.45,
-      "spread": 0.47,
-      "spread_1mo_ago": 0.5,
-      "spread_change": -0.03,
-      "date": "2026-05-29",
-      "assessment": "Flat \u2014 neutral"
+      "two_year": 4.172,
+      "ten_year": 4.453,
+      "spread": 0.281,
+      "date": "2026-06-02",
+      "assessment": "Flat \u2014 caution"
     },
     "credit_spreads": {
-      "current_bps": 272.0,
-      "raw_value": 2.72,
-      "prev_value": 2.78,
-      "change": -0.06,
-      "date": "2026-06-01",
-      "assessment": "Tight (272bps) \u2014 bullish"
+      "current_bps": 292.0,
+      "date": "2026-06-02",
+      "assessment": "Tight (292bps) \u2014 bullish"
     },
     "ten_year": {
-      "current": 4.45,
-      "prev": 4.42,
-      "change_bps": 3.0,
-      "date": "2026-05-29",
-      "assessment": "Stable \u2014 neutral"
+      "current": 4.453,
+      "prev": 4.481,
+      "change_bps": -2.8,
+      "date": "2026-06-02",
+      "assessment": "Elevated \u2014 bearish"
     },
     "scores": {
-      "yield_curve": 0,
+      "yield_curve": 1,
       "credit_spreads": 1,
-      "ten_year_level": 0
+      "ten_year_level": -1
     },
     "combined_score": 1
   },
@@ -22679,28 +22593,12 @@
       "reason": "Not in top 10 (score 10)"
     },
     {
-      "portfolio": "Income Dividends",
-      "action": "SELL",
-      "ticker": "SQM",
-      "shares": 143,
-      "score": 10,
-      "reason": "Not in top 10 (score 10)"
-    },
-    {
       "portfolio": "Innovation Fund",
       "action": "SELL",
       "ticker": "GMED",
       "shares": 157,
       "score": 9,
       "reason": "Not in top 10 (score 9)"
-    },
-    {
-      "portfolio": "Innovation Fund",
-      "action": "SELL",
-      "ticker": "ESTC",
-      "shares": 37,
-      "score": 8,
-      "reason": "Not in top 10 (score 8)"
     },
     {
       "portfolio": "Innovation Fund",
@@ -22715,14 +22613,6 @@
       "action": "SELL",
       "ticker": "SHOP",
       "shares": 57,
-      "score": 8,
-      "reason": "Not in top 10 (score 8)"
-    },
-    {
-      "portfolio": "Momentum Growth",
-      "action": "SELL",
-      "ticker": "STX",
-      "shares": 13,
       "score": 8,
       "reason": "Not in top 10 (score 8)"
     },
@@ -22765,38 +22655,6 @@
       "shares": 396,
       "score": 5,
       "reason": "Not in top 10 (score 5)"
-    },
-    {
-      "portfolio": "Value Picks",
-      "action": "SELL",
-      "ticker": "INSW",
-      "shares": 20,
-      "score": 4,
-      "reason": "Not in top 10 (score 4)"
-    },
-    {
-      "portfolio": "Growth Value",
-      "action": "SELL",
-      "ticker": "CPRX",
-      "shares": 383,
-      "score": 2,
-      "reason": "Not in top 10 (score 2)"
-    },
-    {
-      "portfolio": "Nuclear Renaissance",
-      "action": "SELL",
-      "ticker": "ETR",
-      "shares": 75,
-      "score": 2,
-      "reason": "Not in top 10 (score 2)"
-    },
-    {
-      "portfolio": "Value Picks",
-      "action": "SELL",
-      "ticker": "RRC",
-      "shares": 302,
-      "score": 0,
-      "reason": "Not in top 10 (score 0)"
     },
     {
       "portfolio": "Momentum Growth",
@@ -22852,7 +22710,7 @@
       "ticker": "PPG",
       "score": 14,
       "reason": "Score 14 \u2014 new position (top 10)",
-      "est_allocation": 9968
+      "est_allocation": 9566
     },
     {
       "portfolio": "Value Picks",
@@ -22860,7 +22718,7 @@
       "ticker": "BBVA",
       "score": 13,
       "reason": "Score 13 \u2014 new position (top 10)",
-      "est_allocation": 1607
+      "est_allocation": 1601
     },
     {
       "portfolio": "Momentum Growth",
@@ -22876,7 +22734,7 @@
       "ticker": "ATRO",
       "score": 12,
       "reason": "Score 12 \u2014 new position (top 10)",
-      "est_allocation": 6284
+      "est_allocation": 6448
     },
     {
       "portfolio": "Innovation Fund",
@@ -22940,7 +22798,7 @@
       "ticker": "LIF",
       "score": 10,
       "reason": "Score 10 \u2014 new position (top 10)",
-      "est_allocation": 4641
+      "est_allocation": 4603
     },
     {
       "portfolio": "Nuclear Renaissance",
@@ -22964,7 +22822,7 @@
       "ticker": "BOOT",
       "score": 8,
       "reason": "Score 8 \u2014 new position (top 10)",
-      "est_allocation": 10187
+      "est_allocation": 10183
     },
     {
       "portfolio": "Nuclear Renaissance",
@@ -22980,7 +22838,7 @@
       "ticker": "NNE",
       "score": 6,
       "reason": "Score 6 \u2014 new position (top 10)",
-      "est_allocation": 1066
+      "est_allocation": 1154
     },
     {
       "portfolio": "AI Defense & Autonomous",
@@ -23008,6 +22866,83 @@
     }
   ],
   "executed_this_week": [
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "SELL",
+      "ticker": "ETR",
+      "shares": 75,
+      "price": 106.88,
+      "total": 8016.0,
+      "reason": "Not in top 10 (score 2)",
+      "date": "2026-06-02",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "SELL",
+      "ticker": "STX",
+      "shares": 13,
+      "price": 933.69,
+      "total": 12137.97,
+      "reason": "Not in top 10 (score 8)",
+      "date": "2026-06-02",
+      "executed": true
+    },
+    {
+      "portfolio": "Income Dividends",
+      "action": "SELL",
+      "ticker": "SQM",
+      "shares": 143,
+      "price": 80.67,
+      "total": 11535.81,
+      "reason": "Not in top 10 (score 10)",
+      "date": "2026-06-02",
+      "executed": true
+    },
+    {
+      "portfolio": "Growth Value",
+      "action": "SELL",
+      "ticker": "CPRX",
+      "shares": 383,
+      "price": 31.27,
+      "total": 11976.41,
+      "reason": "Not in top 10 (score 2)",
+      "date": "2026-06-02",
+      "executed": true
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "SELL",
+      "ticker": "ESTC",
+      "shares": 37,
+      "price": 65.85,
+      "total": 2436.45,
+      "reason": "Not in top 10 (score 8)",
+      "date": "2026-06-02",
+      "executed": true
+    },
+    {
+      "portfolio": "Value Picks",
+      "action": "SELL",
+      "ticker": "INSW",
+      "shares": 20,
+      "price": 78.16,
+      "total": 1563.2,
+      "reason": "Not in top 10 (score 4)",
+      "date": "2026-06-02",
+      "executed": true
+    },
+    {
+      "portfolio": "Value Picks",
+      "action": "SELL",
+      "ticker": "RRC",
+      "shares": 302,
+      "price": 39.74,
+      "total": 12001.48,
+      "reason": "Not in top 10 (score 0)",
+      "date": "2026-06-02",
+      "executed": true
+    },
     {
       "portfolio": "AI Defense & Autonomous",
       "action": "BUY",
@@ -24296,5 +24231,12 @@
       "executed": true
     }
   ],
-  "priceRefreshedAt": "2026-06-02T15:09:39.527249Z"
+  "priceRefreshedAt": "2026-06-02T15:09:39.527249Z",
+  "rates": {
+    "fed_funds": "4.25\u20134.50%",
+    "ten_year": 4.453,
+    "two_year": 4.172,
+    "yield_spread": 0.281,
+    "inverted": false
+  }
 }
