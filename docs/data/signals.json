@@ -21102,73 +21102,7 @@
       }
     }
   },
-  "earnings": [
-    {
-      "ticker": "ACN",
-      "date": "Jun 18",
-      "days": 14
-    },
-    {
-      "ticker": "BF-A",
-      "date": "Jun 04",
-      "days": 0
-    },
-    {
-      "ticker": "BF-B",
-      "date": "Jun 04",
-      "days": 0
-    },
-    {
-      "ticker": "CIEN",
-      "date": "Jun 04",
-      "days": 0
-    },
-    {
-      "ticker": "GWRE",
-      "date": "Jun 04",
-      "days": 0
-    },
-    {
-      "ticker": "IOT",
-      "date": "Jun 04",
-      "days": 0
-    },
-    {
-      "ticker": "JBL",
-      "date": "Jun 17",
-      "days": 13
-    },
-    {
-      "ticker": "LEN",
-      "date": "Jun 11",
-      "days": 7
-    },
-    {
-      "ticker": "NAVN",
-      "date": "Jun 10",
-      "days": 6
-    },
-    {
-      "ticker": "SAIL",
-      "date": "Jun 09",
-      "days": 5
-    },
-    {
-      "ticker": "TCOM",
-      "date": "Jun 04",
-      "days": 0
-    },
-    {
-      "ticker": "TTAN",
-      "date": "Jun 04",
-      "days": 0
-    },
-    {
-      "ticker": "UEC",
-      "date": "Jun 09",
-      "days": 5
-    }
-  ],
+  "earnings": [],
   "overlap": [
     {
       "ticker": "HMY",
@@ -21188,33 +21122,28 @@
   "concentration": [],
   "bond_signals": {
     "yield_curve": {
-      "two_year": 4.05,
-      "ten_year": 4.47,
-      "spread": 0.42,
-      "spread_1mo_ago": 0.52,
-      "spread_change": -0.1,
-      "date": "2026-06-01",
-      "assessment": "Flat \u2014 neutral"
+      "two_year": 4.204,
+      "ten_year": 4.481,
+      "spread": 0.277,
+      "date": "2026-06-03",
+      "assessment": "Flat \u2014 caution"
     },
     "credit_spreads": {
-      "current_bps": 271.0,
-      "raw_value": 2.71,
-      "prev_value": 2.77,
-      "change": -0.06,
-      "date": "2026-06-02",
-      "assessment": "Tight (271bps) \u2014 bullish"
+      "current_bps": 292.0,
+      "date": "2026-06-03",
+      "assessment": "Tight (292bps) \u2014 bullish"
     },
     "ten_year": {
-      "current": 4.47,
-      "prev": 4.4,
-      "change_bps": 7.0,
-      "date": "2026-06-01",
-      "assessment": "Stable \u2014 neutral"
+      "current": 4.481,
+      "prev": 4.455,
+      "change_bps": 2.6,
+      "date": "2026-06-03",
+      "assessment": "Elevated \u2014 bearish"
     },
     "scores": {
-      "yield_curve": 0,
+      "yield_curve": 1,
       "credit_spreads": 1,
-      "ten_year_level": 0
+      "ten_year_level": -1
     },
     "combined_score": 1
   },
@@ -22715,22 +22644,6 @@
       "reason": "Not in top 10 (score 10)"
     },
     {
-      "portfolio": "Momentum Growth",
-      "action": "SELL",
-      "ticker": "AVGO",
-      "shares": 26,
-      "score": 10,
-      "reason": "Not in top 10 (score 10)"
-    },
-    {
-      "portfolio": "Value Picks",
-      "action": "SELL",
-      "ticker": "FIS",
-      "shares": 276,
-      "score": 9,
-      "reason": "Not in top 10 (score 9)"
-    },
-    {
       "portfolio": "Innovation Fund",
       "action": "SELL",
       "ticker": "IONS",
@@ -22793,14 +22706,6 @@
       "shares": 294,
       "score": 1,
       "reason": "Not in top 10 (score 1)"
-    },
-    {
-      "portfolio": "AI Defense & Autonomous",
-      "action": "SELL",
-      "ticker": "KTOS",
-      "shares": 178,
-      "score": -1,
-      "reason": "Not in top 10 (score -1)"
     },
     {
       "portfolio": "Momentum Growth",
@@ -22880,7 +22785,7 @@
       "ticker": "CLS",
       "score": 14,
       "reason": "Score 14 \u2014 new position (top 10)",
-      "est_allocation": 6427
+      "est_allocation": 7143
     },
     {
       "portfolio": "Value Picks",
@@ -22888,7 +22793,7 @@
       "ticker": "BBVA",
       "score": 13,
       "reason": "Score 13 \u2014 new position (top 10)",
-      "est_allocation": 1565
+      "est_allocation": 792
     },
     {
       "portfolio": "Innovation Fund",
@@ -23016,10 +22921,43 @@
       "ticker": "AVAV",
       "score": 2,
       "reason": "Score 2 \u2014 new position (top 10)",
-      "est_allocation": 5698
+      "est_allocation": 6225
     }
   ],
   "executed_this_week": [
+    {
+      "portfolio": "AI Defense & Autonomous",
+      "action": "SELL",
+      "ticker": "KTOS",
+      "shares": 178,
+      "price": 59.17,
+      "total": 10532.23,
+      "reason": "Not in top 10 (score -1)",
+      "date": "2026-06-03",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "SELL",
+      "ticker": "AVGO",
+      "shares": 26,
+      "price": 488.26,
+      "total": 12694.75,
+      "reason": "Not in top 10 (score 9)",
+      "date": "2026-06-03",
+      "executed": true
+    },
+    {
+      "portfolio": "Value Picks",
+      "action": "SELL",
+      "ticker": "FIS",
+      "shares": 276,
+      "price": 40.55,
+      "total": 11191.8,
+      "reason": "Not in top 10 (score 9)",
+      "date": "2026-06-03",
+      "executed": true
+    },
     {
       "portfolio": "Nuclear Renaissance",
       "action": "SELL",
@@ -24044,5 +23982,12 @@
       "executed": true
     }
   ],
-  "priceRefreshedAt": "2026-06-03T15:11:28.842684Z"
+  "priceRefreshedAt": "2026-06-03T15:11:28.842684Z",
+  "rates": {
+    "fed_funds": "4.25\u20134.50%",
+    "ten_year": 4.481,
+    "two_year": 4.204,
+    "yield_spread": 0.277,
+    "inverted": false
+  }
 }
