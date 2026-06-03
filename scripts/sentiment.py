@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Multi-source sentiment aggregator for BigClaw.
 
-Sources: X/Twitter, Reddit (WSB + stocks + investing), Yahoo Finance news, Brave Search news.
-Stocktwits removed (API 403 since Feb 2026).
+Sources: Reddit (WSB + stocks + investing), Yahoo Finance news, Brave Search news.
+X/Twitter and Stocktwits removed June 2026 (X subscription not renewed since Feb; Stocktwits unreliable).
 
 Usage:
     source ~/.env_secrets
@@ -39,42 +39,6 @@ def _load_env_secrets():
 
 
 _load_env_secrets()
-
-
-def search_x(query, max_results=20):
-    """Search X/Twitter API v2 for recent posts about a topic."""
-    bearer = os.environ.get("X_BEARER_TOKEN")
-    if not bearer:
-        return {"source": "X/Twitter", "error": "No X_BEARER_TOKEN set", "posts": []}
-
-    url = "https://api.twitter.com/2/tweets/search/recent"
-    headers = {"Authorization": f"Bearer {bearer}"}
-    params = {
-        "query": f"{query} lang:en -is:retweet",
-        "max_results": min(max_results, 100),
-        "tweet.fields": "created_at,public_metrics,author_id",
-    }
-
-    try:
-        resp = requests.get(url, headers=headers, params=params, timeout=15)
-        if resp.status_code == 429:
-            return {"source": "X/Twitter", "error": "Rate limited", "posts": []}
-        if resp.status_code != 200:
-            return {"source": "X/Twitter", "error": f"HTTP {resp.status_code}", "posts": []}
-
-        data = resp.json()
-        posts = []
-        for tweet in data.get("data", []):
-            metrics = tweet.get("public_metrics", {})
-            posts.append({
-                "text": tweet.get("text", ""),
-                "likes": metrics.get("like_count", 0),
-                "retweets": metrics.get("retweet_count", 0),
-                "created": tweet.get("created_at", ""),
-            })
-        return {"source": "X/Twitter", "count": len(posts), "posts": posts}
-    except Exception as e:
-        return {"source": "X/Twitter", "error": str(e), "posts": []}
 
 
 def search_reddit(ticker, subreddits=None):
@@ -197,11 +161,6 @@ def analyze_ticker(ticker):
         "sources": {}
     }
 
-    # X/Twitter
-    x_data = search_x(f"${ticker} OR #{ticker}")
-    results["sources"]["twitter"] = x_data
-    x_scores = [simple_sentiment_score(p["text"]) for p in x_data.get("posts", [])]
-
     # Reddit (multiple subs)
     reddit_data = search_reddit(ticker)
     results["sources"]["reddit"] = reddit_data
@@ -219,7 +178,7 @@ def analyze_ticker(ticker):
 
     # Weighted composite
     # Social (X + Reddit) = 50%, News (Yahoo + Brave) = 50%
-    social_scores = x_scores + reddit_scores
+    social_scores = reddit_scores  # was: x_scores + reddit_scores (X removed June 2026)
     news_scores = yahoo_scores + brave_scores
 
     social_avg = sum(social_scores) / len(social_scores) if social_scores else 0
@@ -239,7 +198,6 @@ def analyze_ticker(ticker):
         "composite_score": composite,
         "social_avg": round(social_avg, 2) if social_scores else None,
         "news_avg": round(news_avg, 2) if news_scores else None,
-        "twitter_avg": round(sum(x_scores) / len(x_scores), 2) if x_scores else None,
         "reddit_avg": round(sum(reddit_scores) / len(reddit_scores), 2) if reddit_scores else None,
         "yahoo_avg": round(sum(yahoo_scores) / len(yahoo_scores), 2) if yahoo_scores else None,
         "brave_avg": round(sum(brave_scores) / len(brave_scores), 2) if brave_scores else None,
