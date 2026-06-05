@@ -20303,38 +20303,7 @@
       }
     }
   },
-  "earnings": [
-    {
-      "ticker": "ACN",
-      "date": "Jun 18",
-      "days": 12
-    },
-    {
-      "ticker": "JBL",
-      "date": "Jun 17",
-      "days": 11
-    },
-    {
-      "ticker": "NAVN",
-      "date": "Jun 10",
-      "days": 4
-    },
-    {
-      "ticker": "SAIL",
-      "date": "Jun 09",
-      "days": 3
-    },
-    {
-      "ticker": "TCOM",
-      "date": "Jun 08",
-      "days": 2
-    },
-    {
-      "ticker": "UEC",
-      "date": "Jun 09",
-      "days": 3
-    }
-  ],
+  "earnings": [],
   "overlap": [
     {
       "ticker": "NBIX",
@@ -20347,33 +20316,28 @@
   "concentration": [],
   "bond_signals": {
     "yield_curve": {
-      "two_year": 4.08,
-      "ten_year": 4.49,
-      "spread": 0.41,
-      "spread_1mo_ago": 0.5,
-      "spread_change": -0.09,
-      "date": "2026-06-03",
-      "assessment": "Flat \u2014 neutral"
+      "two_year": 4.278,
+      "ten_year": 4.538,
+      "spread": 0.26,
+      "date": "2026-06-05",
+      "assessment": "Flat \u2014 caution"
     },
     "credit_spreads": {
-      "current_bps": 274.0,
-      "raw_value": 2.74,
-      "prev_value": 2.79,
-      "change": -0.05,
-      "date": "2026-06-04",
-      "assessment": "Tight (274bps) \u2014 bullish"
+      "current_bps": 292.0,
+      "date": "2026-06-05",
+      "assessment": "Tight (292bps) \u2014 bullish"
     },
     "ten_year": {
-      "current": 4.49,
-      "prev": 4.45,
-      "change_bps": 4.0,
-      "date": "2026-06-03",
-      "assessment": "Stable \u2014 neutral"
+      "current": 4.538,
+      "prev": 4.475,
+      "change_bps": 6.3,
+      "date": "2026-06-05",
+      "assessment": "Elevated \u2014 bearish"
     },
     "scores": {
-      "yield_curve": 0,
+      "yield_curve": 1,
       "credit_spreads": 1,
-      "ten_year_level": 0
+      "ten_year_level": -1
     },
     "combined_score": 1
   },
@@ -22835,5 +22799,12 @@
       "executed": true
     }
   ],
-  "priceRefreshedAt": "2026-06-05T15:10:27.140798Z"
+  "priceRefreshedAt": "2026-06-05T15:10:27.140798Z",
+  "rates": {
+    "fed_funds": "4.25\u20134.50%",
+    "ten_year": 4.538,
+    "two_year": 4.278,
+    "yield_spread": 0.26,
+    "inverted": false
+  }
 }
