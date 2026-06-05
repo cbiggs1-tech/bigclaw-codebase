@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-06-04T16:50:40.380230",
+  "timestamp": "2026-06-05T06:30:20.831481",
   "context": {
     "ticker": null,
     "sector": null,
@@ -38,13 +38,13 @@
       "ticker": "^RUT",
       "price": 2935.33,
       "ytd": 18.27,
-      "1mo": 3.17,
+      "1mo": 3.18,
       "3mo": 16.24
     },
     "VIX": {
-      "level": 15.4,
+      "level": 15.62,
       "classification": "Moderate",
-      "1mo_change": -11.39
+      "1mo_change": -10.18
     }
   },
   "sectors": [
@@ -85,15 +85,6 @@
       "above_200sma": "False"
     },
     {
-      "etf": "XLRE",
-      "sector": "Real Estate",
-      "price": 44.4,
-      "1mo": 0.52,
-      "3mo": 4.22,
-      "above_50sma": "True",
-      "above_200sma": "True"
-    },
-    {
       "etf": "XLB",
       "sector": "Materials",
       "price": 51.62,
@@ -121,15 +112,6 @@
       "above_200sma": "True"
     },
     {
-      "etf": "XLC",
-      "sector": "Communications",
-      "price": 113.11,
-      "1mo": -2.18,
-      "3mo": -3.4,
-      "above_50sma": "False",
-      "above_200sma": "False"
-    },
-    {
       "etf": "XLP",
       "sector": "Consumer Staples",
       "price": 82.04,
@@ -137,6 +119,24 @@
       "3mo": -3.82,
       "above_50sma": "False",
       "above_200sma": "True"
+    },
+    {
+      "etf": "XLRE",
+      "sector": "Real Estate",
+      "price": NaN,
+      "1mo": NaN,
+      "3mo": NaN,
+      "above_50sma": "False",
+      "above_200sma": "False"
+    },
+    {
+      "etf": "XLC",
+      "sector": "Communications",
+      "price": NaN,
+      "1mo": NaN,
+      "3mo": NaN,
+      "above_50sma": "False",
+      "above_200sma": "False"
     },
     {
       "etf": "XLU",
@@ -150,9 +150,9 @@
   ],
   "risk": {
     "vix": {
-      "level": 15.4,
+      "level": 15.62,
       "classification": "Moderate",
-      "1mo_change": -11.39
+      "1mo_change": -10.18
     },
     "Gold (GLD)": {
       "price": 411.27,
@@ -163,8 +163,8 @@
       "1mo": 1.24
     },
     "Bitcoin": {
-      "price": 63318.36,
-      "1mo": -21.76
+      "price": 62415.74,
+      "1mo": -23.35
     },
     "yield_curve": {
       "spread": 0.637,
@@ -183,11 +183,11 @@
       "mom_change": -3.5
     },
     "fear_greed": {
-      "score": 54.7,
+      "score": 55,
       "rating": "neutral",
-      "previous": 54.0,
-      "1w_ago": 60.1,
-      "1m_ago": 66.9
+      "previous": 54.7,
+      "1w_ago": 59.5,
+      "1m_ago": 67.3
     },
     "saving_rate": {
       "current": 2.6,
@@ -211,19 +211,19 @@
       "two_year": 4.188,
       "ten_year": 4.477,
       "spread": 0.289,
-      "date": "2026-06-04",
+      "date": "2026-06-05",
       "assessment": "Flat \u2014 caution"
     },
     "credit_spreads": {
       "current_bps": 292.0,
-      "date": "2026-06-04",
+      "date": "2026-06-05",
       "assessment": "Tight (292bps) \u2014 bullish"
     },
     "ten_year": {
       "current": 4.477,
       "prev": 4.453,
       "change_bps": 2.4,
-      "date": "2026-06-04",
+      "date": "2026-06-05",
       "assessment": "Elevated \u2014 bearish"
     },
     "scores": {
@@ -245,9 +245,9 @@
   "verdict": {
     "environment": "Risk-On",
     "positioning": "Aggressive",
-    "score": 5,
+    "score": 4,
     "signals": {
-      "bullish": 5,
+      "bullish": 4,
       "bearish": 0
     },
     "specific": null,
