@@ -304,7 +304,7 @@ trailing_stops
 
 ## 5. Portfolio Management Philosophy
 
-BigClaw manages seven independent paper portfolios. Each is permanently tied to a distinct investment philosophy modeled after a legendary investor or thematic approach. The decision engine applies unique signal-weighting matrices to each style so that a ticker that scores as a "STRONG BUY" for Momentum Growth may legitimately score as a "HOLD" or "SELL" for Value Picks. This style fidelity is non-negotiable and is the single most important mechanism that prevents the system from drifting into generic "just buy what's hot" behavior.
+BigClaw manages eight independent paper portfolios. Seven are tied to distinct investment philosophies modeled after legendary investors or thematic approaches; the decision engine applies unique signal-weighting matrices to each style so that a ticker that scores as a "STRONG BUY" for Momentum Growth may legitimately score as a "HOLD" or "SELL" for Value Picks. This style fidelity is non-negotiable and is the single most important mechanism that prevents the system from drifting into generic "just buy what's hot" behavior. The eighth portfolio (added June 2026) is a controlled experiment in LLM-driven discretionary trading with no rule-based engine — see section 5.3.
 
 ### 5.1 Portfolio Definitions
 
@@ -317,12 +317,36 @@ BigClaw manages seven independent paper portfolios. Each is permanently tied to 
 | 5 | Momentum Growth | CANSLIM Momentum | William O'Neil |
 | 6 | Nuclear Renaissance | Nuclear Energy / Domain Expertise | Thematic Structural |
 | 7 | AI Defense & Autonomous | AI Defense / Autonomous Systems | Pentagon Spending Theme |
+| 8 | LLM Discretionary | LLM-Driven Autonomous (experimental — see 5.3) | None — pure model judgment |
 
 ### 5.2 Portfolio Parameters
 
 | Parameter | Value |
 |-----------|-------|
 | Starting capital per portfolio | $100,000 virtual cash |
+
+### 5.3 LLM Discretionary Portfolio (experimental, June 2026 onward)
+
+The 8th portfolio is a deliberate counter-design to the seven rule-based portfolios. **No style gates, no top-10 rotation, no target-price discipline, no decision-engine scoring.** Every trade decision is made by a 3-Sonnet dialectical decision system.
+
+**Architecture: 3-Sonnet dialectic.** Three Claude Sonnet 4.6 agents run sequentially each weekday at 11:00 CT:
+1. **BULL agent** — given the data (portfolio state, sector/factor ETFs, news, journal), builds the strongest case FOR candidate trades.
+2. **BEAR agent** — reads the bull's case and same data, builds the strongest case AGAINST. Looks for hidden risk, counter-evidence, already-priced signals.
+3. **JUDGE agent** — reads data + bull + bear + journal. Must explicitly address the strongest bear counter-arguments before committing. Produces strict-JSON trade decisions with required `exit_thesis` field (specific gain target / stop loss / time-based exit).
+
+**Recursive learning via journal.** Every cycle appends to `data/llm_journal.jsonl` — input snapshot, bull case, bear case, judge decision, executed trades, and (filled in later by Python reconciler) realized P&L vs the predicted `exit_thesis`. Each subsequent cycle reads this journal as input, so the model can see its own track record of wins, losses, and prediction accuracy. Over weeks, the model's stated `patterns_noted` field accumulates as a self-written strategy guide.
+
+**Anti-cheating constraints (mechanical, enforced in Python):**
+- Ticker validation: every proposed trade ticker is verified against Alpaca's tradable assets list before submit.
+- Cash wall: cannot spend more than `current_cash`; enforced by `record_trade`.
+- Market-hours gate: trades only submitted when Alpaca clock reports market open.
+- Hallucination prevention via prompt: training cutoff is January 2026; every factual claim must cite the data feed; no inventing news, earnings, or events.
+
+**Safety rail — catastrophic drawdown freeze.** If total portfolio value drops below $50,000 (50% of starting capital), `LLM_PORTFOLIO_DRAWDOWN_FREEZE.flag` is written, trading pauses, and a Slack alert fires. Manual resolution required to resume.
+
+**Cost.** Daily cycle ≈ $0.13 (three Sonnet 4.6 calls). Annual ≈ $34 for ~252 trading days.
+
+**Experimental purpose.** The 7 rule-based portfolios are the control. This portfolio is the treatment. Direct comparison over months: does LLM judgment with structured self-feedback beat hand-coded rules and SPY? Either outcome is valuable — it informs the future direction of BigClaw's decision architecture.
 | Maximum holdings per portfolio | 10 |
 | Minimum holdings per portfolio | 7 (triggers swap/add if breached) |
 | Maximum single position | 20% of total portfolio value (holdings + cash) |
@@ -987,7 +1011,9 @@ All JSON data in `docs/data/` is auto-refreshed and pushed to GitHub Pages:
 | File | Contents | Refresh |
 |------|----------|---------|
 | `signals.json` | Decision engine output with rescreen: scores, labels, reasons, portfolio holding context (shares, position %, capacity), swap recommendations with score differentials | 5×/day |
-| `portfolios.json` | All 7 portfolios with holdings, current prices, returns | 5×/day |
+| `portfolios.json` | All 8 portfolios with holdings, current prices, returns | 5×/day |
+| `llm_portfolio.json` | LLM Discretionary daily bull/bear/judge output + trades | 1×/day weekday |
+| `sector_rotation.json` | Weekly sector rotation report (LLM-synthesized) | 1×/week Sunday |
 | `market.json` | S&P 500, Dow, NASDAQ, VIX + sector rotation heatmap (11 GICS sectors) | 5×/day (indices), 1×/day (sectors) |
 | `macro.json` | Macro indicators, bond yields, sentiment, sector performance, VIX, verdict | 5×/day |
 | `charts/*.json` | Per-ticker OHLCV, MACD, RSI, Monte Carlo for ~50 held tickers | 5×/day |
