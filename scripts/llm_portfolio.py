@@ -62,6 +62,7 @@ DRAWDOWN_FLAG = Path.home() / "bigclaw-ai" / "logs" / "LLM_PORTFOLIO_DRAWDOWN_FR
 LLM_LOG = Path.home() / "bigclaw-ai" / "logs" / "llm_calls.jsonl"
 JOURNAL = Path.home() / "bigclaw-ai" / "data" / "llm_journal.jsonl"
 OUTPUT_JSON = Path.home() / "bigclaw-ai" / "docs" / "data" / "llm_portfolio.json"
+DECISIONS_DIR = Path.home() / "bigclaw-ai" / "data" / "llm_decisions"
 DB_PATH = Path.home() / "bigclaw-ai" / "src" / "portfolios.db"
 
 SECTOR_ETFS = ['XLK', 'XLF', 'XLE', 'XLV', 'XLI', 'XLP', 'XLY', 'XLB', 'XLU', 'XLRE', 'XLC']
@@ -465,7 +466,7 @@ def call_agent(client, system, user_message, model, max_tokens, agent_name):
     cost = (in_tok * 3.0 + out_tok * 15.0) / 1_000_000
     log_llm_call(agent_name, model, in_tok, out_tok, cost, dt)
     log(f"  {agent_name}: in={in_tok} out={out_tok} cost=${cost:.4f} t={dt:.1f}s")
-    return text, cost
+    return text, cost, dt
 
 
 def parse_judge_json(text):
@@ -586,6 +587,196 @@ def post_slack(channel, text, secrets):
         prefix = "" if i == 0 else f"_(continued)_\n\n"
         client.chat_postMessage(channel=channel, text=prefix + text[i:i+38000])
 
+def save_decision_markdown(today_iso, total_value, state, market, news, peer_returns,
+                            bull_text, bear_text, judge_out, exec_results,
+                            cost_total, cycle_duration_sec, bull_dt=None, bear_dt=None, judge_dt=None):
+    """Human-readable per-cycle file with full reasoning. Browse data/llm_decisions/
+       to see Bull / Bear / Decision basis and how it evolves over time."""
+    DECISIONS_DIR.mkdir(parents=True, exist_ok=True)
+    md = DECISIONS_DIR / f"{today_iso}.md"
+
+    cum = (total_value / state['starting_cash'] - 1) * 100
+    spy = market.get('SPY', {})
+
+    lines = [
+        f"# LLM Discretionary — {today_iso}",
+        "",
+        f"**Portfolio value:** ${total_value:,.2f}  |  **Cash:** ${state['current_cash']:,.2f}  "
+        f"|  **Cumulative return:** {cum:+.2f}%",
+        f"**Cycle cost:** ${cost_total:.4f}  |  **Total cycle duration:** {cycle_duration_sec:.1f}s "
+        f"(Bull {bull_dt or '?'}s, Bear {bear_dt or '?'}s, Judge {judge_dt or '?'}s)",
+        "",
+        "---",
+        "",
+        "## Market state the LLM saw",
+        "",
+        f"- **SPY:** 1d {spy.get('ret_1d',0):+.2f}%  /  5d {spy.get('ret_5d',0):+.2f}%  /  30d {spy.get('ret_30d',0):+.2f}%",
+        "",
+    ]
+
+    # Sector ETFs
+    sector_rows = [(t, market.get(t, {})) for t in SECTOR_ETFS]
+    if any(m for _, m in sector_rows):
+        lines += ["### Sector ETF returns (1d / 5d / 30d)", ""]
+        lines += ["| ETF | 1d | 5d | 30d |", "|---|---:|---:|---:|"]
+        for t, m in sorted(sector_rows, key=lambda kv: -(kv[1].get('ret_5d') or -99)):
+            if not m: continue
+            lines.append(f"| {t} | {m.get('ret_1d',0):+.2f}% | {m.get('ret_5d',0):+.2f}% | {m.get('ret_30d',0):+.2f}% |")
+        lines.append("")
+
+    # Factor ETFs
+    factor_rows = [(t, market.get(t, {})) for t in FACTOR_ETFS]
+    if any(m for _, m in factor_rows):
+        lines += ["### Factor ETFs", ""]
+        for t, m in factor_rows:
+            if not m: continue
+            lines.append(f"- **{t}**: 1d {m.get('ret_1d',0):+.2f}%  /  5d {m.get('ret_5d',0):+.2f}%  /  30d {m.get('ret_30d',0):+.2f}%")
+        lines.append("")
+
+    # Macro
+    macro_rows = [(t, market.get(t, {})) for t in MACRO_ETFS if t != 'SPY']
+    if any(m for _, m in macro_rows):
+        lines += ["### Macro context", ""]
+        for t, m in macro_rows:
+            if not m: continue
+            lines.append(f"- **{t}**: 1d {m.get('ret_1d',0):+.2f}%  /  5d {m.get('ret_5d',0):+.2f}%  /  30d {m.get('ret_30d',0):+.2f}%")
+        lines.append("")
+
+    # Peer portfolios
+    if peer_returns:
+        lines += ["### Rule-based BigClaw peers (cumulative return)", ""]
+        for n, r in sorted(peer_returns.items(), key=lambda kv: -(kv[1] or -99)):
+            if r is None: continue
+            mark = "  ← beating LLM" if r > cum else ""
+            lines.append(f"- {n}: {r:+.2f}%{mark}")
+        lines.append("")
+
+    # Holdings before this cycle
+    lines += [f"### Holdings at start of cycle ({len(state['holdings'])})", ""]
+    if state['holdings']:
+        lines += ["| Ticker | Shares | Avg Cost | Current | Unrealized % | $ |",
+                  "|---|---:|---:|---:|---:|---:|"]
+        for h in state['holdings']:
+            lines.append(f"| {h['ticker']} | {h['shares']:.0f} | ${h['avg_cost']:.2f} | "
+                         f"${h.get('current_price',0):.2f} | {h.get('unrealized_pl_pct',0):+.1f}% | "
+                         f"${h.get('unrealized_pl',0):+,.0f} |")
+    else:
+        lines.append("_All cash, no positions._")
+    lines.append("")
+
+    # News volume
+    n_alpaca = sum(len(v) for v in news.get('per_ticker', {}).values())
+    lines.append(f"- **News volume fed in:** {n_alpaca} ticker-tagged Benzinga articles, "
+                 f"{len(news.get('cnbc', []))} CNBC headlines, "
+                 f"{len(news.get('reuters', []))} Reuters headlines.")
+    lines += ["", "---", ""]
+
+    # BULL
+    lines += [
+        "## 🟢 Bull Case",
+        "",
+        "_Sonnet #1 — strongest case FOR candidate trades. Full output, raw and uncurated._",
+        "",
+        bull_text,
+        "",
+        "---",
+        "",
+    ]
+
+    # BEAR
+    lines += [
+        "## 🔴 Bear Case",
+        "",
+        "_Sonnet #2 — challenges every bull thesis with counter-evidence. Full output, raw and uncurated._",
+        "",
+        bear_text,
+        "",
+        "---",
+        "",
+    ]
+
+    # JUDGE
+    lines += [
+        "## ⚖️ Judge Decision",
+        "",
+        "_Sonnet #3 — synthesizes both sides, must address the bear before deciding._",
+        "",
+    ]
+
+    if judge_out.get("reflection"):
+        lines += ["### Reflection on prior performance", "", judge_out["reflection"], ""]
+    if judge_out.get("market_read"):
+        lines += ["### Market read", "", judge_out["market_read"], ""]
+    if judge_out.get("addresses_bear_case"):
+        lines += ["### How the judge addressed the bear case", "",
+                  judge_out["addresses_bear_case"], ""]
+
+    trades = judge_out.get("trades", [])
+    if trades:
+        lines += [f"### Trades decided ({len(trades)})", ""]
+        for i, t in enumerate(trades, 1):
+            action = (t.get("action") or "").upper()
+            tk = t.get("ticker", "?")
+            sh = t.get("shares", 0)
+            typ = t.get("thesis_type", "?")
+            conf = t.get("confidence", "?")
+            lines += [f"**{i}. {action} {sh} {tk}** — type: {typ}, confidence: {conf}", ""]
+            lines += [f"- **Rationale:** {t.get('rationale','')}"]
+            lines += [f"- **Exit thesis:** {t.get('exit_thesis','')}"]
+            lines += [""]
+    else:
+        lines += ["### Trades decided", "", "_No trades this cycle._", ""]
+
+    if judge_out.get("watchlist"):
+        lines += ["### Watchlist for upcoming days", "",
+                  ", ".join(judge_out["watchlist"]), ""]
+    if judge_out.get("patterns_noted"):
+        lines += ["### Patterns noted (added to journal)", "",
+                  judge_out["patterns_noted"], ""]
+    if judge_out.get("uncertainty_inventory"):
+        lines += ["### Things the LLM wishes it knew but cannot", ""]
+        for item in judge_out["uncertainty_inventory"]:
+            lines.append(f"- {item}")
+        lines.append("")
+    if judge_out.get("expected_portfolio_direction"):
+        lines += [f"**Expected direction:** {judge_out['expected_portfolio_direction']}", ""]
+
+    lines += ["---", "", "## Execution", ""]
+    if exec_results:
+        for t, r in exec_results:
+            tag = f"{(t.get('action') or '').upper()} {t.get('shares')} {t.get('ticker')}"
+            if "filled_qty" in r:
+                lines.append(f"- ✓ **{tag}** filled {r['filled_qty']} @ ${r['filled_price']:.2f} "
+                             f"= ${r['value']:,.2f}  (order `{r['order_id']}`)")
+            elif "skipped" in r:
+                lines.append(f"- ⊘ **{tag}** skipped — {r['skipped']}")
+            elif "dry_run" in r:
+                lines.append(f"- ⊙ **{tag}** dry-run")
+            elif "error" in r:
+                lines.append(f"- ✗ **{tag}** ERROR — {r['error']}")
+    else:
+        lines.append("_No trades to execute._")
+
+    md.write_text("\n".join(lines))
+
+    # Maintain index README.md
+    files = sorted([f for f in DECISIONS_DIR.glob("*.md") if f.name != "README.md"], reverse=True)
+    idx = [
+        "# LLM Discretionary — Decision Journal",
+        "",
+        "Per-cycle reasoning from the 3-Sonnet dialectic (Bull / Bear / Judge).",
+        "Browse a day to see the full argument the LLMs made.",
+        "",
+        f"_{len(files)} cycle(s) recorded._",
+        "",
+        "## By date (newest first)",
+        "",
+    ]
+    for f in files:
+        idx.append(f"- [{f.stem}]({f.name})")
+    (DECISIONS_DIR / "README.md").write_text("\n".join(idx))
+
+
 def save_dashboard_json(judge_out, bull_text, bear_text, total_value, state, exec_results, cost_total):
     OUTPUT_JSON.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT_JSON.write_text(json.dumps({
@@ -685,10 +876,12 @@ def main():
         anthropic_client = anthropic.Anthropic(api_key=secrets['ANTHROPIC_API_KEY'],
                                                  timeout=LLM_TIMEOUT)
 
+        cycle_start = time.time()
+
         # --- BULL ---
         log("Calling BULL agent...")
         bull_msg = state_ctx + "\n\n## YOUR TASK:\nAs the BULL agent, write your case. Use the schema in your system prompt."
-        bull_text, bull_cost = call_agent(anthropic_client, BULL_SYSTEM, bull_msg,
+        bull_text, bull_cost, bull_dt = call_agent(anthropic_client, BULL_SYSTEM, bull_msg,
                                             MODEL_BULL, MAX_TOKENS_DEBATE, "bull")
 
         # --- BEAR ---
@@ -696,7 +889,7 @@ def main():
         bear_msg = (state_ctx
                     + "\n\n## BULL AGENT'S CASE (your target to challenge):\n\n" + bull_text
                     + "\n\n## YOUR TASK:\nAs the BEAR agent, challenge each bull thesis. Use the schema in your system prompt.")
-        bear_text, bear_cost = call_agent(anthropic_client, BEAR_SYSTEM, bear_msg,
+        bear_text, bear_cost, bear_dt = call_agent(anthropic_client, BEAR_SYSTEM, bear_msg,
                                             MODEL_BEAR, MAX_TOKENS_DEBATE, "bear")
 
         # --- JUDGE ---
@@ -705,11 +898,12 @@ def main():
                      + "\n\n## BULL AGENT'S CASE:\n\n" + bull_text
                      + "\n\n## BEAR AGENT'S COUNTER-CASE:\n\n" + bear_text
                      + "\n\n## YOUR TASK:\nAs the JUDGE, decide today's trades. Output strict JSON per schema in system prompt.")
-        judge_text, judge_cost = call_agent(anthropic_client, JUDGE_SYSTEM, judge_msg,
+        judge_text, judge_cost, judge_dt = call_agent(anthropic_client, JUDGE_SYSTEM, judge_msg,
                                               MODEL_JUDGE, MAX_TOKENS_JUDGE, "judge")
 
         cost_total = bull_cost + bear_cost + judge_cost
-        log(f"Total cycle cost: ${cost_total:.4f}")
+        cycle_duration = time.time() - cycle_start
+        log(f"Total cycle cost: ${cost_total:.4f}  duration: {cycle_duration:.1f}s")
 
         try:
             judge_out = parse_judge_json(judge_text)
@@ -754,6 +948,18 @@ def main():
 
         # Output JSON for dashboard
         save_dashboard_json(judge_out, bull_text, bear_text, total_value, state, exec_results, cost_total)
+
+        # Human-readable per-cycle Markdown for Curtis to browse
+        try:
+            save_decision_markdown(today_iso, total_value, state, market, news, peer_returns,
+                                    bull_text, bear_text, judge_out, exec_results,
+                                    cost_total, cycle_duration,
+                                    bull_dt=round(bull_dt, 1) if bull_dt else None,
+                                    bear_dt=round(bear_dt, 1) if bear_dt else None,
+                                    judge_dt=round(judge_dt, 1) if judge_dt else None)
+            log(f"Decision Markdown written to {DECISIONS_DIR}/{today_iso}.md")
+        except Exception as e:
+            log(f"Decision Markdown write failed: {e}", "WARN")
 
         # Slack summary
         slack_text = (f"🤖 *LLM Discretionary Portfolio* — {today_iso}\n"
