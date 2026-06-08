@@ -20276,33 +20276,7 @@
       }
     }
   },
-  "earnings": [
-    {
-      "ticker": "ACN",
-      "date": "Jun 18",
-      "days": 9
-    },
-    {
-      "ticker": "JBL",
-      "date": "Jun 17",
-      "days": 8
-    },
-    {
-      "ticker": "NAVN",
-      "date": "Jun 10",
-      "days": 1
-    },
-    {
-      "ticker": "TCOM",
-      "date": "Jun 10",
-      "days": 1
-    },
-    {
-      "ticker": "UEC",
-      "date": "Jun 09",
-      "days": 0
-    }
-  ],
+  "earnings": [],
   "overlap": [
     {
       "ticker": "NBIX",
@@ -20315,33 +20289,28 @@
   "concentration": [],
   "bond_signals": {
     "yield_curve": {
-      "two_year": 4.05,
-      "ten_year": 4.47,
-      "spread": 0.42,
-      "spread_1mo_ago": 0.5,
-      "spread_change": -0.08,
-      "date": "2026-06-04",
-      "assessment": "Flat \u2014 neutral"
+      "two_year": 4.287,
+      "ten_year": 4.55,
+      "spread": 0.263,
+      "date": "2026-06-08",
+      "assessment": "Flat \u2014 caution"
     },
     "credit_spreads": {
-      "current_bps": 276.0,
-      "raw_value": 2.76,
-      "prev_value": 2.81,
-      "change": -0.05,
-      "date": "2026-06-05",
-      "assessment": "Tight (276bps) \u2014 bullish"
+      "current_bps": 292.0,
+      "date": "2026-06-08",
+      "assessment": "Tight (292bps) \u2014 bullish"
     },
     "ten_year": {
-      "current": 4.47,
-      "prev": 4.43,
-      "change_bps": 4.0,
-      "date": "2026-06-04",
-      "assessment": "Stable \u2014 neutral"
+      "current": 4.55,
+      "prev": 4.455,
+      "change_bps": 9.5,
+      "date": "2026-06-08",
+      "assessment": "Elevated \u2014 bearish"
     },
     "scores": {
-      "yield_curve": 0,
+      "yield_curve": 1,
       "credit_spreads": 1,
-      "ten_year_level": 0
+      "ten_year_level": -1
     },
     "combined_score": 1
   },
@@ -22643,5 +22612,12 @@
       "executed": true
     }
   ],
-  "priceRefreshedAt": "2026-06-08T15:09:34.787295Z"
+  "priceRefreshedAt": "2026-06-08T15:09:34.787295Z",
+  "rates": {
+    "fed_funds": "4.25\u20134.50%",
+    "ten_year": 4.55,
+    "two_year": 4.287,
+    "yield_spread": 0.263,
+    "inverted": false
+  }
 }
