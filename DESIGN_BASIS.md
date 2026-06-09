@@ -346,6 +346,8 @@ The 8th portfolio is a deliberate counter-design to the seven rule-based portfol
 
 **Cost.** Daily cycle ≈ $0.13 (three Sonnet 4.6 calls). Annual ≈ $34 for ~252 trading days.
 
+**Trade closure reconciler (added June 8 2026).** A second script `llm_portfolio_reconciler.py` runs daily at 15:30 CT (30 min after market close) to verify each open position against its stated `exit_thesis`. Logic: in priority order, check stop > target > time_exit; if any trigger fires, submit the SELL via the canonical Alpaca + `record_trade` path. The Judge prompt now emits a structured `exit_conditions: {target_pct, stop_pct, time_exit_date}` alongside the prose `exit_thesis`; for legacy trades lacking the structured field, a small Sonnet 4.6 call (~$0.001) extracts the conditions on first encounter. Each closure writes an `outcome` record to `data/llm_outcomes.jsonl` capturing entry/exit prices, realized %, days held, which trigger fired, and whether the original prediction was correct. **This outcomes log is what makes recursive learning real** — without verified prediction outcomes, the daily Judge has no signal to learn from. Periodic synthesis (monthly, to be built ~July 1) will compress accumulated outcomes into a `llm_strategy_guide.md` that the daily prompt reads at top-of-context.
+
 **Experimental purpose.** The 7 rule-based portfolios are the control. This portfolio is the treatment. Direct comparison over months: does LLM judgment with structured self-feedback beat hand-coded rules and SPY? Either outcome is valuable — it informs the future direction of BigClaw's decision architecture.
 | Maximum holdings per portfolio | 10 |
 | Minimum holdings per portfolio | 7 (triggers swap/add if breached) |
@@ -1013,6 +1015,7 @@ All JSON data in `docs/data/` is auto-refreshed and pushed to GitHub Pages:
 | `signals.json` | Decision engine output with rescreen: scores, labels, reasons, portfolio holding context (shares, position %, capacity), swap recommendations with score differentials | 5×/day |
 | `portfolios.json` | All 8 portfolios with holdings, current prices, returns | 5×/day |
 | `llm_portfolio.json` | LLM Discretionary daily bull/bear/judge output + trades | 1×/day weekday |
+| `llm_outcomes.jsonl` | Append-only trade closure log: entry/exit, realized %, trigger, prediction accuracy | continuous |
 | `sector_rotation.json` | Weekly sector rotation report (LLM-synthesized) | 1×/week Sunday |
 | `market.json` | S&P 500, Dow, NASDAQ, VIX + sector rotation heatmap (11 GICS sectors) | 5×/day (indices), 1×/day (sectors) |
 | `macro.json` | Macro indicators, bond yields, sentiment, sector performance, VIX, verdict | 5×/day |
