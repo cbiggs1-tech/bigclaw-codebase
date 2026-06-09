@@ -448,10 +448,30 @@ OUTPUT SCHEMA:
     }
   ],
   "watchlist": ["tickers you're considering for upcoming days"],
+  "intraday_triggers": [
+    {
+      "id": "t1",                       // your label, e.g. "t1", "fed_speak"
+      "type": "price" | "news" | "time",
+      "ticker": "NVDA",                 // PRICE triggers only
+      "op": "below" | "above" | "crosses_below" | "crosses_above",  // PRICE only
+      "level": 205.0,                   // PRICE only
+      "keywords": ["Fed", "Powell", "FOMC", "rate decision"],  // NEWS only
+      "wake_at": "YYYY-MM-DDTHH:MMZ",   // TIME only - ISO UTC
+      "action_intent": "specific intent if the trigger fires (the watcher's LLM call will see this)",
+      "expires_at": "YYYY-MM-DDTHH:MMZ" // default end of trading day
+    }
+  ],
   "patterns_noted": "lessons-learned to add to your journal for future cycles",
   "uncertainty_inventory": ["3 things you wish you knew but cannot from this data feed"],
   "expected_portfolio_direction": "bullish" or "bearish" or "neutral"
 }
+
+INTRADAY TRIGGERS: You have full freedom to define up to 8 triggers per cycle that may fire later
+today. Use them aggressively when you see asymmetric setups: "if NVDA breaks $210 with volume,
+add", "if Fed dovishness leaks before FOMC, lever up tech", "if SPY -2% intraday, buy the panic".
+A lightweight watcher polls every 5 min during market hours. When any trigger matches, a focused
+LLM cycle (you again, with the original intent + current state) decides: execute as planned,
+modify, or stand down. Max 6 fires per day across all triggers.
 
 If no trades make sense today, return {"trades": []} and explain in reflection."""
 
@@ -953,6 +973,23 @@ def main():
 
         # Output JSON for dashboard
         save_dashboard_json(judge_out, bull_text, bear_text, total_value, state, exec_results, cost_total)
+
+        # Persist intraday triggers for the watcher to pick up
+        try:
+            triggers = judge_out.get("intraday_triggers", []) or []
+            pending_state = {
+                "date": today_iso,
+                "fires_today": 0,
+                "max_fires": 6,
+                "triggers": [{**t, "status": "armed"} for t in triggers if t.get("id")],
+                "last_news_check": None,
+            }
+            pending_path = Path.home() / "bigclaw-ai" / "data" / "llm_pending_triggers.json"
+            pending_path.parent.mkdir(parents=True, exist_ok=True)
+            pending_path.write_text(json.dumps(pending_state, indent=2))
+            log(f"Persisted {len(pending_state['triggers'])} intraday trigger(s) to {pending_path}")
+        except Exception as e:
+            log(f"Trigger persistence failed: {e}", "WARN")
 
         # Human-readable per-cycle Markdown for Curtis to browse
         try:
