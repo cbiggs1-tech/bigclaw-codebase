@@ -437,7 +437,12 @@ OUTPUT SCHEMA:
       "ticker": "AAPL",  // real tradable Alpaca ticker
       "shares": 50,       // positive integer
       "rationale": "specific data-cited reasoning (which catalyst/setup/pattern)",
-      "exit_thesis": "specific gain target / stop loss / time-based exit",
+      "exit_thesis": "specific gain target / stop loss / time-based exit (prose, for the journal)",
+      "exit_conditions": {
+        "target_pct": 2.0,              // gain target as positive number, e.g. 2.5 = +2.5%; null if none
+        "stop_pct": 1.5,                // stop loss as positive number (absolute), e.g. 1.5 = -1.5%; null if none
+        "time_exit_date": "YYYY-MM-DD"  // ISO date by which position must close; null if no time exit
+      },
       "thesis_type": "catalyst" or "technical" or "macro" or "sentiment" or "contrarian",
       "confidence": 0.0 to 1.0
     }
