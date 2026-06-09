@@ -156,6 +156,35 @@ def _expired(trigger, now):
     except Exception:
         return False
 
+SELL_INTENT_WORDS = ("sell", "trim", "stop", "exit", "close", "lighten", "reduce", "cut")
+
+def _is_sell_intent(trigger):
+    """Return True if the trigger's action_intent looks like a sell/exit action."""
+    intent = (trigger.get("action_intent") or "").lower()
+    return any(w in intent for w in SELL_INTENT_WORDS)
+
+def cleanup_obsolete_triggers(state, current_holdings):
+    """Mark as obsolete any price-stop trigger referencing a ticker we no longer hold.
+
+    Called both pre-evaluation (catches stale state from earlier today) and post-execution
+    (catches triggers made stale by the trade we just did)."""
+    held_set = {h["ticker"].upper() for h in current_holdings}
+    n_obsoleted = 0
+    for trig in state.get("triggers", []):
+        if trig.get("status") != "armed":
+            continue
+        ttype = trig.get("type")
+        if ttype != "price":
+            continue
+        ticker = (trig.get("ticker") or "").upper()
+        if not ticker:
+            continue
+        if _is_sell_intent(trig) and ticker not in held_set:
+            trig["status"] = "obsolete_position_closed"
+            trig["obsoleted_at"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
+            n_obsoleted += 1
+    return n_obsoleted
+
 
 # ---------- trigger evaluation ----------
 def check_price_trigger(trigger):
@@ -495,8 +524,20 @@ def main():
         if not client.get_clock().is_open and not args.dry_run:
             return  # quiet exit; cron fires every 5 min
 
-        log(f"Watcher poll - {len(state['triggers'])} triggers armed, "
+        # PRE-FLIGHT: invalidate sell-intent price triggers referencing positions we no longer hold.
+        # Catches the case where an earlier trigger fire (or the morning script or manual action)
+        # closed the position, but the original stop trigger is still armed against the now-empty ticker.
+        _, current_holdings_preflight = get_portfolio_state()
+        n_obs = cleanup_obsolete_triggers(state, current_holdings_preflight)
+        if n_obs:
+            log(f"Cleanup: marked {n_obs} stale sell-intent trigger(s) as obsolete (no position to act on)")
+            save_state(state)
+
+        n_armed = sum(1 for t in state['triggers'] if t.get('status') == 'armed')
+        log(f"Watcher poll - {n_armed} triggers armed ({len(state['triggers'])} total), "
             f"{state['fires_today']}/{state.get('max_fires')} fires used today")
+        if n_armed == 0:
+            return
 
         # Refresh news once per poll (deduped via last_news_check timestamp)
         now_iso = datetime.datetime.now(datetime.timezone.utc).isoformat()
@@ -583,6 +624,14 @@ def main():
                                 f"{rationale[:200]}")
 
         state["fires_today"] = state.get("fires_today", 0) + 1
+
+        # POST-EXECUTION CLEANUP: if any sell just executed, invalidate triggers protecting positions
+        # that no longer exist. Prevents the next poll from firing the LLM for stale stops.
+        _, holdings_after = get_portfolio_state()
+        n_obs_post = cleanup_obsolete_triggers(state, holdings_after)
+        if n_obs_post:
+            log(f"Post-execution cleanup: marked {n_obs_post} now-stale trigger(s) as obsolete")
+
         save_state(state)
 
         # Journal entry
