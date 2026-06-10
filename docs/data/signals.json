@@ -20958,10 +20958,10 @@
   },
   "earnings": [
     {
-      "ticker": "NOC",
+      "ticker": "AMX",
       "date": "2026-07-21",
       "days_away": 41,
-      "eps_est": 6.81
+      "eps_est": 0.52
     },
     {
       "ticker": "LMT",
@@ -20970,22 +20970,22 @@
       "eps_est": 7.15
     },
     {
-      "ticker": "AMX",
+      "ticker": "NOC",
       "date": "2026-07-21",
       "days_away": 41,
-      "eps_est": 0.52
-    },
-    {
-      "ticker": "GL",
-      "date": "2026-07-22",
-      "days_away": 42,
-      "eps_est": 3.68
+      "eps_est": 6.81
     },
     {
       "ticker": "NEE",
       "date": "2026-07-22",
       "days_away": 42,
       "eps_est": 1.08
+    },
+    {
+      "ticker": "GL",
+      "date": "2026-07-22",
+      "days_away": 42,
+      "eps_est": 3.68
     },
     {
       "ticker": "GD",
@@ -21036,6 +21036,12 @@
       "eps_est": 0.39
     },
     {
+      "ticker": "Z",
+      "date": "2026-08-05",
+      "days_away": 56,
+      "eps_est": 0.45
+    },
+    {
       "ticker": "IONS",
       "date": "2026-08-05",
       "days_away": 56,
@@ -21048,22 +21054,16 @@
       "eps_est": 0.4
     },
     {
-      "ticker": "Z",
-      "date": "2026-08-05",
-      "days_away": 56,
-      "eps_est": 0.45
+      "ticker": "GMED",
+      "date": "2026-08-06",
+      "days_away": 57,
+      "eps_est": 1.1
     },
     {
       "ticker": "PODD",
       "date": "2026-08-06",
       "days_away": 57,
       "eps_est": 1.45
-    },
-    {
-      "ticker": "GMED",
-      "date": "2026-08-06",
-      "days_away": 57,
-      "eps_est": 1.1
     },
     {
       "ticker": "B",
@@ -21099,9 +21099,9 @@
   ],
   "bond_signals": {
     "yield_curve": {
-      "two_year": 4.26,
-      "ten_year": 4.536,
-      "spread": 0.276,
+      "two_year": 4.258,
+      "ten_year": 4.538,
+      "spread": 0.28,
       "date": "2026-06-10",
       "assessment": "Flat \u2014 caution"
     },
@@ -21111,9 +21111,9 @@
       "assessment": "Tight (292bps) \u2014 bullish"
     },
     "ten_year": {
-      "current": 4.536,
+      "current": 4.538,
       "prev": 4.477,
-      "change_bps": 5.9,
+      "change_bps": 6.1,
       "date": "2026-06-10",
       "assessment": "Elevated \u2014 bearish"
     },
@@ -22618,7 +22618,7 @@
       "executed": true
     },
     {
-      "portfolio": "LLM Discretionary",
+      "portfolio": "LLM-ETF Focus",
       "action": "BUY",
       "ticker": "XLV",
       "shares": 350,
@@ -22629,7 +22629,7 @@
       "executed": true
     },
     {
-      "portfolio": "LLM Discretionary",
+      "portfolio": "LLM-ETF Focus",
       "action": "BUY",
       "ticker": "XLF",
       "shares": 450,
@@ -22706,7 +22706,7 @@
       "executed": true
     },
     {
-      "portfolio": "LLM Discretionary",
+      "portfolio": "LLM-ETF Focus",
       "action": "SELL",
       "ticker": "XLK",
       "shares": 85,
@@ -22717,7 +22717,7 @@
       "executed": true
     },
     {
-      "portfolio": "LLM Discretionary",
+      "portfolio": "LLM-ETF Focus",
       "action": "SELL",
       "ticker": "NVDA",
       "shares": 30,
@@ -22728,7 +22728,7 @@
       "executed": true
     },
     {
-      "portfolio": "LLM Discretionary",
+      "portfolio": "LLM-ETF Focus",
       "action": "BUY",
       "ticker": "NVDA",
       "shares": 30,
@@ -22739,7 +22739,7 @@
       "executed": true
     },
     {
-      "portfolio": "LLM Discretionary",
+      "portfolio": "LLM-ETF Focus",
       "action": "BUY",
       "ticker": "XLK",
       "shares": 85,
@@ -22885,9 +22885,9 @@
   "priceRefreshedAt": "2026-06-10T17:17:37.257988Z",
   "rates": {
     "fed_funds": "4.25\u20134.50%",
-    "ten_year": 4.536,
-    "two_year": 4.26,
-    "yield_spread": 0.276,
+    "ten_year": 4.538,
+    "two_year": 4.258,
+    "yield_spread": 0.28,
     "inverted": false
   }
 }
