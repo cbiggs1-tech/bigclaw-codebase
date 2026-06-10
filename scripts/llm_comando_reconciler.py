@@ -35,15 +35,15 @@ import anthropic
 import yfinance as yf
 from slack_sdk import WebClient
 
-PORTFOLIO_NAME = "LLM-ETF Focus"
+PORTFOLIO_NAME = "LLM-Comando"
 DEFAULT_CHANNEL = "D0ADHLUJ400"
 MODEL_EXTRACTOR = "claude-sonnet-4-6"
-LOCK_FILE = Path("/tmp/llm_reconciler.lock")
-FAILURE_FLAG = Path.home() / "bigclaw-ai" / "logs" / "LLM_RECONCILER_FAILED.flag"
+LOCK_FILE = Path("/tmp/llm_comando_reconciler.lock")
+FAILURE_FLAG = Path.home() / "bigclaw-ai" / "logs" / "LLM_COMANDO_RECONCILER_FAILED.flag"
 LLM_LOG = Path.home() / "bigclaw-ai" / "logs" / "llm_calls.jsonl"
-JOURNAL = Path.home() / "bigclaw-ai" / "data" / "llm_journal.jsonl"
-OUTCOMES = Path.home() / "bigclaw-ai" / "data" / "llm_outcomes.jsonl"  # append-only closure log
-DECISIONS_DIR = Path.home() / "bigclaw-ai" / "data" / "llm_decisions"
+JOURNAL = Path.home() / "bigclaw-ai" / "data" / "llm_comando_journal.jsonl"
+OUTCOMES = Path.home() / "bigclaw-ai" / "data" / "llm_comando_outcomes.jsonl"  # append-only closure log
+DECISIONS_DIR = Path.home() / "bigclaw-ai" / "data" / "llm_comando_decisions"
 DB_PATH = Path.home() / "bigclaw-ai" / "src" / "portfolios.db"
 
 

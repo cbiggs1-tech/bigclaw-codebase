@@ -38,19 +38,19 @@ import feedparser
 import yfinance as yf
 from slack_sdk import WebClient
 
-PORTFOLIO_NAME = "LLM-ETF Focus"
+PORTFOLIO_NAME = "LLM-Comando"
 DEFAULT_CHANNEL = "D0ADHLUJ400"
 MODEL = "claude-sonnet-4-6"
 MAX_TOKENS = 3000
 LLM_TIMEOUT = 90.0
 MAX_FIRES_PER_DAY = 6
 
-PENDING_STATE = Path.home() / "bigclaw-ai" / "data" / "llm_pending_triggers.json"
-JOURNAL = Path.home() / "bigclaw-ai" / "data" / "llm_journal.jsonl"
-DECISIONS_DIR = Path.home() / "bigclaw-ai" / "data" / "llm_decisions"
+PENDING_STATE = Path.home() / "bigclaw-ai" / "data" / "llm_comando_pending_triggers.json"
+JOURNAL = Path.home() / "bigclaw-ai" / "data" / "llm_comando_journal.jsonl"
+DECISIONS_DIR = Path.home() / "bigclaw-ai" / "data" / "llm_comando_decisions"
 LLM_LOG = Path.home() / "bigclaw-ai" / "logs" / "llm_calls.jsonl"
-FAILURE_FLAG = Path.home() / "bigclaw-ai" / "logs" / "LLM_WATCHER_FAILED.flag"
-LOCK_FILE = Path("/tmp/llm_watcher.lock")
+FAILURE_FLAG = Path.home() / "bigclaw-ai" / "logs" / "LLM_COMANDO_WATCHER_FAILED.flag"
+LOCK_FILE = Path("/tmp/llm_comando_watcher.lock")
 DB_PATH = Path.home() / "bigclaw-ai" / "src" / "portfolios.db"
 
 CNBC_FEEDS = [
@@ -652,7 +652,7 @@ def main():
 
         # Slack
         try:
-            msg = f"⚡ *LLM-ETF Focus — Intraday Trigger Fire*\n"
+            msg = f"⚡ *LLM-Comando — Intraday Trigger Fire*\n"
             msg += f"_{state['fires_today']}/{state.get('max_fires')} fires used today, cost ${cost:.4f}_\n\n"
             msg += "\n".join(slack_lines)
             if response.get("patterns_noted"):

@@ -44,7 +44,7 @@ import yfinance as yf
 from slack_sdk import WebClient
 
 # ---------- constants ----------
-PORTFOLIO_NAME = "LLM-ETF Focus"
+PORTFOLIO_NAME = "LLM-Comando"
 DEFAULT_CHANNEL = "D0ADHLUJ400"
 MODEL_BULL = "claude-sonnet-4-6"
 MODEL_BEAR = "claude-sonnet-4-6"
@@ -56,13 +56,13 @@ LLM_TIMEOUT = 120.0
 # Safety rails (Curtis's minimum)
 CATASTROPHIC_DRAWDOWN_FLOOR = 50_000.0   # USD - freeze if portfolio drops below
 
-LOCK_FILE = Path("/tmp/llm_portfolio.lock")
-FAILURE_FLAG = Path.home() / "bigclaw-ai" / "logs" / "LLM_PORTFOLIO_FAILED.flag"
-DRAWDOWN_FLAG = Path.home() / "bigclaw-ai" / "logs" / "LLM_PORTFOLIO_DRAWDOWN_FREEZE.flag"
+LOCK_FILE = Path("/tmp/llm_comando.lock")
+FAILURE_FLAG = Path.home() / "bigclaw-ai" / "logs" / "LLM_COMANDO_FAILED.flag"
+DRAWDOWN_FLAG = Path.home() / "bigclaw-ai" / "logs" / "LLM_COMANDO_DRAWDOWN_FREEZE.flag"
 LLM_LOG = Path.home() / "bigclaw-ai" / "logs" / "llm_calls.jsonl"
-JOURNAL = Path.home() / "bigclaw-ai" / "data" / "llm_journal.jsonl"
-OUTPUT_JSON = Path.home() / "bigclaw-ai" / "docs" / "data" / "llm_portfolio.json"
-DECISIONS_DIR = Path.home() / "bigclaw-ai" / "data" / "llm_decisions"
+JOURNAL = Path.home() / "bigclaw-ai" / "data" / "llm_comando_journal.jsonl"
+OUTPUT_JSON = Path.home() / "bigclaw-ai" / "docs" / "data" / "llm_comando_portfolio.json"
+DECISIONS_DIR = Path.home() / "bigclaw-ai" / "data" / "llm_comando_decisions"
 DB_PATH = Path.home() / "bigclaw-ai" / "src" / "portfolios.db"
 
 SECTOR_ETFS = ['XLK', 'XLF', 'XLE', 'XLV', 'XLI', 'XLP', 'XLY', 'XLB', 'XLU', 'XLRE', 'XLC']
@@ -363,6 +363,16 @@ ANTI-CHEATING:
   appearing in the news feed is hallucination.
 - Every thesis must reference specific data: a sector move, a headline, a P&L pattern, a divergence.
 
+STRATEGY MANDATE — INDIVIDUAL STOCKS ONLY, NEVER ETFs:
+This portfolio is specifically designed for individual single-stock picks. ETFs (XLK, XLV, XLF, SPY,
+IWM, MTUM, USMV, etc.) are NOT acceptable candidates except in genuine hedging cases. Look for
+named single-stock theses backed by company-specific catalysts: earnings beats/misses, analyst
+upgrades, product launches, regulatory events, insider buying, news-driven price action, M&A,
+guidance changes. The data feed includes per-ticker news from Benzinga for an expanded candidate
+universe — use it aggressively. If you only see a sector theme but cannot identify a specific
+named stock to express it, say so honestly and recommend cash. Defaulting to ETFs is analytical
+laziness and is forbidden.
+
 OUTPUT: For 2-5 candidate trades (existing positions or new ideas), provide:
 - Ticker
 - Direction (buy / add / hold-and-watch / trim)
@@ -385,6 +395,13 @@ ANTI-CHEATING:
 - Every factual claim must be cited from the data feed.
 - Don't be contrarian for its own sake - if a bull thesis is genuinely strong and you cannot
   find weakness, say so honestly. The JUDGE needs your real assessment, not theatrical opposition.
+
+ETF VETO:
+If the Bull proposed any ETF candidate, you must veto it outright and identify which specific stock
+within the basket would express the thesis with better asymmetry. Name the specific stock and argue
+why the basket is inferior (greater idiosyncratic upside, cleaner catalyst, better risk/reward).
+If the Bull defaulted to ETFs because they couldn't identify a specific name, call out the lazy
+reasoning and recommend cash instead.
 
 For each bull thesis, provide:
 - Ticker
@@ -420,7 +437,15 @@ YOUR FEEDBACK LOOP: Each cycle you read your journal. The exit_thesis field on e
 trade tells you whether your prediction came true. Patterns of wrong predictions should
 change your behavior. Don't just keep doing what didn't work.
 
-YOUR GOAL: Beat SPY and beat the 7 rule-based BigClaw portfolios over the next weeks.
+YOUR GOAL: Beat SPY and beat the 7 rule-based BigClaw portfolios over the next weeks BY PICKING INDIVIDUAL STOCKS.
+
+STRICT STOCK PREFERENCE — NEVER DEFAULT TO ETFs:
+This portfolio is the LLM-Comando experiment: individual-stock theses ONLY. ETFs (any ticker starting
+with X- or factor ETFs like MTUM/QUAL/USMV/IWM) must NOT appear in your trades unless you have an
+extraordinary explicit hedging rationale. If the Bear successfully argued for a specific stock within
+an ETF basket, take that specific stock. If you find yourself reaching for an ETF, hold cash and watch
+instead. Cash is a position. Lazy ETF basket trades are forbidden — the parallel LLM-ETF Focus
+portfolio handles those by design.
 Short-term focus (1-day to 1-week horizon mostly). Quick profits OK. Cutting losses OK.
 Holding cash OK if no high-conviction opportunities.
 
@@ -624,7 +649,7 @@ def save_decision_markdown(today_iso, total_value, state, market, news, peer_ret
     spy = market.get('SPY', {})
 
     lines = [
-        f"# LLM-ETF Focus — {today_iso}",
+        f"# LLM-Comando — {today_iso}",
         "",
         f"**Portfolio value:** ${total_value:,.2f}  |  **Cash:** ${state['current_cash']:,.2f}  "
         f"|  **Cumulative return:** {cum:+.2f}%",
@@ -787,7 +812,7 @@ def save_decision_markdown(today_iso, total_value, state, market, news, peer_ret
     # Maintain index README.md
     files = sorted([f for f in DECISIONS_DIR.glob("*.md") if f.name != "README.md"], reverse=True)
     idx = [
-        "# LLM-ETF Focus — Decision Journal",
+        "# LLM-Comando — Decision Journal",
         "",
         "Per-cycle reasoning from the 3-Sonnet dialectic (Bull / Bear / Judge).",
         "Browse a day to see the full argument the LLMs made.",
@@ -883,11 +908,31 @@ def main():
 
         log("Gathering news (Alpaca/Benzinga + CNBC + Reuters)...")
         held_tickers = [h['ticker'] for h in state['holdings']]
-        # plus watchlist from last journal entry (if any)
         recent_watch = []
         if journal:
             recent_watch = journal[-1].get('watchlist', [])[:15] if isinstance(journal[-1].get('watchlist'), list) else []
-        news_tickers = sorted(set(held_tickers + recent_watch))
+
+        # LLM-Comando: expand candidate universe with BigClaw's curated rule-based universes
+        extra_candidates = set()
+        try:
+            import json as _j
+            pu_path = Path.home() / ".openclaw" / "workspace" / "config" / "portfolio_universes.json"
+            if pu_path.exists():
+                pu = _j.loads(pu_path.read_text())
+                for pname, conf in (pu.items() if isinstance(pu, dict) else []):
+                    if isinstance(conf, dict):
+                        for k in ("holdings", "candidates"):
+                            v = conf.get(k, [])
+                            if isinstance(v, list):
+                                extra_candidates.update(t for t in v if isinstance(t, str))
+                    elif isinstance(conf, list):
+                        extra_candidates.update(t for t in conf if isinstance(t, str))
+        except Exception as _e:
+            log(f"portfolio_universes read failed: {_e}", "WARN")
+        extra_candidates = sorted(extra_candidates)[:60]
+        log(f"  Curated stock universe: {len(extra_candidates)} tickers")
+
+        news_tickers = sorted(set(held_tickers + recent_watch + list(extra_candidates)))
         news = get_news(news_tickers, secrets)
         log(f"  Alpaca: {sum(len(v) for v in news['per_ticker'].values())} items for {len(news['per_ticker'])} tickers")
         log(f"  CNBC: {len(news['cnbc'])} | Reuters: {len(news['reuters'])}")
@@ -984,7 +1029,7 @@ def main():
                 "triggers": [{**t, "status": "armed"} for t in triggers if t.get("id")],
                 "last_news_check": None,
             }
-            pending_path = Path.home() / "bigclaw-ai" / "data" / "llm_pending_triggers.json"
+            pending_path = Path.home() / "bigclaw-ai" / "data" / "llm_comando_pending_triggers.json"
             pending_path.parent.mkdir(parents=True, exist_ok=True)
             pending_path.write_text(json.dumps(pending_state, indent=2))
             log(f"Persisted {len(pending_state['triggers'])} intraday trigger(s) to {pending_path}")
@@ -1004,7 +1049,7 @@ def main():
             log(f"Decision Markdown write failed: {e}", "WARN")
 
         # Slack summary
-        slack_text = (f"🤖 *LLM-ETF Focus* — {today_iso}\n"
+        slack_text = (f"🎯 *LLM-Comando* — {today_iso}\n"
                       f"Portfolio: ${total_value:,.2f} ({(total_value/state['starting_cash']-1)*100:+.2f}% from start)  "
                       f"Cash: ${state['current_cash']:,.2f}\n"
                       f"Trades decided: {len(trades)}  Executed: {executed}  Skipped: {skipped}\n"

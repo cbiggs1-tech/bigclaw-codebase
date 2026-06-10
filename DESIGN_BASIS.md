@@ -304,7 +304,7 @@ trailing_stops
 
 ## 5. Portfolio Management Philosophy
 
-BigClaw manages eight independent paper portfolios. Seven are tied to distinct investment philosophies modeled after legendary investors or thematic approaches; the decision engine applies unique signal-weighting matrices to each style so that a ticker that scores as a "STRONG BUY" for Momentum Growth may legitimately score as a "HOLD" or "SELL" for Value Picks. This style fidelity is non-negotiable and is the single most important mechanism that prevents the system from drifting into generic "just buy what's hot" behavior. The eighth portfolio (added June 2026) is a controlled experiment in LLM-driven discretionary trading with no rule-based engine — see section 5.3.
+BigClaw manages nine independent paper portfolios. Seven are tied to distinct investment philosophies modeled after legendary investors or thematic approaches; the decision engine applies unique signal-weighting matrices to each style so that a ticker that scores as a "STRONG BUY" for Momentum Growth may legitimately score as a "HOLD" or "SELL" for Value Picks. This style fidelity is non-negotiable and is the single most important mechanism that prevents the system from drifting into generic "just buy what's hot" behavior. The eighth portfolio (added June 2026) is a controlled experiment in LLM-driven discretionary trading with no rule-based engine — see section 5.3.
 
 ### 5.1 Portfolio Definitions
 
@@ -317,7 +317,8 @@ BigClaw manages eight independent paper portfolios. Seven are tied to distinct i
 | 5 | Momentum Growth | CANSLIM Momentum | William O'Neil |
 | 6 | Nuclear Renaissance | Nuclear Energy / Domain Expertise | Thematic Structural |
 | 7 | AI Defense & Autonomous | AI Defense / Autonomous Systems | Pentagon Spending Theme |
-| 8 | LLM Discretionary | LLM-Driven Autonomous (experimental — see 5.3) | None — pure model judgment |
+| 8 | LLM-ETF Focus | LLM-Driven Autonomous, ETF-tilted (3-Sonnet dialectic — see 5.3) | None — pure model judgment |
+| 9 | LLM-Comando | LLM-Driven Single-Stock (3-Sonnet dialectic, stock-preference enforced — see 5.3) | None — pure model judgment |
 
 ### 5.2 Portfolio Parameters
 
@@ -327,7 +328,15 @@ BigClaw manages eight independent paper portfolios. Seven are tied to distinct i
 
 ### 5.3 LLM Discretionary Portfolio (experimental, June 2026 onward)
 
-The 8th portfolio is a deliberate counter-design to the seven rule-based portfolios. **No style gates, no top-10 rotation, no target-price discipline, no decision-engine scoring.** Every trade decision is made by a 3-Sonnet dialectical decision system.
+The 8th and 9th portfolios are deliberate counter-designs to the seven rule-based portfolios. They share the same 3-Sonnet dialectic architecture but differ in candidate universe and prompt preference:
+
+- **LLM-ETF Focus** (formerly named LLM Discretionary, renamed June 10 2026) — original variant, trades whatever the dialectic settles on with no preference. Observed behavior is sector-rotation via SPDR ETFs as the LLM defaults to the most data-rich investable objects (XLK, XLF, XLE, etc.) and rotates between them on macro/news shifts. Curtis observed this and decided to preserve the behavior intact as a real-world test of LLM-driven sector rotation.
+
+- **LLM-Comando** (new June 10 2026) — variant with **strict stock-preference language** in all three agent prompts (Bull, Bear, Judge). ETFs are explicitly forbidden except for hedging. Candidate universe expanded to include ~60 curated liquid names from `portfolio_universes.json` (the BigClaw rule-based portfolios' shared universe) so per-ticker Benzinga news flows into the context for individual-stock theses. Dry-run verified: Judge picked AMAT (analyst PT raises) and APA (geopolitical energy thesis) — no ETFs.
+
+The original architecture description below applies to both variants. Differences noted inline.
+
+**Common architecture:** **No style gates, no top-10 rotation, no target-price discipline, no decision-engine scoring.** Every trade decision is made by a 3-Sonnet dialectical decision system.
 
 **Architecture: 3-Sonnet dialectic.** Three Claude Sonnet 4.6 agents run sequentially each weekday at 11:00 CT:
 1. **BULL agent** — given the data (portfolio state, sector/factor ETFs, news, journal), builds the strongest case FOR candidate trades.
@@ -344,7 +353,7 @@ The 8th portfolio is a deliberate counter-design to the seven rule-based portfol
 
 **Safety rail — catastrophic drawdown freeze.** If total portfolio value drops below $50,000 (50% of starting capital), `LLM_PORTFOLIO_DRAWDOWN_FREEZE.flag` is written, trading pauses, and a Slack alert fires. Manual resolution required to resume.
 
-**Cost.** Daily cycle ≈ $0.13 (three Sonnet 4.6 calls). Annual ≈ $34 for ~252 trading days.
+**Cost.** LLM-ETF Focus daily cycle ≈ $0.13 (three Sonnet 4.6 calls, smaller news context). LLM-Comando daily cycle ≈ $0.18 (same architecture but expanded ~60-ticker candidate universe inflates input tokens). Combined annual cost: ≈ $80 for ~252 trading days × 2 portfolios.
 
 **Trade closure reconciler (added June 8 2026).** A second script `llm_portfolio_reconciler.py` runs daily at 15:30 CT (30 min after market close) to verify each open position against its stated `exit_thesis`. Logic: in priority order, check stop > target > time_exit; if any trigger fires, submit the SELL via the canonical Alpaca + `record_trade` path. The Judge prompt now emits a structured `exit_conditions: {target_pct, stop_pct, time_exit_date}` alongside the prose `exit_thesis`; for legacy trades lacking the structured field, a small Sonnet 4.6 call (~$0.001) extracts the conditions on first encounter. Each closure writes an `outcome` record to `data/llm_outcomes.jsonl` capturing entry/exit prices, realized %, days held, which trigger fired, and whether the original prediction was correct. **This outcomes log is what makes recursive learning real** — without verified prediction outcomes, the daily Judge has no signal to learn from. Periodic synthesis (monthly, to be built ~July 1) will compress accumulated outcomes into a `llm_strategy_guide.md` that the daily prompt reads at top-of-context.
 
@@ -1019,6 +1028,10 @@ All JSON data in `docs/data/` is auto-refreshed and pushed to GitHub Pages:
 | `llm_portfolio.json` | LLM Discretionary daily bull/bear/judge output + trades | 1×/day weekday |
 | `llm_outcomes.jsonl` | Append-only trade closure log: entry/exit, realized %, trigger, prediction accuracy | continuous |
 | `llm_pending_triggers.json` | Today's armed intraday triggers + fires_today counter | per-cycle, per-fire |
+| `llm_comando_portfolio.json` | LLM-Comando daily bull/bear/judge output + trades | 1×/day weekday |
+| `llm_comando_journal.jsonl` | LLM-Comando append-only journal | per-cycle |
+| `llm_comando_outcomes.jsonl` | LLM-Comando trade closure log | continuous |
+| `llm_comando_pending_triggers.json` | LLM-Comando intraday triggers + fires counter | per-cycle, per-fire |
 | `sector_rotation.json` | Weekly sector rotation report (LLM-synthesized) | 1×/week Sunday |
 | `market.json` | S&P 500, Dow, NASDAQ, VIX + sector rotation heatmap (11 GICS sectors) | 5×/day (indices), 1×/day (sectors) |
 | `macro.json` | Macro indicators, bond yields, sentiment, sector performance, VIX, verdict | 5×/day |
