@@ -53,6 +53,24 @@ FAILURE_FLAG = Path.home() / "bigclaw-ai" / "logs" / "LLM_COMANDO_WATCHER_FAILED
 LOCK_FILE = Path("/tmp/llm_comando_watcher.lock")
 DB_PATH = Path.home() / "bigclaw-ai" / "src" / "portfolios.db"
 
+
+# ---------- ETF blacklist (LLM-Comando is single-stock by mandate) ----------
+ETF_BLACKLIST = {
+    # Broad index
+    'SPY', 'QQQ', 'DIA', 'VOO', 'VTI', 'VEA', 'VWO',
+    # Sector SPDRs
+    'XLK', 'XLF', 'XLE', 'XLV', 'XLI', 'XLP', 'XLY', 'XLB', 'XLU', 'XLRE', 'XLC',
+    # Industry / theme
+    'SOXX', 'SMH', 'KRE', 'IGV', 'XHB', 'ITB', 'XME', 'XOP', 'XBI', 'IBB',
+    'ARKK', 'ARKW', 'ARKQ', 'ARKG', 'ARKF', 'VNQ', 'VYM', 'VTV', 'VUG',
+    # Factor / smart-beta
+    'IWM', 'IWN', 'IWO', 'IWP', 'IWB', 'IWS', 'IWD', 'IWF',
+    'MTUM', 'QUAL', 'USMV', 'VLUE', 'SIZE', 'SPLV',
+    # Bond / macro
+    'TLT', 'IEF', 'SHY', 'BND', 'AGG', 'LQD', 'HYG', 'JNK',
+    'UUP', 'GLD', 'SLV', 'USO', 'BNO', 'UNG',
+}
+
 CNBC_FEEDS = [
     'https://www.cnbc.com/id/100003114/device/rss/rss.html',
     'https://www.cnbc.com/id/10000664/device/rss/rss.html',
@@ -456,6 +474,12 @@ def execute_trades(trades, pf_id, dry_run, secrets):
                 continue
         except Exception as e:
             results.append((tr, {"skipped": f"ticker not found: {ticker}"}))
+            continue
+
+        # HARD ENFORCEMENT: LLM-Comando is single-stock by mandate. Reject any ETF buy.
+        if action == 'buy' and ticker in ETF_BLACKLIST:
+            log(f"REJECTED ETF buy: {ticker} (LLM-Comando is single-stock only)", "WARN")
+            results.append((tr, {"skipped": f"ETF rejected: {ticker} (LLM-Comando is single-stock only)"}))
             continue
         if action == "sell":
             if shares > holdings.get(ticker, 0):

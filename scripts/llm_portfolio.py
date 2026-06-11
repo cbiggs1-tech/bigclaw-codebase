@@ -974,22 +974,27 @@ def main():
         # Output JSON for dashboard
         save_dashboard_json(judge_out, bull_text, bear_text, total_value, state, exec_results, cost_total)
 
-        # Persist intraday triggers for the watcher to pick up
-        try:
-            triggers = judge_out.get("intraday_triggers", []) or []
-            pending_state = {
-                "date": today_iso,
-                "fires_today": 0,
-                "max_fires": 6,
-                "triggers": [{**t, "status": "armed"} for t in triggers if t.get("id")],
-                "last_news_check": None,
-            }
-            pending_path = Path.home() / "bigclaw-ai" / "data" / "llm_pending_triggers.json"
-            pending_path.parent.mkdir(parents=True, exist_ok=True)
-            pending_path.write_text(json.dumps(pending_state, indent=2))
-            log(f"Persisted {len(pending_state['triggers'])} intraday trigger(s) to {pending_path}")
-        except Exception as e:
-            log(f"Trigger persistence failed: {e}", "WARN")
+        # Persist intraday triggers for the watcher to pick up.
+        # Guarded against --dry-run because the pending state file is a real side effect
+        # that the live watcher cron will pick up at its next poll (bug observed June 10).
+        if not args.dry_run:
+            try:
+                triggers = judge_out.get("intraday_triggers", []) or []
+                pending_state = {
+                    "date": today_iso,
+                    "fires_today": 0,
+                    "max_fires": 6,
+                    "triggers": [{**t, "status": "armed"} for t in triggers if t.get("id")],
+                    "last_news_check": None,
+                }
+                pending_path = Path.home() / "bigclaw-ai" / "data" / "llm_pending_triggers.json"
+                pending_path.parent.mkdir(parents=True, exist_ok=True)
+                pending_path.write_text(json.dumps(pending_state, indent=2))
+                log(f"Persisted {len(pending_state['triggers'])} intraday trigger(s) to {pending_path}")
+            except Exception as e:
+                log(f"Trigger persistence failed: {e}", "WARN")
+        else:
+            log(f"DRY RUN — skipping trigger persistence ({len(judge_out.get('intraday_triggers', []) or [])} triggers would have been written)")
 
         # Human-readable per-cycle Markdown for Curtis to browse
         try:
