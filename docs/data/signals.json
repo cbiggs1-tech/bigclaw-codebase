@@ -19040,48 +19040,7 @@
       }
     }
   },
-  "earnings": [
-    {
-      "ticker": "ACN",
-      "date": "Jun 18",
-      "days": 6
-    },
-    {
-      "ticker": "CBRS",
-      "date": "Jun 23",
-      "days": 11
-    },
-    {
-      "ticker": "CCL",
-      "date": "Jun 24",
-      "days": 12
-    },
-    {
-      "ticker": "JBL",
-      "date": "Jun 17",
-      "days": 5
-    },
-    {
-      "ticker": "JEF",
-      "date": "Jun 24",
-      "days": 12
-    },
-    {
-      "ticker": "MKC",
-      "date": "Jun 25",
-      "days": 13
-    },
-    {
-      "ticker": "MU",
-      "date": "Jun 24",
-      "days": 12
-    },
-    {
-      "ticker": "TCOM",
-      "date": "Jun 24",
-      "days": 12
-    }
-  ],
+  "earnings": [],
   "overlap": [],
   "concentration": [
     {
@@ -19092,35 +19051,30 @@
   ],
   "bond_signals": {
     "yield_curve": {
-      "two_year": 4.13,
-      "ten_year": 4.53,
-      "spread": 0.4,
-      "spread_1mo_ago": 0.48,
-      "spread_change": -0.08,
-      "date": "2026-06-09",
-      "assessment": "Flat \u2014 neutral"
+      "two_year": 4.253,
+      "ten_year": 4.522,
+      "spread": 0.269,
+      "date": "2026-06-11",
+      "assessment": "Flat \u2014 caution"
     },
     "credit_spreads": {
-      "current_bps": 280.0,
-      "raw_value": 2.8,
-      "prev_value": 2.82,
-      "change": -0.02,
-      "date": "2026-06-10",
-      "assessment": "Tight (280bps) \u2014 bullish"
+      "current_bps": 292.0,
+      "date": "2026-06-11",
+      "assessment": "Tight (292bps) \u2014 bullish"
     },
     "ten_year": {
-      "current": 4.53,
-      "prev": 4.38,
-      "change_bps": 15.0,
-      "date": "2026-06-09",
-      "assessment": "High/rising \u2014 bearish"
+      "current": 4.522,
+      "prev": 4.536,
+      "change_bps": -1.4,
+      "date": "2026-06-11",
+      "assessment": "Elevated \u2014 bearish"
     },
     "scores": {
-      "yield_curve": 0,
+      "yield_curve": 1,
       "credit_spreads": 1,
       "ten_year_level": -1
     },
-    "combined_score": 0
+    "combined_score": 1
   },
   "portfolio_optimization": {
     "Value Picks": {
@@ -19967,14 +19921,6 @@
       "reason": "Not in top 10 (score 5)"
     },
     {
-      "portfolio": "Nuclear Renaissance",
-      "action": "SELL",
-      "ticker": "NEE",
-      "shares": 90,
-      "score": 2,
-      "reason": "Not in top 10 (score 2)"
-    },
-    {
       "portfolio": "AI Defense & Autonomous",
       "action": "SELL",
       "ticker": "BAH",
@@ -20340,10 +20286,21 @@
       "ticker": "DUK",
       "score": 4,
       "reason": "Score 4 \u2014 new position (top 10)",
-      "est_allocation": 5297
+      "est_allocation": 5045
     }
   ],
   "executed_this_week": [
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "SELL",
+      "ticker": "NEE",
+      "shares": 90,
+      "price": 85.15,
+      "total": 7663.5,
+      "reason": "Not in top 10 (score 2)",
+      "date": "2026-06-11",
+      "executed": true
+    },
     {
       "portfolio": "LLM-Comando",
       "action": "SELL",
@@ -20664,5 +20621,12 @@
       "executed": true
     }
   ],
-  "priceRefreshedAt": "2026-06-11T15:09:56.030111Z"
+  "priceRefreshedAt": "2026-06-11T15:09:56.030111Z",
+  "rates": {
+    "fed_funds": "4.25\u20134.50%",
+    "ten_year": 4.522,
+    "two_year": 4.253,
+    "yield_spread": 0.269,
+    "inverted": false
+  }
 }
