@@ -828,6 +828,42 @@ def save_dashboard_json(judge_out, bull_text, bear_text, total_value, state, exe
 
 
 # ---------- main ----------
+
+def validate_triggers(triggers, db_path, pid):
+    """Drop price triggers whose levels are nonsensical vs current entry.
+    For longs (paper account is long-only):
+      crosses_below: level in (entry*0.5, entry*0.99) -- stop must be below entry but above wipeout
+      crosses_above: level in (entry*1.01, entry*2.0) -- target/add must be above entry but reachable
+    Triggers on unheld tickers (watch triggers) pass through unchanged.
+    Returns (kept_triggers, [{trigger_id, reason}, ...])."""
+    if not triggers:
+        return triggers, []
+    import sqlite3 as _s
+    c = _s.connect(db_path, timeout=10); c.row_factory = _s.Row
+    held = {r['ticker']: float(r['avg_cost']) for r in c.execute(
+        "SELECT ticker, avg_cost FROM holdings WHERE portfolio_id=? AND shares > 0", (pid,)).fetchall()}
+    c.close()
+    kept, dropped = [], []
+    for tr in triggers:
+        if tr.get("type") != "price" or not tr.get("ticker") or tr["ticker"] not in held:
+            kept.append(tr); continue
+        entry = held[tr["ticker"]]; level = tr.get("level"); op = tr.get("op")
+        if level is None or op is None:
+            kept.append(tr); continue
+        ok, reason = True, ""
+        if op == "crosses_below" and not (entry * 0.5 < level < entry * 0.99):
+            ok = False
+            reason = f"stop {tr['ticker']} crosses_below ${level} (entry ${entry:.2f}) outside ${entry*0.5:.2f}..${entry*0.99:.2f}"
+        elif op == "crosses_above" and not (entry * 1.01 < level < entry * 2.0):
+            ok = False
+            reason = f"target {tr['ticker']} crosses_above ${level} (entry ${entry:.2f}) outside ${entry*1.01:.2f}..${entry*2.0:.2f}"
+        if ok:
+            kept.append(tr)
+        else:
+            dropped.append({"trigger_id": tr.get("id"), "reason": reason})
+    return kept, dropped
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true",
@@ -980,6 +1016,9 @@ def main():
         if not args.dry_run:
             try:
                 triggers = judge_out.get("intraday_triggers", []) or []
+                triggers, _dropped_triggers = validate_triggers(triggers, str(DB_PATH), state['id'])
+                for _d in _dropped_triggers:
+                    log(f"DROPPED nonsense trigger {_d['trigger_id']}: {_d['reason']}", "WARN")
                 pending_state = {
                     "date": today_iso,
                     "fires_today": 0,
