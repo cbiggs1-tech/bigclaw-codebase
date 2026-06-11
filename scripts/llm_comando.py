@@ -78,7 +78,7 @@ ETF_BLACKLIST = {
     'XLK', 'XLF', 'XLE', 'XLV', 'XLI', 'XLP', 'XLY', 'XLB', 'XLU', 'XLRE', 'XLC',
     # Industry / theme
     'SOXX', 'SMH', 'KRE', 'IGV', 'XHB', 'ITB', 'XME', 'XOP', 'XBI', 'IBB',
-    'ARKK', 'ARKW', 'ARKQ', 'ARKG', 'ARKF', 'VNQ', 'VYM', 'VTV', 'VUG',
+    'ARKK', 'ARKW', 'ARKQ', 'ARKG', 'ARKF', 'ARKX', 'VNQ', 'VYM', 'VTV', 'VUG',
     # Factor / smart-beta
     'IWM', 'IWN', 'IWO', 'IWP', 'IWB', 'IWS', 'IWD', 'IWF',
     'MTUM', 'QUAL', 'USMV', 'VLUE', 'SIZE', 'SPLV',
@@ -198,6 +198,46 @@ def get_market_snapshot():
         except Exception:
             pass
     return out
+
+
+def discover_news_makers(secrets, top_n=30, hours_back=24):
+    """Pull general Benzinga/Alpaca news (no symbol filter) and rank tickers
+    by mention count over the last `hours_back` hours. Returns top_n most-
+    mentioned tickers — "what the market is talking about today" — which is
+    the right discovery surface for an LLM that reasons on citable catalysts.
+    Filters out broad-market ETFs and non-stock symbols."""
+    from alpaca.data.historical.news import NewsClient
+    from alpaca.data.requests import NewsRequest
+    from collections import Counter
+    client = NewsClient(api_key=secrets['ALPACA_API_KEY'],
+                        secret_key=secrets['ALPACA_SECRET_KEY'])
+    start = datetime.datetime.now(datetime.UTC) - datetime.timedelta(hours=hours_back)
+    items = []
+    try:
+        next_token = None
+        for _ in range(5):  # up to 5 pages * 50 = 250 items
+            req = NewsRequest(start=start, limit=50)
+            if next_token:
+                req.page_token = next_token
+            r = client.get_news(req)
+            if hasattr(r, 'data') and isinstance(r.data, dict):
+                for v in r.data.values():
+                    items.extend(v if isinstance(v, list) else [v])
+            next_token = getattr(r, 'next_page_token', None)
+            if not next_token:
+                break
+    except Exception as e:
+        log(f"news_makers discovery failed: {e}", "WARN")
+        return []
+    # Reuse the module-level ETF_BLACKLIST (Comando is single-stock — ETFs are wasted slots)
+    cnt = Counter()
+    for item in items:
+        for sym in (getattr(item, 'symbols', None) or []):
+            if sym and 1 < len(sym) <= 5 and sym.isalpha() and sym not in ETF_BLACKLIST:
+                cnt[sym] += 1
+    log(f"  news_makers scan: {len(items)} items, {len(cnt)} unique tickers mentioned")
+    return [t for t, _ in cnt.most_common(top_n)]
+
 
 def get_news(tickers, secrets):
     """Pull Alpaca/Benzinga per-ticker (for held + recently-traded) + broad CNBC/Reuters."""
@@ -972,27 +1012,17 @@ def main():
         if journal:
             recent_watch = journal[-1].get('watchlist', [])[:15] if isinstance(journal[-1].get('watchlist'), list) else []
 
-        # LLM-Comando: expand candidate universe with BigClaw's curated rule-based universes
-        extra_candidates = set()
-        try:
-            import json as _j
-            pu_path = Path.home() / ".openclaw" / "workspace" / "config" / "portfolio_universes.json"
-            if pu_path.exists():
-                pu = _j.loads(pu_path.read_text())
-                for pname, conf in (pu.items() if isinstance(pu, dict) else []):
-                    if isinstance(conf, dict):
-                        for k in ("holdings", "candidates"):
-                            v = conf.get(k, [])
-                            if isinstance(v, list):
-                                extra_candidates.update(t for t in v if isinstance(t, str))
-                    elif isinstance(conf, list):
-                        extra_candidates.update(t for t in conf if isinstance(t, str))
-        except Exception as _e:
-            log(f"portfolio_universes read failed: {_e}", "WARN")
-        extra_candidates = sorted(extra_candidates)[:60]
-        log(f"  Curated stock universe: {len(extra_candidates)} tickers")
+        # LLM-Comando discovery: top news-mentioned tickers in the last 24h.
+        # The LLM reasons on citable catalysts — rank candidates by news volume,
+        # not price movement (Curtis 2026-06-11: "News is information. A stock
+        # moving with no news, the LLM can't sort out logically anyway").
+        news_makers = discover_news_makers(secrets, top_n=30, hours_back=24)
+        if news_makers:
+            log(f"  Top news-makers (first 10): {news_makers[:10]}")
+        else:
+            log("  news_makers empty — falling back to held + watchlist only", "WARN")
 
-        news_tickers = sorted(set(held_tickers + recent_watch + list(extra_candidates)))
+        news_tickers = sorted(set(held_tickers + recent_watch + news_makers))
         news = get_news(news_tickers, secrets)
         log(f"  Alpaca: {sum(len(v) for v in news['per_ticker'].values())} items for {len(news['per_ticker'])} tickers")
         log(f"  CNBC: {len(news['cnbc'])} | Reuters: {len(news['reuters'])}")
