@@ -344,9 +344,9 @@ def build_state_context(state, total_value, market, news, journal, peer_returns,
                 lines.append(f"    patterns_noted: {e['patterns_noted'][:300]}")
             if e.get('outcomes'):
                 lines.append(f"    outcomes (filled later by reconciler): {json.dumps(e['outcomes'])[:300]}")
-            if e.get('dropped_triggers'):
-                lines.append(f"    DROPPED_TRIGGERS (safety check refused {len(e['dropped_triggers'])} nonsense level(s) you set):")
-                for _dt in e['dropped_triggers'][:5]:
+            if e.get('flagged_triggers'):
+                lines.append(f"    FLAGGED_TRIGGERS (safety check flagged {len(e['flagged_triggers'])} nonsense level(s) you set):")
+                for _dt in e['flagged_triggers'][:5]:
                     lines.append(f"      - {_dt.get('reason','')[:200]}")
     else:
         lines.append("\n## YOUR JOURNAL: empty (this is your first cycle)")
@@ -478,12 +478,21 @@ A lightweight watcher polls every 5 min during market hours. When any trigger ma
 LLM cycle (you again, with the original intent + current state) decides: execute as planned,
 modify, or stand down. Max 6 fires per day across all triggers.
 
+PERIODIC RE-RANKING (strongly suggested for ANY open position): your goal is short-term gains.
+A position you buy at 9:00 CT can have its thesis weaken by 12:00 CT as news shifts. Consider
+setting a periodic time trigger (e.g., "wake_at": "YYYY-06-12T17:00Z" = noon CT, and again
+at 19:00Z = 2 PM CT) with action_intent "Re-rank all open positions vs the Candidate Strength
+Ranking. Sell any held position that no longer ranks in the top-N by news intensity AND momentum
+vs unowned candidates available for purchase." This is the "others look better" half of the
+exit thesis — without it, you tend to hold morning positions even when fresher catalysts emerge.
+The current CANDIDATE STRENGTH RANKING block in your state context is the input for this decision.
+
 If no trades make sense today, return {"trades": []} and explain in reflection.
 
-DROPPED TRIGGERS — IF YOU SEE THEM IN YOUR JOURNAL: a safety check downstream of you
-refuses to arm price triggers whose levels are nonsense relative to entry (stop must
+FLAGGED TRIGGERS — IF YOU SEE THEM IN YOUR JOURNAL: a safety check downstream of you
+flags price triggers whose levels are nonsense relative to entry (stop must
 be strictly below entry but above entry × 0.5; target must be strictly above entry
-and below entry × 2.0). When you see `DROPPED_TRIGGERS` in a past journal entry, that
+and below entry × 2.0). When you see `FLAGGED_TRIGGERS` in a past journal entry, that
 was YOU setting absolute dollar levels based on stale training-cutoff price anchors.
 Sector ETFs move in narrow ranges — sanity-check against the live price in your
 market_snapshot, not the price you remember from training."""
@@ -843,22 +852,23 @@ def save_dashboard_json(judge_out, bull_text, bear_text, total_value, state, exe
 # ---------- main ----------
 
 def validate_triggers(triggers, db_path, pid):
-    """Drop price triggers whose levels are nonsensical vs current entry.
-    For longs (paper account is long-only):
-      crosses_below: stop must be strictly below entry but above entry * 0.5
-      crosses_above: target/add must be strictly above entry but below entry * 2.0
+    """FLAG-mode validator: stamps a `_schema_flag` field on price triggers
+    whose levels are schema-nonsensical for a long position, but arms them
+    anyway. The LLM learns from real outcomes via the journal rather than
+    silent filtering.
+
+    Schema check (longs only — paper account is long-only):
+      crosses_below: stop should be strictly below entry but above entry * 0.5
+      crosses_above: target/add should be strictly above entry but below entry * 2.0
     Triggers on unheld tickers (watch triggers) pass through unchanged.
 
     Resolution: if a trigger sets `level_pct` (e.g. -0.05 for -5% from entry)
     instead of `level`, this function computes the absolute level from the
-    held position's entry price before validating. That lets the Judge avoid
+    held position's entry price before checking. That lets the Judge avoid
     setting absolute dollar levels on tickers whose live price differs from
-    its training-cutoff anchor (June 2026 bugs: AMD $510-stop-above-$479-entry,
-    ARM $148-stop-on-$334-entry). After resolution, `level_pct` is dropped so
-    the persisted pending-triggers file (and the watcher) only see absolute
-    `level` as before.
+    its training-cutoff anchor.
 
-    Returns (kept_triggers, [{trigger_id, reason}, ...])."""
+    Returns (all_triggers_armed, [{trigger_id, reason}, ...] for flagged ones)."""
     if not triggers:
         return triggers, []
     import sqlite3 as _s
@@ -866,12 +876,12 @@ def validate_triggers(triggers, db_path, pid):
     held = {r['ticker']: float(r['avg_cost']) for r in c.execute(
         "SELECT ticker, avg_cost FROM holdings WHERE portfolio_id=? AND shares > 0", (pid,)).fetchall()}
     c.close()
-    kept, dropped = [], []
+    kept, flagged = [], []
     for tr in triggers:
         if tr.get("type") != "price" or not tr.get("ticker") or tr["ticker"] not in held:
             # Watch trigger or non-price — but resolve level_pct if it leaked in
             if tr.get("level_pct") is not None and tr.get("level") is None:
-                dropped.append({"trigger_id": tr.get("id"),
+                flagged.append({"trigger_id": tr.get("id"),
                                 "reason": f"level_pct set on unheld ticker {tr.get('ticker')} — cannot resolve"})
                 continue
             kept.append(tr); continue
@@ -880,7 +890,7 @@ def validate_triggers(triggers, db_path, pid):
         if tr.get("level_pct") is not None:
             pct = tr["level_pct"]
             if not isinstance(pct, (int, float)) or not (-0.5 < pct < 1.0):
-                dropped.append({"trigger_id": tr.get("id"),
+                flagged.append({"trigger_id": tr.get("id"),
                                 "reason": f"level_pct {pct} out of range (-0.5, 1.0) for {tr['ticker']}"})
                 continue
             tr = {k: v for k, v in tr.items() if k != "level_pct"}
@@ -888,22 +898,27 @@ def validate_triggers(triggers, db_path, pid):
         level = tr.get("level")
         if level is None or op is None:
             kept.append(tr); continue
-        # Strict-ordering check with wide outer bands. Catches the real bug
-        # class (stop at-or-above entry, target at-or-below entry, or absurd
-        # outer values from training-cutoff anchors) without false-positiving
-        # legitimate tight stops/targets (<1% bands are common on ETFs).
-        ok, reason = True, ""
+        # Strict-ordering check with wide outer bands. Bug-class catches: stop
+        # at-or-above entry on a long, target at-or-below entry on a long,
+        # absurd outer values from training-cutoff price anchors. Sub-1%
+        # bands pass through (legitimate tight stops are common on ETFs).
+        #
+        # FLAG MODE (2026-06-12): we no longer drop nonsense triggers. They
+        # arm anyway. The watcher fires them, the LLM re-evaluates, the
+        # outcome lands in the journal. That gives the LLM a real signal
+        # ("I set a stop that fired in 2 minutes — bad") instead of a
+        # silent filter. Aligned with the design call that Python provides
+        # information, not rules, for these two portfolios.
+        flag_reason = ""
         if op == "crosses_below" and not (entry * 0.5 < level < entry):
-            ok = False
-            reason = f"stop {tr['ticker']} crosses_below ${level} (entry ${entry:.2f}) — must be strictly below entry and above ${entry*0.5:.2f}"
+            flag_reason = f"stop {tr['ticker']} crosses_below ${level} (entry ${entry:.2f}) — schema says stop should be strictly below entry and above ${entry*0.5:.2f}. Armed anyway; watch for fast-fire."
         elif op == "crosses_above" and not (entry < level < entry * 2.0):
-            ok = False
-            reason = f"target {tr['ticker']} crosses_above ${level} (entry ${entry:.2f}) — must be strictly above entry and below ${entry*2.0:.2f}"
-        if ok:
-            kept.append(tr)
-        else:
-            dropped.append({"trigger_id": tr.get("id"), "reason": reason})
-    return kept, dropped
+            flag_reason = f"target {tr['ticker']} crosses_above ${level} (entry ${entry:.2f}) — schema says target should be strictly above entry and below ${entry*2.0:.2f}. Armed anyway; watch for instant-fire or never-fire."
+        if flag_reason:
+            tr = {**tr, "_schema_flag": flag_reason}
+            flagged.append({"trigger_id": tr.get("id"), "reason": flag_reason})
+        kept.append(tr)
+    return kept, flagged
 
 
 def main():
@@ -1029,9 +1044,9 @@ def main():
         # which of yesterday's triggers got refused as nonsense — closes the
         # recursive learning loop for the stale-price-anchor bug class.
         _raw_triggers = judge_out.get("intraday_triggers", []) or []
-        _validated_triggers, _dropped_triggers = validate_triggers(_raw_triggers, str(DB_PATH), state['id'])
-        for _d in _dropped_triggers:
-            log(f"DROPPED nonsense trigger {_d['trigger_id']}: {_d['reason']}", "WARN")
+        _all_triggers, _flagged_triggers = validate_triggers(_raw_triggers, str(DB_PATH), state['id'])
+        for _d in _flagged_triggers:
+            log(f"FLAGGED suspect trigger (armed anyway) {_d['trigger_id']}: {_d['reason']}", "WARN")
 
         # Journal entry
         entry = {
@@ -1052,7 +1067,7 @@ def main():
             "uncertainty_inventory": judge_out.get("uncertainty_inventory", []),
             "expected_direction": judge_out.get("expected_portfolio_direction"),
             "cost_usd": round(cost_total, 4),
-            "dropped_triggers": _dropped_triggers,
+            "flagged_triggers": _flagged_triggers,
             "dry_run": args.dry_run,
             "observe_only": args.observe_only,
         }
@@ -1071,7 +1086,7 @@ def main():
                     "date": today_iso,
                     "fires_today": 0,
                     "max_fires": 6,
-                    "triggers": [{**t, "status": "armed"} for t in _validated_triggers if t.get("id")],
+                    "triggers": [{**t, "status": "armed"} for t in _all_triggers if t.get("id")],
                     "last_news_check": None,
                 }
                 pending_path = Path.home() / "bigclaw-ai" / "data" / "llm_pending_triggers.json"
