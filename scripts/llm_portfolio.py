@@ -550,6 +550,14 @@ def validate_and_execute(trades, state, total_value, secrets, dry_run=False):
     holdings_by_ticker = {h['ticker']: h for h in state['holdings']}
     results = []
 
+    # Process SELLS before BUYS so in-cycle sell proceeds fund in-cycle buys.
+    # Without this, the Judge can't express compound rotation moves like
+    # "sell A, buy B and C" — the buys see only the pre-cycle cash and may
+    # be skipped as insufficient even though the sell would cover them.
+    # Bug observed 2026-06-12: ETF Focus sold XLV (~$53K proceeds) then tried
+    # to buy IWM + XLK; XLK was skipped despite plenty of total cash.
+    trades = sorted(trades, key=lambda t: 0 if t.get('action','').lower() == 'sell' else 1)
+
     for tr in trades:
         ticker = tr.get('ticker', '').upper()
         action = tr.get('action', '').lower()
@@ -569,12 +577,18 @@ def validate_and_execute(trades, state, total_value, secrets, dry_run=False):
             results.append((tr, {"skipped": f"ticker not found: {ticker} ({e})"}))
             continue
 
-        # SELL: must hold enough
+        # SELL: must hold enough; credit estimated proceeds to running cash
         if action == 'sell':
             held = holdings_by_ticker.get(ticker, {}).get('shares', 0)
             if shares > held:
                 results.append((tr, {"skipped": f"cannot sell {shares} of {ticker} (hold {held})"}))
                 continue
+            # Credit estimated proceeds so subsequent buys this cycle see realistic cash.
+            try:
+                spot = float(yf.Ticker(ticker).fast_info['lastPrice'])
+                cash += shares * spot
+            except Exception:
+                pass
 
         # BUY: cash check (use latest price)
         if action == 'buy':
