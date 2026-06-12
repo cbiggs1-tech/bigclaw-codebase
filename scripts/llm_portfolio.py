@@ -269,9 +269,16 @@ def compute_portfolio_value(state, market):
 
 
 # ---------- prompt builders ----------
-def build_state_context(state, total_value, market, news, journal, peer_returns, today_iso):
+def build_state_context(state, total_value, market, news, journal, peer_returns, today_iso, cycle_name=None):
     lines = []
     lines.append(f"## TODAY: {today_iso}")
+    if cycle_name:
+        _cycle_labels = {
+            "morning":   "MORNING (09:00 CT) — anchor cycle, set today's thesis",
+            "midday":    "MIDDAY (11:30 CT) — re-evaluate; first 2.5h have settled",
+            "afternoon": "AFTERNOON (14:30 CT) — pre-close lock; 30min to close, decide overnight/weekend exposure",
+        }
+        lines.append(f"## CYCLE: {_cycle_labels.get(cycle_name, cycle_name)}")
     lines.append(f"## YOUR PORTFOLIO (LLM Discretionary)")
     lines.append(f"  Starting cash: ${state['starting_cash']:,.2f}")
     lines.append(f"  Current cash:  ${state['current_cash']:,.2f}")
@@ -478,14 +485,26 @@ A lightweight watcher polls every 5 min during market hours. When any trigger ma
 LLM cycle (you again, with the original intent + current state) decides: execute as planned,
 modify, or stand down. Max 6 fires per day across all triggers.
 
-PERIODIC RE-RANKING (strongly suggested for ANY open position): your goal is short-term gains.
-A position you buy at 9:00 CT can have its thesis weaken by 12:00 CT as news shifts. Consider
-setting a periodic time trigger (e.g., "wake_at": "YYYY-06-12T17:00Z" = noon CT, and again
-at 19:00Z = 2 PM CT) with action_intent "Re-rank all open positions vs the Candidate Strength
-Ranking. Sell any held position that no longer ranks in the top-N by news intensity AND momentum
-vs unowned candidates available for purchase." This is the "others look better" half of the
-exit thesis — without it, you tend to hold morning positions even when fresher catalysts emerge.
-The current CANDIDATE STRENGTH RANKING block in your state context is the input for this decision.
+PERIODIC RE-RANKING: your goal is short-term gains. A position you buy at 9:00 CT can have its
+thesis weaken by 12:00 CT as news shifts. Three deliberative cycles fire per market day —
+you are running in ONE of them right now (the state context tells you which). The watcher
+between cycles only fires on triggers you set; the three full dialectic cycles are guaranteed
+deliberative moments where Bear gets to refute Bull.
+
+CYCLE FRAMINGS:
+  - MORNING (09:00 CT): Set the day's thesis. Open positions you have high conviction on.
+    Default trigger plan should include both intraday safety triggers AND a midday/afternoon
+    time wake so the next deliberative cycle gets a clean handoff.
+  - MIDDAY (11:30 CT): First 2.5 hours of trading have settled. Morning thesis has had time
+    to play out. Re-evaluate using the Candidate Strength Ranking. Are held positions still
+    the strongest in the data? Has news shifted? This is your chance to rotate before the
+    afternoon while there is still time for positions to work.
+  - AFTERNOON (14:30 CT, 30 min before close): Decide overnight + weekend positioning. Lock
+    gains from morning/midday positions if thesis has played out or weakened. Trim losers
+    you do not want to hold through the close. Any position you keep here is one you are
+    explicitly choosing to expose to gap risk overnight (or Friday-to-Monday gap risk on
+    weekends — substantially higher uncertainty). Be ruthless about exits when the thesis
+    no longer justifies overnight risk.
 
 If no trades make sense today, return {"trades": []} and explain in reflection.
 
@@ -939,6 +958,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true",
                     help="No Alpaca submits, no Slack post, no DB writes for trades")
+    ap.add_argument("--cycle", choices=["morning", "midday", "afternoon"], default="morning",
+                    help="Which deliberative cycle this is. morning=09:00 anchor, "
+                         "midday=11:30 re-evaluation, afternoon=14:30 pre-close lock")
     ap.add_argument("--observe-only", action="store_true",
                     help="Run agents but produce strategy doc only - no trade decisions")
     ap.add_argument("--channel", default=DEFAULT_CHANNEL)
@@ -946,7 +968,7 @@ def main():
 
     acquire_lock()
     try:
-        log("LLM portfolio cycle - starting")
+        log(f"LLM portfolio cycle - starting ({args.cycle.upper()})")
         secrets = load_secrets()
         for k in ("ANTHROPIC_API_KEY", "ALPACA_API_KEY", "ALPACA_SECRET_KEY", "SLACK_BOT_TOKEN"):
             if k not in secrets:
@@ -1002,7 +1024,7 @@ def main():
         peer_returns = get_peer_returns()
         today_iso = datetime.date.today().isoformat()
         state_ctx = build_state_context(state, total_value, market, news, journal,
-                                         peer_returns, today_iso)
+                                         peer_returns, today_iso, cycle_name=args.cycle)
         log(f"State context: {len(state_ctx)} chars")
 
         anthropic_client = anthropic.Anthropic(api_key=secrets['ANTHROPIC_API_KEY'],
