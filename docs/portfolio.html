@@ -257,13 +257,17 @@ fetch('data/portfolios.json')
         });
 
         const totalInvested = holdings.reduce((s, h) => s + h.cost, 0);
-        const totalValue = holdings.reduce((s, h) => s + h.value, 0);
-        // CASH: read directly from JSON (the DB's authoritative current_cash).
-        // Falls back to the legacy cost-basis derivation only if 'cash' is missing
+        const holdingsValue = holdings.reduce((s, h) => s + h.value, 0);
+        // CASH: read directly from JSON (the DBs authoritative current_cash).
+        // Falls back to the legacy cost-basis derivation only if cash is missing
         // (older JSON files before this fix). New behavior: trust the DB.
         const cashRemaining = (typeof p.cash === 'number')
             ? p.cash
             : (p.startingCash || 0) - totalInvested;
+        // Portfolio Value = holdings + cash. With an all-cash portfolio,
+        // holdings sum is $0, so the metric card needs cash added in to
+        // match the header total (which uses p.totalValue from the DB).
+        const totalValue = holdingsValue + cashRemaining;
 
         // Sort by weight desc
         holdings.sort((a, b) => b.value - a.value);
@@ -304,22 +308,22 @@ fetch('data/portfolios.json')
             <div class="metric-card">
                 <div class="metric-label">Largest Position</div>
                 <div class="metric-value">${largest ? largest.ticker : '--'}</div>
-                <div class="metric-sub">${largest ? fmt$(largest.value) + ' · ' + (largest.value / totalValue * 100).toFixed(1) + '% weight' : ''}</div>
+                <div class="metric-sub">${largest ? fmt$(largest.value) + ' · ' + (largest.value / holdingsValue * 100).toFixed(1) + '% weight' : ''}</div>
             </div>
             <div class="metric-card">
                 <div class="metric-label">${isPending ? 'Largest Allocation' : 'Top Gainer'}</div>
                 <div class="metric-value ${!isPending && topGainer && topGainer.pnl >= 0 ? 'gain' : ''}">${topGainer ? topGainer.ticker : '--'}</div>
-                <div class="metric-sub">${topGainer && !isPending ? fmtPct(topGainer.pnlPct) + ' · ' + fmt$(topGainer.pnl) : topGainer ? (topGainer.value / totalValue * 100).toFixed(1) + '% target' : ''}</div>
+                <div class="metric-sub">${topGainer && !isPending ? fmtPct(topGainer.pnlPct) + ' · ' + fmt$(topGainer.pnl) : topGainer ? (topGainer.value / holdingsValue * 100).toFixed(1) + '% target' : ''}</div>
             </div>
             <div class="metric-card">
                 <div class="metric-label">${isPending ? 'Smallest Allocation' : 'Top Loser'}</div>
                 <div class="metric-value ${!isPending && topLoser && topLoser.pnl < 0 ? 'loss' : ''}">${topLoser ? topLoser.ticker : '--'}</div>
-                <div class="metric-sub">${topLoser && !isPending ? fmtPct(topLoser.pnlPct) + ' · ' + fmt$(topLoser.pnl) : topLoser ? (topLoser.value / totalValue * 100).toFixed(1) + '% target' : ''}</div>
+                <div class="metric-sub">${topLoser && !isPending ? fmtPct(topLoser.pnlPct) + ' · ' + fmt$(topLoser.pnl) : topLoser ? (topLoser.value / holdingsValue * 100).toFixed(1) + '% target' : ''}</div>
             </div>
             <div class="metric-card">
                 <div class="metric-label">Portfolio ${isPending ? 'Target' : 'Value'}</div>
                 <div class="metric-value">${fmt$(totalValue)}</div>
-                <div class="metric-sub">${isPending ? 'Awaiting purchase execution' : fmt$(totalValue - totalInvested) + ' P&L'}</div>
+                <div class="metric-sub">${isPending ? 'Awaiting purchase execution' : fmt$(totalValue - (p.startingCash || 0)) + ' P&L'}</div>
             </div>
         </div>`;
 
@@ -338,7 +342,7 @@ fetch('data/portfolios.json')
                 <tbody>`;
 
         holdings.forEach(h => {
-            const weight = (h.value / totalValue * 100).toFixed(1);
+            const weight = (h.value / holdingsValue * 100).toFixed(1);
             const pnlClass = h.pnl >= 0 ? 'gain' : 'loss';
             html += `<tr>
                 <td class="ticker-cell"><a href="ticker.html?ticker=${encodeURIComponent(h.ticker)}&from=portfolio" class="ticker-link">${h.ticker}</a></td>
@@ -358,7 +362,7 @@ fetch('data/portfolios.json')
         // Holding mini cards
         html += '<div class="holdings-grid">';
         holdings.forEach(h => {
-            const weight = (h.value / totalValue * 100).toFixed(1);
+            const weight = (h.value / holdingsValue * 100).toFixed(1);
             const pnlClass = h.pnl >= 0 ? 'gain' : 'loss';
             html += `<div class="holding-card">
                 <div class="holding-ticker"><a href="ticker.html?ticker=${encodeURIComponent(h.ticker)}&from=portfolio" class="ticker-link">${h.ticker}</a></div>
