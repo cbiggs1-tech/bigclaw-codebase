@@ -344,6 +344,10 @@ def build_state_context(state, total_value, market, news, journal, peer_returns,
                 lines.append(f"    patterns_noted: {e['patterns_noted'][:300]}")
             if e.get('outcomes'):
                 lines.append(f"    outcomes (filled later by reconciler): {json.dumps(e['outcomes'])[:300]}")
+            if e.get('dropped_triggers'):
+                lines.append(f"    DROPPED_TRIGGERS (safety check refused {len(e['dropped_triggers'])} nonsense level(s) you set):")
+                for _dt in e['dropped_triggers'][:5]:
+                    lines.append(f"      - {_dt.get('reason','')[:200]}")
     else:
         lines.append("\n## YOUR JOURNAL: empty (this is your first cycle)")
 
@@ -454,7 +458,8 @@ OUTPUT SCHEMA:
       "type": "price" | "news" | "time",
       "ticker": "NVDA",                 // PRICE triggers only
       "op": "below" | "above" | "crosses_below" | "crosses_above",  // PRICE only
-      "level": 205.0,                   // PRICE only
+      "level": 205.0,                   // PRICE only - absolute dollar level (use for tickers in your market_snapshot)
+      "level_pct": -0.05,               // PRICE only - ALTERNATIVE to level, percentage from entry of a position you're opening this cycle. -0.05 = stop at 5% below entry. +0.10 = target at 10% above entry. ALWAYS prefer level_pct over level when setting stop/target for a position you are opening today, because absolute dollar prices in your training data may not match the live entry price.
       "keywords": ["Fed", "Powell", "FOMC", "rate decision"],  // NEWS only
       "wake_at": "YYYY-MM-DDTHH:MMZ",   // TIME only - ISO UTC
       "action_intent": "specific intent if the trigger fires (the watcher's LLM call will see this)",
@@ -473,7 +478,15 @@ A lightweight watcher polls every 5 min during market hours. When any trigger ma
 LLM cycle (you again, with the original intent + current state) decides: execute as planned,
 modify, or stand down. Max 6 fires per day across all triggers.
 
-If no trades make sense today, return {"trades": []} and explain in reflection."""
+If no trades make sense today, return {"trades": []} and explain in reflection.
+
+DROPPED TRIGGERS — IF YOU SEE THEM IN YOUR JOURNAL: a safety check downstream of you
+refuses to arm price triggers whose levels are nonsense relative to entry (stop must
+be strictly below entry but above entry × 0.5; target must be strictly above entry
+and below entry × 2.0). When you see `DROPPED_TRIGGERS` in a past journal entry, that
+was YOU setting absolute dollar levels based on stale training-cutoff price anchors.
+Sector ETFs move in narrow ranges — sanity-check against the live price in your
+market_snapshot, not the price you remember from training."""
 
 
 # ---------- agent call ----------
@@ -832,9 +845,19 @@ def save_dashboard_json(judge_out, bull_text, bear_text, total_value, state, exe
 def validate_triggers(triggers, db_path, pid):
     """Drop price triggers whose levels are nonsensical vs current entry.
     For longs (paper account is long-only):
-      crosses_below: level in (entry*0.5, entry*0.99) -- stop must be below entry but above wipeout
-      crosses_above: level in (entry*1.01, entry*2.0) -- target/add must be above entry but reachable
+      crosses_below: stop must be strictly below entry but above entry * 0.5
+      crosses_above: target/add must be strictly above entry but below entry * 2.0
     Triggers on unheld tickers (watch triggers) pass through unchanged.
+
+    Resolution: if a trigger sets `level_pct` (e.g. -0.05 for -5% from entry)
+    instead of `level`, this function computes the absolute level from the
+    held position's entry price before validating. That lets the Judge avoid
+    setting absolute dollar levels on tickers whose live price differs from
+    its training-cutoff anchor (June 2026 bugs: AMD $510-stop-above-$479-entry,
+    ARM $148-stop-on-$334-entry). After resolution, `level_pct` is dropped so
+    the persisted pending-triggers file (and the watcher) only see absolute
+    `level` as before.
+
     Returns (kept_triggers, [{trigger_id, reason}, ...])."""
     if not triggers:
         return triggers, []
@@ -846,17 +869,36 @@ def validate_triggers(triggers, db_path, pid):
     kept, dropped = [], []
     for tr in triggers:
         if tr.get("type") != "price" or not tr.get("ticker") or tr["ticker"] not in held:
+            # Watch trigger or non-price — but resolve level_pct if it leaked in
+            if tr.get("level_pct") is not None and tr.get("level") is None:
+                dropped.append({"trigger_id": tr.get("id"),
+                                "reason": f"level_pct set on unheld ticker {tr.get('ticker')} — cannot resolve"})
+                continue
             kept.append(tr); continue
-        entry = held[tr["ticker"]]; level = tr.get("level"); op = tr.get("op")
+        entry = held[tr["ticker"]]; op = tr.get("op")
+        # Resolve level_pct -> level if set
+        if tr.get("level_pct") is not None:
+            pct = tr["level_pct"]
+            if not isinstance(pct, (int, float)) or not (-0.5 < pct < 1.0):
+                dropped.append({"trigger_id": tr.get("id"),
+                                "reason": f"level_pct {pct} out of range (-0.5, 1.0) for {tr['ticker']}"})
+                continue
+            tr = {k: v for k, v in tr.items() if k != "level_pct"}
+            tr["level"] = round(entry * (1.0 + pct), 4)
+        level = tr.get("level")
         if level is None or op is None:
             kept.append(tr); continue
+        # Strict-ordering check with wide outer bands. Catches the real bug
+        # class (stop at-or-above entry, target at-or-below entry, or absurd
+        # outer values from training-cutoff anchors) without false-positiving
+        # legitimate tight stops/targets (<1% bands are common on ETFs).
         ok, reason = True, ""
-        if op == "crosses_below" and not (entry * 0.5 < level < entry * 0.99):
+        if op == "crosses_below" and not (entry * 0.5 < level < entry):
             ok = False
-            reason = f"stop {tr['ticker']} crosses_below ${level} (entry ${entry:.2f}) outside ${entry*0.5:.2f}..${entry*0.99:.2f}"
-        elif op == "crosses_above" and not (entry * 1.01 < level < entry * 2.0):
+            reason = f"stop {tr['ticker']} crosses_below ${level} (entry ${entry:.2f}) — must be strictly below entry and above ${entry*0.5:.2f}"
+        elif op == "crosses_above" and not (entry < level < entry * 2.0):
             ok = False
-            reason = f"target {tr['ticker']} crosses_above ${level} (entry ${entry:.2f}) outside ${entry*1.01:.2f}..${entry*2.0:.2f}"
+            reason = f"target {tr['ticker']} crosses_above ${level} (entry ${entry:.2f}) — must be strictly above entry and below ${entry*2.0:.2f}"
         if ok:
             kept.append(tr)
         else:
@@ -982,6 +1024,15 @@ def main():
         skipped = sum(1 for _, r in exec_results if "skipped" in r or "error" in r)
         log(f"Executed: {executed}  skipped/errored: {skipped}")
 
+        # Validate Judge-emitted intraday triggers BEFORE building the journal
+        # entry. The dropped list goes into the entry so tomorrow's Judge sees
+        # which of yesterday's triggers got refused as nonsense — closes the
+        # recursive learning loop for the stale-price-anchor bug class.
+        _raw_triggers = judge_out.get("intraday_triggers", []) or []
+        _validated_triggers, _dropped_triggers = validate_triggers(_raw_triggers, str(DB_PATH), state['id'])
+        for _d in _dropped_triggers:
+            log(f"DROPPED nonsense trigger {_d['trigger_id']}: {_d['reason']}", "WARN")
+
         # Journal entry
         entry = {
             "date": today_iso,
@@ -1001,6 +1052,7 @@ def main():
             "uncertainty_inventory": judge_out.get("uncertainty_inventory", []),
             "expected_direction": judge_out.get("expected_portfolio_direction"),
             "cost_usd": round(cost_total, 4),
+            "dropped_triggers": _dropped_triggers,
             "dry_run": args.dry_run,
             "observe_only": args.observe_only,
         }
@@ -1015,15 +1067,11 @@ def main():
         # that the live watcher cron will pick up at its next poll (bug observed June 10).
         if not args.dry_run:
             try:
-                triggers = judge_out.get("intraday_triggers", []) or []
-                triggers, _dropped_triggers = validate_triggers(triggers, str(DB_PATH), state['id'])
-                for _d in _dropped_triggers:
-                    log(f"DROPPED nonsense trigger {_d['trigger_id']}: {_d['reason']}", "WARN")
                 pending_state = {
                     "date": today_iso,
                     "fires_today": 0,
                     "max_fires": 6,
-                    "triggers": [{**t, "status": "armed"} for t in triggers if t.get("id")],
+                    "triggers": [{**t, "status": "armed"} for t in _validated_triggers if t.get("id")],
                     "last_news_check": None,
                 }
                 pending_path = Path.home() / "bigclaw-ai" / "data" / "llm_pending_triggers.json"
