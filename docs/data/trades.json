@@ -2,6 +2,28 @@
   "trades": [
     {
       "date": "Jun 12",
+      "portfolio": "Value Picks",
+      "action": "SELL",
+      "ticker": "GL",
+      "shares": 77.0,
+      "price": 167.11,
+      "total": 12867.470000000001,
+      "rationale": "Not in top 10 (score 9)",
+      "executed_at": "2026-06-12 15:09:06"
+    },
+    {
+      "date": "Jun 12",
+      "portfolio": "Momentum Growth",
+      "action": "SELL",
+      "ticker": "USAC",
+      "shares": 414.0,
+      "price": 26.19,
+      "total": 10842.66,
+      "rationale": "Trailing stop triggered: $26.26 <= $26.44 (HWM $29.38, -10.6%)",
+      "executed_at": "2026-06-12 15:08:59"
+    },
+    {
+      "date": "Jun 12",
       "portfolio": "LLM-Comando",
       "action": "BUY",
       "ticker": "MRVL",
@@ -386,5 +408,5 @@
       "executed_at": "2026-06-05 14:00:27"
     }
   ],
-  "lastUpdate": "2026-06-12T14:22:56.557290+00:00"
+  "lastUpdate": "2026-06-12T15:12:44.539860+00:00"
 }
