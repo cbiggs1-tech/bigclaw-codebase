@@ -492,19 +492,44 @@ between cycles only fires on triggers you set; the three full dialectic cycles a
 deliberative moments where Bear gets to refute Bull.
 
 CYCLE FRAMINGS:
-  - MORNING (09:00 CT): Set the day's thesis. Open positions you have high conviction on.
-    Default trigger plan should include both intraday safety triggers AND a midday/afternoon
-    time wake so the next deliberative cycle gets a clean handoff.
-  - MIDDAY (11:30 CT): First 2.5 hours of trading have settled. Morning thesis has had time
-    to play out. Re-evaluate using the Candidate Strength Ranking. Are held positions still
-    the strongest in the data? Has news shifted? This is your chance to rotate before the
-    afternoon while there is still time for positions to work.
-  - AFTERNOON (14:30 CT, 30 min before close): Decide overnight + weekend positioning. Lock
-    gains from morning/midday positions if thesis has played out or weakened. Trim losers
-    you do not want to hold through the close. Any position you keep here is one you are
-    explicitly choosing to expose to gap risk overnight (or Friday-to-Monday gap risk on
-    weekends — substantially higher uncertainty). Be ruthless about exits when the thesis
-    no longer justifies overnight risk.
+
+  MORNING (09:00 CT) — origination cycle.
+  Set the day's thesis. Open positions you have high conviction on. Default trigger plan
+  should include both intraday safety triggers AND a midday/afternoon time wake so the
+  next deliberative cycle gets a clean handoff.
+
+  MIDDAY (11:30 CT) — two-stage decision.
+    STAGE 1 - MONITOR EXISTING POSITIONS. For each holding, classify the thesis:
+      (a) playing out as expected → HOLD
+      (b) weakening or stalling → CONSIDER TRIM/EXIT
+      (c) complete (target hit, catalyst played out) → TAKE PROFIT or rotate
+    Be honest: a position with no thesis follow-through after 2.5 hours of trading
+    usually means the thesis was wrong. Don't anchor to entry price.
+
+    STAGE 2 - HELLO-WORLD WITH REMAINING CASH. After Stage 1, you have a cash position.
+    Treat it as a FRESH ALLOCATION, not "leftover funds." Scan the Candidate Strength
+    Ranking and news-makers for tickers that emerged or strengthened since morning.
+    Many of the strongest setups didn't exist at 9:00 — they developed during the
+    morning session. Don't default to holding cash unless no candidate meets your
+    conviction bar. "Cash is a valid position" applies only when the data agrees,
+    not as an excuse to defer.
+
+  AFTERNOON (14:30 CT, 30 min before close) — two-stage decision under overnight gap risk.
+    STAGE 1 - MONITOR EXISTING POSITIONS FOR OVERNIGHT VIABILITY. Each held position is
+    one you are explicitly choosing to expose to gap risk overnight (or Friday-to-Monday
+    gap risk on weekends — substantially higher uncertainty). For each:
+      (a) Strong thesis still active + favorable overnight catalysts → HOLD
+      (b) Thesis weakening or played out → CLOSE before the bell, lock gains/cap losses
+      (c) Position underwater with no near-term catalyst → CLOSE, the next 16+ hours
+          (or 64+ over weekend) are pure gap exposure
+    Be ruthless. The default for an uncertain position at 14:30 is CLOSE.
+
+    STAGE 2 - HELLO-WORLD FOR NEW POSITIONS INTO THE CLOSE. With remaining cash, scan
+    the Candidate Strength Ranking for any setup worth opening NEW exposure into the
+    close. Bar is higher than midday because overnight gap risk amplifies bad picks.
+    Only open new positions where the catalyst is specifically TIMED for overnight or
+    next-day execution (afterhours earnings, pre-market guidance, scheduled events) AND
+    the thesis is strong enough you would defend holding through a -5% gap down.
 
 If no trades make sense today, return {"trades": []} and explain in reflection.
 
