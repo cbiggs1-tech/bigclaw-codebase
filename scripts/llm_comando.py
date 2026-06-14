@@ -48,9 +48,9 @@ PORTFOLIO_NAME = "LLM-Comando"
 DEFAULT_CHANNEL = "D0ADHLUJ400"
 MODEL_BULL = "claude-sonnet-4-6"
 MODEL_BEAR = "claude-sonnet-4-6"
-MODEL_JUDGE = "claude-sonnet-4-6"
+MODEL_JUDGE = "claude-opus-4-8"  # A/B: Opus on Comando, Sonnet on ETF Focus
 MAX_TOKENS_DEBATE = 3000     # bull / bear each
-MAX_TOKENS_JUDGE = 4000
+MAX_TOKENS_JUDGE = 8000     # Opus 4.8 + adaptive thinking needs headroom (thinking blocks count toward output)
 LLM_TIMEOUT = 120.0
 
 # Safety rails (Curtis's minimum)
@@ -566,9 +566,30 @@ will be torn apart. If you have no high-conviction ideas, say so and recommend c
 
 BEAR_SYSTEM = """You are the BEAR agent in a 3-agent dialectical trading decision system.
 
-Your job: Read the BULL agent's case, then build the strongest possible case AGAINST each
-bull thesis. Be skeptical. Look for counter-evidence. Find hidden risks. Argue why each
-trade is wrong, late, or already priced in. Identify what the bull missed.
+Your job has TWO STAGES, in order:
+
+STAGE 1 — FACT VERIFICATION (do this FIRST, before any adversarial reasoning):
+For each specific factual claim the BULL made — earnings numbers, analyst ratings,
+price levels, dates, quoted headlines, percentages — locate the supporting evidence
+in the data feed (the news section, market_snapshot, candidate_snapshot, or
+Candidate Strength Ranking). Check three things explicitly:
+
+  (a) Does the cited fact actually exist in the data feed?
+  (b) Did the Bull read the direction correctly? (Upgrade vs downgrade, raise vs cut,
+      reaffirm vs withdraw, beat vs miss — these get flipped frequently)
+  (c) Is the cited number correct? (Price target above or below current price,
+      percentage gain or loss, share count, etc.)
+
+If you find a factual error — Bull cited something that isn't in the feed, misread a
+direction, or quoted a number that contradicts what the feed actually shows — that is
+your STRONGEST possible refutation. State the error explicitly with the actual data
+from the feed, and treat the entire downstream thesis as compromised. A wrong fact is
+not a debatable interpretation; it is a disqualifying mistake.
+
+STAGE 2 — ADVERSARIAL REASONING (only after Stage 1):
+For each surviving (factually accurate) Bull thesis, build the strongest possible
+case AGAINST it. Be skeptical. Look for counter-evidence. Find hidden risks. Argue
+why each trade is wrong, late, or already priced in. Identify what the bull missed.
 
 ANTI-CHEATING:
 - Your training data ends January 2026. Today is provided in the data. Trust ONLY the data feed.
@@ -725,6 +746,15 @@ CYCLE FRAMINGS:
     next-day execution (afterhours earnings, pre-market guidance, scheduled events) AND
     the thesis is strong enough you would defend holding through a -5% gap down.
 
+AUTONOMY (Opus 4.8 model note): you are running unattended in a paper trading
+system with no human in the loop. For minor decisions (specific share counts, exact
+trigger levels within the bands you choose, naming choices, formatting), pick a
+reasonable value and note your reasoning in the rationale — do NOT ask for
+clarification, do NOT defer, and do NOT add hedging language like "the user should
+decide" or "consider whether to...". You ARE the decision-maker. For scope changes
+(new strategy, abandoning a thesis mid-cycle, action outside the documented system),
+be deliberate as usual. But on the routine call-the-trade decisions, commit.
+
 If no trades make sense today, return {"trades": []} and explain in reflection.
 
 FLAGGED TRIGGERS — IF YOU SEE THEM IN YOUR JOURNAL: a safety check downstream of you
@@ -738,18 +768,44 @@ levels relative to the entry you're about to take, not the historical price you 
 
 
 # ---------- agent call ----------
-def call_agent(client, system, user_message, model, max_tokens, agent_name):
+# Per-million-token pricing by model id. Update when models change.
+MODEL_PRICING = {
+    "claude-sonnet-4-6": (3.0, 15.0),
+    "claude-opus-4-8":   (5.0, 25.0),
+    "claude-opus-4-7":   (5.0, 25.0),
+    "claude-opus-4-6":   (5.0, 25.0),
+    "claude-haiku-4-5":  (1.0, 5.0),
+}
+
+def call_agent(client, system, user_message, model, max_tokens, agent_name, thinking=None):
+    """Run one agent call. Pass thinking={"type":"adaptive"} for the Judge to enable
+    adaptive thinking (recommended on Opus 4.8 for synthesis tasks).
+    Cost is computed from MODEL_PRICING; falls back to Sonnet rates if model unknown."""
     t0 = time.time()
-    resp = client.messages.create(
-        model=model, max_tokens=max_tokens,
-        system=system,
-        messages=[{"role": "user", "content": user_message}],
-    )
+    kwargs = {
+        "model": model,
+        "max_tokens": max_tokens,
+        "system": system,
+        "messages": [{"role": "user", "content": user_message}],
+    }
+    if thinking is not None:
+        kwargs["thinking"] = thinking
+    resp = client.messages.create(**kwargs)
     dt = time.time() - t0
-    text = resp.content[0].text
+    # Extract text — adaptive thinking returns thinking blocks before text;
+    # we only want the text content for the prompt-following output.
+    text = ""
+    for block in resp.content:
+        if getattr(block, "type", None) == "text":
+            text += block.text
+    if not text:
+        # Fallback: legacy single-block response
+        text = resp.content[0].text if resp.content else ""
+    if getattr(resp, 'stop_reason', None) == 'max_tokens':
+        log(f"  {agent_name}: TRUNCATED — hit max_tokens ceiling. Output may be incomplete.", "WARN")
     in_tok, out_tok = resp.usage.input_tokens, resp.usage.output_tokens
-    # Sonnet 4.6 pricing
-    cost = (in_tok * 3.0 + out_tok * 15.0) / 1_000_000
+    in_rate, out_rate = MODEL_PRICING.get(model, (3.0, 15.0))
+    cost = (in_tok * in_rate + out_tok * out_rate) / 1_000_000
     log_llm_call(agent_name, model, in_tok, out_tok, cost, dt)
     log(f"  {agent_name}: in={in_tok} out={out_tok} cost=${cost:.4f} t={dt:.1f}s")
     return text, cost, dt
@@ -1296,7 +1352,8 @@ def main():
                      + "\n\n## BEAR AGENT'S COUNTER-CASE:\n\n" + bear_text
                      + "\n\n## YOUR TASK:\nAs the JUDGE, decide today's trades. Output strict JSON per schema in system prompt.")
         judge_text, judge_cost, judge_dt = call_agent(anthropic_client, JUDGE_SYSTEM, judge_msg,
-                                              MODEL_JUDGE, MAX_TOKENS_JUDGE, "judge")
+                                              MODEL_JUDGE, MAX_TOKENS_JUDGE, "judge",
+                                              thinking={"type": "adaptive"})
 
         cost_total = bull_cost + bear_cost + judge_cost
         cycle_duration = time.time() - cycle_start
