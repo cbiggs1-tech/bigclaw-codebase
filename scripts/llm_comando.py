@@ -885,7 +885,18 @@ def validate_and_execute(trades, state, total_value, secrets, dry_run=False):
         return [(t, {"skipped": "market closed"}) for t in trades]
 
     cash = state['current_cash']
-    holdings_by_ticker = {h['ticker']: h for h in state['holdings']}
+    # Re-read holdings FRESH from the DB at execution time, NOT the cycle-start
+    # snapshot. The 5-min watcher can sell a position during this cycle's ~167s
+    # run; selling against the stale snapshot oversells into a SHORT.
+    # Incident 2026-06-15: AAL/IWM double-sold into shorts (watcher + cycle).
+    _hc = sqlite3.connect(DB_PATH, timeout=10)
+    _hc.row_factory = sqlite3.Row
+    holdings_by_ticker = {r['ticker']: {'ticker': r['ticker'], 'shares': r['shares'],
+                                        'avg_cost': r['avg_cost']}
+                          for r in _hc.execute(
+                              "SELECT ticker, shares, avg_cost FROM holdings "
+                              "WHERE portfolio_id=? AND shares>0", (state['id'],)).fetchall()}
+    _hc.close()
     results = []
 
     # Process SELLS before BUYS so in-cycle sell proceeds fund in-cycle buys.
@@ -922,9 +933,12 @@ def validate_and_execute(trades, state, total_value, secrets, dry_run=False):
         # SELL: must hold enough; credit estimated proceeds to running cash
         if action == 'sell':
             held = holdings_by_ticker.get(ticker, {}).get('shares', 0)
-            if shares > held:
-                results.append((tr, {"skipped": f"cannot sell {shares} of {ticker} (hold {held})"}))
+            if held <= 0:
+                results.append((tr, {"skipped": f"{ticker}: fresh holdings=0, nothing to sell (stale/duplicate sell blocked)"}))
                 continue
+            if shares > held:
+                log(f"Clamping {ticker} sell {shares} -> {int(held)} to fresh holdings (prevents short)", "WARN")
+                shares = int(held)
             # Credit estimated proceeds so subsequent buys this cycle see realistic cash.
             try:
                 spot = float(yf.Ticker(ticker).fast_info['lastPrice'])
