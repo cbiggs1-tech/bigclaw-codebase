@@ -591,6 +591,21 @@ For each surviving (factually accurate) Bull thesis, build the strongest possibl
 case AGAINST it. Be skeptical. Look for counter-evidence. Find hidden risks. Argue
 why each trade is wrong, late, or already priced in. Identify what the bull missed.
 
+A true fact is NOT a tradeable fact. For EACH surviving Bull thesis you must run the
+ALREADY-PRICED-IN test and state the result explicitly:
+  (1) FRESHNESS - When did this catalyst become public? An MOU signed yesterday, an oil
+      move that already happened, a headline from a prior session - the market has already
+      seen it. A catalyst the tape has digested is a day-trader's enemy, not a tailwind.
+  (2) PRICE REACTION - Has the stock already moved in the catalyst's direction? Check the
+      market_snapshot and Candidate Strength Ranking. If price has already run on this news,
+      the edge is gone: entering now is CHASING the reaction, not trading the catalyst.
+      Say so, and argue reject.
+  (3) DURABILITY - Is the driver durable or reflexive? Catalysts that depend on an unstable
+      situation holding (war-scene oil spikes, headline-driven macro moves) can reverse on
+      the next headline. Do NOT extrapolate a fluid situation forward; discount it.
+A thesis that is true but already priced in, or that rests on a reflexive driver, has a
+DISQUALIFYING weakness - argue the trade should be rejected, not taken late.
+
 ANTI-CHEATING:
 - Your training data ends January 2026. Today is provided in the data. Trust ONLY the data feed.
 - Every factual claim must be cited from the data feed.
@@ -628,6 +643,23 @@ YOUR JOB: Make the actual trade decisions. You MUST address the strongest counte
 from the BEAR before committing to any trade. If the BEAR has surfaced a real risk you cannot
 rebut, do not take the trade.
 
+YOUR FIRST MOVE IS NOT TO ADJUDICATE - IT IS TO FIND THE GAP. The Bull and Bear are both
+advocates; each argues inside the frame it was handed, and a coherent debate between two
+advocates can be collectively blind to the question neither thought to raise. You are the
+only seat that can see what the debate structurally cannot, and THAT is where your edge
+comes from - not from scoring two cases that are both already reflected in the market's price.
+Before you weigh Bull against Bear, list what is ABSENT from BOTH cases that would change
+this decision. For every proposed entry you MUST answer, independently of whether either
+side raised it:
+  - Is the catalyst already in the price? Has the stock already moved on it? If so, taking
+    the long now is chasing a played-out reaction - reject or heavily discount.
+  - Is the driver durable or reflexive? What must STAY true for this to work, and how
+    fragile is that condition?
+  - What is the single thing that, if you are honest, would make this trade wrong - that
+    neither the Bull nor the Bear named?
+Only after you have named the shared omissions do you rule. A true-but-stale thesis must
+not out-argue an absent-but-decisive question.
+
 ANTI-CHEATING (these are mechanical, you will be checked):
 - Every factual claim cited from the data feed only
 - Every ticker must be a real ticker (verified before trade submits)
@@ -656,6 +688,7 @@ OUTPUT SCHEMA:
 {
   "reflection": "what your journal shows about your past performance and what you'd change",
   "market_read": "your read of next 1-5 days",
+  "gap_analysis": "what BOTH the Bull and Bear missed that affects today's decision. For each proposed entry, explicitly: is the catalyst already priced in? is the driver durable or reflexive? what would make this wrong that neither side named? This is your primary value-add - do not leave it shallow.",
   "addresses_bear_case": "specific paragraph addressing the strongest bear counter-arguments",
   "trades": [
     {
