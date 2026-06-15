@@ -1110,6 +1110,9 @@ def save_decision_markdown(today_iso, total_value, state, market, news, peer_ret
         lines += ["### Reflection on prior performance", "", judge_out["reflection"], ""]
     if judge_out.get("market_read"):
         lines += ["### Market read", "", judge_out["market_read"], ""]
+    if judge_out.get("gap_analysis"):
+        lines += ["### Gap analysis (what BOTH bull and bear missed)", "",
+                  judge_out["gap_analysis"], ""]
     if judge_out.get("addresses_bear_case"):
         lines += ["### How the judge addressed the bear case", "",
                   judge_out["addresses_bear_case"], ""]
@@ -1190,6 +1193,7 @@ def save_dashboard_json(judge_out, bull_text, bear_text, total_value, state, exe
         "starting_cash": state['starting_cash'],
         "reflection": judge_out.get("reflection"),
         "market_read": judge_out.get("market_read"),
+        "gap_analysis": judge_out.get("gap_analysis"),
         "addresses_bear_case": judge_out.get("addresses_bear_case"),
         "trades_decided": judge_out.get("trades", []),
         "execution_results": [{"action": t.get("action"), "ticker": t.get("ticker"),
@@ -1436,6 +1440,7 @@ def main():
                                     "avg_cost": h['avg_cost']} for h in state['holdings']],
             "reflection": judge_out.get("reflection"),
             "market_read": judge_out.get("market_read"),
+            "gap_analysis": judge_out.get("gap_analysis"),
             "addresses_bear_case": judge_out.get("addresses_bear_case"),
             "trades": trades,
             "execution_results": [{"ticker": t.get("ticker"), "action": t.get("action"),
