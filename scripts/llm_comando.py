@@ -992,17 +992,18 @@ def post_slack(channel, text, secrets):
 
 def save_decision_markdown(today_iso, total_value, state, market, news, peer_returns,
                             bull_text, bear_text, judge_out, exec_results,
-                            cost_total, cycle_duration_sec, bull_dt=None, bear_dt=None, judge_dt=None):
+                            cost_total, cycle_duration_sec, bull_dt=None, bear_dt=None, judge_dt=None,
+                            cycle_name=None):
     """Human-readable per-cycle file with full reasoning. Browse data/llm_decisions/
        to see Bull / Bear / Decision basis and how it evolves over time."""
     DECISIONS_DIR.mkdir(parents=True, exist_ok=True)
-    md = DECISIONS_DIR / f"{today_iso}.md"
+    md = DECISIONS_DIR / (f"{today_iso}-{cycle_name}.md" if cycle_name else f"{today_iso}.md")
 
     cum = (total_value / state['starting_cash'] - 1) * 100
     spy = market.get('SPY', {})
 
     lines = [
-        f"# LLM-Comando — {today_iso}",
+        f"# LLM-Comando — {today_iso}" + (f" — {cycle_name.upper()} cycle" if cycle_name else ""),
         "",
         f"**Portfolio value:** ${total_value:,.2f}  |  **Cash:** ${state['current_cash']:,.2f}  "
         f"|  **Cumulative return:** {cum:+.2f}%",
@@ -1489,8 +1490,9 @@ def main():
                                     cost_total, cycle_duration,
                                     bull_dt=round(bull_dt, 1) if bull_dt else None,
                                     bear_dt=round(bear_dt, 1) if bear_dt else None,
-                                    judge_dt=round(judge_dt, 1) if judge_dt else None)
-            log(f"Decision Markdown written to {DECISIONS_DIR}/{today_iso}.md")
+                                    judge_dt=round(judge_dt, 1) if judge_dt else None,
+                                    cycle_name=args.cycle)
+            log(f"Decision Markdown written to {DECISIONS_DIR}/{today_iso}-{args.cycle}.md")
         except Exception as e:
             log(f"Decision Markdown write failed: {e}", "WARN")
 
