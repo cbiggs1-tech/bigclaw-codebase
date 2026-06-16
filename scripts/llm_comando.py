@@ -68,6 +68,7 @@ DB_PATH = Path.home() / "bigclaw-ai" / "src" / "portfolios.db"
 SECTOR_ETFS = ['XLK', 'XLF', 'XLE', 'XLV', 'XLI', 'XLP', 'XLY', 'XLB', 'XLU', 'XLRE', 'XLC']
 FACTOR_ETFS = ['IWM', 'MTUM', 'QUAL', 'USMV', 'IWN']
 MACRO_ETFS  = ['SPY', 'TLT', 'UUP', 'GLD', 'USO']
+REGIME_TICKERS = ['^VIX', 'HYG', 'LQD', '^TNX', 'IWM']  # vol / HY credit / IG credit / 10y yield / small-cap breadth - macro regime tells
 
 
 # ---------- ETF blacklist (LLM-Comando is single-stock by mandate) ----------
@@ -233,8 +234,8 @@ def get_candidate_snapshot(tickers):
 
 def get_market_snapshot():
     """Sector ETFs + factor ETFs + macro ETFs - current price + 1d/5d/30d returns."""
-    universe = SECTOR_ETFS + FACTOR_ETFS + MACRO_ETFS
-    hist = yf.download(universe, period='3mo', progress=False, threads=True)['Close']
+    universe = SECTOR_ETFS + FACTOR_ETFS + MACRO_ETFS + REGIME_TICKERS
+    hist = yf.download(universe, period='1y', progress=False, threads=True)['Close']
     def r(t, n):
         try:
             if len(hist[t]) < n+1: return None
@@ -246,6 +247,7 @@ def get_market_snapshot():
             out[t] = {
                 "price": float(hist[t].iloc[-1]),
                 "ret_1d": r(t, 1), "ret_5d": r(t, 5), "ret_30d": r(t, 30),
+                "ret_63d": r(t, 63), "ret_126d": r(t, 126),
             }
         except Exception:
             pass
@@ -432,6 +434,30 @@ def build_state_context(state, total_value, market, news, journal, peer_returns,
         m = market.get(t, {})
         if m:
             lines.append(f"  {t}  1d {m.get('ret_1d',0):+5.2f}%  5d {m.get('ret_5d',0):+5.2f}%  30d {m.get('ret_30d',0):+5.2f}%")
+
+    # MACRO REGIME (vol / credit / rates / cycle tells) - forward-looking, not lagging news
+    _vix = market.get('^VIX', {}); _hyg = market.get('HYG', {}); _lqd = market.get('LQD', {})
+    _tnx = market.get('^TNX', {}); _xly = market.get('XLY', {}); _xlp = market.get('XLP', {})
+    _iwm = market.get('IWM', {}); _spy = market.get('SPY', {})
+    _reg = []
+    if _vix.get('price') is not None:
+        _reg.append(f"  VIX {_vix['price']:.1f}  (5d {_vix.get('ret_5d') or 0:+.0f}%, 30d {_vix.get('ret_30d') or 0:+.0f}%) - vol/fear gauge")
+    if _hyg.get('ret_30d') is not None and _lqd.get('ret_30d') is not None:
+        _reg.append(f"  Credit: HY(HYG) 30d {_hyg['ret_30d']:+.2f}% vs IG(LQD) 30d {_lqd['ret_30d']:+.2f}% - HY leading = risk-on credit")
+    if _tnx.get('price') is not None:
+        _reg.append(f"  10y yield {_tnx['price']:.2f}  (5d {_tnx.get('ret_5d') or 0:+.1f}%, 30d {_tnx.get('ret_30d') or 0:+.1f}%)")
+    if _xly.get('ret_63d') is not None and _xlp.get('ret_63d') is not None:
+        _reg.append(f"  Offense/Defense: XLY(disc) 3mo {_xly['ret_63d']:+.1f}% vs XLP(staples) 3mo {_xlp['ret_63d']:+.1f}% - disc>staples = expansion")
+    if _iwm.get('ret_63d') is not None and _spy.get('ret_63d') is not None:
+        _reg.append(f"  Breadth: IWM(small) 3mo {_iwm['ret_63d']:+.1f}% vs SPY 3mo {_spy['ret_63d']:+.1f}% - small-caps leading = risk-on")
+    _secs = [(t, market.get(t, {}).get('ret_63d')) for t in SECTOR_ETFS if market.get(t, {}).get('ret_63d') is not None]
+    if _secs:
+        _secs.sort(key=lambda x: x[1], reverse=True)
+        _reg.append('  Sector rotation 3mo - leaders: ' + ', '.join(f'{t} {v:+.0f}%' for t, v in _secs[:3]) + '  |  laggards: ' + ', '.join(f'{t} {v:+.0f}%' for t, v in _secs[-3:]))
+    if _reg:
+        lines.append('')
+        lines.append('## MACRO REGIME (cycle tells):')
+        lines.extend(_reg)
 
     if candidate_snapshot:
         # CANDIDATE STRENGTH RANKING: the "compete" view. Held positions ranked
@@ -691,6 +717,8 @@ money-market rate or you hold cash instead. State each entry's reward-to-risk as
 confirm it is favorable before committing. Cutting losses fast is good. Holding cash is a valid
 position when nothing clears the bar. (This is short-window Comando style - NOT buy-and-hold;
 do not ride drawdowns for a long thesis.)
+
+VOLATILITY REGIME: the MACRO REGIME block shows VIX. Use it to set your aggression this cycle. A LOW or falling VIX in an uptrend means momentum persists and trends are clean - press: take more shots, rotate in and out of leaders, keep position sizes modest so you can hold several names at once. A HIGH or spiking VIX means whipsaw and failed breakouts - throttle back: raise the bar, size down, favor cash. Let the volatility regime, not just the individual setup, dial how active you are.
 
 YOU MUST PRODUCE STRICT JSON. NO PROSE OUTSIDE THE JSON BLOCK.
 

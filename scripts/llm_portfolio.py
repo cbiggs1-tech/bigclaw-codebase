@@ -68,6 +68,7 @@ DB_PATH = Path.home() / "bigclaw-ai" / "src" / "portfolios.db"
 SECTOR_ETFS = ['XLK', 'XLF', 'XLE', 'XLV', 'XLI', 'XLP', 'XLY', 'XLB', 'XLU', 'XLRE', 'XLC']
 FACTOR_ETFS = ['IWM', 'MTUM', 'QUAL', 'USMV', 'IWN']
 MACRO_ETFS  = ['SPY', 'TLT', 'UUP', 'GLD', 'USO']
+REGIME_TICKERS = ['^VIX', 'HYG', 'LQD', '^TNX', 'IWM']  # vol / HY credit / IG credit / 10y yield / small-cap breadth - macro regime tells
 
 # ---------- utilities ----------
 def log(msg, level="INFO"):
@@ -163,8 +164,8 @@ def get_peer_returns():
 
 def get_market_snapshot():
     """Sector ETFs + factor ETFs + macro ETFs - current price + 1d/5d/30d returns."""
-    universe = SECTOR_ETFS + FACTOR_ETFS + MACRO_ETFS
-    hist = yf.download(universe, period='3mo', progress=False, threads=True)['Close']
+    universe = SECTOR_ETFS + FACTOR_ETFS + MACRO_ETFS + REGIME_TICKERS
+    hist = yf.download(universe, period='1y', progress=False, threads=True)['Close']
     def r(t, n):
         try:
             if len(hist[t]) < n+1: return None
@@ -176,6 +177,7 @@ def get_market_snapshot():
             out[t] = {
                 "price": float(hist[t].iloc[-1]),
                 "ret_1d": r(t, 1), "ret_5d": r(t, 5), "ret_30d": r(t, 30),
+                "ret_63d": r(t, 63), "ret_126d": r(t, 126),
             }
         except Exception:
             pass
@@ -322,6 +324,30 @@ def build_state_context(state, total_value, market, news, journal, peer_returns,
         m = market.get(t, {})
         if m:
             lines.append(f"  {t}  1d {m.get('ret_1d',0):+5.2f}%  5d {m.get('ret_5d',0):+5.2f}%  30d {m.get('ret_30d',0):+5.2f}%")
+
+    # MACRO REGIME (vol / credit / rates / cycle tells) - forward-looking, not lagging news
+    _vix = market.get('^VIX', {}); _hyg = market.get('HYG', {}); _lqd = market.get('LQD', {})
+    _tnx = market.get('^TNX', {}); _xly = market.get('XLY', {}); _xlp = market.get('XLP', {})
+    _iwm = market.get('IWM', {}); _spy = market.get('SPY', {})
+    _reg = []
+    if _vix.get('price') is not None:
+        _reg.append(f"  VIX {_vix['price']:.1f}  (5d {_vix.get('ret_5d') or 0:+.0f}%, 30d {_vix.get('ret_30d') or 0:+.0f}%) - vol/fear gauge")
+    if _hyg.get('ret_30d') is not None and _lqd.get('ret_30d') is not None:
+        _reg.append(f"  Credit: HY(HYG) 30d {_hyg['ret_30d']:+.2f}% vs IG(LQD) 30d {_lqd['ret_30d']:+.2f}% - HY leading = risk-on credit")
+    if _tnx.get('price') is not None:
+        _reg.append(f"  10y yield {_tnx['price']:.2f}  (5d {_tnx.get('ret_5d') or 0:+.1f}%, 30d {_tnx.get('ret_30d') or 0:+.1f}%)")
+    if _xly.get('ret_63d') is not None and _xlp.get('ret_63d') is not None:
+        _reg.append(f"  Offense/Defense: XLY(disc) 3mo {_xly['ret_63d']:+.1f}% vs XLP(staples) 3mo {_xlp['ret_63d']:+.1f}% - disc>staples = expansion")
+    if _iwm.get('ret_63d') is not None and _spy.get('ret_63d') is not None:
+        _reg.append(f"  Breadth: IWM(small) 3mo {_iwm['ret_63d']:+.1f}% vs SPY 3mo {_spy['ret_63d']:+.1f}% - small-caps leading = risk-on")
+    _secs = [(t, market.get(t, {}).get('ret_63d')) for t in SECTOR_ETFS if market.get(t, {}).get('ret_63d') is not None]
+    if _secs:
+        _secs.sort(key=lambda x: x[1], reverse=True)
+        _reg.append('  Sector rotation 3mo - leaders: ' + ', '.join(f'{t} {v:+.0f}%' for t, v in _secs[:3]) + '  |  laggards: ' + ', '.join(f'{t} {v:+.0f}%' for t, v in _secs[-3:]))
+    if _reg:
+        lines.append('')
+        lines.append('## MACRO REGIME (cycle tells):')
+        lines.extend(_reg)
 
     if news.get('per_ticker'):
         lines.append(f"\n## NEWS FOR HELD/RECENT TICKERS (Alpaca/Benzinga, last 2 days):")
@@ -475,6 +501,8 @@ thesis-breakage and drawdown depth, not how long you hold. Reject the bad quadra
 multi-month upside for large drawdown risk. A low-conviction position must clear a meaningful edge
 over simply holding a broad index or cash, or you wait. Holding cash is a valid position when
 nothing clears that bar.
+
+CYCLE POSITIONING (your core edge): the MACRO REGIME block is your forward read - yield-curve direction (10y), credit spreads (HY vs IG), volatility (VIX), offense/defense (XLY vs XLP), breadth (IWM vs SPY), and 3-month sector rotation. From these, explicitly CALL where we are in the cycle (early / mid / late expansion, or contraction) and position sectors for the NEXT FEW MONTHS - lead the rotation into what works in the coming phase; do not chase the sector that already ran. This forward cycle read, not lagging headlines, is where a months-horizon ETF book finds alpha.
 
 YOU MUST PRODUCE STRICT JSON. NO PROSE OUTSIDE THE JSON BLOCK.
 
