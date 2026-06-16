@@ -111,3 +111,30 @@ def wait_for_fill(client, order, ordered_qty, est_price,
         f"{ctx} | timeout — final state={final_state}, filled {qty}/{ordered_qty}"
     )
     return qty, price
+
+
+def clamp_sell_to_long(client, alpaca_symbol, requested_shares, allow_short=False):
+    """Cap a SELL at the live Alpaca long position so we never open or extend a
+    short BY ACCIDENT. Shared long-only safety backstop for every sell path.
+
+    Returns the share qty that is safe to sell:
+      - allow_short=True              -> requested_shares unchanged (DELIBERATE short)
+      - flat / already short at Alpaca-> 0  (block: selling would go short)
+      - long N shares                 -> min(requested, N)
+      - genuine Alpaca read error     -> requested unchanged (fail-open; a broker
+        hiccup must never block a legit sell — per-portfolio DB bounds still apply)
+
+    Pass allow_short=True ONLY when a short is explicitly intended.
+    """
+    req = int(requested_shares)
+    if allow_short:
+        return req
+    try:
+        pos = client.get_open_position(alpaca_symbol)
+        long_qty = int(float(pos.qty))
+        return min(req, long_qty) if long_qty > 0 else 0
+    except Exception as e:
+        m = str(e).lower()
+        if "position does not exist" in m or "not found" in m or "404" in m:
+            return 0  # flat -> selling would short
+        return req     # real API error -> fail-open to upstream DB bounds

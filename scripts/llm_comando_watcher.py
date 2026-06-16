@@ -438,7 +438,7 @@ def market_snapshot():
 def execute_trades(trades, pf_id, dry_run, secrets):
     sys.path.insert(0, str(Path.home() / "bigclaw-ai" / "scripts"))
     from autonomous_trader import get_trading_client, MISMATCH_FLAG_PATH
-    from order_fill import wait_for_fill
+    from order_fill import wait_for_fill, clamp_sell_to_long
     from trade_recorder import record_trade
     from alpaca.trading.requests import MarketOrderRequest
     from alpaca.trading.enums import OrderSide, TimeInForce, AssetStatus
@@ -485,6 +485,11 @@ def execute_trades(trades, pf_id, dry_run, secrets):
             if shares > holdings.get(ticker, 0):
                 results.append((tr, {"skipped": f"cannot sell {shares} {ticker} (hold {holdings.get(ticker,0)})"}))
                 continue
+            _bk = clamp_sell_to_long(client, ticker, shares, allow_short=bool(tr.get("short", False)))
+            if _bk <= 0:
+                results.append((tr, {"skipped": f"{ticker}: not long at Alpaca (short-prevention)"}))
+                continue
+            shares = _bk
         if action == "buy":
             try: spot = float(yf.Ticker(ticker).fast_info["lastPrice"])
             except Exception: spot = 0

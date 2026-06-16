@@ -43,7 +43,7 @@ from bigclaw_logging import get_logger
 from bigclaw_retry import retry
 from alpaca_symbols import to_alpaca, from_alpaca
 from stop_cooldown import is_blocked as is_in_cooldown
-from order_fill import wait_for_fill
+from order_fill import wait_for_fill, clamp_sell_to_long
 from trade_recorder import record_trade
 
 ET = ZoneInfo("America/New_York")
@@ -304,7 +304,7 @@ def get_portfolio_market_value(pid):
 
 
 
-def _execute_sell_order(client, pid, pname, ticker, shares, reason, dry_run=False):
+def _execute_sell_order(client, pid, pname, ticker, shares, reason, dry_run=False, allow_short=False):
     """Execute a sell order through Alpaca and record to DB.
 
     Single path for ALL sells. Returns dict with result or None on failure.
@@ -324,6 +324,13 @@ def _execute_sell_order(client, pid, pname, ticker, shares, reason, dry_run=Fals
 
     from alpaca.trading.requests import MarketOrderRequest
     from alpaca.trading.enums import OrderSide, TimeInForce
+    _req = shares
+    shares = clamp_sell_to_long(client, to_alpaca(ticker), shares, allow_short=allow_short)
+    if shares <= 0:
+        log_trade(f"SELL BLOCKED | {pname} | {ticker} | not long at Alpaca (short-prevention); requested {_req}")
+        return {"skipped": "no long position at Alpaca (short-prevention)"}
+    if shares < _req:
+        log_trade(f"SELL CLAMPED | {pname} | {ticker} | {_req} -> {shares} (live Alpaca long)")
     try:
         order = client.submit_order(MarketOrderRequest(
             symbol=to_alpaca(ticker), qty=shares, side=OrderSide.SELL, time_in_force=TimeInForce.DAY,
@@ -729,6 +736,10 @@ def check_concentration(client, dry_run=False):
                                 "shares": trim_shares, "price": price, "reason": reason, "dry_run": True})
                 continue
 
+            trim_shares = clamp_sell_to_long(client, to_alpaca(ticker), trim_shares)
+            if trim_shares <= 0:
+                log_trade(f"REBALANCE-SELL BLOCKED | {pname} | {ticker} | not long at Alpaca (short-prevention)")
+                continue
             try:
                 req = MarketOrderRequest(
                     symbol=to_alpaca(ticker), qty=trim_shares,
@@ -865,6 +876,10 @@ def execute_trades(client, data, dry_run=False, seed_mode=False):
                                 "price": price_stop, "reason": reason_stop, "dry_run": True})
                 continue
 
+            shares_stop = clamp_sell_to_long(client, to_alpaca(ticker_stop), int(shares_stop))
+            if shares_stop <= 0:
+                log_trade(f"STOP-SELL BLOCKED | {st['portfolio_name']} | {ticker_stop} | not long at Alpaca (short-prevention)")
+                continue
             try:
                 req = MarketOrderRequest(
                     symbol=to_alpaca(ticker_stop), qty=int(shares_stop),

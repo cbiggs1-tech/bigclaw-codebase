@@ -595,7 +595,7 @@ def validate_and_execute(trades, state, total_value, secrets, dry_run=False):
        Returns list of (trade, result_dict)."""
     sys.path.insert(0, str(Path.home() / "bigclaw-ai" / "scripts"))
     from autonomous_trader import get_trading_client, MISMATCH_FLAG_PATH
-    from order_fill import wait_for_fill
+    from order_fill import wait_for_fill, clamp_sell_to_long
     from trade_recorder import record_trade
     from alpaca.trading.requests import MarketOrderRequest, GetAssetsRequest
     from alpaca.trading.enums import OrderSide, TimeInForce, AssetStatus
@@ -662,6 +662,11 @@ def validate_and_execute(trades, state, total_value, secrets, dry_run=False):
             if shares > held:
                 log(f"Clamping {ticker} sell {shares} -> {int(held)} to fresh holdings (prevents short)", "WARN")
                 shares = int(held)
+            _bk = clamp_sell_to_long(client, ticker, shares, allow_short=bool(tr.get('short', False)))
+            if _bk <= 0:
+                results.append((tr, {"skipped": f"{ticker}: not long at Alpaca (short-prevention)"}))
+                continue
+            shares = _bk
             # Credit estimated proceeds so subsequent buys this cycle see realistic cash.
             try:
                 spot = float(yf.Ticker(ticker).fast_info['lastPrice'])
