@@ -312,7 +312,7 @@ def _execute_sell_order(client, pid, pname, ticker, shares, reason, dry_run=Fals
     """
     import yfinance as yf
     try:
-        info = retry(lambda: yf.Ticker(ticker).info, attempts=2, delay=3, label=f"yf.info({ticker})")
+        from fundamentals_cache import get_info; info = get_info(ticker)
         est_price = info.get("currentPrice") or info.get("regularMarketPrice")
     except Exception:
         est_price = None
@@ -368,7 +368,7 @@ def _execute_buy_order(client, pid, pname, ticker, alloc, reason, starting, rese
     """
     import yfinance as yf
     try:
-        info = retry(lambda: yf.Ticker(ticker).info, attempts=2, delay=3, label=f"yf.info({ticker})")
+        from fundamentals_cache import get_info; info = get_info(ticker)
         price = info.get("currentPrice") or info.get("regularMarketPrice") or info.get("previousClose")
         target_price = info.get("targetMeanPrice")  # captured at entry, never overwritten
     except Exception:

@@ -257,7 +257,7 @@ def screen_portfolio(portfolio_name, current_holdings):
 
     for ticker in sorted(raw_candidates):
         try:
-            info = yf.Ticker(ticker).info or {}
+            from fundamentals_cache import get_info; info = get_info(ticker)
         except Exception:
             continue
 

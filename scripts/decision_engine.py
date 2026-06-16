@@ -261,7 +261,7 @@ def fetch_market_data(tickers):
         logger.debug(f"Fetching info: {ticker}")
         try:
             t = yf.Ticker(ticker)
-            data[ticker]["info"] = retry(lambda t=t: t.info or {}, attempts=2, delay=3, label=f"yf.info({ticker})")
+            from fundamentals_cache import get_info; data[ticker]["info"] = get_info(ticker)
         except Exception:
             data[ticker]["info"] = {}
         # Earnings dates

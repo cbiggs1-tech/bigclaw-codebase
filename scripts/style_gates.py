@@ -462,7 +462,7 @@ def passes_style_gate(ticker, portfolio_name, info=None, context="pre_buy"):
     if info is None:
         try:
             import yfinance as yf
-            info = yf.Ticker(ticker).info or {}
+            from fundamentals_cache import get_info; info = get_info(ticker)
         except Exception as e:
             log.warning(f"Could not fetch info for {ticker}: {e}")
             # Fail open — if we can't get data, let the score decide
@@ -491,7 +491,7 @@ def check_all_gates(ticker, info=None):
     if info is None:
         try:
             import yfinance as yf
-            info = yf.Ticker(ticker).info or {}
+            from fundamentals_cache import get_info; info = get_info(ticker)
         except Exception:
             info = {}
 
@@ -514,7 +514,7 @@ def main():
 
     import yfinance as yf
     ticker = args.ticker.upper()
-    info = yf.Ticker(ticker).info or {}
+    from fundamentals_cache import get_info; info = get_info(ticker)
 
     if args.portfolio:
         result = passes_style_gate(ticker, args.portfolio, info)

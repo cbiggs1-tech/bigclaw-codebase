@@ -168,10 +168,7 @@ def fetch_info_batch(tickers):
     info_map = {}
     for ticker in tickers:
         try:
-            data = retry(
-                lambda t=ticker: yf.Ticker(t).info or {},
-                attempts=2, delay=3, label=f"yf.info({ticker})"
-            )
+            from fundamentals_cache import get_info; data = get_info(ticker)
             info_map[ticker] = data
         except Exception as e:
             log.warning(f"Could not fetch info for {ticker}: {e}")
