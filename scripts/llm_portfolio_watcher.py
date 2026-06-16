@@ -288,8 +288,12 @@ def get_portfolio_state():
 
 
 # ---------- focused LLM trigger response ----------
-TRIGGER_SYSTEM = """You are the LLM Discretionary trader. One or more intraday triggers you set
-this morning have fired. You decide what to do for each.
+TRIGGER_SYSTEM = """You are the LLM-ETF Focus trader, a MONTHS-horizon thesis investor. One or more
+thesis-break triggers you set this morning have fired. They exist ONLY to catch a development that
+INVALIDATES a multi-month thesis — not to trade intraday. Your strong default is stand_down: a
+months-horizon position is HELD through intraday noise, overnight gaps, and weekend gaps. Act ONLY
+if the multi-month thesis is genuinely broken; never take quick profits, buy dips, or trim on a
+price wobble.
 
 FOR EACH FIRED TRIGGER YOU MUST DECIDE:
 - "execute" — execute the action_intent as originally planned (or adapt it lightly)

@@ -379,7 +379,7 @@ OUTPUT: For 2-5 candidate trades (existing positions or new ideas), provide:
 - Direction (buy / add / hold-and-watch / trim)
 - Strongest bull thesis (3-5 sentences, data-cited)
 - Catalyst or trigger (what's driving this?)
-- Time horizon (1-day / 3-day / 1-week / longer)
+- Time horizon (MONTHS-horizon portfolio — frame in weeks / months / quarters, never intraday)
 - Conviction (0.0 to 1.0)
 
 Be aggressive but grounded. The BEAR agent will challenge you - if your thesis is weak it
@@ -492,9 +492,9 @@ OUTPUT SCHEMA:
       "rationale": "specific data-cited reasoning (which catalyst/setup/pattern)",
       "exit_thesis": "specific gain target / stop loss / time-based exit (prose, for the journal)",
       "exit_conditions": {
-        "target_pct": 2.0,              // gain target as positive number, e.g. 2.5 = +2.5%; null if none
-        "stop_pct": 1.5,                // stop loss as positive number (absolute), e.g. 1.5 = -1.5%; null if none
-        "time_exit_date": "YYYY-MM-DD"  // ISO date by which position must close; null if no time exit
+        "target_pct": 25.0,             // MONTHS horizon: multi-month upside target, e.g. 25 = +25%; null if exit is thesis-based not price-based
+        "stop_pct": 15.0,               // WIDE thesis-protection / max-drawdown stop, NOT an intraday stop; e.g. 15 = -15%; null if thesis-based. Do NOT set tight sub-5% stops — noise would force a day-trade exit and break the hold
+        "time_exit_date": "YYYY-MM-DD"  // months out, or null. NEVER same-day/same-week — this is a months hold
       },
       "thesis_type": "catalyst" or "technical" or "macro" or "sentiment" or "contrarian",
       "confidence": 0.0 to 1.0
@@ -520,15 +520,18 @@ OUTPUT SCHEMA:
   "expected_portfolio_direction": "bullish" or "bearish" or "neutral"
 }
 
-INTRADAY TRIGGERS: You have full freedom to define up to 8 triggers per cycle that may fire later
-today. Use them aggressively when you see asymmetric setups: "if NVDA breaks $210 with volume,
-add", "if Fed dovishness leaks before FOMC, lever up tech", "if SPY -2% intraday, buy the panic".
-A lightweight watcher polls every 5 min during market hours. When any trigger matches, a focused
-LLM cycle (you again, with the original intent + current state) decides: execute as planned,
-modify, or stand down. Max 6 fires per day across all triggers.
+THESIS-BREAK TRIGGERS: You may define up to 8 triggers a lightweight watcher checks during market
+hours. Because this is a MONTHS-horizon portfolio, triggers are NOT for intraday trading, quick
+profits, or buying dips — they are thesis-BREAK alarms: a development that would INVALIDATE a
+multi-month thesis and justify an exit before a large drawdown (e.g. "if a guidance cut / analyst
+downgrade / structural-reversal headline hits NAME, exit"). Do NOT set intraday price-wobble
+triggers to add or take quick gains. When a trigger matches, a focused LLM call (you, with the
+original intent + current state) decides: exit per the thesis-break, adapt, or stand down. Max 6
+fires per day.
 
-PERIODIC RE-RANKING: your goal is short-term gains. A position you buy at 9:00 CT can have its
-thesis weaken by 12:00 CT as news shifts. Three deliberative cycles fire per market day —
+PERIODIC RE-EVALUATION: your goal is risk-adjusted return over MONTHS, not short-term gains. A
+multi-month thesis does NOT weaken because price moved intraday — reassess only when the THESIS
+itself changes (the reason you entered is no longer true). Three deliberative cycles fire per market day —
 you are running in ONE of them right now (the state context tells you which). The watcher
 between cycles only fires on triggers you set; the three full dialectic cycles are guaranteed
 deliberative moments where Bear gets to refute Bull.
@@ -545,8 +548,8 @@ CYCLE FRAMINGS:
       (a) playing out as expected → HOLD
       (b) weakening or stalling → CONSIDER TRIM/EXIT
       (c) complete (target hit, catalyst played out) → TAKE PROFIT or rotate
-    Be honest: a position with no thesis follow-through after 2.5 hours of trading
-    usually means the thesis was wrong. Don't anchor to entry price.
+    For a months thesis, intraday follow-through is irrelevant — a position is not "wrong"
+    because it has not moved in a few hours. Reassess only if the multi-month THESIS has broken.
 
     STAGE 2 - HELLO-WORLD WITH REMAINING CASH. After Stage 1, you have a cash position.
     Treat it as a FRESH ALLOCATION, not "leftover funds." Scan the Candidate Strength
@@ -556,22 +559,13 @@ CYCLE FRAMINGS:
     conviction bar. "Cash is a valid position" applies only when the data agrees,
     not as an excuse to defer.
 
-  AFTERNOON (14:30 CT, 30 min before close) — two-stage decision under overnight gap risk.
-    STAGE 1 - MONITOR EXISTING POSITIONS FOR OVERNIGHT VIABILITY. Each held position is
-    one you are explicitly choosing to expose to gap risk overnight (or Friday-to-Monday
-    gap risk on weekends — substantially higher uncertainty). For each:
-      (a) Strong thesis still active + favorable overnight catalysts → HOLD
-      (b) Thesis weakening or played out → CLOSE before the bell, lock gains/cap losses
-      (c) Position underwater with no near-term catalyst → CLOSE, the next 16+ hours
-          (or 64+ over weekend) are pure gap exposure
-    Be ruthless. The default for an uncertain position at 14:30 is CLOSE.
-
-    STAGE 2 - HELLO-WORLD FOR NEW POSITIONS INTO THE CLOSE. With remaining cash, scan
-    the Candidate Strength Ranking for any setup worth opening NEW exposure into the
-    close. Bar is higher than midday because overnight gap risk amplifies bad picks.
-    Only open new positions where the catalyst is specifically TIMED for overnight or
-    next-day execution (afterhours earnings, pre-market guidance, scheduled events) AND
-    the thesis is strong enough you would defend holding through a -5% gap down.
+  AFTERNOON (14:30 CT) — light thesis check-in, NOT a pre-close de-risking window.
+    A months-horizon position is HELD through overnight and weekend gaps — that exposure is the
+    normal cost of a multi-month thesis, not a reason to sell. For each holding ask only: is the
+    multi-month THESIS still intact? Intact → HOLD (ignore intraday price action). Genuinely
+    broken by a new development (guidance cut, downgrade, structural reversal) → EXIT.
+    Do NOT close positions to avoid overnight/weekend gaps, and do NOT take quick profits into the
+    close. You MAY open a NEW position only on a real multi-month thesis, never an intraday pop.
 
 If no trades make sense today, return {"trades": []} and explain in reflection.
 
