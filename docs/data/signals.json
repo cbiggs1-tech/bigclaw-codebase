@@ -16695,63 +16695,7 @@
       }
     }
   },
-  "earnings": [
-    {
-      "ticker": "ACN",
-      "date": "Jun 18",
-      "days": 1
-    },
-    {
-      "ticker": "AVAV",
-      "date": "Jun 29",
-      "days": 12
-    },
-    {
-      "ticker": "CBRS",
-      "date": "Jun 23",
-      "days": 6
-    },
-    {
-      "ticker": "CCL",
-      "date": "Jun 23",
-      "days": 6
-    },
-    {
-      "ticker": "GIS",
-      "date": "Jul 01",
-      "days": 14
-    },
-    {
-      "ticker": "JBL",
-      "date": "Jun 17",
-      "days": 0
-    },
-    {
-      "ticker": "JEF",
-      "date": "Jun 24",
-      "days": 7
-    },
-    {
-      "ticker": "MKC",
-      "date": "Jun 25",
-      "days": 8
-    },
-    {
-      "ticker": "MU",
-      "date": "Jun 24",
-      "days": 7
-    },
-    {
-      "ticker": "STZ",
-      "date": "Jun 30",
-      "days": 13
-    },
-    {
-      "ticker": "TCOM",
-      "date": "Jun 24",
-      "days": 7
-    }
-  ],
+  "earnings": [],
   "overlap": [],
   "concentration": [
     {
@@ -16762,33 +16706,28 @@
   ],
   "bond_signals": {
     "yield_curve": {
-      "two_year": 4.09,
-      "ten_year": 4.48,
-      "spread": 0.39,
-      "spread_1mo_ago": 0.48,
-      "spread_change": -0.09,
-      "date": "2026-06-12",
-      "assessment": "Flat \u2014 neutral"
+      "two_year": 4.174,
+      "ten_year": 4.451,
+      "spread": 0.277,
+      "date": "2026-06-16",
+      "assessment": "Flat \u2014 caution"
     },
     "credit_spreads": {
-      "current_bps": 266.0,
-      "raw_value": 2.66,
-      "prev_value": 2.83,
-      "change": -0.17,
-      "date": "2026-06-15",
-      "assessment": "Tight (266bps) \u2014 bullish"
+      "current_bps": 292.0,
+      "date": "2026-06-16",
+      "assessment": "Tight (292bps) \u2014 bullish"
     },
     "ten_year": {
-      "current": 4.48,
-      "prev": 4.46,
-      "change_bps": 2.0,
-      "date": "2026-06-12",
-      "assessment": "Stable \u2014 neutral"
+      "current": 4.451,
+      "prev": 4.451,
+      "change_bps": 0.0,
+      "date": "2026-06-16",
+      "assessment": "Elevated \u2014 bearish"
     },
     "scores": {
-      "yield_curve": 0,
+      "yield_curve": 1,
       "credit_spreads": 1,
-      "ten_year_level": 0
+      "ten_year_level": -1
     },
     "combined_score": 1
   },
@@ -17471,5 +17410,968 @@
       "swap_recommendations": []
     }
   },
-  "priceRefreshedAt": "2026-06-16T15:09:38.107832Z"
+  "priceRefreshedAt": "2026-06-16T15:09:38.107832Z",
+  "rates": {
+    "fed_funds": "4.25\u20134.50%",
+    "ten_year": 4.451,
+    "two_year": 4.174,
+    "yield_spread": 0.277,
+    "inverted": false
+  },
+  "planned_actions": [
+    {
+      "portfolio": "Innovation Fund",
+      "action": "SELL",
+      "ticker": "GMED",
+      "shares": 157,
+      "score": 9,
+      "reason": "Not in top 10 (score 9)"
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "SELL",
+      "ticker": "SHOP",
+      "shares": 57,
+      "score": 8,
+      "reason": "Not in top 10 (score 8)"
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "SELL",
+      "ticker": "Z",
+      "shares": 294,
+      "score": 8,
+      "reason": "Not in top 10 (score 8)"
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "SELL",
+      "ticker": "WAY",
+      "shares": 396,
+      "score": 7,
+      "reason": "Not in top 10 (score 7)"
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "SELL",
+      "ticker": "IONS",
+      "shares": 159,
+      "score": 6,
+      "reason": "Not in top 10 (score 6)"
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "SELL",
+      "ticker": "PODD",
+      "shares": 64,
+      "score": 5,
+      "reason": "Not in top 10 (score 5)"
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "APH",
+      "score": 21,
+      "reason": "Score 21 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Income Dividends",
+      "action": "BUY",
+      "ticker": "AU",
+      "score": 17,
+      "reason": "Score 17 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "AMAT",
+      "score": 16,
+      "reason": "Score 16 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "ANET",
+      "score": 15,
+      "reason": "Score 15 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "EVR",
+      "score": 15,
+      "reason": "Score 15 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Income Dividends",
+      "action": "BUY",
+      "ticker": "GFI",
+      "score": 14,
+      "reason": "Score 14 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Income Dividends",
+      "action": "BUY",
+      "ticker": "PPG",
+      "score": 14,
+      "reason": "Score 14 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Income Dividends",
+      "action": "BUY",
+      "ticker": "SNA",
+      "score": 14,
+      "reason": "Score 14 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Income Dividends",
+      "action": "BUY",
+      "ticker": "WRB",
+      "score": 14,
+      "reason": "Score 14 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "AGX",
+      "score": 14,
+      "reason": "Score 14 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Value Picks",
+      "action": "BUY",
+      "ticker": "APA",
+      "score": 13,
+      "reason": "Score 13 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Value Picks",
+      "action": "BUY",
+      "ticker": "IAG",
+      "score": 13,
+      "reason": "Score 13 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Value Picks",
+      "action": "BUY",
+      "ticker": "RRC",
+      "score": 13,
+      "reason": "Score 13 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Income Dividends",
+      "action": "BUY",
+      "ticker": "BLK",
+      "score": 13,
+      "reason": "Score 13 \u2014 new position (top 10)",
+      "est_allocation": 6725
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "ALAB",
+      "score": 13,
+      "reason": "Score 13 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "LAUR",
+      "score": 13,
+      "reason": "Score 13 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "NVDA",
+      "score": 13,
+      "reason": "Score 13 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "BUY",
+      "ticker": "TER",
+      "score": 13,
+      "reason": "Score 13 \u2014 new position (top 10)",
+      "est_allocation": 7496
+    },
+    {
+      "portfolio": "AI Defense & Autonomous",
+      "action": "BUY",
+      "ticker": "AXON",
+      "score": 13,
+      "reason": "Score 13 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Value Picks",
+      "action": "BUY",
+      "ticker": "CB",
+      "score": 12,
+      "reason": "Score 12 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "BUY",
+      "ticker": "TTAN",
+      "score": 12,
+      "reason": "Score 12 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Growth Value",
+      "action": "BUY",
+      "ticker": "HMY",
+      "score": 12,
+      "reason": "Score 12 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "BUY",
+      "ticker": "VST",
+      "score": 12,
+      "reason": "Score 12 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "AI Defense & Autonomous",
+      "action": "BUY",
+      "ticker": "PLTR",
+      "score": 12,
+      "reason": "Score 12 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Value Picks",
+      "action": "BUY",
+      "ticker": "FIS",
+      "score": 11,
+      "reason": "Score 11 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Value Picks",
+      "action": "BUY",
+      "ticker": "G",
+      "score": 11,
+      "reason": "Score 11 \u2014 new position (top 10)",
+      "est_allocation": 9555
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "ADD",
+      "ticker": "PINS",
+      "score": 10,
+      "reason": "Score 10 \u2014 add to position",
+      "est_allocation": 5864
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "BUY",
+      "ticker": "ESTC",
+      "score": 10,
+      "reason": "Score 10 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "BUY",
+      "ticker": "GTLB",
+      "score": 10,
+      "reason": "Score 10 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "BUY",
+      "ticker": "LIF",
+      "score": 10,
+      "reason": "Score 10 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "BUY",
+      "ticker": "MEDP",
+      "score": 10,
+      "reason": "Score 10 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "BUY",
+      "ticker": "MNDY",
+      "score": 10,
+      "reason": "Score 10 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "BUY",
+      "ticker": "NFLX",
+      "score": 10,
+      "reason": "Score 10 \u2014 new position (top 10)",
+      "est_allocation": 3273
+    },
+    {
+      "portfolio": "AI Defense & Autonomous",
+      "action": "BUY",
+      "ticker": "RTX",
+      "score": 10,
+      "reason": "Score 10 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Growth Value",
+      "action": "BUY",
+      "ticker": "TNL",
+      "score": 9,
+      "reason": "Score 9 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "BUY",
+      "ticker": "CCJ",
+      "score": 9,
+      "reason": "Score 9 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Growth Value",
+      "action": "BUY",
+      "ticker": "BAC",
+      "score": 8,
+      "reason": "Score 8 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Growth Value",
+      "action": "BUY",
+      "ticker": "BOOT",
+      "score": 8,
+      "reason": "Score 8 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Growth Value",
+      "action": "BUY",
+      "ticker": "LYG",
+      "score": 8,
+      "reason": "Score 8 \u2014 new position (top 10)",
+      "est_allocation": 9409
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "BUY",
+      "ticker": "CEG",
+      "score": 5,
+      "reason": "Score 5 \u2014 new position (top 10)",
+      "est_allocation": 12000
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "BUY",
+      "ticker": "EVRG",
+      "score": 4,
+      "reason": "Score 4 \u2014 new position (top 10)",
+      "est_allocation": 10000
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "BUY",
+      "ticker": "PEG",
+      "score": 4,
+      "reason": "Score 4 \u2014 new position (top 10)",
+      "est_allocation": 10000
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "BUY",
+      "ticker": "TLN",
+      "score": 4,
+      "reason": "Score 4 \u2014 new position (top 10)",
+      "est_allocation": 10000
+    },
+    {
+      "portfolio": "AI Defense & Autonomous",
+      "action": "BUY",
+      "ticker": "KTOS",
+      "score": 4,
+      "reason": "Score 4 \u2014 new position (top 10)",
+      "est_allocation": 10000
+    },
+    {
+      "portfolio": "AI Defense & Autonomous",
+      "action": "BUY",
+      "ticker": "LHX",
+      "score": 4,
+      "reason": "Score 4 \u2014 new position (top 10)",
+      "est_allocation": 10000
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "BUY",
+      "ticker": "AEE",
+      "score": 3,
+      "reason": "Score 3 \u2014 new position (top 10)",
+      "est_allocation": 9045
+    },
+    {
+      "portfolio": "AI Defense & Autonomous",
+      "action": "BUY",
+      "ticker": "IREN",
+      "score": 2,
+      "reason": "Score 2 \u2014 new position (top 10)",
+      "est_allocation": 3354
+    }
+  ],
+  "executed_this_week": [
+    {
+      "portfolio": "LLM-ETF Focus",
+      "action": "BUY",
+      "ticker": "IWM",
+      "shares": 35,
+      "price": 296.37,
+      "total": 10372.82,
+      "reason": "Cover unintended short from 2026-06-15 watcher/cycle double-sell incident",
+      "date": "2026-06-16",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-Comando",
+      "action": "BUY",
+      "ticker": "AAL",
+      "shares": 1000,
+      "price": 15.99,
+      "total": 15990.0,
+      "reason": "Cover unintended short from 2026-06-15 watcher/cycle double-sell incident",
+      "date": "2026-06-16",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-ETF Focus",
+      "action": "BUY",
+      "ticker": "IWM",
+      "shares": 0,
+      "price": 295.7,
+      "total": 0.0,
+      "reason": "Cover unintended short from 2026-06-15 watcher/cycle double-sell incident",
+      "date": "2026-06-16",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-Comando",
+      "action": "BUY",
+      "ticker": "AAL",
+      "shares": 0,
+      "price": 15.71,
+      "total": 0.0,
+      "reason": "Cover unintended short from 2026-06-15 watcher/cycle double-sell incident",
+      "date": "2026-06-16",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "SELL",
+      "ticker": "CRS",
+      "shares": 24,
+      "price": 561.1,
+      "total": 13466.4,
+      "reason": "Not in top 10 (score 12)",
+      "date": "2026-06-16",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-ETF Focus",
+      "action": "BUY",
+      "ticker": "MTUM",
+      "shares": 10,
+      "price": 334.97,
+      "total": 3349.7,
+      "reason": "LLM-WATCHER: MTUM confirmed momentum continuation (+3.22% 1d, +9.96% 5d per snap",
+      "date": "2026-06-16",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-Comando",
+      "action": "SELL",
+      "ticker": "AAL",
+      "shares": 1000,
+      "price": 15.5,
+      "total": 15500.0,
+      "reason": "LLM-DIALECTIC: Exit the full position before close. The Iran-deal/oil-down catal",
+      "date": "2026-06-15",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-ETF Focus",
+      "action": "SELL",
+      "ticker": "IWM",
+      "shares": 35,
+      "price": 294.7,
+      "total": 10314.48,
+      "reason": "LLM-DIALECTIC: IWM is underperforming SPY by 117bps (+0.51% vs +1.68%) on the ex",
+      "date": "2026-06-15",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-Comando",
+      "action": "SELL",
+      "ticker": "AAL",
+      "shares": 1000,
+      "price": 15.49,
+      "total": 15490.0,
+      "reason": "LLM-WATCHER: AAL at $15.48 is -0.42% vs $15.54 entry. Underperforming in a stron",
+      "date": "2026-06-15",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-ETF Focus",
+      "action": "SELL",
+      "ticker": "IWM",
+      "shares": 65,
+      "price": 294.54,
+      "total": 19145.1,
+      "reason": "LLM-WATCHER: IWM is +0.44% on the day vs SPY +1.69%, underperforming by ~125bps ",
+      "date": "2026-06-15",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-ETF Focus",
+      "action": "SELL",
+      "ticker": "IWM",
+      "shares": 60,
+      "price": 296.11,
+      "total": 17766.61,
+      "reason": "LLM-WATCHER: IWM is +0.99% vs SPY +2.00% \u2014 significant underperformance on a str",
+      "date": "2026-06-15",
+      "executed": true
+    },
+    {
+      "portfolio": "AI Defense & Autonomous",
+      "action": "SELL",
+      "ticker": "BAH",
+      "shares": 126,
+      "price": 74.04,
+      "total": 9329.65,
+      "reason": "Trailing stop triggered: $74.08 <= $74.10 (HWM $84.21, -12.0%)",
+      "date": "2026-06-15",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-Comando",
+      "action": "BUY",
+      "ticker": "AAL",
+      "shares": 1000,
+      "price": 15.54,
+      "total": 15540.0,
+      "reason": "LLM-DIALECTIC: Iran deal TODAY is driving crude sharply lower (USO -4.62% today,",
+      "date": "2026-06-15",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-ETF Focus",
+      "action": "SELL",
+      "ticker": "XLF",
+      "shares": 50,
+      "price": 53.86,
+      "total": 2693.0,
+      "reason": "LLM-DIALECTIC: XLF original entry thesis (NIM expansion from high yields/CPI 4.2",
+      "date": "2026-06-15",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-ETF Focus",
+      "action": "SELL",
+      "ticker": "XLF",
+      "shares": 100,
+      "price": 53.35,
+      "total": 5335.0,
+      "reason": "LLM-DIALECTIC: XLF is the portfolio's only meaningful winner (+1.1%, +$146 on 25",
+      "date": "2026-06-12",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-ETF Focus",
+      "action": "SELL",
+      "ticker": "MTUM",
+      "shares": 20,
+      "price": 325.16,
+      "total": 6503.2,
+      "reason": "LLM-WATCHER: MTUM +1.92% today and +3.19% 5d per market snapshot \u2014 has run signi",
+      "date": "2026-06-12",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-ETF Focus",
+      "action": "SELL",
+      "ticker": "XLF",
+      "shares": 100,
+      "price": 53.34,
+      "total": 5334.0,
+      "reason": "LLM-WATCHER: XLF has gained +1.40% today and +2.66% over 5d, cited in market sna",
+      "date": "2026-06-12",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-ETF Focus",
+      "action": "BUY",
+      "ticker": "IWM",
+      "shares": 25,
+      "price": 293.74,
+      "total": 7343.5,
+      "reason": "LLM-DIALECTIC: Adding small increment to working position (currently +0.2%, 100 ",
+      "date": "2026-06-12",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-ETF Focus",
+      "action": "BUY",
+      "ticker": "MTUM",
+      "shares": 60,
+      "price": 324.48,
+      "total": 19468.8,
+      "reason": "LLM-DIALECTIC: MTUM is the strongest factor ETF by every timeframe: +1.70% today",
+      "date": "2026-06-12",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-Comando",
+      "action": "SELL",
+      "ticker": "MRVL",
+      "shares": 36,
+      "price": 287.19,
+      "total": 10338.84,
+      "reason": "LLM-WATCHER: Price target of +3% reached ($287.55 vs entry $278.70). No new cata",
+      "date": "2026-06-12",
+      "executed": true
+    },
+    {
+      "portfolio": "Value Picks",
+      "action": "SELL",
+      "ticker": "GL",
+      "shares": 77,
+      "price": 167.11,
+      "total": 12867.47,
+      "reason": "Not in top 10 (score 9)",
+      "date": "2026-06-12",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "SELL",
+      "ticker": "USAC",
+      "shares": 414,
+      "price": 26.19,
+      "total": 10842.66,
+      "reason": "Trailing stop triggered: $26.26 <= $26.44 (HWM $29.38, -10.6%)",
+      "date": "2026-06-12",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-Comando",
+      "action": "BUY",
+      "ticker": "MRVL",
+      "shares": 36,
+      "price": 278.7,
+      "total": 10033.14,
+      "reason": "LLM-DIALECTIC: Marvell reaffirmed Q2 guidance 2026-06-11T20:11 (risk removal). A",
+      "date": "2026-06-12",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-ETF Focus",
+      "action": "BUY",
+      "ticker": "IWM",
+      "shares": 100,
+      "price": 293.04,
+      "total": 29304.49,
+      "reason": "LLM-DIALECTIC: IWM is the clearest cross-timeframe momentum leader in factor dat",
+      "date": "2026-06-12",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-ETF Focus",
+      "action": "SELL",
+      "ticker": "XLV",
+      "shares": 350,
+      "price": 153.89,
+      "total": 53861.5,
+      "reason": "LLM-DIALECTIC: XLV is -0.5% unrealized (-$259) after 2 full trading days with no",
+      "date": "2026-06-12",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-Comando",
+      "action": "SELL",
+      "ticker": "ARM",
+      "shares": 55,
+      "price": 343.1,
+      "total": 18870.43,
+      "reason": "LLM-WATCHER: Closing full 55-share ARM position at ~$342.39 (+2.61% gain per por",
+      "date": "2026-06-11",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-Comando",
+      "action": "BUY",
+      "ticker": "ARM",
+      "shares": 55,
+      "price": 333.69,
+      "total": 18353.1,
+      "reason": "LLM-DIALECTIC: ARM is rallying today on what Benzinga (2026-06-11T16:33) specifi",
+      "date": "2026-06-11",
+      "executed": true
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "SELL",
+      "ticker": "NEE",
+      "shares": 90,
+      "price": 85.15,
+      "total": 7663.5,
+      "reason": "Not in top 10 (score 2)",
+      "date": "2026-06-11",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-Comando",
+      "action": "SELL",
+      "ticker": "AMD",
+      "shares": 30,
+      "price": 477.23,
+      "total": 14317.02,
+      "reason": "LLM-WATCHER: AMD crossed below $510 stop level per trigger \u2014 now at $477.96, a s",
+      "date": "2026-06-11",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-ETF Focus",
+      "action": "SELL",
+      "ticker": "XLF",
+      "shares": 200,
+      "price": 52.16,
+      "total": 10432.0,
+      "reason": "LLM-WATCHER: Iran escalation (Trump threatening Kharg Island seizure per CNBC, I",
+      "date": "2026-06-11",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-Comando",
+      "action": "BUY",
+      "ticker": "AMD",
+      "shares": 30,
+      "price": 479.08,
+      "total": 14372.4,
+      "reason": "LLM-DIALECTIC: B of A Securities raised AMD PT to $560 (Buy) today (Benzinga 202",
+      "date": "2026-06-11",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-Comando",
+      "action": "SELL",
+      "ticker": "XLE",
+      "shares": 204,
+      "price": 58.31,
+      "total": 11895.24,
+      "reason": "LLM-DIALECTIC: XLE is -0.09% today, -0.94% 5d, -1.41% 30d \u2014 worst sector across ",
+      "date": "2026-06-11",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-Comando",
+      "action": "SELL",
+      "ticker": "XLE",
+      "shares": 296,
+      "price": 58.62,
+      "total": 17351.52,
+      "reason": "EXPERIMENT-CLEANUP: XLE bought June 10 via dry-run side-effect + missing watcher",
+      "date": "2026-06-11",
+      "executed": true
+    },
+    {
+      "portfolio": "Value Picks",
+      "action": "SELL",
+      "ticker": "FSM",
+      "shares": 1204,
+      "price": 8.13,
+      "total": 9788.52,
+      "reason": "Trailing stop triggered: $8.14 <= $8.17 (HWM $9.97, -18.4%)",
+      "date": "2026-06-10",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-Comando",
+      "action": "BUY",
+      "ticker": "XLE",
+      "shares": 500,
+      "price": 58.59,
+      "total": 29295.0,
+      "reason": "LLM-WATCHER: Iran escalation confirmed via Trump pledge of more strikes (CNBC). ",
+      "date": "2026-06-10",
+      "executed": true
+    },
+    {
+      "portfolio": "Momentum Growth",
+      "action": "SELL",
+      "ticker": "NBIX",
+      "shares": 76,
+      "price": 166.06,
+      "total": 12620.56,
+      "reason": "Not in top 10 (score 9)",
+      "date": "2026-06-10",
+      "executed": true
+    },
+    {
+      "portfolio": "Growth Value",
+      "action": "SELL",
+      "ticker": "SGHC",
+      "shares": 911,
+      "price": 13.97,
+      "total": 12725.74,
+      "reason": "Not in top 10 (score -2)",
+      "date": "2026-06-10",
+      "executed": true
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "SELL",
+      "ticker": "VST",
+      "shares": 75,
+      "price": 140.6,
+      "total": 10545.0,
+      "reason": "Trailing stop triggered: $140.91 <= $141.04 (HWM $160.27, -12.1%)",
+      "date": "2026-06-10",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-ETF Focus",
+      "action": "BUY",
+      "ticker": "XLV",
+      "shares": 350,
+      "price": 154.52,
+      "total": 54082.0,
+      "reason": "LLM-DIALECTIC: XLV is the strongest defensive sector in the data feed: 5d +4.68%",
+      "date": "2026-06-10",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-ETF Focus",
+      "action": "BUY",
+      "ticker": "XLF",
+      "shares": 450,
+      "price": 52.77,
+      "total": 23746.5,
+      "reason": "LLM-DIALECTIC: XLF is the highest-conviction rotation trade: CPI at 4.2% (CNBC T",
+      "date": "2026-06-10",
+      "executed": true
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "SELL",
+      "ticker": "TLN",
+      "shares": 31,
+      "price": 342.0,
+      "total": 10602.0,
+      "reason": "Trailing stop triggered: $343.14 <= $344.10 (HWM $391.02, -12.2%)",
+      "date": "2026-06-10",
+      "executed": true
+    },
+    {
+      "portfolio": "Nuclear Renaissance",
+      "action": "SELL",
+      "ticker": "GEV",
+      "shares": 11,
+      "price": 891.02,
+      "total": 9801.22,
+      "reason": "Trailing stop triggered: $892.17 <= $892.43 (HWM $1014.13, -12.0%)",
+      "date": "2026-06-09",
+      "executed": true
+    },
+    {
+      "portfolio": "Income Dividends",
+      "action": "SELL",
+      "ticker": "AU",
+      "shares": 125,
+      "price": 83.06,
+      "total": 10382.52,
+      "reason": "Trailing stop triggered: $83.16 <= $83.23 (HWM $97.92, -15.1%)",
+      "date": "2026-06-09",
+      "executed": true
+    },
+    {
+      "portfolio": "Innovation Fund",
+      "action": "SELL",
+      "ticker": "HUBS",
+      "shares": 51,
+      "price": 194.0,
+      "total": 9894.01,
+      "reason": "Trailing stop triggered: $194.15 <= $195.13 (HWM $260.17, -25.4%)",
+      "date": "2026-06-09",
+      "executed": true
+    },
+    {
+      "portfolio": "AI Defense & Autonomous",
+      "action": "SELL",
+      "ticker": "AXON",
+      "shares": 25,
+      "price": 447.72,
+      "total": 11193.0,
+      "reason": "Trailing stop triggered: $447.82 <= $450.27 (HWM $511.67, -12.5%)",
+      "date": "2026-06-09",
+      "executed": true
+    },
+    {
+      "portfolio": "Income Dividends",
+      "action": "SELL",
+      "ticker": "EOG",
+      "shares": 88,
+      "price": 136.62,
+      "total": 12022.56,
+      "reason": "Not in top 10 (score 11)",
+      "date": "2026-06-09",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-ETF Focus",
+      "action": "SELL",
+      "ticker": "XLK",
+      "shares": 85,
+      "price": 185.55,
+      "total": 15771.55,
+      "reason": "LLM-WATCHER: XLK mean-reversion thesis required a benign Fed backdrop. 'Hot jobs",
+      "date": "2026-06-09",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-ETF Focus",
+      "action": "SELL",
+      "ticker": "NVDA",
+      "shares": 30,
+      "price": 208.87,
+      "total": 6266.1,
+      "reason": "LLM-WATCHER: Hot jobs report and Warsh hawkish hires eliminate the near-term rat",
+      "date": "2026-06-09",
+      "executed": true
+    }
+  ]
 }
