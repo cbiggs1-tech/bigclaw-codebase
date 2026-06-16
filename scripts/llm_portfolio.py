@@ -442,6 +442,20 @@ YOUR JOB: Make the actual trade decisions. You MUST address the strongest counte
 from the BEAR before committing to any trade. If the BEAR has surfaced a real risk you cannot
 rebut, do not take the trade.
 
+YOUR FIRST MOVE IS NOT TO ADJUDICATE - IT IS TO FIND THE GAP. The Bull and Bear are both
+advocates; each argues inside the frame it was handed, and a coherent debate can be collectively
+blind to the question neither thought to raise. You are the only seat that can see what the debate
+structurally cannot, and THAT is where your edge comes from. Before you weigh Bull against Bear,
+name what is ABSENT from BOTH cases that would change this decision over the MONTHS ahead. For
+every proposed entry you MUST answer, independently of whether either side raised it:
+  - Is the move already priced in over a multi-month view? A one-day pop may be noise; the question
+    is whether the multi-month thesis still has room, not whether it moved today.
+  - Is the driver durable over months/quarters - a secular or structural trend - or a transient
+    catalyst dressed up as a trend?
+  - What has to STAY true for the next several months for this to work, and what specific
+    development would break it (that is your exit signal)?
+Only after you have named the shared omissions do you rule.
+
 ANTI-CHEATING (these are mechanical, you will be checked):
 - Every factual claim cited from the data feed only
 - Every ticker must be a real ticker (verified before trade submits)
@@ -452,16 +466,23 @@ YOUR FEEDBACK LOOP: Each cycle you read your journal. The exit_thesis field on e
 trade tells you whether your prediction came true. Patterns of wrong predictions should
 change your behavior. Don't just keep doing what didn't work.
 
-YOUR GOAL: Beat SPY and beat the 7 rule-based BigClaw portfolios over the next weeks.
-Short-term focus (1-day to 1-week horizon mostly). Quick profits OK. Cutting losses OK.
-Holding cash OK if no high-conviction opportunities.
+YOUR GOAL: Beat SPY and beat the 7 rule-based BigClaw portfolios.
+OBJECTIVE IS ALPHA - risk-adjusted return over a MULTI-MONTH horizon. This is a longer-term thesis
+portfolio, NOT a day-trader: time-in-market is how a thesis pays off, not a risk to minimize. Hold
+through short-term noise and drawdowns as long as the multi-month thesis is intact; exit when the
+THESIS breaks (the reason you entered is no longer true), not when price wobbles. Risk here is
+thesis-breakage and drawdown depth, not how long you hold. Reject the bad quadrant: small
+multi-month upside for large drawdown risk. A low-conviction position must clear a meaningful edge
+over simply holding a broad index or cash, or you wait. Holding cash is a valid position when
+nothing clears that bar.
 
 YOU MUST PRODUCE STRICT JSON. NO PROSE OUTSIDE THE JSON BLOCK.
 
 OUTPUT SCHEMA:
 {
   "reflection": "what your journal shows about your past performance and what you'd change",
-  "market_read": "your read of next 1-5 days",
+  "market_read": "your read of the next weeks-to-months",
+  "gap_analysis": "what BOTH the Bull and Bear missed that affects this decision over the months ahead. For each proposed entry, explicitly: is it already priced in over a multi-month view? is the driver durable over months/quarters or a transient catalyst? what must stay true for months and what would break it (the exit signal)? This is your primary value-add - do not leave it shallow.",
   "addresses_bear_case": "specific paragraph addressing the strongest bear counter-arguments",
   "trades": [
     {
@@ -853,6 +874,9 @@ def save_decision_markdown(today_iso, total_value, state, market, news, peer_ret
         lines += ["### Reflection on prior performance", "", judge_out["reflection"], ""]
     if judge_out.get("market_read"):
         lines += ["### Market read", "", judge_out["market_read"], ""]
+    if judge_out.get("gap_analysis"):
+        lines += ["### Gap analysis (what BOTH bull and bear missed)", "",
+                  judge_out["gap_analysis"], ""]
     if judge_out.get("addresses_bear_case"):
         lines += ["### How the judge addressed the bear case", "",
                   judge_out["addresses_bear_case"], ""]
@@ -933,6 +957,7 @@ def save_dashboard_json(judge_out, bull_text, bear_text, total_value, state, exe
         "starting_cash": state['starting_cash'],
         "reflection": judge_out.get("reflection"),
         "market_read": judge_out.get("market_read"),
+        "gap_analysis": judge_out.get("gap_analysis"),
         "addresses_bear_case": judge_out.get("addresses_bear_case"),
         "trades_decided": judge_out.get("trades", []),
         "execution_results": [{"action": t.get("action"), "ticker": t.get("ticker"),
@@ -1159,6 +1184,7 @@ def main():
                                     "avg_cost": h['avg_cost']} for h in state['holdings']],
             "reflection": judge_out.get("reflection"),
             "market_read": judge_out.get("market_read"),
+            "gap_analysis": judge_out.get("gap_analysis"),
             "addresses_bear_case": judge_out.get("addresses_bear_case"),
             "trades": trades,
             "execution_results": [{"ticker": t.get("ticker"), "action": t.get("action"),
