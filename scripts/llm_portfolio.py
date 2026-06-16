@@ -274,9 +274,9 @@ def build_state_context(state, total_value, market, news, journal, peer_returns,
     lines.append(f"## TODAY: {today_iso}")
     if cycle_name:
         _cycle_labels = {
-            "morning":   "MORNING (09:00 CT) — anchor cycle, set today's thesis",
-            "midday":    "MIDDAY (11:30 CT) — re-evaluate; first 2.5h have settled",
-            "afternoon": "AFTERNOON (14:30 CT) — pre-close lock; 30min to close, decide overnight/weekend exposure",
+            "morning":   "MORNING (09:00 CT) — full run: thesis-check every holding, then deploy cash or consciously hold",
+            "midday":    "MIDDAY (11:30 CT) — full run, same rules: thesis-check every holding, then deploy cash or consciously hold",
+            "afternoon": "AFTERNOON (14:30 CT) — full run, same rules: thesis-check every holding, then deploy cash or consciously hold",
         }
         lines.append(f"## CYCLE: {_cycle_labels.get(cycle_name, cycle_name)}")
     lines.append(f"## YOUR PORTFOLIO (LLM Discretionary)")
@@ -529,43 +529,21 @@ triggers to add or take quick gains. When a trigger matches, a focused LLM call 
 original intent + current state) decides: exit per the thesis-break, adapt, or stand down. Max 6
 fires per day.
 
-PERIODIC RE-EVALUATION: your goal is risk-adjusted return over MONTHS, not short-term gains. A
-multi-month thesis does NOT weaken because price moved intraday — reassess only when the THESIS
-itself changes (the reason you entered is no longer true). Three deliberative cycles fire per market day —
-you are running in ONE of them right now (the state context tells you which). The watcher
-between cycles only fires on triggers you set; the three full dialectic cycles are guaranteed
-deliberative moments where Bear gets to refute Bull.
+CYCLE FRAMINGS: Three deliberative cycles fire each market day — MORNING (09:00 CT), MIDDAY
+(11:30 CT) and AFTERNOON (14:30 CT) — and EVERY cycle runs the SAME full decision (the morning
+run, repeated). There is NO monitor-only or pre-close-only mode. Each cycle, in order:
 
-CYCLE FRAMINGS:
+  1. THESIS CHECK ON EVERY HOLDING (the extra question per held name): is the thesis that put
+     you into this position STILL intact? If a real development has broken it, EXIT. If it is
+     intact, HOLD — do not churn a working position on noise. (What "the thesis" means and the
+     horizon over which it must hold are set by YOUR GOAL above.)
+  2. FULL RE-EVALUATION + CASH DEPLOYMENT: then scan the full candidate set and your available
+     cash exactly as you would at the open. Deploy into the best opportunities that clear your
+     bar, or CONSCIOUSLY hold cash with a stated reason if nothing does. "Nothing clears the bar"
+     is a valid call, but it must be an ACTIVE decision every cycle, never a passive default.
 
-  MORNING (09:00 CT) — origination cycle.
-  Set the day's thesis. Open positions you have high conviction on. Default trigger plan
-  should include both intraday safety triggers AND a midday/afternoon time wake so the
-  next deliberative cycle gets a clean handoff.
-
-  MIDDAY (11:30 CT) — two-stage decision.
-    STAGE 1 - MONITOR EXISTING POSITIONS. For each holding, classify the thesis:
-      (a) playing out as expected → HOLD
-      (b) weakening or stalling → CONSIDER TRIM/EXIT
-      (c) complete (target hit, catalyst played out) → TAKE PROFIT or rotate
-    For a months thesis, intraday follow-through is irrelevant — a position is not "wrong"
-    because it has not moved in a few hours. Reassess only if the multi-month THESIS has broken.
-
-    STAGE 2 - HELLO-WORLD WITH REMAINING CASH. After Stage 1, you have a cash position.
-    Treat it as a FRESH ALLOCATION, not "leftover funds." Scan the Candidate Strength
-    Ranking and news-makers for tickers that emerged or strengthened since morning.
-    Many of the strongest setups didn't exist at 9:00 — they developed during the
-    morning session. Don't default to holding cash unless no candidate meets your
-    conviction bar. "Cash is a valid position" applies only when the data agrees,
-    not as an excuse to defer.
-
-  AFTERNOON (14:30 CT) — light thesis check-in, NOT a pre-close de-risking window.
-    A months-horizon position is HELD through overnight and weekend gaps — that exposure is the
-    normal cost of a multi-month thesis, not a reason to sell. For each holding ask only: is the
-    multi-month THESIS still intact? Intact → HOLD (ignore intraday price action). Genuinely
-    broken by a new development (guidance cut, downgrade, structural reversal) → EXIT.
-    Do NOT close positions to avoid overnight/weekend gaps, and do NOT take quick profits into the
-    close. You MAY open a NEW position only on a real multi-month thesis, never an intraday pop.
+Between cycles the watcher fires only on triggers you set; these three dialectic cycles are the
+guaranteed full-deliberation moments where Bear gets to refute Bull.
 
 If no trades make sense today, return {"trades": []} and explain in reflection.
 
