@@ -1,5 +1,5 @@
 {
-  "lastUpdate": "2026-06-16T21:46:28.838046Z",
+  "lastUpdate": "2026-06-16T21:50:51.037509Z",
   "portfolios": [
     {
       "name": "LLM-Comando",
@@ -7,6 +7,8 @@
       "totalValue": 100179.41,
       "prevTotalValue": 100179.41,
       "startingCash": 100000.0,
+      "cash": 100179.41,
+      "holdingsValue": 0,
       "totalReturn": 0.18,
       "dailyReturn": 0.0,
       "createdAt": "2026-06-10 19:02:20",
@@ -16,11 +18,13 @@
     {
       "name": "LLM-ETF Focus",
       "style": "LLM-Driven ETF/Sector Rotation (3-Sonnet dialectic)",
-      "totalValue": 99912.18,
-      "prevTotalValue": 100174.18,
+      "totalValue": 99923.18,
+      "prevTotalValue": 100389.18,
       "startingCash": 100000.0,
-      "totalReturn": -0.09,
-      "dailyReturn": -0.26,
+      "cash": 65624.68,
+      "holdingsValue": 34298.5,
+      "totalReturn": -0.08,
+      "dailyReturn": -0.46,
       "createdAt": "2026-06-06 15:53:08",
       "purchaseStatus": "active",
       "holdings": [
@@ -28,14 +32,20 @@
           "ticker": "MTUM",
           "shares": 50.0,
           "avgCost": 326.58,
-          "currentPrice": 326.05,
+          "currentPrice": 326.19,
+          "targetPrice": null,
+          "targetUpsidePct": null,
+          "targetSource": null,
           "purchasedAt": "Jun 12, 2026"
         },
         {
           "ticker": "XLI",
           "shares": 100.0,
           "avgCost": 180.83,
-          "currentPrice": 179.85,
+          "currentPrice": 179.89,
+          "targetPrice": null,
+          "targetUpsidePct": null,
+          "targetSource": null,
           "purchasedAt": "Jun 16, 2026"
         }
       ]
@@ -43,11 +53,13 @@
     {
       "name": "Nuclear Renaissance",
       "style": "Nuclear Energy / Domain Expertise",
-      "totalValue": 87289.82,
+      "totalValue": 87295.94,
       "prevTotalValue": 87191.9,
       "startingCash": 100000.0,
-      "totalReturn": -12.71,
-      "dailyReturn": 0.11,
+      "cash": 77044.94,
+      "holdingsValue": 10251.0,
+      "totalReturn": -12.7,
+      "dailyReturn": 0.12,
       "createdAt": "2026-02-16 13:51:57",
       "purchaseStatus": "active",
       "holdings": [
@@ -55,7 +67,10 @@
           "ticker": "PCG",
           "shares": 612.0,
           "avgCost": 16.32,
-          "currentPrice": 16.74,
+          "currentPrice": 16.75,
+          "targetPrice": 22.84,
+          "targetUpsidePct": 36.4,
+          "targetSource": "yfinance_mean",
           "purchasedAt": "May 11, 2026"
         }
       ]
@@ -63,11 +78,13 @@
     {
       "name": "Income Dividends",
       "style": "Income / Dividend Growth",
-      "totalValue": 91782.11,
+      "totalValue": 91799.71,
       "prevTotalValue": 91941.47,
       "startingCash": 100000.0,
-      "totalReturn": -8.22,
-      "dailyReturn": -0.17,
+      "cash": 68724.53,
+      "holdingsValue": 23075.18,
+      "totalReturn": -8.2,
+      "dailyReturn": -0.15,
       "createdAt": "2026-02-16 13:12:32",
       "purchaseStatus": "active",
       "holdings": [
@@ -75,14 +92,20 @@
           "ticker": "B",
           "shares": 260.0,
           "avgCost": 41.65,
-          "currentPrice": 42.77,
+          "currentPrice": 42.8,
+          "targetPrice": 57.12,
+          "targetUpsidePct": 33.5,
+          "targetSource": "yfinance_mean",
           "purchasedAt": "May 28, 2026"
         },
         {
           "ticker": "NTES",
           "shares": 98.0,
           "avgCost": 122.33,
-          "currentPrice": 121.81,
+          "currentPrice": 121.91,
+          "targetPrice": 162.24,
+          "targetUpsidePct": 33.1,
+          "targetSource": "yfinance_mean",
           "purchasedAt": "May 26, 2026"
         }
       ]
@@ -93,6 +116,8 @@
       "totalValue": 105495.95,
       "prevTotalValue": 105495.95,
       "startingCash": 100000.0,
+      "cash": 105495.95,
+      "holdingsValue": 0,
       "totalReturn": 5.5,
       "dailyReturn": 0.0,
       "createdAt": "2026-02-16 13:12:32",
@@ -102,11 +127,13 @@
     {
       "name": "AI Defense & Autonomous",
       "style": "AI Defense / Autonomous Systems",
-      "totalValue": 102719.17,
+      "totalValue": 102709.09,
       "prevTotalValue": 102353.87,
       "startingCash": 100000.0,
-      "totalReturn": 2.72,
-      "dailyReturn": 0.36,
+      "cash": 61354.42,
+      "holdingsValue": 41354.67,
+      "totalReturn": 2.71,
+      "dailyReturn": 0.35,
       "createdAt": "2026-02-16",
       "purchaseStatus": "active",
       "holdings": [
@@ -114,28 +141,40 @@
           "ticker": "GD",
           "shares": 35.0,
           "avgCost": 345.84,
-          "currentPrice": 364.11,
+          "currentPrice": 364.0,
+          "targetPrice": 392.31,
+          "targetUpsidePct": 7.8,
+          "targetSource": "yfinance_mean",
           "purchasedAt": "May 11, 2026"
         },
         {
           "ticker": "LMT",
           "shares": 16.0,
           "avgCost": 533.52,
-          "currentPrice": 535.95,
+          "currentPrice": 536.23,
+          "targetPrice": 626.63,
+          "targetUpsidePct": 16.9,
+          "targetSource": "yfinance_mean",
           "purchasedAt": "May 26, 2026"
         },
         {
           "ticker": "NOC",
           "shares": 18.0,
           "avgCost": 553.32,
-          "currentPrice": 551.21,
+          "currentPrice": 551.18,
+          "targetPrice": 710.6,
+          "targetUpsidePct": 28.9,
+          "targetSource": "yfinance_mean",
           "purchasedAt": "May 11, 2026"
         },
         {
           "ticker": "TXT",
           "shares": 108.0,
           "avgCost": 92.02,
-          "currentPrice": 93.74,
+          "currentPrice": 93.64,
+          "targetPrice": 103.45,
+          "targetUpsidePct": 10.5,
+          "targetSource": "yfinance_mean",
           "purchasedAt": "May 11, 2026"
         }
       ]
@@ -143,11 +182,13 @@
     {
       "name": "Value Picks",
       "style": "Deep Value Investing",
-      "totalValue": 93252.86,
-      "prevTotalValue": 93215.13,
+      "totalValue": 93251.44,
+      "prevTotalValue": 93242.11,
       "startingCash": 100000.0,
+      "cash": 71555.43,
+      "holdingsValue": 21696.01,
       "totalReturn": -6.75,
-      "dailyReturn": 0.04,
+      "dailyReturn": 0.01,
       "createdAt": "2026-02-03 19:30:00",
       "purchaseStatus": "active",
       "holdings": [
@@ -156,13 +197,19 @@
           "shares": 311.0,
           "avgCost": 38.56,
           "currentPrice": 36.23,
+          "targetPrice": 39.5,
+          "targetUpsidePct": 9.0,
+          "targetSource": "yfinance_mean",
           "purchasedAt": "May 18, 2026"
         },
         {
           "ticker": "UHS",
           "shares": 71.0,
           "avgCost": 167.1,
-          "currentPrice": 146.9,
+          "currentPrice": 146.88,
+          "targetPrice": 223.31,
+          "targetUpsidePct": 52.0,
+          "targetSource": "yfinance_mean",
           "purchasedAt": "May 19, 2026"
         }
       ]
@@ -170,11 +217,13 @@
     {
       "name": "Innovation Fund",
       "style": "Disruptive Innovation",
-      "totalValue": 97232.73,
-      "prevTotalValue": 97395.08,
+      "totalValue": 97221.65,
+      "prevTotalValue": 97101.57,
       "startingCash": 100000.0,
-      "totalReturn": -2.77,
-      "dailyReturn": -0.17,
+      "cash": 23042.29,
+      "holdingsValue": 74179.37,
+      "totalReturn": -2.78,
+      "dailyReturn": 0.12,
       "createdAt": "2026-02-03 19:30:00",
       "purchaseStatus": "active",
       "holdings": [
@@ -183,13 +232,19 @@
           "shares": 619.0,
           "avgCost": 16.18,
           "currentPrice": 17.98,
+          "targetPrice": 28.46,
+          "targetUpsidePct": 58.3,
+          "targetSource": "yfinance_mean",
           "purchasedAt": "May 11, 2026"
         },
         {
           "ticker": "GMED",
           "shares": 157.0,
           "avgCost": 78.87,
-          "currentPrice": 77.52,
+          "currentPrice": 77.59,
+          "targetPrice": 111.5,
+          "targetUpsidePct": 43.7,
+          "targetSource": "yfinance_mean",
           "purchasedAt": "May 11, 2026"
         },
         {
@@ -197,20 +252,29 @@
           "shares": 159.0,
           "avgCost": 75.43,
           "currentPrice": 73.09,
+          "targetPrice": 100.92,
+          "targetUpsidePct": 38.1,
+          "targetSource": "yfinance_mean",
           "purchasedAt": "Jun 01, 2026"
         },
         {
           "ticker": "PINS",
           "shares": 298.0,
           "avgCost": 20.59,
-          "currentPrice": 21.16,
+          "currentPrice": 21.18,
+          "targetPrice": 27.72,
+          "targetUpsidePct": 30.9,
+          "targetSource": "yfinance_mean",
           "purchasedAt": "May 29, 2026"
         },
         {
           "ticker": "PODD",
           "shares": 64.0,
           "avgCost": 154.78,
-          "currentPrice": 147.69,
+          "currentPrice": 147.65,
+          "targetPrice": 250.13,
+          "targetUpsidePct": 69.4,
+          "targetSource": "yfinance_mean",
           "purchasedAt": "May 11, 2026"
         },
         {
@@ -218,20 +282,29 @@
           "shares": 57.0,
           "avgCost": 105.25,
           "currentPrice": 113.23,
+          "targetPrice": null,
+          "targetUpsidePct": null,
+          "targetSource": "reconciliation-row-restored",
           "purchasedAt": "May 11, 2026"
         },
         {
           "ticker": "WAY",
           "shares": 396.0,
           "avgCost": 19.75,
-          "currentPrice": 18.38,
+          "currentPrice": 18.34,
+          "targetPrice": 34.74,
+          "targetUpsidePct": 89.4,
+          "targetSource": "yfinance_mean",
           "purchasedAt": "May 12, 2026"
         },
         {
           "ticker": "Z",
           "shares": 294.0,
           "avgCost": 40.79,
-          "currentPrice": 33.26,
+          "currentPrice": 33.21,
+          "targetPrice": 64.67,
+          "targetUpsidePct": 94.7,
+          "targetSource": "yfinance_mean",
           "purchasedAt": "May 11, 2026"
         }
       ]
@@ -239,11 +312,13 @@
     {
       "name": "Growth Value",
       "style": "Growth at Reasonable Price",
-      "totalValue": 93882.94,
+      "totalValue": 93864.33,
       "prevTotalValue": 95167.79,
       "startingCash": 100000.0,
-      "totalReturn": -6.12,
-      "dailyReturn": -1.35,
+      "cash": 59409.34,
+      "holdingsValue": 34454.99,
+      "totalReturn": -6.14,
+      "dailyReturn": -1.37,
       "createdAt": "2026-02-03 19:30:00",
       "purchaseStatus": "active",
       "holdings": [
@@ -252,20 +327,29 @@
           "shares": 465.0,
           "avgCost": 27.06,
           "currentPrice": 26.78,
+          "targetPrice": 26.7,
+          "targetUpsidePct": -0.3,
+          "targetSource": "yfinance_mean",
           "purchasedAt": "May 11, 2026"
         },
         {
           "ticker": "BZ",
           "shares": 898.0,
           "avgCost": 14.05,
-          "currentPrice": 13.2,
+          "currentPrice": 13.18,
+          "targetPrice": 21.7,
+          "targetUpsidePct": 64.6,
+          "targetSource": "yfinance_mean",
           "purchasedAt": "May 11, 2026"
         },
         {
           "ticker": "NBIX",
           "shares": 65.0,
           "avgCost": 153.22,
-          "currentPrice": 156.42,
+          "currentPrice": 156.41,
+          "targetPrice": 190.99,
+          "targetUpsidePct": 22.1,
+          "targetSource": "yfinance_mean",
           "purchasedAt": "May 11, 2026"
         }
       ]
