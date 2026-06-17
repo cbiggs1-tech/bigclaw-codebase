@@ -21081,54 +21081,100 @@
   },
   "earnings": [
     {
-      "ticker": "ACN",
-      "date": "Jun 18",
-      "days": 0
+      "ticker": "LMT",
+      "date": "2026-07-21",
+      "days_away": 34,
+      "eps_est": 7.18
     },
     {
-      "ticker": "AVAV",
-      "date": "Jun 29",
-      "days": 11
+      "ticker": "AMX",
+      "date": "2026-07-21",
+      "days_away": 34,
+      "eps_est": 0.52
     },
     {
-      "ticker": "CBRS",
-      "date": "Jun 23",
-      "days": 5
+      "ticker": "NOC",
+      "date": "2026-07-21",
+      "days_away": 34,
+      "eps_est": 6.81
     },
     {
-      "ticker": "CCL",
-      "date": "Jun 23",
-      "days": 5
+      "ticker": "GD",
+      "date": "2026-07-22",
+      "days_away": 35,
+      "eps_est": 3.94
     },
     {
-      "ticker": "GIS",
-      "date": "Jul 01",
-      "days": 13
+      "ticker": "TXT",
+      "date": "2026-07-23",
+      "days_away": 36,
+      "eps_est": 1.55
     },
     {
-      "ticker": "JEF",
-      "date": "Jun 24",
-      "days": 6
+      "ticker": "UHS",
+      "date": "2026-07-27",
+      "days_away": 40,
+      "eps_est": 5.89
     },
     {
-      "ticker": "MKC",
-      "date": "Jun 25",
-      "days": 7
+      "ticker": "NBIX",
+      "date": "2026-07-29",
+      "days_away": 42,
+      "eps_est": 2.11
     },
     {
-      "ticker": "MU",
-      "date": "Jun 24",
-      "days": 6
+      "ticker": "WAY",
+      "date": "2026-07-29",
+      "days_away": 42,
+      "eps_est": 0.4
     },
     {
-      "ticker": "STZ",
-      "date": "Jun 30",
-      "days": 12
+      "ticker": "Z",
+      "date": "2026-08-05",
+      "days_away": 49,
+      "eps_est": 0.45
     },
     {
-      "ticker": "TCOM",
-      "date": "Jun 24",
-      "days": 6
+      "ticker": "SHOP",
+      "date": "2026-08-05",
+      "days_away": 49,
+      "eps_est": 0.4
+    },
+    {
+      "ticker": "IONS",
+      "date": "2026-08-05",
+      "days_away": 49,
+      "eps_est": null
+    },
+    {
+      "ticker": "GMED",
+      "date": "2026-08-06",
+      "days_away": 50,
+      "eps_est": 1.1
+    },
+    {
+      "ticker": "PODD",
+      "date": "2026-08-06",
+      "days_away": 50,
+      "eps_est": 1.45
+    },
+    {
+      "ticker": "B",
+      "date": "2026-08-11",
+      "days_away": 55,
+      "eps_est": 0.87
+    },
+    {
+      "ticker": "NTES",
+      "date": "2026-08-13",
+      "days_away": 57,
+      "eps_est": 15.86
+    },
+    {
+      "ticker": "BZ",
+      "date": "2026-08-19",
+      "days_away": 63,
+      "eps_est": 2.18
     }
   ],
   "overlap": [],
@@ -21146,33 +21192,28 @@
   ],
   "bond_signals": {
     "yield_curve": {
-      "two_year": 4.07,
-      "ten_year": 4.47,
-      "spread": 0.4,
-      "spread_1mo_ago": 0.47,
-      "spread_change": -0.07,
-      "date": "2026-06-15",
-      "assessment": "Flat \u2014 neutral"
+      "two_year": 4.163,
+      "ten_year": 4.434,
+      "spread": 0.271,
+      "date": "2026-06-17",
+      "assessment": "Flat \u2014 caution"
     },
     "credit_spreads": {
-      "current_bps": 271.0,
-      "raw_value": 2.71,
-      "prev_value": 2.86,
-      "change": -0.15,
-      "date": "2026-06-16",
-      "assessment": "Tight (271bps) \u2014 bullish"
+      "current_bps": 292.0,
+      "date": "2026-06-17",
+      "assessment": "Tight (292bps) \u2014 bullish"
     },
     "ten_year": {
-      "current": 4.47,
-      "prev": 4.47,
+      "current": 4.434,
+      "prev": 4.434,
       "change_bps": 0.0,
-      "date": "2026-06-15",
-      "assessment": "Stable \u2014 neutral"
+      "date": "2026-06-17",
+      "assessment": "Elevated \u2014 bearish"
     },
     "scores": {
-      "yield_curve": 0,
+      "yield_curve": 1,
       "credit_spreads": 1,
-      "ten_year_level": 0
+      "ten_year_level": -1
     },
     "combined_score": 1
   },
@@ -23050,5 +23091,12 @@
       "executed": true
     }
   ],
-  "priceRefreshedAt": "2026-06-17T14:14:46.833722Z"
+  "priceRefreshedAt": "2026-06-17T14:14:46.833722Z",
+  "rates": {
+    "fed_funds": "4.25\u20134.50%",
+    "ten_year": 4.434,
+    "two_year": 4.163,
+    "yield_spread": 0.271,
+    "inverted": false
+  }
 }
