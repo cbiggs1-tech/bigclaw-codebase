@@ -49,7 +49,7 @@ DEFAULT_CHANNEL = "D0ADHLUJ400"
 MODEL_BULL = "claude-sonnet-4-6"
 MODEL_BEAR = "claude-sonnet-4-6"
 MODEL_JUDGE = "claude-opus-4-8"  # A/B: Opus on Comando, Sonnet on ETF Focus
-MAX_TOKENS_DEBATE = 4000     # bull / bear each (new mandatory Bear priced-in test runs longer; truncated at 3000 on 2026-06-17)
+MAX_TOKENS_DEBATE = 6000     # bull / bear each (new mandatory Bear priced-in test runs longer; truncated at 3000 on 2026-06-17)
 MAX_TOKENS_JUDGE = 8000     # Opus 4.8 + adaptive thinking needs headroom (thinking blocks count toward output)
 LLM_TIMEOUT = 120.0
 

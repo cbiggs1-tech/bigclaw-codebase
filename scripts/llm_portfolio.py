@@ -49,7 +49,7 @@ DEFAULT_CHANNEL = "D0ADHLUJ400"
 MODEL_BULL = "claude-sonnet-4-6"
 MODEL_BEAR = "claude-sonnet-4-6"
 MODEL_JUDGE = "claude-sonnet-4-6"
-MAX_TOKENS_DEBATE = 4000     # bull / bear each (longer with new mandates)
+MAX_TOKENS_DEBATE = 6000     # bull / bear each (longer with new mandates)
 MAX_TOKENS_JUDGE = 8000     # was 4000; gap_analysis + cycle-positioning fields overflowed it -> JSON truncation/parse fail (2026-06-17)
 LLM_TIMEOUT = 120.0
 
