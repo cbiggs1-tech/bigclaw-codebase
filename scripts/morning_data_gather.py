@@ -91,6 +91,7 @@ def main():
 
     # Predictions
     sections.append(run("DECISION ENGINE", f"python3 {SCRIPTS_DIR}/signals_brief.py"))
+    sections.append(run("IV SIGNAL", f"python3 {SCRIPTS_DIR}/iv_brief.py"))
     sections.append(run("POLYMARKET", f"python3 {SCRIPTS_DIR}/polymarket.py --market-movers --limit 5"))
 
     # Count errors

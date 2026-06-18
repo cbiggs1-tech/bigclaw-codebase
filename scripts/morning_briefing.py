@@ -49,6 +49,9 @@ FOCUS ON:
   credit (risk-on vs stress), and rate direction.
 - Decision-engine intent (from the DECISION ENGINE section): today's PLANNED
   buys/sells, the top-scored candidates, and what executed this week.
+- IV signal (from the IV SIGNAL section): the forward options read (skew/spread)
+  that replaced UW. Note the overall bullish/bearish tilt and which HOLDINGS the
+  options market is positioned for or against.
 - Polymarket: ONLY macro / geopolitical / markets-relevant markets (wars, rates,
   the Fed, elections, the dollar). SKIP consumer / entertainment / crypto-meme
   noise entirely - do not include a market just because it exists.
