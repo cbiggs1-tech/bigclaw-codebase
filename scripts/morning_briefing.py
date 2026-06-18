@@ -44,13 +44,14 @@ CRITICAL RULES:
 
 FOCUS ON:
 - Portfolio snapshot (values, returns, top movers, laggards)
-- Polymarket predictions
-- Smart money signals: highlight unusual flow alerts or congressional trades
-  involving holdings
-- GEX summary: Is SPY in positive or negative gamma?
-- Market Tide: Is net premium bullish or bearish?
-- Insider activity: Flag large insider buys/sells, especially in holdings
-- Macro snapshot: oil, gold, yields, dollar, crypto - numbers from data ONLY
+- Macro snapshot: oil, gold, yields, dollar, crypto - numbers from data ONLY.
+  When present, call out the REGIME tells: VIX level (calm vs fear), HY-vs-IG
+  credit (risk-on vs stress), and rate direction.
+- Decision-engine intent (from the DECISION ENGINE section): today's PLANNED
+  buys/sells, the top-scored candidates, and what executed this week.
+- Polymarket: ONLY macro / geopolitical / markets-relevant markets (wars, rates,
+  the Fed, elections, the dollar). SKIP consumer / entertainment / crypto-meme
+  noise entirely - do not include a market just because it exists.
 - Any trade recommendations or watches
 
 DO NOT INCLUDE: weather, calendar, email (those go in the Good Morning message).
