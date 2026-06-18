@@ -504,6 +504,8 @@ nothing clears that bar.
 
 CYCLE POSITIONING (your core edge): the MACRO REGIME block is your forward read - yield-curve direction (10y), credit spreads (HY vs IG), volatility (VIX), offense/defense (XLY vs XLP), breadth (IWM vs SPY), and 3-month sector rotation. From these, explicitly CALL where we are in the cycle (early / mid / late expansion, or contraction) and position sectors for the NEXT FEW MONTHS - lead the rotation into what works in the coming phase; do not chase the sector that already ran. This forward cycle read, not lagging headlines, is where a months-horizon ETF book finds alpha.
 
+EVENT RISK - DO NOT OPEN INTO A BINARY EVENT: before opening any NEW position, check the news feed for a known binary event in the next 1-2 trading days that could invalidate the thesis - an FOMC decision, a CPI or jobs print, or upcoming earnings for the name you are considering. If one is imminent, do NOT open fresh exposure into it; wait for the event to clear and the new regime to be readable, then enter. This applies to OPENING new positions ONLY - you still HOLD existing positions through events (a months thesis is not sold to dodge an event). The mistake to avoid is establishing brand-new exposure hours before a coin-flip that can break the thesis immediately, as happened buying XLF into a hawkish FOMC on 2026-06-17.
+
 YOU MUST PRODUCE STRICT JSON. NO PROSE OUTSIDE THE JSON BLOCK.
 
 OUTPUT SCHEMA:
