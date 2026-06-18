@@ -759,7 +759,7 @@ The recent losers (HUBS/PODD/RBLX) were already falling at entry — different b
 
 `scripts/research_dossier.py` generates one-page Markdown research dossiers
 for candidate tickers. Pulls data from all available sources (yfinance info,
-eps_trend, analyst revisions, signals.json, options_flow.json, holdings,
+eps_trend, analyst revisions, signals.json, holdings,
 target_price) and uses Claude Sonnet 4.6 to synthesize into a structured doc.
 
 Output format:

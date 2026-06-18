@@ -40,7 +40,7 @@ BigClaw orchestrates financial analysis, portfolio management, sentiment trackin
 │  ┌──────────────────────────────────────┐              │
 │  │         External APIs                 │              │
 │  │  Cloud LLMs: Claude, Grok, Gemini    │              │
-│  │  Data: yfinance, Unusual Whales,     │              │
+│  │  Data: yfinance, Alpaca, IV skew,    │              │
 │  │        Polymarket, Brave Search       │              │
 │  │  Brokerage: Alpaca (paper trading)   │              │
 │  │  Comms: Slack, Discord               │              │
@@ -130,4 +130,4 @@ API calls use `bigclaw_retry.py` for automatic retries on transient failures.
 
 - **Anthropic Pro** ($20/mo): Claude Code (interactive development)
 - **OpenRouter**: All automated/cron LLM calls (Claude Sonnet, Gemini Flash Lite)
-- **Direct APIs**: yfinance, Unusual Whales, Polymarket, Brave Search
+- **Direct APIs**: yfinance, Alpaca, Polymarket, Brave Search

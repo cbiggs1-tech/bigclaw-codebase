@@ -10,7 +10,7 @@ Checks:
 - All 12 dashboard JSON files for staleness (> 24h)
 - Cron job consecutive error counts
 - DB integrity (WAL mode, tables exist)
-- Key data sources (yfinance, Unusual Whales, Slack API)
+- Key data sources (yfinance, Alpaca, Slack API)
 """
 
 import json
@@ -32,7 +32,6 @@ DASHBOARD_FILES = {
     "trades.json": 24,
     "news.json": 12,
     "sentiment.json": 12,
-    "options_flow.json": 6,
     "calendar.json": 24,
     "metadata.json": 6,
 }

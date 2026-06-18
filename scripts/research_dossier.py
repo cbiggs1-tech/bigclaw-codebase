@@ -117,21 +117,6 @@ def gather_data(ticker):
     except Exception:
         pass
 
-    # Options flow
-    try:
-        opts_path = BIGCLAW_HOME / "docs" / "data" / "options_flow.json"
-        opts = json.loads(opts_path.read_text())
-        for entry in opts.get("max_pain", []):
-            if entry.get("ticker") == ticker:
-                data["max_pain"] = entry
-                break
-        for entry in opts.get("iv_rank", []):
-            if entry.get("ticker") == ticker:
-                data["iv_rank"] = entry.get("iv_rank")
-                break
-    except Exception:
-        pass
-
     # Current BigClaw position (if held)
     try:
         import sqlite3

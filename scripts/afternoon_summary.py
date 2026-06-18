@@ -46,10 +46,6 @@ FOCUS ON:
 - Portfolio performance at close (each portfolio value, day return, week/period return
   if shown)
 - Top movers and laggards of the day for each portfolio
-- Smart Money section: dark pool findings, large block trades in holdings
-- GEX status going INTO the next session: positive or negative gamma?
-- Market Tide: was today's flow bullish or bearish on net?
-- Insider activity: any notable Form 4 filings, especially in portfolio holdings
 - Macro close: oil, gold, yields, dollar, crypto - numbers from data ONLY
 - Any end-of-day observations, capitulation signals, or setup-for-tomorrow notes
 

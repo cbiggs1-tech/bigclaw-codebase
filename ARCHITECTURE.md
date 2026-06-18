@@ -137,7 +137,7 @@ Additional guardrails:
 | Script | Purpose |
 |--------|---------|
 | `sentiment.py` | X/Twitter, Reddit, Yahoo, Brave Search |
-| `unusual_whales.py` | Options flow, dark pool, insider trades |
+| `iv_tracker.py` | IV skew/spread signal (replaced Unusual Whales, retired 2026-05-31) |
 | `ark_trades.py` | ARK Invest daily transactions |
 | `truth_engine.py` | Multi-model fact-checking |
 | `polymarket.py` | Prediction market data |
