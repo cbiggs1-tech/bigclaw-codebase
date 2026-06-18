@@ -15,7 +15,6 @@ Inputs per ticker:
   - Forward EPS revision trend (from yfinance.eps_trend)
   - Recent insider transactions (from finviz)
   - News headlines (from existing news pipeline)
-  - Options flow / max pain / dark pool (from options_flow.json)
   - Earnings dates (from existing earnings pipeline)
 
 Output: docs/dossiers/{ticker}_{YYYYMMDD}.md
