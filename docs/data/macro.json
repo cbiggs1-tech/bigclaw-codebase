@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-06-19T09:21:11.833633",
+  "timestamp": "2026-06-19T10:18:31.047463",
   "context": {
     "ticker": null,
     "sector": null,
@@ -42,9 +42,9 @@
       "3mo": 22.2
     },
     "VIX": {
-      "level": 16.87,
+      "level": 16.75,
       "classification": "Moderate",
-      "1mo_change": -3.27
+      "1mo_change": -3.96
     }
   },
   "sectors": [
@@ -112,15 +112,6 @@
       "above_200sma": "True"
     },
     {
-      "etf": "XLRE",
-      "sector": "Real Estate",
-      "price": 43.86,
-      "1mo": -0.18,
-      "3mo": 8.78,
-      "above_50sma": "False",
-      "above_200sma": "True"
-    },
-    {
       "etf": "XLP",
       "sector": "Consumer Staples",
       "price": 83.3,
@@ -130,15 +121,6 @@
       "above_200sma": "True"
     },
     {
-      "etf": "XLC",
-      "sector": "Communications",
-      "price": 109.45,
-      "1mo": -5.52,
-      "3mo": -2.17,
-      "above_50sma": "False",
-      "above_200sma": "False"
-    },
-    {
       "etf": "XLE",
       "sector": "Energy",
       "price": 53.77,
@@ -146,13 +128,31 @@
       "3mo": -8.75,
       "above_50sma": "False",
       "above_200sma": "True"
+    },
+    {
+      "etf": "XLRE",
+      "sector": "Real Estate",
+      "price": NaN,
+      "1mo": NaN,
+      "3mo": NaN,
+      "above_50sma": "False",
+      "above_200sma": "False"
+    },
+    {
+      "etf": "XLC",
+      "sector": "Communications",
+      "price": 109.45,
+      "1mo": -5.52,
+      "3mo": -2.17,
+      "above_50sma": "False",
+      "above_200sma": "False"
     }
   ],
   "risk": {
     "vix": {
-      "level": 16.87,
+      "level": 16.75,
       "classification": "Moderate",
-      "1mo_change": -3.27
+      "1mo_change": -3.96
     },
     "Gold (GLD)": {
       "price": 387.12,
@@ -163,8 +163,8 @@
       "1mo": 1.84
     },
     "Bitcoin": {
-      "price": 62984.78,
-      "1mo": -18.69
+      "price": 63103.47,
+      "1mo": -18.53
     },
     "yield_curve": {
       "spread": 0.631,
