@@ -1,5 +1,5 @@
 {
-  "date": "2026-06-19 09:16",
+  "date": "2026-06-19 10:13",
   "signals": [
     {
       "ticker": "ABT",
@@ -208,8 +208,8 @@
         "gross margin 50% (wide moat)",
         "insider net selling (0B/20S)",
         "bond mkt +1 (wt 1.5x)",
-        "correlated with PNW (0.91)",
-        "correlated with EVRG (0.86)"
+        "correlated with EVRG (0.86)",
+        "correlated with PNW (0.91)"
       ],
       "price": 108.67,
       "held_in": [
@@ -1932,7 +1932,7 @@
         "below 200-day SMA",
         "golden cross (50>200)",
         "30d vol 78% of 1y",
-        "forward EPS up +225% in 90d",
+        "forward EPS up +26265% in 90d",
         "trailing SPY by -21% over 60d",
         "revenue growth 67%",
         "short interest 14.4%",
@@ -3390,7 +3390,6 @@
         "FCF yield 10.4% (strong)",
         "gross margin 28% (thin)",
         "payout ratio 20% (safe)",
-        "underperforming XLF by 2.7%",
         "bond mkt +1 (wt 1.5x)",
         "\u26a1 VALUE OVERRIDE: +1 (capitulation volume)"
       ],
@@ -3401,7 +3400,7 @@
         "components": {
           "capitulation": {
             "score": 1,
-            "reason": "volume 5.0x avg on down day (capitulation)"
+            "reason": "volume 4.7x avg on down day (capitulation)"
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (capitulation volume)"
@@ -5428,8 +5427,8 @@
         "gross margin 52% (wide moat)",
         "insider net selling (0B/12S)",
         "bond mkt +1 (wt 1.5x)",
-        "correlated with PNW (0.85)",
-        "correlated with AEE (0.86)"
+        "correlated with AEE (0.86)",
+        "correlated with PNW (0.85)"
       ],
       "price": 82.5,
       "held_in": [
@@ -8307,16 +8306,58 @@
       "pending_swaps": []
     },
     {
+      "ticker": "JBS",
+      "score": 0,
+      "label": "\u26aa HOLD",
+      "reasons": [
+        "below 50-day SMA",
+        "below 200-day SMA",
+        "golden cross (50>200)",
+        "forward EPS DOWN -17% in 90d (deteriorating)",
+        "3% above 52w low AND falling 30d (falling knife risk)",
+        "earnings growth -57%",
+        "revenue growth 11%",
+        "P/E improving (7.2 < 7.4)",
+        "D/E ratio 268",
+        "yield 1091.0%",
+        "PEG N/A (negative growth)",
+        "ROE 22% (excellent)",
+        "FCF positive ($0.4B)",
+        "gross margin 12% (thin)",
+        "payout ratio 21% (safe)",
+        "underperforming XLP by 4.9%",
+        "bond mkt +1 (wt 1.5x)",
+        "\u26a1 VALUE OVERRIDE: +3 (37% below target, RSI 39 oversold)"
+      ],
+      "price": 11.93,
+      "value_override": {
+        "total_score": 3,
+        "base_score_before": 0.25,
+        "components": {
+          "analyst_target": {
+            "score": 2,
+            "reason": "37% below analyst target $19.01"
+          },
+          "rsi_oversold": {
+            "score": 1,
+            "reason": "RSI 39 oversold territory"
+          }
+        },
+        "summary": "\u26a1 VALUE OVERRIDE: +3 (37% below target, RSI 39 oversold)"
+      },
+      "held_in": [],
+      "pending_swaps": []
+    },
+    {
       "ticker": "JEF",
-      "score": 2,
-      "label": "\ud83d\udfe2 BUY / HOLD",
+      "score": 0,
+      "label": "\u26aa HOLD",
       "reasons": [
         "RSI 78 overbought",
         "above 50-day SMA",
         "above 200-day SMA",
         "death cross (50<200)",
         "30d vol 68% of 1y",
-        "beating SPY by 44% over 60d",
         "earnings growth 23%",
         "revenue growth 27%",
         "P/E improving (13.7 < 20.8)",
@@ -8333,13 +8374,12 @@
     },
     {
       "ticker": "JNJ",
-      "score": 3,
+      "score": 4,
       "label": "\ud83d\udfe2 STRONG BUY / ADD",
       "reasons": [
         "below 50-day SMA",
         "above 200-day SMA",
         "golden cross (50>200)",
-        "trailing SPY by -18% over 60d",
         "earnings growth -53%",
         "revenue growth 10%",
         "P/E improving (18.0 < 26.5)",
@@ -8413,14 +8453,13 @@
     },
     {
       "ticker": "KC",
-      "score": 1,
-      "label": "\ud83d\udfe2 BUY / HOLD",
+      "score": 3,
+      "label": "\ud83d\udfe2 STRONG BUY / ADD",
       "reasons": [
         "below 50-day SMA",
         "below 200-day SMA",
         "golden cross (50>200)",
         "0% above 52w low AND falling 30d (falling knife risk)",
-        "trailing SPY by -46% over 60d",
         "revenue growth 37%",
         "D/E ratio 120",
         "no dividend",
@@ -8435,7 +8474,7 @@
       "price": 10.06,
       "value_override": {
         "total_score": 3,
-        "base_score_before": 1.25,
+        "base_score_before": 2.75,
         "components": {
           "analyst_target": {
             "score": 2,
@@ -8453,13 +8492,12 @@
     },
     {
       "ticker": "KEP",
-      "score": 7,
+      "score": 8,
       "label": "\ud83d\udfe2 STRONG BUY / ADD",
       "reasons": [
         "below 50-day SMA",
         "below 200-day SMA",
         "death cross (50<200)",
-        "trailing SPY by -31% over 60d",
         "earnings growth 7%",
         "revenue growth 1%",
         "forward P/E (3.4) > trailing (2.9)",
@@ -8476,7 +8514,7 @@
       "price": 13.0,
       "value_override": {
         "total_score": 2,
-        "base_score_before": 7.0,
+        "base_score_before": 8.0,
         "components": {
           "analyst_target": {
             "score": 1,
@@ -10788,7 +10826,6 @@
       "score": 2,
       "label": "\ud83d\udfe2 BUY / HOLD",
       "reasons": [
-        "MACD bullish crossover",
         "above 50-day SMA",
         "below 200-day SMA",
         "death cross (50<200)",
@@ -10799,8 +10836,8 @@
         "FCF negative ($-0.0B)",
         "gross margin 0% (thin)",
         "insider net selling (0B/11S)",
-        "outperforming XLI by 10.1%",
-        "\u26a1 VALUE OVERRIDE: +2 (39% below target)"
+        "outperforming XLI by 7.6%",
+        "\u26a1 VALUE OVERRIDE: +2 (45% below target)"
       ],
       "price": 28.21,
       "value_override": {
@@ -10809,10 +10846,10 @@
         "components": {
           "analyst_target": {
             "score": 2,
-            "reason": "39% below analyst target $46.25"
+            "reason": "45% below analyst target $46.25"
           }
         },
-        "summary": "\u26a1 VALUE OVERRIDE: +2 (39% below target)"
+        "summary": "\u26a1 VALUE OVERRIDE: +2 (45% below target)"
       },
       "held_in": [],
       "pending_swaps": []
@@ -12911,6 +12948,15 @@
           "portfolio": "Innovation Fund",
           "sell": "PODD",
           "sell_score": 3,
+          "buy": "S",
+          "buy_score": 6,
+          "score_diff": 3
+        },
+        {
+          "action": "SWAP OUT",
+          "portfolio": "Innovation Fund",
+          "sell": "PODD",
+          "sell_score": 3,
           "buy": "SMTC",
           "buy_score": 6,
           "score_diff": 3
@@ -13962,12 +14008,13 @@
     },
     {
       "ticker": "S",
-      "score": 4,
+      "score": 6,
       "label": "\ud83d\udfe2 STRONG BUY / ADD",
       "reasons": [
         "below 50-day SMA",
         "below 200-day SMA",
         "golden cross (50>200)",
+        "forward EPS up +9% in 90d",
         "revenue growth 21%",
         "no dividend",
         "ROE -21% (negative)",
@@ -13981,7 +14028,7 @@
       "price": 15.02,
       "value_override": {
         "total_score": 1,
-        "base_score_before": 4.5,
+        "base_score_before": 6.5,
         "components": {
           "analyst_target": {
             "score": 1,
@@ -13991,7 +14038,17 @@
         "summary": "\u26a1 VALUE OVERRIDE: +1 (22% below target)"
       },
       "held_in": [],
-      "pending_swaps": []
+      "pending_swaps": [
+        {
+          "action": "SWAP IN",
+          "portfolio": "Innovation Fund",
+          "sell": "PODD",
+          "sell_score": 3,
+          "buy": "S",
+          "buy_score": 6,
+          "score_diff": 3
+        }
+      ]
     },
     {
       "ticker": "SAIL",
@@ -18711,50 +18768,6 @@
       "pending_swaps": []
     },
     {
-      "ticker": "JBS",
-      "score": -1,
-      "label": "\ud83d\udfe1 WATCH / CAUTION",
-      "reasons": [
-        "below 50-day SMA",
-        "below 200-day SMA",
-        "golden cross (50>200)",
-        "forward EPS DOWN -17% in 90d (deteriorating)",
-        "3% above 52w low AND falling 30d (falling knife risk)",
-        "trailing SPY by -32% over 60d",
-        "earnings growth -57%",
-        "revenue growth 11%",
-        "P/E improving (7.2 < 7.4)",
-        "D/E ratio 268",
-        "yield 1091.0%",
-        "PEG N/A (negative growth)",
-        "ROE 22% (excellent)",
-        "FCF positive ($0.4B)",
-        "gross margin 12% (thin)",
-        "payout ratio 21% (safe)",
-        "underperforming XLP by 4.9%",
-        "bond mkt +1 (wt 1.5x)",
-        "\u26a1 VALUE OVERRIDE: +3 (37% below target, RSI 39 oversold)"
-      ],
-      "price": 11.93,
-      "value_override": {
-        "total_score": 3,
-        "base_score_before": -0.75,
-        "components": {
-          "analyst_target": {
-            "score": 2,
-            "reason": "37% below analyst target $19.01"
-          },
-          "rsi_oversold": {
-            "score": 1,
-            "reason": "RSI 39 oversold territory"
-          }
-        },
-        "summary": "\u26a1 VALUE OVERRIDE: +3 (37% below target, RSI 39 oversold)"
-      },
-      "held_in": [],
-      "pending_swaps": []
-    },
-    {
       "ticker": "KKR",
       "score": -2,
       "label": "\ud83d\udfe1 WATCH / CAUTION",
@@ -20214,8 +20227,8 @@
         "label": "\ud83d\udfe2 STRONG BUY / ADD"
       },
       "KC": {
-        "score": 1,
-        "label": "\ud83d\udfe2 BUY / HOLD"
+        "score": 3,
+        "label": "\ud83d\udfe2 STRONG BUY / ADD"
       },
       "KEYS": {
         "score": 4,
@@ -20458,7 +20471,7 @@
         "label": "\ud83d\udfe2 STRONG BUY / ADD"
       },
       "S": {
-        "score": 4,
+        "score": 6,
         "label": "\ud83d\udfe2 STRONG BUY / ADD"
       },
       "SAIL": {
@@ -21016,15 +21029,15 @@
         "label": "\u26aa HOLD"
       },
       "JBS": {
-        "score": -1,
-        "label": "\ud83d\udfe1 WATCH / CAUTION"
+        "score": 0,
+        "label": "\u26aa HOLD"
       },
       "JEF": {
-        "score": 2,
-        "label": "\ud83d\udfe2 BUY / HOLD"
+        "score": 0,
+        "label": "\u26aa HOLD"
       },
       "JNJ": {
-        "score": 3,
+        "score": 4,
         "label": "\ud83d\udfe2 STRONG BUY / ADD"
       },
       "JPM": {
@@ -21036,7 +21049,7 @@
         "label": "\ud83d\udfe2 STRONG BUY / ADD"
       },
       "KEP": {
-        "score": 7,
+        "score": 8,
         "label": "\ud83d\udfe2 STRONG BUY / ADD"
       },
       "KEY": {
@@ -22047,298 +22060,49 @@
   },
   "earnings": [
     {
+      "ticker": "AVAV",
+      "date": "Jun 29",
+      "days": 9
+    },
+    {
+      "ticker": "CBRS",
+      "date": "Jun 23",
+      "days": 3
+    },
+    {
+      "ticker": "CCL",
+      "date": "Jun 23",
+      "days": 3
+    },
+    {
+      "ticker": "GIS",
+      "date": "Jul 01",
+      "days": 11
+    },
+    {
+      "ticker": "JEF",
+      "date": "Jun 24",
+      "days": 4
+    },
+    {
+      "ticker": "MKC",
+      "date": "Jun 25",
+      "days": 5
+    },
+    {
       "ticker": "MU",
-      "date": "2026-06-24",
-      "days_away": 5,
-      "eps_est": 20.05
+      "date": "Jun 24",
+      "days": 4
     },
     {
-      "ticker": "SNA",
-      "date": "2026-07-16",
-      "days_away": 27,
-      "eps_est": 4.93
+      "ticker": "STZ",
+      "date": "Jun 30",
+      "days": 10
     },
     {
-      "ticker": "WRB",
-      "date": "2026-07-20",
-      "days_away": 31,
-      "eps_est": 1.1
-    },
-    {
-      "ticker": "AMX",
-      "date": "2026-07-21",
-      "days_away": 32,
-      "eps_est": 0.52
-    },
-    {
-      "ticker": "ENVA",
-      "date": "2026-07-21",
-      "days_away": 32,
-      "eps_est": 3.96
-    },
-    {
-      "ticker": "NOC",
-      "date": "2026-07-21",
-      "days_away": 32,
-      "eps_est": 6.81
-    },
-    {
-      "ticker": "RTX",
-      "date": "2026-07-21",
-      "days_away": 32,
-      "eps_est": 1.66
-    },
-    {
-      "ticker": "LMT",
-      "date": "2026-07-21",
-      "days_away": 32,
-      "eps_est": 7.18
-    },
-    {
-      "ticker": "GD",
-      "date": "2026-07-22",
-      "days_away": 33,
-      "eps_est": 3.94
-    },
-    {
-      "ticker": "TNL",
-      "date": "2026-07-22",
-      "days_away": 33,
-      "eps_est": 1.89
-    },
-    {
-      "ticker": "BVN",
-      "date": "2026-07-23",
-      "days_away": 34,
-      "eps_est": 1.03
-    },
-    {
-      "ticker": "TXT",
-      "date": "2026-07-23",
-      "days_away": 34,
-      "eps_est": 1.55
-    },
-    {
-      "ticker": "TTE",
-      "date": "2026-07-23",
-      "days_away": 34,
-      "eps_est": 2.84
-    },
-    {
-      "ticker": "LHX",
-      "date": "2026-07-24",
-      "days_away": 35,
-      "eps_est": 2.84
-    },
-    {
-      "ticker": "UHS",
-      "date": "2026-07-27",
-      "days_away": 38,
-      "eps_est": 5.89
-    },
-    {
-      "ticker": "SCCO",
-      "date": "2026-07-27",
-      "days_away": 38,
-      "eps_est": 1.76
-    },
-    {
-      "ticker": "AKO-B",
-      "date": "2026-07-28",
-      "days_away": 39,
-      "eps_est": 410.09
-    },
-    {
-      "ticker": "CB",
-      "date": "2026-07-28",
-      "days_away": 39,
-      "eps_est": 6.68
-    },
-    {
-      "ticker": "WDC",
-      "date": "2026-07-29",
-      "days_away": 40,
-      "eps_est": 3.29
-    },
-    {
-      "ticker": "WAY",
-      "date": "2026-07-29",
-      "days_away": 40,
-      "eps_est": 0.4
-    },
-    {
-      "ticker": "TER",
-      "date": "2026-07-29",
-      "days_away": 40,
-      "eps_est": 2.05
-    },
-    {
-      "ticker": "NBIX",
-      "date": "2026-07-29",
-      "days_away": 40,
-      "eps_est": 2.16
-    },
-    {
-      "ticker": "APH",
-      "date": "2026-07-29",
-      "days_away": 40,
-      "eps_est": 1.17
-    },
-    {
-      "ticker": "ETR",
-      "date": "2026-07-30",
-      "days_away": 41,
-      "eps_est": 1.1
-    },
-    {
-      "ticker": "BOOT",
-      "date": "2026-07-30",
-      "days_away": 41,
-      "eps_est": 1.7
-    },
-    {
-      "ticker": "AEE",
-      "date": "2026-07-30",
-      "days_away": 41,
-      "eps_est": 1.08
-    },
-    {
-      "ticker": "RDDT",
-      "date": "2026-07-30",
-      "days_away": 41,
-      "eps_est": 1.45
-    },
-    {
-      "ticker": "CRS",
-      "date": "2026-07-30",
-      "days_away": 41,
-      "eps_est": 3.07
-    },
-    {
-      "ticker": "CCJ",
-      "date": "2026-07-31",
-      "days_away": 42,
-      "eps_est": 0.38
-    },
-    {
-      "ticker": "SU",
-      "date": "2026-08-04",
-      "days_away": 46,
-      "eps_est": 3.04
-    },
-    {
-      "ticker": "ALAB",
-      "date": "2026-08-04",
-      "days_away": 46,
-      "eps_est": 0.69
-    },
-    {
-      "ticker": "PEG",
-      "date": "2026-08-04",
-      "days_away": 46,
-      "eps_est": 0.82
-    },
-    {
-      "ticker": "MIRM",
-      "date": "2026-08-05",
-      "days_away": 47,
-      "eps_est": null
-    },
-    {
-      "ticker": "Z",
-      "date": "2026-08-05",
-      "days_away": 47,
-      "eps_est": 0.45
-    },
-    {
-      "ticker": "APA",
-      "date": "2026-08-05",
-      "days_away": 47,
-      "eps_est": 2.1
-    },
-    {
-      "ticker": "SHOP",
-      "date": "2026-08-05",
-      "days_away": 47,
-      "eps_est": 0.4
-    },
-    {
-      "ticker": "IONS",
-      "date": "2026-08-05",
-      "days_away": 47,
-      "eps_est": null
-    },
-    {
-      "ticker": "PBR",
-      "date": "2026-08-06",
-      "days_away": 48,
-      "eps_est": null
-    },
-    {
-      "ticker": "EVRG",
-      "date": "2026-08-06",
-      "days_away": 48,
-      "eps_est": 0.91
-    },
-    {
-      "ticker": "PODD",
-      "date": "2026-08-06",
-      "days_away": 48,
-      "eps_est": 1.45
-    },
-    {
-      "ticker": "GMED",
-      "date": "2026-08-06",
-      "days_away": 48,
-      "eps_est": 1.1
-    },
-    {
-      "ticker": "SEZL",
-      "date": "2026-08-06",
-      "days_away": 48,
-      "eps_est": 1.0
-    },
-    {
-      "ticker": "TTWO",
-      "date": "2026-08-10",
-      "days_away": 52,
-      "eps_est": 0.36
-    },
-    {
-      "ticker": "B",
-      "date": "2026-08-11",
-      "days_away": 53,
-      "eps_est": 0.87
-    },
-    {
-      "ticker": "AMAT",
-      "date": "2026-08-13",
-      "days_away": 55,
-      "eps_est": 3.38
-    },
-    {
-      "ticker": "NTES",
-      "date": "2026-08-13",
-      "days_away": 55,
-      "eps_est": 15.86
-    },
-    {
-      "ticker": "BZ",
-      "date": "2026-08-19",
-      "days_away": 61,
-      "eps_est": 2.18
-    },
-    {
-      "ticker": "VSXY",
-      "date": "2026-08-26",
-      "days_away": 68,
-      "eps_est": 0.76
-    },
-    {
-      "ticker": "AGX",
-      "date": "2026-09-03",
-      "days_away": 76,
-      "eps_est": 2.69
+      "ticker": "TCOM",
+      "date": "Jun 24",
+      "days": 4
     }
   ],
   "overlap": [],
@@ -22356,28 +22120,33 @@
   ],
   "bond_signals": {
     "yield_curve": {
-      "two_year": 4.225,
-      "ten_year": 4.451,
-      "spread": 0.226,
-      "date": "2026-06-19",
-      "assessment": "Flat \u2014 caution"
+      "two_year": 4.2,
+      "ten_year": 4.49,
+      "spread": 0.29,
+      "spread_1mo_ago": 0.54,
+      "spread_change": -0.25,
+      "date": "2026-06-17",
+      "assessment": "Flat \u2014 neutral"
     },
     "credit_spreads": {
-      "current_bps": 292.0,
-      "date": "2026-06-19",
-      "assessment": "Tight (292bps) \u2014 bullish"
+      "current_bps": 263.0,
+      "raw_value": 2.63,
+      "prev_value": 2.8,
+      "change": -0.17,
+      "date": "2026-06-17",
+      "assessment": "Tight (263bps) \u2014 bullish"
     },
     "ten_year": {
-      "current": 4.451,
-      "prev": 4.451,
-      "change_bps": 0.0,
-      "date": "2026-06-19",
-      "assessment": "Elevated \u2014 bearish"
+      "current": 4.49,
+      "prev": 4.61,
+      "change_bps": -12.0,
+      "date": "2026-06-17",
+      "assessment": "Stable \u2014 neutral"
     },
     "scores": {
-      "yield_curve": 1,
+      "yield_curve": 0,
       "credit_spreads": 1,
-      "ten_year_level": -1
+      "ten_year_level": 0
     },
     "combined_score": 1
   },
@@ -23060,6 +22829,13 @@
           "sell": "PODD",
           "sell_score": 3,
           "buy": "ROKU",
+          "buy_score": 6,
+          "score_diff": 3
+        },
+        {
+          "sell": "PODD",
+          "sell_score": 3,
+          "buy": "S",
           "buy_score": 6,
           "score_diff": 3
         },
@@ -25052,12 +24828,5 @@
       "executed": true
     }
   ],
-  "priceRefreshedAt": "2026-06-19T14:17:17.773708Z",
-  "rates": {
-    "fed_funds": "4.25\u20134.50%",
-    "ten_year": 4.451,
-    "two_year": 4.225,
-    "yield_spread": 0.226,
-    "inverted": false
-  }
+  "priceRefreshedAt": "2026-06-19T15:14:42.263499Z"
 }
