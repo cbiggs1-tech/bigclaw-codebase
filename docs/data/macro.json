@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-06-22T16:49:01.856741",
+  "timestamp": "2026-06-23T06:30:12.393860",
   "context": {
     "ticker": null,
     "sector": null,
@@ -7,9 +7,9 @@
   },
   "rates": {
     "fed_funds": "4.25\u20134.50%",
-    "ten_year": 4.509,
-    "two_year": 4.287,
-    "yield_spread": 0.222,
+    "ten_year": 4.451,
+    "two_year": 4.225,
+    "yield_spread": 0.226,
     "inverted": false
   },
   "market": {
@@ -42,9 +42,9 @@
       "3mo": 19.92
     },
     "VIX": {
-      "level": 17.28,
+      "level": 19.79,
       "classification": "Moderate",
-      "1mo_change": 3.47
+      "1mo_change": 18.5
     }
   },
   "sectors": [
@@ -52,8 +52,8 @@
       "etf": "XLK",
       "sector": "Technology",
       "price": 192.15,
-      "1mo": 6.52,
-      "3mo": 41.13,
+      "1mo": 6.65,
+      "3mo": 41.3,
       "above_50sma": "True",
       "above_200sma": "True"
     },
@@ -61,8 +61,8 @@
       "etf": "XLI",
       "sector": "Industrials",
       "price": 181.8,
-      "1mo": 5.84,
-      "3mo": 10.85,
+      "1mo": 6.1,
+      "3mo": 11.13,
       "above_50sma": "True",
       "above_200sma": "True"
     },
@@ -70,8 +70,8 @@
       "etf": "XLF",
       "sector": "Financials",
       "price": 53.7,
-      "1mo": 3.39,
-      "3mo": 8.97,
+      "1mo": 3.75,
+      "3mo": 9.35,
       "above_50sma": "True",
       "above_200sma": "True"
     },
@@ -79,8 +79,8 @@
       "etf": "XLB",
       "sector": "Materials",
       "price": 51.62,
-      "1mo": 2.64,
-      "3mo": 6.54,
+      "1mo": 3.03,
+      "3mo": 6.94,
       "above_50sma": "True",
       "above_200sma": "True"
     },
@@ -88,8 +88,8 @@
       "etf": "XLV",
       "sector": "Healthcare",
       "price": 150.06,
-      "1mo": 0.11,
-      "3mo": 3.64,
+      "1mo": 0.55,
+      "3mo": 4.1,
       "above_50sma": "True",
       "above_200sma": "True"
     },
@@ -97,17 +97,17 @@
       "etf": "XLRE",
       "sector": "Real Estate",
       "price": 44.02,
-      "1mo": -1.21,
-      "3mo": 9.26,
-      "above_50sma": "False",
+      "1mo": -0.35,
+      "3mo": 10.22,
+      "above_50sma": "True",
       "above_200sma": "True"
     },
     {
       "etf": "XLU",
       "sector": "Utilities",
       "price": 44.72,
-      "1mo": -1.39,
-      "3mo": -0.82,
+      "1mo": -0.76,
+      "3mo": -0.19,
       "above_50sma": "False",
       "above_200sma": "True"
     },
@@ -115,8 +115,8 @@
       "etf": "XLP",
       "sector": "Consumer Staples",
       "price": 82.18,
-      "1mo": -3.09,
-      "3mo": 1.32,
+      "1mo": -2.42,
+      "3mo": 2.02,
       "above_50sma": "False",
       "above_200sma": "True"
     },
@@ -124,8 +124,8 @@
       "etf": "XLY",
       "sector": "Consumer Discretionary",
       "price": 114.94,
-      "1mo": -3.56,
-      "3mo": 4.8,
+      "1mo": -3.37,
+      "3mo": 5.0,
       "above_50sma": "False",
       "above_200sma": "False"
     },
@@ -133,8 +133,8 @@
       "etf": "XLC",
       "sector": "Communications",
       "price": 106.86,
-      "1mo": -7.45,
-      "3mo": -3.84,
+      "1mo": -7.21,
+      "3mo": -3.59,
       "above_50sma": "False",
       "above_200sma": "False"
     },
@@ -142,17 +142,17 @@
       "etf": "XLE",
       "sector": "Energy",
       "price": 54.06,
-      "1mo": -9.13,
-      "3mo": -11.14,
+      "1mo": -8.47,
+      "3mo": -10.5,
       "above_50sma": "False",
       "above_200sma": "True"
     }
   ],
   "risk": {
     "vix": {
-      "level": 17.28,
+      "level": 19.79,
       "classification": "Moderate",
-      "1mo_change": 3.47
+      "1mo_change": 18.5
     },
     "Gold (GLD)": {
       "price": 384.59,
@@ -163,11 +163,11 @@
       "1mo": 2.12
     },
     "Bitcoin": {
-      "price": 64180.52,
-      "1mo": -16.29
+      "price": 62464.53,
+      "1mo": -18.86
     },
     "yield_curve": {
-      "spread": 0.669,
+      "spread": 0.611,
       "inverted": false
     }
   },
@@ -183,10 +183,10 @@
       "mom_change": -3.5
     },
     "fear_greed": {
-      "score": 34.7,
+      "score": 34.3,
       "rating": "fear",
-      "previous": 37.3,
-      "1w_ago": 41.6,
+      "previous": 34.7,
+      "1w_ago": 39.1,
       "1m_ago": 59.0
     },
     "saving_rate": {
@@ -208,22 +208,22 @@
   },
   "bond_signals": {
     "yield_curve": {
-      "two_year": 4.287,
-      "ten_year": 4.509,
-      "spread": 0.222,
-      "date": "2026-06-22",
+      "two_year": 4.225,
+      "ten_year": 4.451,
+      "spread": 0.226,
+      "date": "2026-06-23",
       "assessment": "Flat \u2014 caution"
     },
     "credit_spreads": {
       "current_bps": 292.0,
-      "date": "2026-06-22",
+      "date": "2026-06-23",
       "assessment": "Tight (292bps) \u2014 bullish"
     },
     "ten_year": {
-      "current": 4.509,
-      "prev": 4.509,
+      "current": 4.451,
+      "prev": 4.451,
       "change_bps": 0.0,
-      "date": "2026-06-22",
+      "date": "2026-06-23",
       "assessment": "Elevated \u2014 bearish"
     },
     "scores": {
