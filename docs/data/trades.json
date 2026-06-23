@@ -1,6 +1,28 @@
 {
   "trades": [
     {
+      "date": "Jun 23",
+      "portfolio": "LLM-Comando",
+      "action": "SELL",
+      "ticker": "LRCX",
+      "shares": 15.0,
+      "price": 375.73,
+      "total": 5635.950000000001,
+      "rationale": "LLM-DIALECTIC: Rules-based exit: hard stop (-3%, ~$386) breached, now -6% unrealized and -8.8% on the session. Two consecutive major-bank PT raises (Wells Fargo $450 on 6/22, BofA $480 on 6/23) failed to defend the bid \u2014 the market is rejecting analyst targets as a buy signal in this tape. Korea KOSPI -10% memory ",
+      "executed_at": "2026-06-23 14:04:30"
+    },
+    {
+      "date": "Jun 23",
+      "portfolio": "Growth Value",
+      "action": "SELL",
+      "ticker": "HMY",
+      "shares": 674.0,
+      "price": 15.78,
+      "total": 10635.72,
+      "rationale": "Trailing stop triggered: $15.77 <= $15.95 (HWM $18.13, -13.0%)",
+      "executed_at": "2026-06-23 14:00:18"
+    },
+    {
       "date": "Jun 22",
       "portfolio": "LLM-Comando",
       "action": "BUY",
@@ -1002,5 +1024,5 @@
       "executed_at": "2026-06-16 14:05:39"
     }
   ],
-  "lastUpdate": "2026-06-23T11:33:02.618617+00:00"
+  "lastUpdate": "2026-06-23T14:24:33.689680+00:00"
 }
