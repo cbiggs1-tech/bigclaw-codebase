@@ -2,6 +2,28 @@
   "trades": [
     {
       "date": "Jun 24",
+      "portfolio": "Income Dividends",
+      "action": "SELL",
+      "ticker": "SCCO",
+      "shares": 61.0,
+      "price": 172.01,
+      "total": 10492.609999999999,
+      "rationale": "Trailing stop triggered: $172.12 <= $172.22 (HWM $202.61, -15.0%)",
+      "executed_at": "2026-06-24 17:00:16"
+    },
+    {
+      "date": "Jun 24",
+      "portfolio": "Momentum Growth",
+      "action": "SELL",
+      "ticker": "ARGX",
+      "shares": 13.0,
+      "price": 838.0,
+      "total": 10894.0,
+      "rationale": "Trailing stop triggered: $840.09 <= $840.22 (HWM $933.58, -10.0%)",
+      "executed_at": "2026-06-24 16:00:13"
+    },
+    {
+      "date": "Jun 24",
       "portfolio": "LLM-Comando",
       "action": "BUY",
       "ticker": "PODD",
@@ -1244,5 +1266,5 @@
       "executed_at": "2026-06-17 14:03:55"
     }
   ],
-  "lastUpdate": "2026-06-24T15:19:29.442353+00:00"
+  "lastUpdate": "2026-06-24T17:21:52.465026+00:00"
 }
