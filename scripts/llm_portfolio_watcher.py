@@ -44,6 +44,7 @@ MODEL = "claude-sonnet-4-6"
 MAX_TOKENS = 3000
 LLM_TIMEOUT = 90.0
 MAX_FIRES_PER_DAY = 6
+EXEC_RETRY_CAP = 3  # re-attempt a decided-but-unfilled trade on later polls, up to this many times
 
 PENDING_STATE = Path.home() / "bigclaw-ai" / "data" / "llm_pending_triggers.json"
 JOURNAL = Path.home() / "bigclaw-ai" / "data" / "llm_journal.jsonl"
@@ -171,7 +172,7 @@ def cleanup_obsolete_triggers(state, current_holdings):
     held_set = {h["ticker"].upper() for h in current_holdings}
     n_obsoleted = 0
     for trig in state.get("triggers", []):
-        if trig.get("status") != "armed":
+        if trig.get("status") not in ("armed", "retrying"):
             continue
         ttype = trig.get("type")
         if ttype != "price":
@@ -542,7 +543,7 @@ def main():
             log(f"Cleanup: marked {n_obs} stale sell-intent trigger(s) as obsolete (no position to act on)")
             save_state(state)
 
-        n_armed = sum(1 for t in state['triggers'] if t.get('status') == 'armed')
+        n_armed = sum(1 for t in state['triggers'] if t.get('status') in ('armed', 'retrying'))
         log(f"Watcher poll - {n_armed} triggers armed ({len(state['triggers'])} total), "
             f"{state['fires_today']}/{state.get('max_fires')} fires used today")
         if n_armed == 0:
@@ -556,9 +557,16 @@ def main():
         # Evaluate each armed trigger
         fired = []
         for trig in state["triggers"]:
-            if trig.get("status") != "armed": continue
+            st = trig.get("status")
+            if st not in ("armed", "retrying"): continue
             if _expired(trig, datetime.datetime.now(datetime.timezone.utc)):
                 trig["status"] = "expired"; continue
+            if st == "retrying":
+                # A prior decided trade did not fill - re-fire (re-runs the LLM with fresh
+                # data so conviction is re-validated) without needing the condition to re-match.
+                fired.append({"trigger": trig, "evidence":
+                    f"execution retry (attempt {trig.get('exec_attempts', 0)}/{EXEC_RETRY_CAP})"})
+                continue
 
             ttype = trig.get("type")
             if ttype == "price":
@@ -620,17 +628,47 @@ def main():
                               "trades": trades, "exec_results": [
                                   {"trade": t, "result": r} for t, r in exec_results
                               ]})
-            # Mark trigger consumed
-            for trig in state["triggers"]:
-                if trig.get("id") == trig_id:
-                    trig["status"] = "consumed" if dec != "stand_down" else "stood_down"
-                    trig["consumed_at"] = now_iso
-                    trig["last_decision"] = dec
-                    break
-            # Slack line
+            # Execution-aware trigger lifecycle. A decided trade that was submitted but did NOT
+            # fully fill (e.g. a market order that didn't fill at the volatile open) must NOT
+            # silently consume the trigger - keep it 'retrying' so a later poll re-attempts the
+            # exit (re-running the LLM, which re-validates conviction and re-clamps to the live
+            # long position via clamp_sell_to_long, so it can never oversell or open a short).
+            underfilled = [
+                (t, r) for t, r in exec_results
+                if ("filled_qty" in r) and int(r.get("filled_qty", 0) or 0) < int(t.get("shares", 0) or 0)
+            ]
             executed = sum(1 for _, r in exec_results if r.get("filled_qty"))
+            for trig in state["triggers"]:
+                if trig.get("id") != trig_id:
+                    continue
+                trig["last_decision"] = dec
+                if dec == "stand_down":
+                    trig["status"] = "stood_down"; trig["consumed_at"] = now_iso
+                elif underfilled:
+                    attempts = int(trig.get("exec_attempts", 0)) + 1
+                    trig["exec_attempts"] = attempts
+                    trig["last_attempt_at"] = now_iso
+                    if attempts >= EXEC_RETRY_CAP:
+                        trig["status"] = "consumed"; trig["consumed_at"] = now_iso
+                        trig["exec_failed"] = True
+                    else:
+                        trig["status"] = "retrying"
+                else:
+                    trig["status"] = "consumed"; trig["consumed_at"] = now_iso
+                break
+            # Slack line - loudly flag any decided trade that did NOT fill (position still held).
             slack_lines.append(f"  • Trigger `{trig_id}` → *{dec.upper()}* ({executed}/{len(trades)} trades): "
                                 f"{rationale[:200]}")
+            _trig = next((x for x in state["triggers"] if x.get("id") == trig_id), {})
+            for t, r in underfilled:
+                fq = int(r.get("filled_qty", 0) or 0); sh = int(t.get("shares", 0) or 0)
+                att = int(_trig.get("exec_attempts", 0))
+                tail = (f"*GAVE UP after {att} attempts - position STILL HELD, MANUAL ACTION NEEDED.*"
+                        if _trig.get("status") == "consumed"
+                        else f"will retry next poll (attempt {att}/{EXEC_RETRY_CAP}).")
+                slack_lines.append(
+                    f"  ⚠️ *EXECUTION FAILED* - {t.get('action','').upper()} {sh} {t.get('ticker')} "
+                    f"filled {fq}/{sh} (order did not fill); {tail}")
 
         state["fires_today"] = state.get("fires_today", 0) + 1
 
