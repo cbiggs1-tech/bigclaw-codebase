@@ -172,3 +172,92 @@ if __name__ == "__main__":
     prices = get_extended_hours_prices(test_tickers)
     for ticker, data in prices.items():
         print(f"{ticker}: ${data.get('price', 'N/A'):.2f} (extended: {data.get('is_extended', 'N/A')})")
+
+
+def get_daily_bars(tickers, start, end):
+    """Daily adjusted OHLCV bars via Alpaca, shaped like yfinance's
+    ``yf.download(...)`` output: a DataFrame with MultiIndex columns
+    ``(Field, Ticker)`` where Field is one of Open/High/Low/Close/Volume, indexed
+    by a tz-naive normalized DatetimeIndex. ``df["Close"][ticker]`` and
+    ``df["Volume"][ticker]`` both work, matching what the decision engine expects.
+
+    Alpaca is the primary source (no scraping rate-limit). Any symbols Alpaca
+    cannot serve fall back to yfinance so the returned frame is complete. Returns
+    None only if NO data could be obtained from either source.
+    """
+    import pandas as pd
+    syms = sorted({t for t in (tickers or []) if t})
+    if not syms:
+        return None
+
+    # yfinance uses 'BRK-B'; Alpaca uses 'BRK.B'.
+    def _to_alp(s):   return s.replace("-", ".")
+    def _from_alp(s): return s.replace(".", "-")
+
+    alpaca_frame, got = None, set()
+    client = get_alpaca_client()
+    if client is not None:
+        try:
+            from alpaca.data.requests import StockBarsRequest
+            from alpaca.data.timeframe import TimeFrame
+            from alpaca.data.enums import Adjustment, DataFeed
+            alp_syms = [_to_alp(s) for s in syms]
+            frames, BATCH = [], 200
+            for i in range(0, len(alp_syms), BATCH):
+                chunk = alp_syms[i:i + BATCH]
+                try:
+                    req = StockBarsRequest(symbol_or_symbols=chunk, timeframe=TimeFrame.Day,
+                                           start=start, end=end, adjustment=Adjustment.ALL,
+                                           feed=DataFeed.IEX)
+                    bdf = client.get_stock_bars(req).df
+                    if bdf is not None and not bdf.empty:
+                        frames.append(bdf)
+                except Exception as e:
+                    logger.warning(f"Alpaca bars batch {i // BATCH} failed: {e}")
+            if frames:
+                full = pd.concat(frames)
+                fields = {"Open": "open", "High": "high", "Low": "low",
+                          "Close": "close", "Volume": "volume"}
+                cols = {}
+                for yf_field, alp_col in fields.items():
+                    if alp_col not in full.columns:
+                        continue
+                    piv = full[alp_col].unstack(level=0)  # index=timestamp, cols=alpaca symbol
+                    piv.columns = [_from_alp(c) for c in piv.columns]
+                    cols[yf_field] = piv
+                if cols:
+                    alpaca_frame = pd.concat(cols, axis=1)  # MultiIndex (Field, Ticker)
+                    got = set(alpaca_frame["Close"].columns) if "Close" in cols else set()
+        except Exception as e:
+            logger.warning(f"Alpaca get_daily_bars failed, using yfinance: {e}")
+
+    # yfinance fallback for any symbols Alpaca did not return
+    yf_frame, missing = None, [s for s in syms if s not in got]
+    if missing:
+        try:
+            import yfinance as yf
+            logger.info(f"get_daily_bars: yfinance fallback for {len(missing)} ticker(s): {missing[:8]}")
+            raw = yf.download(missing, start=start, end=end, progress=False, auto_adjust=True)
+            if raw is not None and not raw.empty:
+                if isinstance(raw.columns, pd.MultiIndex):
+                    yf_frame = raw
+                else:  # single ticker -> build (Field, Ticker)
+                    keep = [f for f in ("Open", "High", "Low", "Close", "Volume") if f in raw.columns]
+                    yf_frame = pd.concat({f: raw[[f]].rename(columns={f: missing[0]}) for f in keep}, axis=1)
+        except Exception as e:
+            logger.warning(f"get_daily_bars yfinance fallback failed: {e}")
+
+    parts = [f for f in (alpaca_frame, yf_frame) if f is not None]
+    if not parts:
+        return None
+    prices = pd.concat(parts, axis=1) if len(parts) > 1 else parts[0]
+
+    # Normalize index to tz-naive normalized dates to match yfinance
+    try:
+        idx = pd.to_datetime(prices.index)
+        if getattr(idx, "tz", None) is not None:
+            idx = idx.tz_convert(None)
+        prices.index = idx.normalize()
+    except Exception:
+        pass
+    return prices.sort_index()

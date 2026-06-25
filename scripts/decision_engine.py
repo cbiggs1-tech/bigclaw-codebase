@@ -17,6 +17,7 @@ from ta.trend import MACD, SMAIndicator
 
 from bigclaw_logging import get_logger
 from bigclaw_retry import retry
+sys.path.insert(0, os.path.expanduser("~/bigclaw-ai/src"))  # for alpaca_data (Alpaca price bars)
 
 DB_PATH = "/home/cbiggs90/bigclaw-ai/src/portfolios.db"
 logger = get_logger("decision_engine")
@@ -221,13 +222,17 @@ def fetch_market_data(tickers):
     all_tickers = list(tickers)
     # Add sector ETFs
     sector_etfs = set(SECTOR_ETF_MAP.values())
-    download_tickers = list(set(all_tickers) | sector_etfs)
+    download_tickers = list(set(all_tickers) | sector_etfs | {"SPY"})  # SPY fetched once for relative-strength
     
-    logger.info(f"Fetching price data for {len(download_tickers)} tickers...")
-    prices = retry(
-        lambda: yf.download(download_tickers, start=start, end=end, progress=False, auto_adjust=True),
-        attempts=3, delay=5, label="yf.download"
-    )
+    logger.info(f"Fetching price data for {len(download_tickers)} tickers (Alpaca daily bars)...")
+    from alpaca_data import get_daily_bars
+    prices = get_daily_bars(download_tickers, start, end)
+    if prices is None or getattr(prices, "empty", True):
+        logger.warning("Alpaca returned no usable price data — falling back to yfinance bulk download")
+        prices = retry(
+            lambda: yf.download(download_tickers, start=start, end=end, progress=False, auto_adjust=True),
+            attempts=3, delay=5, label="yf.download"
+        )
     
     for ticker in all_tickers:
         try:
@@ -242,8 +247,8 @@ def fetch_market_data(tickers):
         except Exception as e:
             logger.warning(f"{ticker}: price data error: {e}")
 
-    # Store sector ETF data
-    for etf in sector_etfs:
+    # Store sector ETF data (+ SPY, used once for relative-strength scoring)
+    for etf in (sector_etfs | {"SPY"}):
         try:
             if len(download_tickers) == 1:
                 close = prices["Close"].dropna()
@@ -266,7 +271,7 @@ def fetch_market_data(tickers):
             data[ticker]["info"] = {}
         # Earnings dates
         try:
-            cal = retry(lambda: yf.Ticker(ticker).calendar, attempts=2, delay=3, label=f"yf.calendar({ticker})")
+            cal = retry(lambda: yf.Ticker(ticker).calendar, attempts=1, delay=0, label=f"yf.calendar({ticker})")  # fail-fast: optional signal, never block the rescreen
             if isinstance(cal, dict) and "Earnings Date" in cal:
                 dates = cal["Earnings Date"]
                 if isinstance(dates, list) and dates:
@@ -279,25 +284,42 @@ def fetch_market_data(tickers):
     return data, prices
 
 
+# finviz is a flaky scraper with no rate-limit SLA. A per-run circuit breaker disables
+# it after repeated consecutive failures so an outage cannot stall the rescreen — it
+# supplies only the optional short-interest + insider signals and the engine degrades
+# gracefully without them. (June 25 2026: finviz was down and its retry storm — 592
+# failures x 3s — was the dominant cause of a 44-minute rescreen.)
+_FINVIZ_FAILS = 0
+_FINVIZ_DISABLED = False
+_FINVIZ_FAIL_LIMIT = 12
+
+
 def fetch_finviz_data(ticker):
-    """Fetch finvizfinance data (short interest, insider activity)."""
+    """Fetch finvizfinance data (short interest, insider activity). Optional signals;
+    returns empty defaults on failure. Fail-fast (no retry storm) + circuit breaker."""
+    global _FINVIZ_FAILS, _FINVIZ_DISABLED
     result = {"short_pct": None, "insider_buys": 0, "insider_sells": 0}
+    if _FINVIZ_DISABLED:
+        return result
+    fundament_ok = False
+
     try:
         from finvizfinance.quote import finvizfinance as fvf
         stock = fvf(ticker)
-        fundament = retry(lambda: stock.ticker_fundament(), attempts=2, delay=3, label=f"finviz.fundament({ticker})")
+        fundament = retry(lambda: stock.ticker_fundament(), attempts=1, delay=0, label=f"finviz.fundament({ticker})")
         short_str = fundament.get("Short Float", fundament.get("Short Float / Ratio", ""))
         if isinstance(short_str, str) and "%" in short_str:
             result["short_pct"] = float(short_str.replace("%", "").strip())
         elif isinstance(short_str, (int, float)):
             result["short_pct"] = float(short_str)
-    except Exception as e:
+        fundament_ok = True
+    except Exception:
         pass
 
     try:
         from finvizfinance.quote import finvizfinance as fvf
         stock = fvf(ticker)
-        insider = retry(lambda: stock.ticker_inside_trader(), attempts=2, delay=3, label=f"finviz.insider({ticker})")
+        insider = retry(lambda: stock.ticker_inside_trader(), attempts=1, delay=0, label=f"finviz.insider({ticker})")
         if insider is not None and len(insider) > 0:
             # Look at recent transactions (last ~20)
             for _, row in insider.head(20).iterrows():
@@ -309,6 +331,16 @@ def fetch_finviz_data(ticker):
     except Exception:
         pass
 
+    # Circuit breaker: count consecutive all-endpoints-failed tickers; once finviz is
+    # clearly down, skip it for the rest of the run instead of failing per-ticker.
+    if fundament_ok:
+        _FINVIZ_FAILS = 0
+    else:
+        _FINVIZ_FAILS += 1
+        if _FINVIZ_FAILS >= _FINVIZ_FAIL_LIMIT and not _FINVIZ_DISABLED:
+            _FINVIZ_DISABLED = True
+            logger.warning(f"finviz disabled for this run after {_FINVIZ_FAILS} consecutive failures "
+                           f"(optional short-interest/insider signals skipped)")
     return result
 
 
@@ -458,7 +490,7 @@ def analyze_breakout(close):
     return signals
 
 
-def analyze_falling_knife(close, info, ticker=None):
+def analyze_falling_knife(close, info, ticker=None, spy_close=None):
     """Detect deteriorating fundamentals + bearish technicals (falling knives).
 
     Three signals work together to flag stocks where fundamentals AND price
@@ -525,12 +557,16 @@ def analyze_falling_knife(close, info, ticker=None):
     # Compare 60d return vs SPY 60d return as a proxy for "underperforming the market"
     if len(close) >= 60:
         try:
-            import yfinance as _yf
             stock_60d_return = (current - float(close.iloc[-60])) / float(close.iloc[-60]) * 100
-            spy_hist = _yf.Ticker("SPY").history(period="3mo", auto_adjust=True)
-            if len(spy_hist) >= 60:
-                spy_close = spy_hist["Close"]
-                spy_60d_return = (float(spy_close.iloc[-1]) - float(spy_close.iloc[-60])) / float(spy_close.iloc[-60]) * 100
+            # SPY closes are fetched ONCE per rescreen (Alpaca) and passed in; only
+            # fall back to a per-ticker yfinance fetch if they were not provided.
+            _spy = spy_close
+            if _spy is None or len(_spy) < 60:
+                import yfinance as _yf
+                _sh = _yf.Ticker("SPY").history(period="3mo", auto_adjust=True)
+                _spy = _sh["Close"] if _sh is not None and len(_sh) >= 60 else None
+            if _spy is not None and len(_spy) >= 60:
+                spy_60d_return = (float(_spy.iloc[-1]) - float(_spy.iloc[-60])) / float(_spy.iloc[-60]) * 100
                 relative = stock_60d_return - spy_60d_return
                 if relative <= -15:
                     signals.append(("WeakRelStrength", -1, f"trailing SPY by {relative:.0f}% over 60d"))
@@ -963,7 +999,7 @@ def score_ticker(ticker, market_data, prices, bond_combined, bond_weight, style_
     all_signals.extend(tech_signals)
     all_signals.extend(analyze_extension(close))
     all_signals.extend(analyze_breakout(close))
-    all_signals.extend(analyze_falling_knife(close, info, ticker))
+    all_signals.extend(analyze_falling_knife(close, info, ticker, spy_close=(market_data.get("SPY") or {}).get("close")))
     all_signals.extend(analyze_fundamentals(info, finviz))
     all_signals.extend(analyze_quality_fundamentals(info))
     all_signals.extend(analyze_insider(finviz))
