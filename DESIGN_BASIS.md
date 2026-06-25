@@ -549,6 +549,16 @@ Yahoo throttled the rule-based scorer on June 16 2026 (101 "Too Many Requests" r
 
 ---
 
+### 6.9 Price Data via Alpaca + External-Scraper Resilience (June 25 2026)
+
+The daily rule-based rescreen (, ~543 tickers) had been timing out, freezing  and showing day-old scores on the dashboard. Root cause was two unreliable external scrapers in the per-ticker loop. Both are now handled; the full rescreen dropped from ~44 min (and rising) to **~2.5 min**, comfortably under the 30-min subprocess timeout.
+
+**Prices moved from yfinance to Alpaca.** A new  in  fetches daily split/dividend-adjusted OHLCV bars from Alpaca and returns a DataFrame shaped exactly like  (MultiIndex columns ), so it is a drop-in for the engine's bulk price fetch. 554 tickers fetch in ~70s with no rate-limit, versus yfinance throttling hard (1811 Too Many Requests in one morning, even on SPY/QQQ) and the bulk download timing out. Symbol quirks ( → ) and ADRs are handled. There are two fallbacks: any individual ticker Alpaca can't serve falls back to yfinance inside , and if Alpaca returns nothing at all the engine falls back to the original yfinance bulk download. SPY history (used for the relative-strength signal) is now fetched **once** per rescreen and passed into , instead of being re-fetched per-ticker (543×). The yfinance earnings-calendar lookup was made fail-fast () so a yfinance throttle can no longer block the rescreen.
+
+**finviz circuit breaker.** finviz (the optional short-interest + insider signals) is a flaky scraper with no rate-limit SLA. When it is down it was failing on every ticker with a 2-attempt/3s-delay retry storm (≈592 failures × 3s ≈ 30 min — the dominant cause of the timeout). It is now fail-fast (, no delay) plus a per-run circuit breaker keyed on the primary signal (): after 12 consecutive failures finviz is disabled for the rest of the run and the remaining tickers skip it entirely. These are minor supplementary signals, so the engine degrades gracefully — scores computed without finviz match the prior baseline to within ~0.8 points mean.
+
+Net effect: the rescreen is now resilient to a yfinance price throttle (Alpaca), a yfinance per-ticker throttle (fail-fast calendar/EPS), and a finviz outage (circuit breaker). The fundamentals cache (6.8) continues to serve yfinance  from SQLite.
+
 ## 7. Autonomous Trading Logic & Execution
 
 Trading is orchestrated once per day at 10:30 AM ET by `autonomous_trader.py` (and reinforced by the intraday stop-check script). The flow is intentionally sell-first: liquidate weak positions and triggered stops before deploying cash into new opportunities. This prevents over-allocation and ensures cash is always available for the best opportunities.
