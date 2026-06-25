@@ -64,7 +64,6 @@ JOURNAL = Path.home() / "bigclaw-ai" / "data" / "llm_comando_journal.jsonl"
 OUTPUT_JSON = Path.home() / "bigclaw-ai" / "docs" / "data" / "llm_comando_portfolio.json"
 DECISIONS_DIR = Path.home() / "bigclaw-ai" / "data" / "llm_comando_decisions"
 DB_PATH = Path.home() / "bigclaw-ai" / "src" / "portfolios.db"
-SIGNALS_JSON = Path.home() / "bigclaw-ai" / "docs" / "data" / "signals.json"  # rule-based engine daily screened+scored universe (momentum candidate pool)
 
 SECTOR_ETFS = ['XLK', 'XLF', 'XLE', 'XLV', 'XLI', 'XLP', 'XLY', 'XLB', 'XLU', 'XLRE', 'XLC']
 FACTOR_ETFS = ['IWM', 'MTUM', 'QUAL', 'USMV', 'IWN']
@@ -294,53 +293,6 @@ def discover_news_makers(secrets, top_n=30, hours_back=24):
     return dict(cnt.most_common(top_n))
 
 
-def discover_momentum_leaders(top_n=25, pool=150):
-    """Relative-strength / breakout leaders from the rule-based engine's daily
-    screened+scored universe (signals.json). Complements the LAGGING news-maker
-    view with a 'what is trending' view. Ranks the top-`pool` by engine score on
-    momentum (1mo + 3mo RS + proximity to the 6-month high) via ONE batch
-    yfinance download (no per-ticker throttle). Returns {ticker: {score,
-    ret_21d, ret_63d, pct_from_high, mom}} sorted by momentum, capped at top_n."""
-    import json as _json
-    try:
-        sig = _json.load(open(SIGNALS_JSON))
-        by_score = sorted(
-            [x for x in sig.get("signals", [])
-             if x.get("ticker") and str(x["ticker"]).isalpha()
-             and x["ticker"] not in ETF_BLACKLIST],
-            key=lambda x: -(x.get("score") or -99))
-        scores = {x["ticker"]: x.get("score") for x in by_score[:pool]}
-        tickers = list(scores.keys())
-    except Exception as e:
-        log(f"momentum_leaders: signals read failed: {e}", "WARN")
-        return {}
-    if not tickers:
-        return {}
-    try:
-        hist = yf.download(tickers, period="6mo", progress=False, threads=True)["Close"]
-    except Exception as e:
-        log(f"momentum_leaders fetch failed: {e}", "WARN")
-        return {}
-    out = {}
-    for t in tickers:
-        try:
-            c = (hist[t] if hasattr(hist, "columns") else hist).dropna()
-            if len(c) < 30:
-                continue
-            last = float(c.iloc[-1])
-            r21 = (last / float(c.iloc[-22]) - 1) * 100 if len(c) > 22 else None
-            r63 = (last / float(c.iloc[-64]) - 1) * 100 if len(c) > 64 else None
-            hi = float(c.tail(126).max())
-            pfh = (last / hi - 1) * 100 if hi else None
-            mom = (r63 or 0) * 0.5 + (r21 or 0) * 0.3 + (50 + (pfh if pfh is not None else -50)) * 0.2
-            out[t] = {"score": scores.get(t), "ret_21d": r21, "ret_63d": r63,
-                      "pct_from_high": pfh, "mom": round(mom, 1)}
-        except Exception:
-            continue
-    ranked = sorted(out.items(), key=lambda kv: -(kv[1]["mom"] if kv[1]["mom"] is not None else -1e9))
-    return dict(ranked[:top_n])
-
-
 def get_news(tickers, secrets):
     """Pull Alpaca/Benzinga per-ticker (for held + recently-traded) + broad CNBC/Reuters."""
     from alpaca.data.historical.news import NewsClient
@@ -429,7 +381,7 @@ def compute_portfolio_value(state, market):
 
 
 # ---------- prompt builders ----------
-def build_state_context(state, total_value, market, news, journal, peer_returns, today_iso, candidate_snapshot=None, news_maker_counts=None, momentum_leaders=None, cycle_name=None):
+def build_state_context(state, total_value, market, news, journal, peer_returns, today_iso, candidate_snapshot=None, news_maker_counts=None, cycle_name=None):
     lines = []
     lines.append(f"## TODAY: {today_iso}")
     if cycle_name:
@@ -506,17 +458,6 @@ def build_state_context(state, total_value, market, news, journal, peer_returns,
         lines.append('')
         lines.append('## MACRO REGIME (cycle tells):')
         lines.extend(_reg)
-
-    if momentum_leaders:
-        _held = {h["ticker"] for h in state["holdings"]}
-        lines.append("\n## MOMENTUM LEADERS (relative-strength / breakout - the 'what is trending' view)")
-        lines.append("  High RS + near the 6-month high = a live uptrend. In a confirmed bull regime (low/falling VIX +")
-        lines.append("  positive breadth in MACRO REGIME) a clean, NOT-yet-parabolic uptrend IS a tradeable thesis on its")
-        lines.append("  own - no fresh headline required. These are your bull-market shots; be active here.")
-        lines.append("  ticker    mom     1mo     3mo    %from-6mo-high   engine_score")
-        for _t, _d in momentum_leaders.items():
-            _hm = " [HELD]" if _t in _held else ""
-            lines.append(f"  {_t:6s} {_d['mom']:>+6.1f}  {(_d.get('ret_21d') or 0):>+5.1f}%  {(_d.get('ret_63d') or 0):>+5.1f}%   {(_d.get('pct_from_high') or 0):>+6.1f}%        {_d.get('score')}{_hm}")
 
     if candidate_snapshot:
         # CANDIDATE STRENGTH RANKING: the "compete" view. Held positions ranked
@@ -785,9 +726,9 @@ or you hold cash instead. Cutting losses fast is good. Holding cash is a valid p
 clears the bar. (Short-window Comando style - NOT buy-and-hold: you do not ride drawdowns for a long
 thesis, but you also do not churn out of a trade you would still buy.)
 
-MOMENTUM SOURCING (two candidate views): candidates now come from TWO angles - (1) NEWS-MAKERS (what is being talked about, often ALREADY priced - run these hard through gap-analysis), and (2) MOMENTUM LEADERS (relative-strength / near-breakout names from the screened universe - what is actually TRENDING). In a confirmed bull regime (low/falling VIX + positive breadth in MACRO REGIME), a clean uptrend that is NOT yet parabolic is a valid thesis on its own - you do NOT need a fresh headline to ride a leader. Do NOT sit in cash waiting for a perfect news catalyst while momentum leaders trend: take several modest positions in the strongest, least-extended names and manage them by the commando doctrine. The bull-market mandate is to be ACTIVE - many small well-chosen shots, not one or two per week.
+NEWS-DRIVEN DISCOVERY: your candidates are the NEWS-MAKERS - the names being talked about in the last 24h - plus your held positions and watchlist. Every entry MUST rest on a citable, still-playing-out news catalyst. A stock moving on price action alone with no news behind it is a bandwagon, not a thesis - do NOT chase it, no matter how strong the chart looks. Run the news-makers hard through gap-analysis (is the move already priced in? is the catalyst still live or already spent?). If the news set is thin and nothing clears your bar, holding cash is the correct call - do NOT manufacture a trade from price momentum to avoid sitting in cash.
 
-VOLATILITY REGIME: the MACRO REGIME block shows VIX. Use it to set your aggression this cycle. A LOW or falling VIX in an uptrend means momentum persists and trends are clean - press: take more shots, rotate in and out of leaders, keep position sizes modest so you can hold several names at once. A HIGH or spiking VIX means whipsaw and failed breakouts - throttle back: raise the bar, size down, favor cash. Let the volatility regime, not just the individual setup, dial how active you are.
+VOLATILITY REGIME: the MACRO REGIME block shows VIX. Use it to size your aggression this cycle. A LOW or falling VIX is a calmer tape where news-backed setups tend to follow through - you can size up modestly and act with more confidence. A HIGH or spiking VIX means whipsaw and failed moves - throttle back: raise the conviction bar, size down, favor cash. Let the volatility regime, not just the individual setup, dial how aggressive you are - but every position still needs its own news-backed catalyst.
 
 YOU MUST PRODUCE STRICT JSON. NO PROSE OUTSIDE THE JSON BLOCK.
 
@@ -1442,10 +1383,7 @@ def main():
         else:
             log("  news_makers empty — falling back to held + watchlist only", "WARN")
 
-        momentum_leaders = discover_momentum_leaders(top_n=25)
-        if momentum_leaders:
-            log("  Momentum leaders (top 5): " + ", ".join(f"{t}(mom {d['mom']})" for t, d in list(momentum_leaders.items())[:5]))
-        news_tickers = sorted(set(held_tickers + recent_watch + news_makers + list(momentum_leaders.keys())))
+        news_tickers = sorted(set(held_tickers + recent_watch + news_makers))
         news = get_news(news_tickers, secrets)
         log(f"  Alpaca: {sum(len(v) for v in news['per_ticker'].values())} items for {len(news['per_ticker'])} tickers")
         log(f"  CNBC: {len(news['cnbc'])} | Reuters: {len(news['reuters'])}")
@@ -1460,7 +1398,7 @@ def main():
         today_iso = datetime.date.today().isoformat()
         state_ctx = build_state_context(state, total_value, market, news, journal,
                                          peer_returns, today_iso, candidate_snapshot=candidate_snapshot,
-                                         news_maker_counts=news_maker_counts, momentum_leaders=momentum_leaders, cycle_name=args.cycle)
+                                         news_maker_counts=news_maker_counts, cycle_name=args.cycle)
         log(f"State context: {len(state_ctx)} chars")
 
         anthropic_client = anthropic.Anthropic(api_key=secrets['ANTHROPIC_API_KEY'],
