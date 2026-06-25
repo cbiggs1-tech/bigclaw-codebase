@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-06-24T16:48:55.311012",
+  "timestamp": "2026-06-25T06:30:13.336024",
   "context": {
     "ticker": null,
     "sector": null,
@@ -7,8 +7,8 @@
   },
   "rates": {
     "fed_funds": "4.25\u20134.50%",
-    "ten_year": 4.402,
-    "two_year": 4.176,
+    "ten_year": 4.451,
+    "two_year": 4.225,
     "yield_spread": 0.226,
     "inverted": false
   },
@@ -22,7 +22,7 @@
     },
     "Nasdaq": {
       "ticker": "^IXIC",
-      "price": 25476.63,
+      "price": 25476.64,
       "ytd": 9.61,
       "1mo": -3.29,
       "3mo": 19.0
@@ -42,9 +42,9 @@
       "3mo": 19.79
     },
     "VIX": {
-      "level": 18.63,
+      "level": 18.01,
       "classification": "Moderate",
-      "1mo_change": 12.3
+      "1mo_change": 5.88
     }
   },
   "sectors": [
@@ -150,9 +150,9 @@
   ],
   "risk": {
     "vix": {
-      "level": 18.63,
+      "level": 18.01,
       "classification": "Moderate",
-      "1mo_change": 12.3
+      "1mo_change": 5.88
     },
     "Gold (GLD)": {
       "price": 365.92,
@@ -163,11 +163,11 @@
       "1mo": 2.74
     },
     "Bitcoin": {
-      "price": 60975.27,
-      "1mo": -21.1
+      "price": 61166.52,
+      "1mo": -19.33
     },
     "yield_curve": {
-      "spread": 0.551,
+      "spread": 0.6,
       "inverted": false
     }
   },
@@ -183,10 +183,10 @@
       "mom_change": -3.5
     },
     "fear_greed": {
-      "score": 25.9,
+      "score": 25.8,
       "rating": "fear",
-      "previous": 27.5,
-      "1w_ago": 32.2,
+      "previous": 25.9,
+      "1w_ago": 37.6,
       "1m_ago": 59.0
     },
     "saving_rate": {
@@ -208,22 +208,22 @@
   },
   "bond_signals": {
     "yield_curve": {
-      "two_year": 4.176,
-      "ten_year": 4.402,
+      "two_year": 4.225,
+      "ten_year": 4.451,
       "spread": 0.226,
-      "date": "2026-06-24",
+      "date": "2026-06-25",
       "assessment": "Flat \u2014 caution"
     },
     "credit_spreads": {
       "current_bps": 292.0,
-      "date": "2026-06-24",
+      "date": "2026-06-25",
       "assessment": "Tight (292bps) \u2014 bullish"
     },
     "ten_year": {
-      "current": 4.402,
-      "prev": 4.402,
+      "current": 4.451,
+      "prev": 4.451,
       "change_bps": 0.0,
-      "date": "2026-06-24",
+      "date": "2026-06-25",
       "assessment": "Elevated \u2014 bearish"
     },
     "scores": {
