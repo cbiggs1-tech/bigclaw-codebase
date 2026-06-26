@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-06-25T17:04:50.704094",
+  "timestamp": "2026-06-26T06:30:12.623843",
   "context": {
     "ticker": null,
     "sector": null,
@@ -7,9 +7,9 @@
   },
   "rates": {
     "fed_funds": "4.25\u20134.50%",
-    "ten_year": 4.392,
-    "two_year": 4.163,
-    "yield_spread": 0.229,
+    "ten_year": 4.451,
+    "two_year": 4.225,
+    "yield_spread": 0.226,
     "inverted": false
   },
   "market": {
@@ -42,9 +42,9 @@
       "3mo": 22.78
     },
     "VIX": {
-      "level": 18.89,
-      "classification": "Moderate",
-      "1mo_change": 11.05
+      "level": 20.0,
+      "classification": "Elevated",
+      "1mo_change": 22.77
     }
   },
   "sectors": [
@@ -150,9 +150,9 @@
   ],
   "risk": {
     "vix": {
-      "level": 18.89,
-      "classification": "Moderate",
-      "1mo_change": 11.05
+      "level": 20.0,
+      "classification": "Elevated",
+      "1mo_change": 22.77
     },
     "Gold (GLD)": {
       "price": 369.46,
@@ -163,11 +163,11 @@
       "1mo": 2.63
     },
     "Bitcoin": {
-      "price": 60040.54,
-      "1mo": -20.82
+      "price": 59333.8,
+      "1mo": -20.19
     },
     "yield_curve": {
-      "spread": 0.541,
+      "spread": 0.6,
       "inverted": false
     }
   },
@@ -183,11 +183,11 @@
       "mom_change": -3.5
     },
     "fear_greed": {
-      "score": 25.5,
+      "score": 25.6,
       "rating": "fear",
-      "previous": 25.9,
-      "1w_ago": 37.6,
-      "1m_ago": 59.0
+      "previous": 25.5,
+      "1w_ago": 31.6,
+      "1m_ago": 60.9
     },
     "saving_rate": {
       "current": 3.0,
@@ -208,22 +208,22 @@
   },
   "bond_signals": {
     "yield_curve": {
-      "two_year": 4.163,
-      "ten_year": 4.392,
-      "spread": 0.229,
-      "date": "2026-06-25",
+      "two_year": 4.225,
+      "ten_year": 4.451,
+      "spread": 0.226,
+      "date": "2026-06-26",
       "assessment": "Flat \u2014 caution"
     },
     "credit_spreads": {
       "current_bps": 292.0,
-      "date": "2026-06-25",
+      "date": "2026-06-26",
       "assessment": "Tight (292bps) \u2014 bullish"
     },
     "ten_year": {
-      "current": 4.392,
-      "prev": 4.392,
+      "current": 4.451,
+      "prev": 4.451,
       "change_bps": 0.0,
-      "date": "2026-06-25",
+      "date": "2026-06-26",
       "assessment": "Elevated \u2014 bearish"
     },
     "scores": {
@@ -243,12 +243,12 @@
     "headlines": []
   },
   "verdict": {
-    "environment": "Risk-On",
-    "positioning": "Aggressive",
-    "score": 3,
+    "environment": "Mixed",
+    "positioning": "Neutral",
+    "score": 1,
     "signals": {
-      "bullish": 4,
-      "bearish": 1
+      "bullish": 3,
+      "bearish": 2
     },
     "specific": null,
     "watch": "Next FOMC meeting & CPI release"
