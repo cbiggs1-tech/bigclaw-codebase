@@ -441,7 +441,10 @@ def build_state_context(state, total_value, market, news, journal, peer_returns,
     _iwm = market.get('IWM', {}); _spy = market.get('SPY', {})
     _reg = []
     if _vix.get('price') is not None:
-        _reg.append(f"  VIX {_vix['price']:.1f}  (5d {_vix.get('ret_5d') or 0:+.0f}%, 30d {_vix.get('ret_30d') or 0:+.0f}%) - vol/fear gauge")
+        _vx = _vix['price']
+        _vband = ("CALM" if _vx < 15 else "NORMAL" if _vx < 22 else "ELEVATED"
+                  if _vx < 25 else "HIGH" if _vx < 30 else "EXTREME")
+        _reg.append(f"  VIX {_vx:.1f} [{_vband}]  (last-yr median ~17, 75th pct ~19; concern threshold 22; 5d {_vix.get('ret_5d') or 0:+.0f}%, 30d {_vix.get('ret_30d') or 0:+.0f}%)")
     if _hyg.get('ret_30d') is not None and _lqd.get('ret_30d') is not None:
         _reg.append(f"  Credit: HY(HYG) 30d {_hyg['ret_30d']:+.2f}% vs IG(LQD) 30d {_lqd['ret_30d']:+.2f}% - HY leading = risk-on credit")
     if _tnx.get('price') is not None:
@@ -728,7 +731,7 @@ thesis, but you also do not churn out of a trade you would still buy.)
 
 NEWS-DRIVEN DISCOVERY: your candidates are the NEWS-MAKERS - the names being talked about in the last 24h - plus your held positions and watchlist. Every entry MUST rest on a citable, still-playing-out news catalyst. A stock moving on price action alone with no news behind it is a bandwagon, not a thesis - do NOT chase it, no matter how strong the chart looks. Run the news-makers hard through gap-analysis (is the move already priced in? is the catalyst still live or already spent?). If the news set is thin and nothing clears your bar, holding cash is the correct call - do NOT manufacture a trade from price momentum to avoid sitting in cash.
 
-VOLATILITY REGIME: the MACRO REGIME block shows VIX. Use it to size your aggression this cycle. A LOW or falling VIX is a calmer tape where news-backed setups tend to follow through - you can size up modestly and act with more confidence. A HIGH or spiking VIX means whipsaw and failed moves - throttle back: raise the conviction bar, size down, favor cash. Let the volatility regime, not just the individual setup, dial how aggressive you are - but every position still needs its own news-backed catalyst.
+VOLATILITY REGIME (judge VIX by its ABSOLUTE level, calibrated to the last year of data - not by the percentage it moved): over the past 252 trading days VIX averaged ~18 with a median of 17 and a 75th percentile of 19, and forward SPY returns from a VIX of 18-21 were actually POSITIVE with drop odds at the ~11% base rate. So the high teens up to ~21 are NORMAL for this tape - do NOT throttle down or favor cash there, and a rising VIX that is still under 22 is NOT a reason to size down. The empirical THRESHOLD OF CONCERN is VIX 22: that is where the probability of a >3% SPY drop in the next 10 days jumps to ~40% (about 4x the base rate). Bands: under ~22 = NORMAL, trade and size normally (a VIX of 18-21 is the default day-trader environment, not a warning); 22-25 = ELEVATED (the real concern threshold) - modestly size down, tighten stops, raise the conviction bar; 25-30 = HIGH - go defensive and size down meaningfully; above ~30 = EXTREME (hit only once last year) - favor cash. Let the absolute level dial your aggression - and every position still needs its own news-backed catalyst.
 
 YOU MUST PRODUCE STRICT JSON. NO PROSE OUTSIDE THE JSON BLOCK.
 

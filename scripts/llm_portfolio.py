@@ -331,7 +331,10 @@ def build_state_context(state, total_value, market, news, journal, peer_returns,
     _iwm = market.get('IWM', {}); _spy = market.get('SPY', {})
     _reg = []
     if _vix.get('price') is not None:
-        _reg.append(f"  VIX {_vix['price']:.1f}  (5d {_vix.get('ret_5d') or 0:+.0f}%, 30d {_vix.get('ret_30d') or 0:+.0f}%) - vol/fear gauge")
+        _vx = _vix['price']
+        _vband = ("CALM" if _vx < 15 else "NORMAL" if _vx < 22 else "ELEVATED"
+                  if _vx < 25 else "HIGH" if _vx < 30 else "EXTREME")
+        _reg.append(f"  VIX {_vx:.1f} [{_vband}]  (last-yr median ~17, 75th pct ~19; concern threshold 22; 5d {_vix.get('ret_5d') or 0:+.0f}%, 30d {_vix.get('ret_30d') or 0:+.0f}%)")
     if _hyg.get('ret_30d') is not None and _lqd.get('ret_30d') is not None:
         _reg.append(f"  Credit: HY(HYG) 30d {_hyg['ret_30d']:+.2f}% vs IG(LQD) 30d {_lqd['ret_30d']:+.2f}% - HY leading = risk-on credit")
     if _tnx.get('price') is not None:
@@ -500,7 +503,7 @@ here includes time-in-market, not just drawdown depth. Reject the bad quadrant: 
 large downside. A low-conviction position must clear a meaningful edge over holding a broad index or
 cash, or you wait. Holding cash is a valid position when nothing clears that bar.
 
-MACRO REGIME READ: the MACRO REGIME block is your risk-on/risk-off gauge - yield-curve direction (10y), credit spreads (HY vs IG), volatility (VIX), offense/defense (XLY vs XLP), breadth (IWM vs SPY), and recent sector rotation. Use it to set aggression and sector tilt for the DAYS AHEAD: in a calm risk-on tape, press into the sectors and factors with fresh momentum; when VIX spikes or credit/breadth deteriorate, size down and favor defensives or cash. Read where leadership is rotating and get in early on the move that is starting - do not chase the sector that already ran.
+MACRO REGIME READ: the MACRO REGIME block is your risk-on/risk-off gauge - yield-curve direction (10y), credit spreads (HY vs IG), volatility (VIX), offense/defense (XLY vs XLP), breadth (IWM vs SPY), and recent sector rotation. Use it to set aggression and sector tilt for the DAYS AHEAD: in a calm risk-on tape, press into the sectors and factors with fresh momentum. Judge VIX by its ABSOLUTE level (calibrated to the last year: median ~17, 75th pct ~19, and forward SPY returns from a VIX of 18-21 were positive) - the high teens up to ~21 are NORMAL, so do not retreat just because VIX is in the high teens or rose. The empirical threshold of concern is VIX 22, where the odds of a >3% SPY drop in 10 days jump to ~40% (4x base rate). Only at VIX 22+ or on material credit/breadth deterioration should you size down and favor defensives or cash. Read where leadership is rotating and get in early on the move that is starting - do not chase the sector that already ran.
 
 EVENT RISK - DO NOT OPEN INTO A BINARY EVENT: before opening any NEW position, check the news feed for a known binary event in the next 1-2 trading days that could invalidate the thesis - an FOMC decision, a CPI or jobs print, or upcoming earnings for the name you are considering. If one is imminent, do NOT open fresh exposure into it; wait for the event to clear and the new regime to be readable, then enter. This applies to OPENING new positions ONLY - whether to trim an existing position ahead of an event is your judgment call, but do not churn a working position just to dodge a scheduled print. The mistake to avoid is establishing brand-new exposure hours before a coin-flip that can break the thesis immediately, as happened buying XLF into a hawkish FOMC on 2026-06-17.
 
