@@ -61,6 +61,7 @@ FAILURE_FLAG = Path.home() / "bigclaw-ai" / "logs" / "LLM_COMANDO_FAILED.flag"
 DRAWDOWN_FLAG = Path.home() / "bigclaw-ai" / "logs" / "LLM_COMANDO_DRAWDOWN_FREEZE.flag"
 LLM_LOG = Path.home() / "bigclaw-ai" / "logs" / "llm_calls.jsonl"
 JOURNAL = Path.home() / "bigclaw-ai" / "data" / "llm_comando_journal.jsonl"
+PASSED = Path.home() / "bigclaw-ai" / "data" / "llm_comando_passed.jsonl"  # candidates seen-but-not-bought (refusal scorecard)
 OUTPUT_JSON = Path.home() / "bigclaw-ai" / "docs" / "data" / "llm_comando_portfolio.json"
 DECISIONS_DIR = Path.home() / "bigclaw-ai" / "data" / "llm_comando_decisions"
 DB_PATH = Path.home() / "bigclaw-ai" / "src" / "portfolios.db"
@@ -381,7 +382,75 @@ def compute_portfolio_value(state, market):
 
 
 # ---------- prompt builders ----------
-def build_state_context(state, total_value, market, news, journal, peer_returns, today_iso, candidate_snapshot=None, news_maker_counts=None, cycle_name=None):
+def log_passed_candidates(today_iso, cycle, candidate_snapshot, bought, held):
+    """Record candidates SEEN this cycle but NOT bought (and not already held), with
+    their price, so future cycles can score the real opportunity cost of refusals."""
+    try:
+        passed = []
+        for t, d in (candidate_snapshot or {}).items():
+            if t in bought or t in held:
+                continue
+            px = (d or {}).get("price")
+            if px:
+                passed.append({"ticker": t, "price": round(float(px), 2)})
+        rec = {"date": today_iso, "cycle": cycle, "passed": passed, "bought": sorted(bought)}
+        PASSED.parent.mkdir(parents=True, exist_ok=True)
+        with PASSED.open("a") as f:
+            f.write(json.dumps(rec) + "\n")
+    except Exception as e:
+        log(f"passed-log failed: {e}", "WARN")
+
+
+def build_refusal_scorecard(current_snapshot=None, lookback_days=7):
+    """Render the opportunity-cost block: of the names you saw and PASSED ON over the
+    last ~week, how many rose, the median move, and the biggest misses. The journal only
+    ever recorded trades it TOOK, so it could only learn to be more cautious; this shows
+    the cost of refusing so it can discover when its bar is too high."""
+    try:
+        if not PASSED.exists():
+            return ""
+        cutoff = (datetime.date.today() - datetime.timedelta(days=lookback_days)).isoformat()
+        seen = {}
+        for line in PASSED.read_text().splitlines():
+            try:
+                r = json.loads(line)
+            except Exception:
+                continue
+            if (r.get("date") or "") < cutoff:
+                continue
+            for p in r.get("passed", []):
+                t, px = p.get("ticker"), p.get("price")
+                if t and px and t not in seen:
+                    seen[t] = {"price": px, "date": r["date"]}
+        if not seen:
+            return ""
+        cur = dict(current_snapshot or {})
+        need = [t for t in seen if not (cur.get(t) or {}).get("price")]
+        if need:
+            cur.update(get_candidate_snapshot(need))
+        rows = []
+        for t, info in seen.items():
+            cp = (cur.get(t) or {}).get("price")
+            if cp and info["price"]:
+                rows.append((t, info["date"], (cp / info["price"] - 1) * 100))
+        if not rows:
+            return ""
+        rows.sort(key=lambda x: -x[2])
+        import statistics as _st
+        up = sum(1 for _, _, rr in rows if rr > 0)
+        med = _st.median(rr for _, _, rr in rows)
+        out = [f"\n## REFUSAL SCORECARD - the opportunity cost of NOT buying (last ~{lookback_days} days)"]
+        out.append(f"  Of {len(rows)} names you saw and PASSED ON, {up} ({up*100//len(rows)}%) are UP since; median move {med:+.1f}%.")
+        out.append("  Biggest misses (you passed, it ran): " + ", ".join(f"{t} {rr:+.1f}% (passed {d[5:]})" for t, d, rr in rows[:6]))
+        if len(rows) >= 5 and up / len(rows) >= 0.6 and med >= 1.0:
+            out.append("  >> Most names you passed kept RISING - your bar is likely TOO HIGH and cash is bleeding while real setups run. Lower the bar: deploy into fresh, news-backed names instead of waiting for a perfect not-yet-moved catalyst that does not exist.")
+        return "\n".join(out)
+    except Exception as e:
+        log(f"refusal-scorecard failed: {e}", "WARN")
+        return ""
+
+
+def build_state_context(state, total_value, market, news, journal, peer_returns, today_iso, candidate_snapshot=None, news_maker_counts=None, cycle_name=None, refusal_scorecard=None):
     lines = []
     lines.append(f"## TODAY: {today_iso}")
     if cycle_name:
@@ -461,6 +530,9 @@ def build_state_context(state, total_value, market, news, journal, peer_returns,
         lines.append('')
         lines.append('## MACRO REGIME (cycle tells):')
         lines.extend(_reg)
+
+    if refusal_scorecard:
+        lines.append(refusal_scorecard)
 
     if candidate_snapshot:
         # CANDIDATE STRENGTH RANKING: the "compete" view. Held positions ranked
@@ -566,6 +638,16 @@ case FOR the trade. Be aggressive. Look for asymmetric upside. Find what other t
 be missing. Identify catalysts, technical setups, sentiment shifts, sector momentum, or
 mean-reversion opportunities.
 
+DEPLOYMENT MANDATE (this is not optional cheerleading - it is symmetric to the Bear's mandatory
+reject-test). Cash is NOT a safe default: in this ~4% inflation environment, with zero interest on
+idle account cash, sitting in cash is a guaranteed real loss of ~4%/year. So each cycle you MUST
+surface the single best deployable setup you can find among the candidates, ranked, each with its
+reward-to-risk - and you must NOT pre-reject a name just because it already reacted to its news (a
+live catalyst always moves the stock first; that is normal, and a fresh catalyst with room left to
+run is exactly what you are hunting). Only if you genuinely cannot find ANY name whose expected edge
+beats a guaranteed real cash loss do you conclude "cash beats everything today" - and then you must
+name precisely what would have to change for you to deploy.
+
 ANTI-CHEATING:
 - Your training data ends January 2026. Today is provided in the data. Trust ONLY the data feed.
 - Every factual claim must be cited from the data feed. Saying "Apple announced X" without it
@@ -625,15 +707,22 @@ ALREADY-PRICED-IN test and state the result explicitly:
   (1) FRESHNESS - When did this catalyst become public? An MOU signed yesterday, an oil
       move that already happened, a headline from a prior session - the market has already
       seen it. A catalyst the tape has digested is a day-trader's enemy, not a tailwind.
-  (2) PRICE REACTION - Has the stock already moved in the catalyst's direction? Check the
-      market_snapshot and Candidate Strength Ranking. If price has already run on this news,
-      the edge is gone: entering now is CHASING the reaction, not trading the catalyst.
-      Say so, and argue reject.
+  (2) ROOM TO RUN (not merely "did it move") - A real catalyst ALWAYS moves the stock
+      immediately; you only see the news after it prints, so "the stock already reacted" is true
+      of nearly every live catalyst and is NOT by itself a reason to reject - rejecting on that
+      basis alone would reject every news trade ever made. The real question is whether the move
+      has EXHAUSTED the opportunity or whether there is still ROOM TO RUN. A strong, fresh catalyst
+      that moved a stock 2-5% frequently continues over the next days (post-news drift is a real,
+      documented edge). Argue reject ONLY if the move has plausibly OVERSHOT what the catalyst is
+      worth (e.g. a +15% parabolic pop on a minor or procedural item) or the catalyst is genuinely
+      SPENT (a one-day event with nothing left to play out). "It moved 3% on real fresh news" is a
+      continuation setup, not a disqualification.
   (3) DURABILITY - Is the driver durable or reflexive? Catalysts that depend on an unstable
       situation holding (war-scene oil spikes, headline-driven macro moves) can reverse on
       the next headline. Do NOT extrapolate a fluid situation forward; discount it.
-A thesis that is true but already priced in, or that rests on a reflexive driver, has a
-DISQUALIFYING weakness - argue the trade should be rejected, not taken late.
+A thesis whose move has plausibly OVERSHOT its catalyst, or that rests on a spent or purely
+reflexive driver, has a DISQUALIFYING weakness. But a fresh, strong catalyst that still has room to
+run is a BUY, not a chase - do not reject it merely because the stock has already reacted.
 
 ANTI-CHEATING:
 - Your training data ends January 2026. Today is provided in the data. Trust ONLY the data feed.
@@ -724,12 +813,23 @@ never a timer, and you NEVER churn out of a name you would still buy today.
 
 A name you exit is eligible for fresh re-entry if its edge reappears - re-judged from scratch; no
 loyalty to a position and no aversion to one you just sold. Reject the bad quadrant: small reward
-for high risk, even if it might close green. A low-conviction trade must beat the money-market rate
-or you hold cash instead. Cutting losses fast is good. Holding cash is a valid position when nothing
-clears the bar. (Short-window Comando style - NOT buy-and-hold: you do not ride drawdowns for a long
-thesis, but you also do not churn out of a trade you would still buy.)
+for high risk, even if it might close green.
 
-NEWS-DRIVEN DISCOVERY: your candidates are the NEWS-MAKERS - the names being talked about in the last 24h - plus your held positions and watchlist. Every entry MUST rest on a citable, still-playing-out news catalyst. A stock moving on price action alone with no news behind it is a bandwagon, not a thesis - do NOT chase it, no matter how strong the chart looks. Run the news-makers hard through gap-analysis (is the move already priced in? is the catalyst still live or already spent?). If the news set is thin and nothing clears your bar, holding cash is the correct call - do NOT manufacture a trade from price momentum to avoid sitting in cash.
+CASH IS NOT FREE - IT IS A SLOW, CERTAIN LOSS. We are in a ~4% inflation environment and this paper
+account earns ZERO interest on idle cash, so every day parked in cash loses ~4%/year of real
+purchasing power with certainty - a guaranteed bleed, not a safe harbor. That makes your hurdle to
+deploy LOW, not high: a trade does not have to be excellent, it only needs a positive expected edge
+that beats a guaranteed real loss. Flip the default - holding cash is the EXCEPTION you must justify
+("every name I can see right now is genuinely negative-expectancy"), not the comfortable resting
+state. Sitting 80-90% cash for weeks in a flat-to-up or rotating tape is a FAILING posture: the
+skill this book exists to test is harvesting the rotation (when one sector is clearly leading,
+something there is buyable), not avoiding every possible loss. Cut losing trades fast - but parking
+in cash to dodge the work of finding the next edge is itself the most reliable way to lose. A
+low-conviction trade still must clear a positive expected edge, but "beat a guaranteed -4% real" is
+a LOW bar, not a high one. (Short-window Comando style - NOT buy-and-hold: you do not ride drawdowns
+for a long thesis, but you also do not churn out of a trade you would still buy.)
+
+NEWS-DRIVEN DISCOVERY: your candidates are the NEWS-MAKERS - the names being talked about in the last 24h - plus your held positions and watchlist. Every entry MUST rest on a citable, still-playing-out news catalyst. A stock moving on price action alone with no news behind it is a bandwagon, not a thesis - do NOT chase it, no matter how strong the chart looks. Run the news-makers through gap-analysis - but the test is ROOM TO RUN, not "did it already move" (a live catalyst always moves the stock first; that is normal continuation, not a reason to pass). If the news set is genuinely thin and every name is negative-expectancy, cash is acceptable for that one cycle - but remember cash is a guaranteed ~4%/year real loss, so "nothing to do" is a HIGH bar you must clear, not an easy default. Do not manufacture a trade from pure price momentum with no news - but do not refuse a fresh news-backed setup just because the stock already reacted.
 
 VOLATILITY REGIME (judge VIX by its ABSOLUTE level, calibrated to the last year of data - not by the percentage it moved): over the past 252 trading days VIX averaged ~18 with a median of 17 and a 75th percentile of 19, and forward SPY returns from a VIX of 18-21 were actually POSITIVE with drop odds at the ~11% base rate. So the high teens up to ~21 are NORMAL for this tape - do NOT throttle down or favor cash there, and a rising VIX that is still under 22 is NOT a reason to size down. The empirical THRESHOLD OF CONCERN is VIX 22: that is where the probability of a >3% SPY drop in the next 10 days jumps to ~40% (about 4x the base rate). Bands: under ~22 = NORMAL, trade and size normally (a VIX of 18-21 is the default day-trader environment, not a warning); 22-25 = ELEVATED (the real concern threshold) - modestly size down, tighten stops, raise the conviction bar; 25-30 = HIGH - go defensive and size down meaningfully; above ~30 = EXTREME (hit only once last year) - favor cash. Let the absolute level dial your aggression - and every position still needs its own news-backed catalyst.
 
@@ -739,7 +839,7 @@ OUTPUT SCHEMA:
 {
   "reflection": "what your journal shows about your past performance and what you'd change",
   "market_read": "your read of next 1-5 days",
-  "gap_analysis": "what BOTH the Bull and Bear missed that affects today's decision. For each proposed entry, explicitly: is the catalyst already priced in? is the driver durable or reflexive? what would make this wrong that neither side named? This is your primary value-add - do not leave it shallow.",
+  "gap_analysis": "what BOTH the Bull and Bear missed that affects today's decision. For each proposed entry, explicitly: is there still ROOM TO RUN or has the move plausibly overshot the catalyst (note: a stock reacting to fresh news is normal and often continues - 'it already moved' alone is NOT priced-in)? is the driver durable or reflexive? what would make this wrong that neither side named? This is your primary value-add - do not leave it shallow.",
   "addresses_bear_case": "specific paragraph addressing the strongest bear counter-arguments",
   "trades": [
     {
@@ -1399,9 +1499,13 @@ def main():
 
         peer_returns = get_peer_returns()
         today_iso = datetime.date.today().isoformat()
+        refusal_scorecard = build_refusal_scorecard(candidate_snapshot)
+        if refusal_scorecard:
+            log("  Refusal scorecard rendered (opportunity-cost feedback)")
         state_ctx = build_state_context(state, total_value, market, news, journal,
                                          peer_returns, today_iso, candidate_snapshot=candidate_snapshot,
-                                         news_maker_counts=news_maker_counts, cycle_name=args.cycle)
+                                         news_maker_counts=news_maker_counts, cycle_name=args.cycle,
+                                         refusal_scorecard=refusal_scorecard)
         log(f"State context: {len(state_ctx)} chars")
 
         anthropic_client = anthropic.Anthropic(api_key=secrets['ANTHROPIC_API_KEY'],
@@ -1452,6 +1556,12 @@ def main():
         executed = sum(1 for _, r in exec_results if r.get("filled_qty"))
         skipped = sum(1 for _, r in exec_results if "skipped" in r or "error" in r)
         log(f"Executed: {executed}  skipped/errored: {skipped}")
+
+        # Record what we SAW but did NOT buy, for the refusal scorecard (live runs only)
+        if not args.dry_run:
+            _bought = {t.get("ticker") for t, r in exec_results if r.get("filled_qty")}
+            _held = {h["ticker"] for h in state["holdings"]}
+            log_passed_candidates(today_iso, args.cycle, candidate_snapshot, _bought, _held)
 
         # Validate Judge-emitted intraday triggers BEFORE building the journal
         # entry. The dropped list goes into the entry so tomorrow's Judge sees
