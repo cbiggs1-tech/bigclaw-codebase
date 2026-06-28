@@ -62,6 +62,7 @@ DRAWDOWN_FLAG = Path.home() / "bigclaw-ai" / "logs" / "LLM_COMANDO_DRAWDOWN_FREE
 LLM_LOG = Path.home() / "bigclaw-ai" / "logs" / "llm_calls.jsonl"
 JOURNAL = Path.home() / "bigclaw-ai" / "data" / "llm_comando_journal.jsonl"
 PASSED = Path.home() / "bigclaw-ai" / "data" / "llm_comando_passed.jsonl"  # candidates seen-but-not-bought (refusal scorecard)
+PEAKS = Path.home() / "bigclaw-ai" / "data" / "llm_comando_position_peaks.json"  # per-position high-water mark (hold scorecard)
 OUTPUT_JSON = Path.home() / "bigclaw-ai" / "docs" / "data" / "llm_comando_portfolio.json"
 DECISIONS_DIR = Path.home() / "bigclaw-ai" / "data" / "llm_comando_decisions"
 DB_PATH = Path.home() / "bigclaw-ai" / "src" / "portfolios.db"
@@ -450,7 +451,55 @@ def build_refusal_scorecard(current_snapshot=None, lookback_days=7):
         return ""
 
 
-def build_state_context(state, total_value, market, news, journal, peer_returns, today_iso, candidate_snapshot=None, news_maker_counts=None, cycle_name=None, refusal_scorecard=None):
+def update_and_render_hold_scorecard(state, candidate_snapshot, today_iso, persist=True):
+    """Track each held position's high-water-mark unrealized % and render the GIVE-BACK
+    (peak minus current). Makes a HOLD that rides a winner back down (or sits in a loser)
+    a visible, learnable cost rather than an implicit '0 sells' every cycle. Persists the
+    peaks only on live runs (persist=False on dry-runs)."""
+    try:
+        held = state.get("holdings", []) or []
+        try:
+            peaks = json.loads(PEAKS.read_text()) if PEAKS.exists() else {}
+        except Exception:
+            peaks = {}
+        rows, live = [], set()
+        for h in held:
+            t = h.get("ticker"); avg = h.get("avg_cost")
+            cp = (candidate_snapshot.get(t) or {}).get("price") if candidate_snapshot else None
+            if not t or not avg or not cp:
+                continue
+            live.add(t)
+            unreal = (cp / avg - 1) * 100
+            rec = peaks.get(t) or {"first_seen": today_iso, "peak_pct": unreal, "peak_date": today_iso}
+            if unreal > rec.get("peak_pct", unreal):
+                rec["peak_pct"] = unreal; rec["peak_date"] = today_iso
+            peaks[t] = rec
+            rows.append((t, rec["first_seen"], unreal, rec["peak_pct"], rec["peak_date"], rec["peak_pct"] - unreal))
+        if persist:
+            try:
+                peaks = {t: v for t, v in peaks.items() if t in live}  # prune closed names
+                PEAKS.parent.mkdir(parents=True, exist_ok=True)
+                PEAKS.write_text(json.dumps(peaks, indent=2))
+            except Exception as e:
+                log(f"peaks-write failed: {e}", "WARN")
+        if not rows:
+            return ""
+        out = ["\n## HOLD SCORECARD - the running cost of staying in each position (high-water mark vs now)"]
+        for t, since, unreal, peak, pkd, gb in rows:
+            tag = ""
+            if gb >= 2.0:
+                tag = (f"  >> GIVEN BACK {gb:.1f} pts from its {peak:+.1f}% peak by holding - apply the conviction "
+                       f"test hard: would you BUY {t} here today, or is this a winner you are riding back down?")
+            elif unreal <= -3.0:
+                tag = f"  >> a LOSING hold ({unreal:+.1f}%) - holding hoping for recovery is not a thesis; would you buy it here?"
+            out.append(f"  {t} held since {since[5:]}: now {unreal:+.1f}%, peaked {peak:+.1f}% ({pkd[5:]}).{tag}")
+        return "\n".join(out)
+    except Exception as e:
+        log(f"hold-scorecard failed: {e}", "WARN")
+        return ""
+
+
+def build_state_context(state, total_value, market, news, journal, peer_returns, today_iso, candidate_snapshot=None, news_maker_counts=None, cycle_name=None, refusal_scorecard=None, hold_scorecard=None):
     lines = []
     lines.append(f"## TODAY: {today_iso}")
     if cycle_name:
@@ -530,6 +579,9 @@ def build_state_context(state, total_value, market, news, journal, peer_returns,
         lines.append('')
         lines.append('## MACRO REGIME (cycle tells):')
         lines.extend(_reg)
+
+    if hold_scorecard:
+        lines.append(hold_scorecard)
 
     if refusal_scorecard:
         lines.append(refusal_scorecard)
@@ -1502,10 +1554,13 @@ def main():
         refusal_scorecard = build_refusal_scorecard(candidate_snapshot)
         if refusal_scorecard:
             log("  Refusal scorecard rendered (opportunity-cost feedback)")
+        hold_scorecard = update_and_render_hold_scorecard(state, candidate_snapshot, today_iso, persist=not args.dry_run)
+        if hold_scorecard:
+            log("  Hold scorecard rendered (give-back / hold-cost feedback)")
         state_ctx = build_state_context(state, total_value, market, news, journal,
                                          peer_returns, today_iso, candidate_snapshot=candidate_snapshot,
                                          news_maker_counts=news_maker_counts, cycle_name=args.cycle,
-                                         refusal_scorecard=refusal_scorecard)
+                                         refusal_scorecard=refusal_scorecard, hold_scorecard=hold_scorecard)
         log(f"State context: {len(state_ctx)} chars")
 
         anthropic_client = anthropic.Anthropic(api_key=secrets['ANTHROPIC_API_KEY'],
