@@ -851,7 +851,7 @@ All times Eastern unless noted.
 
 | Schedule | Job | Model | Purpose |
 |----------|-----|-------|---------|
-| Saturday 8:00 AM CT | ARK ITK Summary | Gemini Flash Lite | Runs `ark_itk_tracker.py`, tracks ARK Invest transactions |
+| Saturday 7:45 AM CT | ARK ITK Summary | Python (zero LLM) | `ark_itk_tracker.py` (system cron) generates the summary; `post_ark_itk.py` posts it to Slack natively. Migrated off the OpenClaw/Gemini-Flash-Lite agent-turn (which kept failing 'Message failed' — the agent only ever cat'd the file verbatim, so no LLM was needed) June 29 2026 |
 | Saturday 8:00 AM CT | Weekly Research Session | Claude Sonnet | Autonomous deep research into market themes and opportunities |
 | Saturday 9:00 AM CT | Candidate Screener | Python (zero LLM) + Opus 4.6 (borderline) | Discovers new candidate stocks via Finviz, filters through style gates + AI reasoning, updates `portfolio_universes.json` |
 | Saturday 9:00 AM CT | Weekly Style Compliance Audit | Gemini Flash Lite + Opus 4.6 (borderline) | Audits holdings against style gates with AI reasoning for borderline cases |
