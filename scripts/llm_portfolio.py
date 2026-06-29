@@ -538,7 +538,7 @@ OUTPUT SCHEMA:
       "rationale": "specific data-cited reasoning (which catalyst/setup/pattern)",
       "exit_thesis": "specific gain target / stop loss / time-based exit (prose, for the journal)",
       "exit_conditions": {
-        "target_pct": 2.0,              // gain target as positive number, e.g. 2.5 = +2.5%; null if none
+        "target_pct": 2.0,              // gain target (positive number). Set it to ~HALF the upside to your thesis price target, NOT the full distance: ~20% upside to the analyst PT/fair value -> target ~10% and take the money and run. The full PT is rarely hit in the commando window before the move stalls or time-exit fires; a half-target is realistic and bankable. null if none
         "stop_pct": 1.5,                // stop loss as positive number (absolute), e.g. 1.5 = -1.5%; null if none
         "time_exit_date": "YYYY-MM-DD"  // ISO date by which the position must close (days out for a short-term trade); null if no time exit
       },
@@ -741,10 +741,15 @@ def validate_and_execute(trades, state, total_value, secrets, dry_run=False):
                 side='BUY' if action == 'buy' else 'SELL',
             )
             actual_value = filled_qty * filled_price
+            # Write the computed target PRICE so the dashboard Target/Upside columns populate.
+            # Target = entry x (1 + target_pct/100); captured on the first buy of a position.
+            _tp = (tr.get('exit_conditions') or {}).get('target_pct')
+            _tgt_price = round(filled_price * (1 + _tp / 100.0), 2) if (action == 'buy' and _tp) else None
+            _tgt_src = f"LLM +{_tp:g}% target" if _tgt_price else None
             ok = record_trade(
                 state['id'], PORTFOLIO_NAME, ticker, action, filled_qty, filled_price, actual_value,
                 f"LLM-DIALECTIC: {tr.get('rationale','')[:300]}",
-                order_id=str(order.id),
+                order_id=str(order.id), target_price=_tgt_price, target_source=_tgt_src,
             )
             results.append((tr, {
                 "filled_qty": filled_qty, "filled_price": filled_price,
