@@ -242,7 +242,10 @@ def execute_close(ticker, shares, reason_str, pid, dry_run, secrets):
 
     client = get_trading_client()
     clock = client.get_clock()
-    # We accept market-closed for this script — orders queue to next open
+    if not clock.is_open and not dry_run:
+        # Market closed: a DAY order cannot fill and is canceled. Do not submit a futile
+        # order or fabricate a closure — signal not-filled so the caller leaves it open.
+        return {"market_closed": True, "filled_qty": 0, "filled_price": 0.0}
 
     if dry_run:
         return {"dry_run": True, "would_sell": f"{shares} {ticker}", "reason": reason_str}
@@ -366,6 +369,16 @@ def main():
 
             log(f"    -> CLOSING: {reason}")
             exec_result = execute_close(tk, shares, reason, pid, args.dry_run, secrets)
+
+            # Integrity gate: a closure outcome MUST reflect a real fill. If the sell did
+            # not fill (market closed, timeout/cancel, mismatch flag), leave the position
+            # OPEN and retry next run — never fabricate a -100% phantom closure (the PODD/
+            # MTUM orphan bug). dry-run is exempt (it never fills by design).
+            _filled = exec_result.get("filled_qty", 0) or 0
+            if not args.dry_run and _filled <= 0:
+                log(f"  {tk}: exit '{trigger}' fired but sell did NOT fill ({exec_result}); "
+                    f"leaving position open, no outcome recorded.", "WARN")
+                continue
 
             # Compute prediction accuracy
             target_pct = conditions.get("target_pct")
