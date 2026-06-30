@@ -503,6 +503,99 @@ def execute_trades(trades, pf_id, dry_run, secrets):
     return results
 
 
+# ---------- intraday mechanical exits (take-the-money-and-run) ----------
+def check_mechanical_exits(dry_run, secrets, channel):
+    """Every poll, sell any holding that has hit its target/stop/time exit NOW, instead of
+    waiting for the once-a-day after-close reconciler. Reuses the reconciler's trigger logic,
+    outcome format, and outcomes log (single source of truth); executes via the watcher's
+    clamped short-safe path; records a closure ONLY on a real fill (the integrity gate)."""
+    import llm_portfolio_reconciler as recon
+    sys.path.insert(0, str(Path.home() / "bigclaw-ai" / "scripts"))
+    from autonomous_trader import get_trading_client, MISMATCH_FLAG_PATH
+    from order_fill import wait_for_fill, clamp_sell_to_long
+    from trade_recorder import record_trade
+    from alpaca.trading.requests import MarketOrderRequest
+    from alpaca.trading.enums import OrderSide, TimeInForce
+
+    if MISMATCH_FLAG_PATH.exists():
+        log("mechanical exits: mismatch flag set — skipping", "WARN")
+        return
+    pf, holdings = get_portfolio_state()
+    if not pf or not holdings:
+        return
+    pid = pf["id"]
+    journal = recon.read_journal()
+    already_closed = recon.read_outcomes()
+    client = get_trading_client()
+    slack_lines = []
+    for h in holdings:
+        tk = h["ticker"]; entry = h["avg_cost"]; held = int(h["shares"])
+        if held < 1:
+            continue
+        try:
+            current = float(yf.Ticker(tk).fast_info["lastPrice"])
+        except Exception as e:
+            log(f"  exit-check {tk}: price fail {e}", "WARN")
+            continue
+        origin_date, source_trade = recon.find_origin_trade(journal, tk)
+        if source_trade is None:
+            continue
+        if (origin_date, tk) in already_closed:
+            continue
+        conditions = source_trade.get("exit_conditions")
+        if not conditions:
+            continue  # prose-only: leave to the after-close reconciler (it LLM-extracts)
+        try:
+            d0 = datetime.date.fromisoformat(origin_date)
+            days_held = (datetime.date.today() - d0).days
+        except Exception:
+            days_held = None
+        trigger, reason = recon.evaluate_triggers(entry, current, days_held, conditions)
+        if trigger is None:
+            continue
+        log(f"  MECHANICAL EXIT {tk}: {reason} (entry ${entry:.2f} -> ${current:.2f})")
+        if dry_run:
+            slack_lines.append(f"  - [DRY] {tk}: {trigger} - {reason}")
+            continue
+        bk = clamp_sell_to_long(client, tk, held, allow_short=False)
+        if bk <= 0:
+            log(f"  exit {tk}: not long at Alpaca — skip", "WARN")
+            continue
+        try:
+            order = client.submit_order(MarketOrderRequest(
+                symbol=tk, qty=int(bk), side=OrderSide.SELL, time_in_force=TimeInForce.DAY))
+            filled_qty, filled_price = wait_for_fill(
+                client, order, int(bk), None, ticker=tk, pname=PORTFOLIO_NAME, side="SELL")
+        except Exception as e:
+            log(f"  exit {tk}: order error {e}", "WARN")
+            continue
+        # Integrity gate: record a closure ONLY if the sell actually filled.
+        if int(filled_qty or 0) <= 0:
+            log(f"  exit {tk}: '{trigger}' fired but did NOT fill — leaving open to retry", "WARN")
+            continue
+        value = filled_qty * filled_price
+        record_trade(pid, PORTFOLIO_NAME, tk, "sell", filled_qty, filled_price, value,
+                     f"LLM-WATCHER-EXIT: {reason}", order_id=str(order.id))
+        exec_result = {"filled_qty": filled_qty, "filled_price": filled_price,
+                       "value": value, "order_id": str(order.id)}
+        outcome = recon.build_outcome(origin_date, tk, filled_qty, entry, current, days_held,
+                                      trigger, reason, conditions, source_trade, exec_result,
+                                      dry_run, source="watcher")
+        recon.append_outcome(outcome)
+        already_closed.add((origin_date, tk))
+        ok = "OK" if outcome["predicted_correctly"] else "X"
+        slack_lines.append(f"  - {tk}: {trigger} - ${entry:.2f} -> ${filled_price:.2f} "
+                           f"({outcome['realized_pct']:+.2f}%, {days_held}d) [{ok}]")
+    if slack_lines:
+        head = ":running: *Intraday Exit - take-the-money-and-run*" if not dry_run \
+            else ":running: *[DRY] Intraday Exit check*"
+        try:
+            WebClient(token=secrets['SLACK_BOT_TOKEN']).chat_postMessage(
+                channel=channel, text=head + "\n" + "\n".join(slack_lines))
+        except Exception as e:
+            log(f"exit slack failed: {e}", "WARN")
+
+
 # ---------- main ----------
 import sqlite3
 def main():
@@ -519,19 +612,27 @@ def main():
                 write_failure_flag(f"missing secret: {k}")
                 sys.exit(1)
 
+        # Market hours gate (first, so the mechanical-exit check below runs in-hours)
+        sys.path.insert(0, str(Path.home() / "bigclaw-ai" / "scripts"))
+        from autonomous_trader import get_trading_client
+        client = get_trading_client()
+        if not client.get_clock().is_open and not args.dry_run:
+            return  # quiet exit; cron fires every 5 min
+
+        # MECHANICAL EXIT CHECK - runs EVERY poll, independent of pending triggers.
+        # Intraday take-the-money-and-run: book a position the moment it hits its target/
+        # stop/time exit, instead of waiting for the once-a-day after-close reconciler.
+        try:
+            check_mechanical_exits(args.dry_run, secrets, args.channel)
+        except Exception as e:
+            log(f"mechanical exit check error: {e}", "WARN")
+
         state = load_state()
         if not state.get("triggers"):
             return  # nothing armed
         if state["fires_today"] >= state.get("max_fires", MAX_FIRES_PER_DAY):
             log(f"daily fire budget exhausted ({state['fires_today']}/{state.get('max_fires')})")
             return
-
-        # Market hours gate
-        sys.path.insert(0, str(Path.home() / "bigclaw-ai" / "scripts"))
-        from autonomous_trader import get_trading_client
-        client = get_trading_client()
-        if not client.get_clock().is_open and not args.dry_run:
-            return  # quiet exit; cron fires every 5 min
 
         # PRE-FLIGHT: invalidate sell-intent price triggers referencing positions we no longer hold.
         # Catches the case where an earlier trigger fire (or the morning script or manual action)

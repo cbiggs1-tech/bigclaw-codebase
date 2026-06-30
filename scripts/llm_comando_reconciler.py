@@ -227,6 +227,50 @@ def evaluate_triggers(entry_price, current_price, days_held, conditions):
     return (None, None)
 
 
+# ---------- outcome record (shared by the after-close reconciler and the intraday watcher) ----------
+def compute_predicted_correctly(trigger, pct, target_pct):
+    if trigger == "target_hit":
+        return True
+    if trigger == "stop_hit":
+        return False
+    if trigger == "time_exit":
+        if target_pct is not None and pct >= 0:
+            return pct >= target_pct * 0.5  # booked at least half the target
+        return False
+    return None
+
+
+def build_outcome(origin_date, ticker, shares, entry_price, current, days_held,
+                  trigger, reason, conditions, source_trade, exec_result, dry_run,
+                  source="reconciler"):
+    """One closure outcome record. Single source of truth for the learning log, used by
+    both reconciler.main() (after-close) and the watcher's intraday exit check."""
+    exit_price = exec_result.get("filled_price", current)
+    pct = (current / entry_price - 1) * 100
+    return {
+        "ts": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "origin_date": origin_date,
+        "close_date": datetime.date.today().isoformat(),
+        "ticker": ticker,
+        "shares": shares,
+        "entry_price": entry_price,
+        "exit_price": exit_price,
+        "realized_pct": (exit_price / entry_price - 1) * 100,
+        "days_held": days_held,
+        "exit_trigger": trigger,
+        "exit_reason": reason,
+        "exit_conditions_used": conditions,
+        "predicted_correctly": compute_predicted_correctly(trigger, pct, conditions.get("target_pct")),
+        "thesis_type": source_trade.get("thesis_type"),
+        "confidence": source_trade.get("confidence"),
+        "original_rationale": (source_trade.get("rationale") or "")[:500],
+        "original_exit_thesis": (source_trade.get("exit_thesis") or "")[:500],
+        "exec_result": exec_result,
+        "dry_run": dry_run,
+        "source": source,
+    }
+
+
 # ---------- close execution ----------
 def execute_close(ticker, shares, reason_str, pid, dry_run, secrets):
     """Submit SELL via Alpaca; record via canonical record_trade. Returns result dict."""
@@ -380,42 +424,10 @@ def main():
                     f"leaving position open, no outcome recorded.", "WARN")
                 continue
 
-            # Compute prediction accuracy
-            target_pct = conditions.get("target_pct")
-            stop_pct = conditions.get("stop_pct")
-            predicted_correctly = None
-            if trigger == "target_hit":
-                predicted_correctly = True
-            elif trigger == "stop_hit":
-                predicted_correctly = False
-            elif trigger == "time_exit":
-                # time exit -> compare actual to target / stop
-                if target_pct is not None and pct >= 0:
-                    predicted_correctly = (pct >= target_pct * 0.5)  # at least half target
-                else:
-                    predicted_correctly = False
-
-            outcome = {
-                "ts": datetime.datetime.now(datetime.timezone.utc).isoformat(),
-                "origin_date": origin_date,
-                "close_date": datetime.date.today().isoformat(),
-                "ticker": tk,
-                "shares": shares,
-                "entry_price": entry_price,
-                "exit_price": exec_result.get("filled_price", current),
-                "realized_pct": (exec_result.get("filled_price", current) / entry_price - 1) * 100,
-                "days_held": days_held,
-                "exit_trigger": trigger,
-                "exit_reason": reason,
-                "exit_conditions_used": conditions,
-                "predicted_correctly": predicted_correctly,
-                "thesis_type": source_trade.get("thesis_type"),
-                "confidence": source_trade.get("confidence"),
-                "original_rationale": (source_trade.get("rationale") or "")[:500],
-                "original_exit_thesis": (source_trade.get("exit_thesis") or "")[:500],
-                "exec_result": exec_result,
-                "dry_run": args.dry_run,
-            }
+            outcome = build_outcome(origin_date, tk, shares, entry_price, current,
+                                    days_held, trigger, reason, conditions, source_trade,
+                                    exec_result, args.dry_run, source="reconciler")
+            predicted_correctly = outcome["predicted_correctly"]
             if not args.dry_run:
                 append_outcome(outcome)
             actions.append(outcome)
