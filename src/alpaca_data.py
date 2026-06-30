@@ -41,7 +41,7 @@ def get_extended_hours_prices(tickers: list[str]) -> dict[str, dict]:
         Dict of ticker -> {price, pre_market, post_market, is_extended}
     """
     # BRK-B is not supported by Alpaca — fetch via yfinance and exclude from Alpaca request
-    YFINANCE_ONLY = {"BRK-B", "BRK/B"}
+    YFINANCE_ONLY = {"BRK-B", "BRK/B", "AKO-B", "AKO/B"}  # foreign/class-B ADRs Alpaca rejects
     yf_tickers = [t for t in tickers if t in YFINANCE_ONLY]
     alpaca_tickers = [t for t in tickers if t not in YFINANCE_ONLY]
 
