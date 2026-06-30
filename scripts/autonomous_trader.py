@@ -778,6 +778,144 @@ def check_concentration(client, dry_run=False):
 
 
 
+def plan_portfolio(pid, pname, starting, signal_map, portfolio_signals, universes):
+    """Best-in-class plan (to_sell, to_buy, target) for ONE portfolio. SINGLE SOURCE OF
+    TRUTH shared by the live trader (autonomous_trader) and the dashboard planned-actions
+    panel (build_planned_actions). Applies the portfolio universe, the style gate, and
+    target-price discipline. Pure planning: reads holdings/cash, performs NO execution
+    and NO writes."""
+    # 1. Get current non-SGOV holdings
+    conn = db_conn()
+    c = conn.cursor()
+    c.execute("SELECT ticker, shares, avg_cost FROM holdings WHERE portfolio_id = ? AND shares > 0", (pid,))
+    current_holdings = c.fetchall()
+    conn.close()
+
+    held_map = {}  # ticker -> {shares, avg_cost}
+    for ticker, shares, avg_cost in current_holdings:
+        if ticker == MONEY_MARKET_TICKER:
+            continue
+        held_map[ticker] = {"shares": int(shares), "avg_cost": avg_cost}
+
+    # 2. Score ALL candidates: held + universe
+    universe = universes.get(pname, {})
+    if isinstance(universe, dict):
+        allowed = set(universe.get("holdings", []) + universe.get("candidates", []))
+    else:
+        allowed = set(universe)
+
+    port_sigs = portfolio_signals.get(pname, {})
+    all_scored = {}
+
+    # Score held stocks
+    for ticker, info in held_map.items():
+        if ticker in port_sigs:
+            score = port_sigs[ticker].get("score", 0)
+        else:
+            sig = signal_map.get(ticker)
+            score = sig.get("score", 0) if sig else 0
+        all_scored[ticker] = {"ticker": ticker, "score": score, "held": True,
+                              "shares": info["shares"], "avg_cost": info["avg_cost"]}
+
+    # Score universe candidates (not already held)
+    for ticker in allowed:
+        if ticker in all_scored or ticker == MONEY_MARKET_TICKER:
+            continue
+        if ticker in port_sigs:
+            score = port_sigs[ticker].get("score", 0)
+        else:
+            sig = signal_map.get(ticker)
+            if not sig:
+                continue
+            score = sig.get("score", 0)
+        # Style gate check — only for candidates, not existing holdings
+        gate_info = signal_map.get(ticker, {}).get("info")
+        gate_result = passes_style_gate(ticker, pname, gate_info)
+        if not gate_result["pass"]:
+            continue
+        all_scored[ticker] = {"ticker": ticker, "score": score, "held": False,
+                              "shares": 0, "avg_cost": 0}
+
+    # 3. Rank by score — top MAX_HOLDINGS are the target portfolio
+    ranked = sorted(all_scored.values(), key=lambda x: x["score"], reverse=True)
+    target = ranked[:MAX_HOLDINGS]
+    target_tickers = {s["ticker"] for s in target}
+
+    logger.info(f"{pname}: {len(held_map)} held, {len(all_scored)} scored, target={[s['ticker']+'('+str(s['score'])+')' for s in target[:5]]}...")
+
+    # 4. Determine sells: held but NOT in target
+    # If TARGET_PRICE_DISCIPLINE is ON for this portfolio, replace the
+    # default "not in top 10" rule with the discipline triggers.
+    to_sell = []
+    if TARGET_PRICE_DISCIPLINE.get(pname, False):
+        # Target-price discipline mode: hold through score variations.
+        # Look up target_price + portfolio_value once; eval each holding.
+        conn = db_conn()
+        c = conn.cursor()
+        c.execute(
+            "SELECT ticker, shares, target_price FROM holdings "
+            "WHERE portfolio_id = ? AND shares > 0",
+            (pid,),
+        )
+        held_with_targets = {row[0]: (int(row[1]), row[2]) for row in c.fetchall()}
+        conn.close()
+
+        # Compute portfolio total value (cash + holdings × current price)
+        portfolio_total_value = 0
+        cash_now = get_verified_cash(pid)
+        portfolio_total_value += cash_now
+        for ticker_h, (shr_h, _) in held_with_targets.items():
+            sig_h = signal_map.get(ticker_h, {})
+            price_h = sig_h.get("price", 0)
+            portfolio_total_value += shr_h * (price_h if price_h > 0 else 0)
+
+        for s in ranked:
+            if not s["held"]:
+                continue
+            shares_h, target_price_h = held_with_targets.get(s["ticker"], (0, None))
+            sig_h = signal_map.get(s["ticker"], {})
+            current_price = sig_h.get("price", 0) if sig_h else 0
+            if current_price <= 0:
+                continue  # cant evaluate without price
+            should_sell, reason = evaluate_target_discipline_sell(
+                pname, s["ticker"], current_price, target_price_h,
+                shares_h, portfolio_total_value,
+                fwd_eps_revision_pct=None,  # TODO: wire forward EPS check
+            )
+            if should_sell:
+                to_sell.append({**s, "discipline_reason": reason})
+                logger.info(
+                    f"{pname}: DISCIPLINE-SELL {s['ticker']} — {reason}"
+                )
+        logger.info(
+            f"{pname}: target-price discipline ON — "
+            f"{len(to_sell)} sells from {len(held_with_targets)} holdings"
+        )
+    else:
+        # Default behavior: sell anything held but not in today's top 10
+        for s in ranked:
+            if s["held"] and s["ticker"] not in target_tickers:
+                to_sell.append(s)
+    to_sell.sort(key=lambda x: x["score"])  # Sell weakest first
+
+    # 5. Determine buys: in target but NOT held (or held but underweight)
+    to_buy = []
+    for s in target:
+        if s["score"] < SCORE_BUY_MINIMUM:
+            continue  # Don't deploy cash into stocks scoring below minimum
+        if not s["held"]:
+            to_buy.append(s)
+        elif s["held"]:
+            # Check if underweight — use market price from signals, fall back to cost basis
+            sig_price = signal_map.get(s["ticker"], {}).get("price", 0)
+            existing_val = s["shares"] * (sig_price if sig_price > 0 else s["avg_cost"])
+            target_alloc = starting * (0.12 if s["score"] >= 5 else 0.10 if s["score"] >= 3 else 0.08)
+            if existing_val < target_alloc * 0.80:  # More than 20% underweight
+                to_buy.append({**s, "is_add": True, "gap": target_alloc - existing_val})
+    to_buy.sort(key=lambda x: x["score"], reverse=True)  # Buy strongest first
+    return to_sell, to_buy, target
+
+
 def execute_trades(client, data, dry_run=False, seed_mode=False):
     """Execute trades: Phase 1 safety sells, then best-in-class optimization per portfolio."""
     logger.info("== STEP 3: Executing Trades ==")
@@ -933,135 +1071,7 @@ def execute_trades(client, data, dry_run=False, seed_mode=False):
 
         reserve = starting * MIN_CASH_RESERVE_PCT
 
-        # 1. Get current non-SGOV holdings
-        conn = db_conn()
-        c = conn.cursor()
-        c.execute("SELECT ticker, shares, avg_cost FROM holdings WHERE portfolio_id = ? AND shares > 0", (pid,))
-        current_holdings = c.fetchall()
-        conn.close()
-
-        held_map = {}  # ticker -> {shares, avg_cost}
-        for ticker, shares, avg_cost in current_holdings:
-            if ticker == MONEY_MARKET_TICKER:
-                continue
-            held_map[ticker] = {"shares": int(shares), "avg_cost": avg_cost}
-
-        # 2. Score ALL candidates: held + universe
-        universe = universes.get(pname, {})
-        if isinstance(universe, dict):
-            allowed = set(universe.get("holdings", []) + universe.get("candidates", []))
-        else:
-            allowed = set(universe)
-
-        port_sigs = portfolio_signals.get(pname, {})
-        all_scored = {}
-
-        # Score held stocks
-        for ticker, info in held_map.items():
-            if ticker in port_sigs:
-                score = port_sigs[ticker].get("score", 0)
-            else:
-                sig = signal_map.get(ticker)
-                score = sig.get("score", 0) if sig else 0
-            all_scored[ticker] = {"ticker": ticker, "score": score, "held": True,
-                                  "shares": info["shares"], "avg_cost": info["avg_cost"]}
-
-        # Score universe candidates (not already held)
-        for ticker in allowed:
-            if ticker in all_scored or ticker == MONEY_MARKET_TICKER:
-                continue
-            if ticker in port_sigs:
-                score = port_sigs[ticker].get("score", 0)
-            else:
-                sig = signal_map.get(ticker)
-                if not sig:
-                    continue
-                score = sig.get("score", 0)
-            # Style gate check — only for candidates, not existing holdings
-            gate_info = signal_map.get(ticker, {}).get("info")
-            gate_result = passes_style_gate(ticker, pname, gate_info)
-            if not gate_result["pass"]:
-                continue
-            all_scored[ticker] = {"ticker": ticker, "score": score, "held": False,
-                                  "shares": 0, "avg_cost": 0}
-
-        # 3. Rank by score — top MAX_HOLDINGS are the target portfolio
-        ranked = sorted(all_scored.values(), key=lambda x: x["score"], reverse=True)
-        target = ranked[:MAX_HOLDINGS]
-        target_tickers = {s["ticker"] for s in target}
-
-        logger.info(f"{pname}: {len(held_map)} held, {len(all_scored)} scored, target={[s['ticker']+'('+str(s['score'])+')' for s in target[:5]]}...")
-
-        # 4. Determine sells: held but NOT in target
-        # If TARGET_PRICE_DISCIPLINE is ON for this portfolio, replace the
-        # default "not in top 10" rule with the discipline triggers.
-        to_sell = []
-        if TARGET_PRICE_DISCIPLINE.get(pname, False):
-            # Target-price discipline mode: hold through score variations.
-            # Look up target_price + portfolio_value once; eval each holding.
-            conn = db_conn()
-            c = conn.cursor()
-            c.execute(
-                "SELECT ticker, shares, target_price FROM holdings "
-                "WHERE portfolio_id = ? AND shares > 0",
-                (pid,),
-            )
-            held_with_targets = {row[0]: (int(row[1]), row[2]) for row in c.fetchall()}
-            conn.close()
-
-            # Compute portfolio total value (cash + holdings × current price)
-            portfolio_total_value = 0
-            cash_now = get_verified_cash(pid)
-            portfolio_total_value += cash_now
-            for ticker_h, (shr_h, _) in held_with_targets.items():
-                sig_h = signal_map.get(ticker_h, {})
-                price_h = sig_h.get("price", 0)
-                portfolio_total_value += shr_h * (price_h if price_h > 0 else 0)
-
-            for s in ranked:
-                if not s["held"]:
-                    continue
-                shares_h, target_price_h = held_with_targets.get(s["ticker"], (0, None))
-                sig_h = signal_map.get(s["ticker"], {})
-                current_price = sig_h.get("price", 0) if sig_h else 0
-                if current_price <= 0:
-                    continue  # cant evaluate without price
-                should_sell, reason = evaluate_target_discipline_sell(
-                    pname, s["ticker"], current_price, target_price_h,
-                    shares_h, portfolio_total_value,
-                    fwd_eps_revision_pct=None,  # TODO: wire forward EPS check
-                )
-                if should_sell:
-                    to_sell.append({**s, "discipline_reason": reason})
-                    logger.info(
-                        f"{pname}: DISCIPLINE-SELL {s['ticker']} — {reason}"
-                    )
-            logger.info(
-                f"{pname}: target-price discipline ON — "
-                f"{len(to_sell)} sells from {len(held_with_targets)} holdings"
-            )
-        else:
-            # Default behavior: sell anything held but not in today's top 10
-            for s in ranked:
-                if s["held"] and s["ticker"] not in target_tickers:
-                    to_sell.append(s)
-        to_sell.sort(key=lambda x: x["score"])  # Sell weakest first
-
-        # 5. Determine buys: in target but NOT held (or held but underweight)
-        to_buy = []
-        for s in target:
-            if s["score"] < SCORE_BUY_MINIMUM:
-                continue  # Don't deploy cash into stocks scoring below minimum
-            if not s["held"]:
-                to_buy.append(s)
-            elif s["held"]:
-                # Check if underweight — use market price from signals, fall back to cost basis
-                sig_price = signal_map.get(s["ticker"], {}).get("price", 0)
-                existing_val = s["shares"] * (sig_price if sig_price > 0 else s["avg_cost"])
-                target_alloc = starting * (0.12 if s["score"] >= 5 else 0.10 if s["score"] >= 3 else 0.08)
-                if existing_val < target_alloc * 0.80:  # More than 20% underweight
-                    to_buy.append({**s, "is_add": True, "gap": target_alloc - existing_val})
-        to_buy.sort(key=lambda x: x["score"], reverse=True)  # Buy strongest first
+        to_sell, to_buy, target = plan_portfolio(pid, pname, starting, signal_map, portfolio_signals, universes)
 
         if not to_sell and not to_buy:
             logger.info(f"{pname}: portfolio is optimal — no changes needed")
