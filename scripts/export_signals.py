@@ -98,8 +98,10 @@ def enrich_signals_with_holdings(signals_path):
         t = s.get("ticker", "")
         s["pending_swaps"] = swap_map.get(t, [])
 
-    with open(signals_path, "w") as f:
+    _tmp = f"{signals_path}.tmp.{os.getpid()}"
+    with open(_tmp, "w") as f:
         json.dump(data, f, indent=2, default=str)
+    os.replace(_tmp, signals_path)
     enriched = len([s for s in signals if s.get("held_in")])
     swapped = len([s for s in signals if s.get("pending_swaps")])
     print(f"  ✅ Enriched {enriched} signals with holdings, {swapped} with swap context", file=sys.stderr)
@@ -131,8 +133,10 @@ def run_script(cmd, output_file, label):
 
         # Validate JSON
         data = json.loads(stdout)
-        with open(output_file, "w") as f:
+        _tmp = f"{output_file}.tmp.{os.getpid()}"
+        with open(_tmp, "w") as f:
             json.dump(data, f, indent=2, default=str)
+        os.replace(_tmp, output_file)
         print(f"  ✅ {label} → {output_file}", file=sys.stderr)
         return True
 

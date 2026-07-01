@@ -275,8 +275,10 @@ def refresh_signals(prices):
     # Add a priceRefreshedAt timestamp so we can track freshness
     data['priceRefreshedAt'] = datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
 
-    with open(signals_path, 'w') as f:
+    _tmp = f"{signals_path}.tmp.{os.getpid()}"
+    with open(_tmp, 'w') as f:
         json.dump(data, f, indent=2)
+    os.replace(_tmp, signals_path)
 
     print(f"Updated prices for {updated}/{len(signals)} signals in signals.json")
 

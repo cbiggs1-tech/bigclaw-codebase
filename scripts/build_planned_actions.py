@@ -148,8 +148,10 @@ def inject_planned_actions():
 
     data["planned_actions"] = planned
 
-    with open(SIGNALS_PATH, "w") as f:
+    _tmp = f"{SIGNALS_PATH}.tmp.{os.getpid()}"
+    with open(_tmp, "w") as f:
         json.dump(data, f, indent=2, default=str)
+    os.replace(_tmp, SIGNALS_PATH)
 
     sells = [a for a in planned if "SELL" in a["action"]]
     buys = [a for a in planned if a["action"] in ("BUY", "ADD")]

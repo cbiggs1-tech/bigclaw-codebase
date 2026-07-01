@@ -831,8 +831,10 @@ def export_dashboard(sentiment_data: Optional[dict] = None) -> bool:
             with open(signals_path, 'r') as f:
                 signals_data = json.load(f)
             signals_data['earnings'] = earnings
-            with open(signals_path, 'w') as f:
+            _tmp = f"{signals_path}.tmp.{os.getpid()}"
+            with open(_tmp, 'w') as f:
                 json.dump(signals_data, f, indent=2)
+            os.replace(_tmp, signals_path)
             logger.info(f"Patched {len(earnings)} earnings into signals.json")
         except Exception as e:
             logger.warning(f"Could not patch signals.json with earnings: {e}")
