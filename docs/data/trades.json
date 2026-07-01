@@ -2,6 +2,127 @@
   "trades": [
     {
       "date": "Jul 01",
+      "portfolio": "LLM-Comando",
+      "action": "BUY",
+      "ticker": "MA",
+      "shares": 7.0,
+      "price": 525.83,
+      "total": 3680.8100000000004,
+      "rationale": "Top 10 (score 11) \u2014 add to position",
+      "executed_at": "2026-07-01 15:04:17"
+    },
+    {
+      "date": "Jul 01",
+      "portfolio": "LLM-ETF Focus",
+      "action": "BUY",
+      "ticker": "XLF",
+      "shares": 123.0,
+      "price": 54.58,
+      "total": 6713.34,
+      "rationale": "Top 10 (score 4) \u2014 add to position",
+      "executed_at": "2026-07-01 15:04:14"
+    },
+    {
+      "date": "Jul 01",
+      "portfolio": "AI Defense & Autonomous",
+      "action": "BUY",
+      "ticker": "AXON",
+      "shares": 11.0,
+      "price": 605.0,
+      "total": 6655.0,
+      "rationale": "Top 10 (score 12) \u2014 add to position",
+      "executed_at": "2026-07-01 15:04:09"
+    },
+    {
+      "date": "Jul 01",
+      "portfolio": "Nuclear Renaissance",
+      "action": "BUY",
+      "ticker": "AEP",
+      "shares": 75.0,
+      "price": 135.7,
+      "total": 10177.5,
+      "rationale": "Top 10 (score 5) \u2014 add to position",
+      "executed_at": "2026-07-01 15:04:03"
+    },
+    {
+      "date": "Jul 01",
+      "portfolio": "Momentum Growth",
+      "action": "SELL",
+      "ticker": "ANET",
+      "shares": 75.0,
+      "price": 167.72,
+      "total": 12579.0,
+      "rationale": "Not in top 10 (score 12)",
+      "executed_at": "2026-07-01 15:04:02"
+    },
+    {
+      "date": "Jul 01",
+      "portfolio": "Momentum Growth",
+      "action": "SELL",
+      "ticker": "FIX",
+      "shares": 6.0,
+      "price": 1874.69,
+      "total": 11248.14,
+      "rationale": "Not in top 10 (score 8)",
+      "executed_at": "2026-07-01 15:03:58"
+    },
+    {
+      "date": "Jul 01",
+      "portfolio": "Growth Value",
+      "action": "BUY",
+      "ticker": "AJG",
+      "shares": 47.0,
+      "price": 241.58,
+      "total": 11354.26,
+      "rationale": "Top 10 (score 8) \u2014 new position",
+      "executed_at": "2026-07-01 15:03:52"
+    },
+    {
+      "date": "Jul 01",
+      "portfolio": "AI Defense & Autonomous",
+      "action": "SELL",
+      "ticker": "KTOS",
+      "shares": 115.0,
+      "price": 52.51,
+      "total": 6038.65,
+      "rationale": "SAFETY TRIM 50% (score -3)",
+      "executed_at": "2026-07-01 15:03:39"
+    },
+    {
+      "date": "Jul 01",
+      "portfolio": "LLM-ETF Focus",
+      "action": "SELL",
+      "ticker": "XLK",
+      "shares": 23.0,
+      "price": 186.828261,
+      "total": 4297.050003,
+      "rationale": "REBALANCE: XLK at 22.4% > 20% cap, trimming to 18%",
+      "executed_at": "2026-07-01 15:03:35"
+    },
+    {
+      "date": "Jul 01",
+      "portfolio": "Nuclear Renaissance",
+      "action": "SELL",
+      "ticker": "TLN",
+      "shares": 28.0,
+      "price": 366.79,
+      "total": 10270.12,
+      "rationale": "Trailing stop triggered: $367.54 <= $370.70 (HWM $421.25, -12.8%)",
+      "executed_at": "2026-07-01 14:45:15"
+    },
+    {
+      "date": "Jul 01",
+      "portfolio": "LLM-ETF Focus",
+      "action": "SELL",
+      "ticker": "XLK",
+      "shares": 50.0,
+      "price": 186.7092,
+      "total": 9335.460000000001,
+      "rationale": "LLM-WATCHER: XLK at $186.87 is -1.92% 1d vs SPY -0.07% (~185bps underperformance), satisfying the intraday trigger condition. Fed hawkishness headlines (Warsh, Hammack rate-hike commentary per Reuters) are a near-term headwind for high-multiple tech. MTUM -3.41% 1d signals momentum unwind. This is the planned 50",
+      "executed_at": "2026-07-01 14:35:35"
+    },
+    {
+      "date": "Jul 01",
       "portfolio": "LLM-ETF Focus",
       "action": "BUY",
       "ticker": "XLF",
@@ -804,5 +925,5 @@
       "executed_at": "2026-06-24 14:00:19"
     }
   ],
-  "lastUpdate": "2026-07-01T14:11:27.879135+00:00"
+  "lastUpdate": "2026-07-01T15:07:49.108437+00:00"
 }
