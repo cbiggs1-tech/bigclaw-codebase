@@ -68,6 +68,7 @@ DB_PATH = Path.home() / "bigclaw-ai" / "src" / "portfolios.db"
 SECTOR_ETFS = ['XLK', 'XLF', 'XLE', 'XLV', 'XLI', 'XLP', 'XLY', 'XLB', 'XLU', 'XLRE', 'XLC']
 FACTOR_ETFS = ['IWM', 'MTUM', 'QUAL', 'USMV', 'IWN']
 MACRO_ETFS  = ['SPY', 'TLT', 'UUP', 'GLD', 'USO']
+INVERSE_ETFS = ['SH', 'PSQ', 'DOG', 'RWM']  # -1x inverse: S&P / Nasdaq-100 / Dow / Russell 2000 - express a bearish edge as a LONG buy that rises when the market falls
 REGIME_TICKERS = ['^VIX', 'HYG', 'LQD', '^TNX', 'IWM']  # vol / HY credit / IG credit / 10y yield / small-cap breadth - macro regime tells
 
 # ---------- utilities ----------
@@ -164,7 +165,7 @@ def get_peer_returns():
 
 def get_market_snapshot():
     """Sector ETFs + factor ETFs + macro ETFs - current price + 1d/5d/30d returns."""
-    universe = SECTOR_ETFS + FACTOR_ETFS + MACRO_ETFS + REGIME_TICKERS
+    universe = SECTOR_ETFS + FACTOR_ETFS + MACRO_ETFS + INVERSE_ETFS + REGIME_TICKERS
     hist = yf.download(universe, period='1y', progress=False, threads=True)['Close']
     def r(t, n):
         try:
@@ -518,6 +519,8 @@ factor offers a positive edge right now"), not the comfortable resting state. Si
 for weeks while a sector clearly leads (something there is buyable) is a FAILING posture - the skill
 this book tests is harvesting the rotation, not avoiding every loss.
 
+SHORT THE MARKET WHEN YOU HAVE A BEARISH EDGE (do not just retreat to cash): the book now holds -1x inverse ETFs - SH (S&P 500), PSQ (Nasdaq-100), DOG (Dow), RWM (Russell 2000). These are ordinary LONG buys that RISE when the market falls, so a down-view is a POSITION, not a sit-out. Distinguish two states: (a) a genuine UNKNOWN with no directional edge either way - cash is the correct, honest call there; versus (b) a real BEARISH EDGE - which means the SAME high bar you use to size down: VIX 22+ (NOT a merely high-teens VIX, which is normal) OR material credit/breadth deterioration, AND a clear macro driver pushing the broad tape lower (hawkish-Fed or inflation-acceleration talk, credit spreads widening, breadth breaking down) - where the alpha move is to BUY an inverse ETF and profit from the decline instead of parking in cash that bleeds to inflation. CRITICAL: in a low or normal-VIX tape (VIX in the teens, credit calm) do NOT short - that is a long-or-cash regime; shorting a calm or rising market is how you lose. Inverse ETFs are for a CONFIRMED down-regime only, never a hedge-by-default or a hunch. Use the -1x inverse ETFs ONLY; avoid leveraged -2x/-3x inverse - their volatility decay is a bad-quadrant risk on a 1-day-to-1-week horizon. Size a short like any other position with a defined target and stop, and cover it (sell the inverse ETF) when the down-move plays out or the regime turns - never marry a short any more than a long.
+
 MACRO REGIME READ: the MACRO REGIME block is your risk-on/risk-off gauge - yield-curve direction (10y), credit spreads (HY vs IG), volatility (VIX), offense/defense (XLY vs XLP), breadth (IWM vs SPY), and recent sector rotation. Use it to set aggression and sector tilt for the DAYS AHEAD: in a calm risk-on tape, press into the sectors and factors with fresh momentum. Judge VIX by its ABSOLUTE level (calibrated to the last year: median ~17, 75th pct ~19, and forward SPY returns from a VIX of 18-21 were positive) - the high teens up to ~21 are NORMAL, so do not retreat just because VIX is in the high teens or rose. The empirical threshold of concern is VIX 22, where the odds of a >3% SPY drop in 10 days jump to ~40% (4x base rate). Only at VIX 22+ or on material credit/breadth deterioration should you size down and favor defensives or cash. Read where leadership is rotating and get in early on the move that is starting - do not chase the sector that already ran.
 
 EVENT RISK - DO NOT OPEN INTO A BINARY EVENT: before opening any NEW position, check the news feed for a known binary event in the next 1-2 trading days that could invalidate the thesis - an FOMC decision, a CPI or jobs print, or upcoming earnings for the name you are considering. If one is imminent, do NOT open fresh exposure into it; wait for the event to clear and the new regime to be readable, then enter. This applies to OPENING new positions ONLY - whether to trim an existing position ahead of an event is your judgment call, but do not churn a working position just to dodge a scheduled print. The mistake to avoid is establishing brand-new exposure hours before a coin-flip that can break the thesis immediately, as happened buying XLF into a hawkish FOMC on 2026-06-17.
@@ -826,6 +829,15 @@ def save_decision_markdown(today_iso, total_value, state, market, news, peer_ret
     if any(m for _, m in macro_rows):
         lines += ["### Macro context", ""]
         for t, m in macro_rows:
+            if not m: continue
+            lines.append(f"- **{t}**: 1d {m.get('ret_1d',0):+.2f}%  /  5d {m.get('ret_5d',0):+.2f}%  /  30d {m.get('ret_30d',0):+.2f}%")
+        lines.append("")
+
+    # Inverse / short ETFs -- a bearish edge is a position, not cash
+    inv_rows = [(t, market.get(t, {})) for t in INVERSE_ETFS]
+    if any(m for _, m in inv_rows):
+        lines += ["### Inverse / Short ETFs (-1x -- these RISE when the market falls)", ""]
+        for t, m in inv_rows:
             if not m: continue
             lines.append(f"- **{t}**: 1d {m.get('ret_1d',0):+.2f}%  /  5d {m.get('ret_5d',0):+.2f}%  /  30d {m.get('ret_30d',0):+.2f}%")
         lines.append("")
