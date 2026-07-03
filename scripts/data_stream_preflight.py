@@ -25,8 +25,14 @@ def check_alpaca_trading():
         c = get_trading_client()
         acct = c.get_account()
         clock = c.get_clock()
-        nxt = clock.next_open.strftime("%m-%d %H:%MZ") if clock.next_open else "?"
-        return "UP", f"equity ${float(acct.equity):,.0f}, mkt {'OPEN' if clock.is_open else 'closed'}, next open {nxt}"
+        # Alpaca's clock is Eastern (tzinfo -04:00/-05:00). Label it ET, not Z (UTC).
+        nxt = clock.next_open.strftime("%a %Y-%m-%d %H:%M ET") if clock.next_open else "?"
+        if clock.is_open:
+            status = "OPEN"
+        else:
+            # weekday + closed = market holiday; weekend = weekend
+            status = "closed (holiday)" if datetime.date.today().weekday() < 5 else "closed (weekend)"
+        return "UP", f"equity ${float(acct.equity):,.0f}, market {status}, next open {nxt}"
     except Exception as e:
         return "DOWN", f"{type(e).__name__}: {str(e)[:90]}"
 
