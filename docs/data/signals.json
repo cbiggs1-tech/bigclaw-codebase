@@ -1,5 +1,5 @@
 {
-  "date": "2026-07-03 14:02",
+  "date": "2026-07-03 16:32",
   "signals": [
     {
       "ticker": "ABT",
@@ -188,8 +188,8 @@
         "insider net selling (0B/20S)",
         "outperforming XLU by 3.7%",
         "bond mkt +1 (wt 1.5x)",
-        "correlated with ETR (0.84)",
         "correlated with AEP (0.84)",
+        "correlated with ETR (0.84)",
         "correlated with PEG (0.80)"
       ],
       "price": 115.02,
@@ -1196,7 +1196,7 @@
         "golden cross (50>200)",
         "up 146% in 90d (very extended)",
         "78% above 200d MA (overextended)",
-        "forward EPS up +7% in 90d",
+        "forward EPS up +6% in 90d",
         "beating SPY by 101% over 60d",
         "earnings growth 48%",
         "revenue growth 20%",
@@ -1454,7 +1454,7 @@
         "below 200-day SMA",
         "death cross (50<200)",
         "fresh 50-day MA reclaim",
-        "forward EPS DOWN -14% in 90d (deteriorating)",
+        "forward EPS DOWN -28% in 90d (deteriorating)",
         "revenue growth 133%",
         "no dividend",
         "ROE -10% (negative)",
@@ -5026,7 +5026,7 @@
         "below 50-day SMA",
         "above 200-day SMA",
         "golden cross (50>200)",
-        "forward EPS up +18% in 90d",
+        "forward EPS up +17% in 90d",
         "trailing SPY by -16% over 60d",
         "earnings growth 40%",
         "revenue growth 16%",
@@ -5076,13 +5076,12 @@
     },
     {
       "ticker": "EQNR",
-      "score": 10,
+      "score": 6,
       "label": "\ud83d\udfe2 STRONG BUY / ADD",
       "reasons": [
         "below 50-day SMA",
         "above 200-day SMA",
         "golden cross (50>200)",
-        "forward EPS up +13% in 90d",
         "trailing SPY by -28% over 60d",
         "earnings growth 29%",
         "revenue growth -5%",
@@ -5097,7 +5096,7 @@
       "price": 32.04,
       "value_override": {
         "total_score": 1,
-        "base_score_before": 10.0,
+        "base_score_before": 6.0,
         "components": {
           "rsi_oversold": {
             "score": 1,
@@ -5812,7 +5811,7 @@
         "below 200-day SMA",
         "death cross (50<200)",
         "fresh 50-day MA reclaim",
-        "forward EPS DOWN -9% in 90d",
+        "forward EPS DOWN -10% in 90d",
         "earnings growth 200%",
         "revenue growth 17%",
         "P/E improving (8.3 < 17.4)",
@@ -8356,7 +8355,7 @@
         "below 50-day SMA",
         "below 200-day SMA",
         "golden cross (50>200)",
-        "forward EPS up +80% in 90d",
+        "forward EPS up +79% in 90d",
         "revenue growth -0%",
         "D/E ratio 149",
         "no dividend",
@@ -10845,7 +10844,7 @@
         "above 50-day SMA",
         "above 200-day SMA",
         "golden cross (50>200)",
-        "21% above 200d MA (extended)",
+        "20% above 200d MA (extended)",
         "forward P/E (20.0) > trailing (15.7)",
         "yield 262.0%",
         "gross margin 0% (thin)",
@@ -12438,7 +12437,7 @@
         "below 50-day SMA",
         "below 200-day SMA",
         "death cross (50<200)",
-        "forward EPS up +11% in 90d",
+        "forward EPS up +13% in 90d",
         "trailing SPY by -19% over 60d",
         "earnings growth 325%",
         "revenue growth 85%",
@@ -16029,6 +16028,47 @@
       "pending_swaps": []
     },
     {
+      "ticker": "UWMC",
+      "score": 0,
+      "label": "\u26aa HOLD",
+      "reasons": [
+        "below 50-day SMA",
+        "below 200-day SMA",
+        "death cross (50<200)",
+        "forward EPS DOWN -6% in 90d",
+        "8% above 52w low AND falling 30d (falling knife risk)",
+        "trailing SPY by -53% over 60d",
+        "revenue growth 24%",
+        "P/E improving (4.2 < 7.2)",
+        "D/E ratio 1033",
+        "yield 1843.0%",
+        "ROE 41% (excellent)",
+        "FCF negative ($-1.1B)",
+        "gross margin 100% (wide moat)",
+        "payout ratio 133% (stretched)",
+        "underperforming XLF by 26.8%",
+        "\u26a1 VALUE OVERRIDE: +3 (54% below target, RSI 38 oversold)"
+      ],
+      "price": 2.17,
+      "value_override": {
+        "total_score": 3,
+        "base_score_before": 0.25,
+        "components": {
+          "analyst_target": {
+            "score": 2,
+            "reason": "54% below analyst target $4.75"
+          },
+          "rsi_oversold": {
+            "score": 1,
+            "reason": "RSI 38 oversold territory"
+          }
+        },
+        "summary": "\u26a1 VALUE OVERRIDE: +3 (54% below target, RSI 38 oversold)"
+      },
+      "held_in": [],
+      "pending_swaps": []
+    },
+    {
       "ticker": "VAL",
       "score": 0,
       "label": "\u26aa HOLD",
@@ -16390,7 +16430,7 @@
         "death cross (50<200)",
         "30d vol 77% of 1y",
         "fresh 50-day MA reclaim",
-        "forward EPS DOWN -18% in 90d (deteriorating)",
+        "forward EPS DOWN -20% in 90d (deteriorating)",
         "beating SPY by 24% over 60d",
         "revenue growth 96%",
         "no dividend",
@@ -18846,47 +18886,6 @@
       },
       "held_in": [],
       "pending_swaps": []
-    },
-    {
-      "ticker": "UWMC",
-      "score": -2,
-      "label": "\ud83d\udfe1 WATCH / CAUTION",
-      "reasons": [
-        "below 50-day SMA",
-        "below 200-day SMA",
-        "death cross (50<200)",
-        "forward EPS DOWN -12% in 90d (deteriorating)",
-        "8% above 52w low AND falling 30d (falling knife risk)",
-        "trailing SPY by -53% over 60d",
-        "revenue growth 24%",
-        "P/E improving (4.2 < 7.2)",
-        "D/E ratio 1033",
-        "yield 1843.0%",
-        "ROE 41% (excellent)",
-        "FCF negative ($-1.1B)",
-        "gross margin 100% (wide moat)",
-        "payout ratio 133% (stretched)",
-        "underperforming XLF by 26.8%",
-        "\u26a1 VALUE OVERRIDE: +3 (54% below target, RSI 38 oversold)"
-      ],
-      "price": 2.17,
-      "value_override": {
-        "total_score": 3,
-        "base_score_before": -1.75,
-        "components": {
-          "analyst_target": {
-            "score": 2,
-            "reason": "54% below analyst target $4.75"
-          },
-          "rsi_oversold": {
-            "score": 1,
-            "reason": "RSI 38 oversold territory"
-          }
-        },
-        "summary": "\u26a1 VALUE OVERRIDE: +3 (54% below target, RSI 38 oversold)"
-      },
-      "held_in": [],
-      "pending_swaps": []
     }
   ],
   "portfolio_signals": {
@@ -20136,7 +20135,7 @@
         "label": "\ud83d\udfe2 STRONG BUY / ADD"
       },
       "EQNR": {
-        "score": 10,
+        "score": 6,
         "label": "\ud83d\udfe2 STRONG BUY / ADD"
       },
       "ERIE": {
@@ -21234,8 +21233,8 @@
         "label": "\ud83d\udfe2 STRONG BUY / ADD"
       },
       "UWMC": {
-        "score": -2,
-        "label": "\ud83d\udfe1 WATCH / CAUTION"
+        "score": 0,
+        "label": "\u26aa HOLD"
       },
       "VIRT": {
         "score": 5,
@@ -21355,340 +21354,129 @@
   },
   "earnings": [
     {
+      "ticker": "ABT",
+      "date": "Jul 16",
+      "days": 12
+    },
+    {
+      "ticker": "BAC",
+      "date": "Jul 14",
+      "days": 10
+    },
+    {
+      "ticker": "BLK",
+      "date": "Jul 15",
+      "days": 11
+    },
+    {
+      "ticker": "C",
+      "date": "Jul 14",
+      "days": 10
+    },
+    {
+      "ticker": "CFG",
+      "date": "Jul 16",
+      "days": 12
+    },
+    {
+      "ticker": "ERIC",
+      "date": "Jul 14",
+      "days": 10
+    },
+    {
+      "ticker": "FHN",
+      "date": "Jul 15",
+      "days": 11
+    },
+    {
+      "ticker": "FITB",
+      "date": "Jul 17",
+      "days": 13
+    },
+    {
+      "ticker": "ISRG",
+      "date": "Jul 16",
+      "days": 12
+    },
+    {
+      "ticker": "JNJ",
+      "date": "Jul 15",
+      "days": 11
+    },
+    {
+      "ticker": "JPM",
+      "date": "Jul 14",
+      "days": 10
+    },
+    {
       "ticker": "LEVI",
-      "date": "2026-07-08",
-      "days_away": 5,
-      "eps_est": 0.24
+      "date": "Jul 08",
+      "days": 4
+    },
+    {
+      "ticker": "MS",
+      "date": "Jul 15",
+      "days": 11
+    },
+    {
+      "ticker": "MTB",
+      "date": "Jul 15",
+      "days": 11
+    },
+    {
+      "ticker": "NFLX",
+      "date": "Jul 16",
+      "days": 12
+    },
+    {
+      "ticker": "PGR",
+      "date": "Jul 15",
+      "days": 11
+    },
+    {
+      "ticker": "PNC",
+      "date": "Jul 15",
+      "days": 11
+    },
+    {
+      "ticker": "RF",
+      "date": "Jul 17",
+      "days": 13
     },
     {
       "ticker": "SNA",
-      "date": "2026-07-16",
-      "days_away": 13,
-      "eps_est": 4.93
+      "date": "Jul 16",
+      "days": 12
     },
     {
-      "ticker": "WRB",
-      "date": "2026-07-20",
-      "days_away": 17,
-      "eps_est": 1.09
+      "ticker": "STT",
+      "date": "Jul 16",
+      "days": 12
     },
     {
-      "ticker": "RRC",
-      "date": "2026-07-21",
-      "days_away": 18,
-      "eps_est": 0.72
+      "ticker": "TFC",
+      "date": "Jul 17",
+      "days": 13
     },
     {
-      "ticker": "CB",
-      "date": "2026-07-21",
-      "days_away": 18,
-      "eps_est": 6.7
+      "ticker": "TRV",
+      "date": "Jul 17",
+      "days": 13
     },
     {
-      "ticker": "AMX",
-      "date": "2026-07-21",
-      "days_away": 18,
-      "eps_est": 0.52
+      "ticker": "UNH",
+      "date": "Jul 16",
+      "days": 12
     },
     {
-      "ticker": "NOC",
-      "date": "2026-07-21",
-      "days_away": 18,
-      "eps_est": 6.8
+      "ticker": "USB",
+      "date": "Jul 16",
+      "days": 12
     },
     {
-      "ticker": "NVS",
-      "date": "2026-07-21",
-      "days_away": 18,
-      "eps_est": 2.15
-    },
-    {
-      "ticker": "NOW",
-      "date": "2026-07-22",
-      "days_away": 19,
-      "eps_est": 0.86
-    },
-    {
-      "ticker": "TNL",
-      "date": "2026-07-22",
-      "days_away": 19,
-      "eps_est": 1.89
-    },
-    {
-      "ticker": "TXN",
-      "date": "2026-07-22",
-      "days_away": 19,
-      "eps_est": 1.95
-    },
-    {
-      "ticker": "LMT",
-      "date": "2026-07-23",
-      "days_away": 20,
-      "eps_est": 7.17
-    },
-    {
-      "ticker": "GOOGL",
-      "date": "2026-07-23",
-      "days_away": 20,
-      "eps_est": 2.88
-    },
-    {
-      "ticker": "TTE",
-      "date": "2026-07-23",
-      "days_away": 20,
-      "eps_est": 2.64
-    },
-    {
-      "ticker": "RTX",
-      "date": "2026-07-23",
-      "days_away": 20,
-      "eps_est": 1.66
-    },
-    {
-      "ticker": "PCG",
-      "date": "2026-07-23",
-      "days_away": 20,
-      "eps_est": 0.36
-    },
-    {
-      "ticker": "LHX",
-      "date": "2026-07-24",
-      "days_away": 21,
-      "eps_est": 2.83
-    },
-    {
-      "ticker": "UHS",
-      "date": "2026-07-27",
-      "days_away": 24,
-      "eps_est": 5.98
-    },
-    {
-      "ticker": "AKO-B",
-      "date": "2026-07-28",
-      "days_away": 25,
-      "eps_est": 410.09
-    },
-    {
-      "ticker": "TXT",
-      "date": "2026-07-28",
-      "days_away": 25,
-      "eps_est": 1.55
-    },
-    {
-      "ticker": "WAY",
-      "date": "2026-07-29",
-      "days_away": 26,
-      "eps_est": 0.4
-    },
-    {
-      "ticker": "APH",
-      "date": "2026-07-29",
-      "days_away": 26,
-      "eps_est": 1.18
-    },
-    {
-      "ticker": "GD",
-      "date": "2026-07-29",
-      "days_away": 26,
-      "eps_est": 3.95
-    },
-    {
-      "ticker": "NBIX",
-      "date": "2026-07-29",
-      "days_away": 26,
-      "eps_est": 2.17
-    },
-    {
-      "ticker": "AEP",
-      "date": "2026-07-30",
-      "days_away": 27,
-      "eps_est": 1.5
-    },
-    {
-      "ticker": "AEE",
-      "date": "2026-07-30",
-      "days_away": 27,
-      "eps_est": 1.08
-    },
-    {
-      "ticker": "ETR",
-      "date": "2026-07-30",
-      "days_away": 27,
-      "eps_est": 1.1
-    },
-    {
-      "ticker": "RDDT",
-      "date": "2026-07-30",
-      "days_away": 27,
-      "eps_est": 1.45
-    },
-    {
-      "ticker": "AJG",
-      "date": "2026-07-30",
-      "days_away": 27,
-      "eps_est": 2.82
-    },
-    {
-      "ticker": "MA",
-      "date": "2026-07-30",
-      "days_away": 27,
-      "eps_est": 4.76
-    },
-    {
-      "ticker": "AU",
-      "date": "2026-07-31",
-      "days_away": 28,
-      "eps_est": 2.11
-    },
-    {
-      "ticker": "AXON",
-      "date": "2026-08-03",
-      "days_away": 31,
-      "eps_est": 1.83
-    },
-    {
-      "ticker": "PLTR",
-      "date": "2026-08-03",
-      "days_away": 31,
-      "eps_est": 0.35
-    },
-    {
-      "ticker": "VOYA",
-      "date": "2026-08-04",
-      "days_away": 32,
-      "eps_est": 2.37
-    },
-    {
-      "ticker": "EOG",
-      "date": "2026-08-04",
-      "days_away": 32,
-      "eps_est": 4.97
-    },
-    {
-      "ticker": "SU",
-      "date": "2026-08-04",
-      "days_away": 32,
-      "eps_est": 2.95
-    },
-    {
-      "ticker": "PEG",
-      "date": "2026-08-04",
-      "days_away": 32,
-      "eps_est": 0.83
-    },
-    {
-      "ticker": "MIRM",
-      "date": "2026-08-05",
-      "days_away": 33,
-      "eps_est": null
-    },
-    {
-      "ticker": "CPRX",
-      "date": "2026-08-05",
-      "days_away": 33,
-      "eps_est": 0.74
-    },
-    {
-      "ticker": "APA",
-      "date": "2026-08-05",
-      "days_away": 33,
-      "eps_est": 2.08
-    },
-    {
-      "ticker": "IONS",
-      "date": "2026-08-05",
-      "days_away": 33,
-      "eps_est": null
-    },
-    {
-      "ticker": "ERO",
-      "date": "2026-08-05",
-      "days_away": 33,
-      "eps_est": 0.85
-    },
-    {
-      "ticker": "PODD",
-      "date": "2026-08-05",
-      "days_away": 33,
-      "eps_est": 1.45
-    },
-    {
-      "ticker": "SHOP",
-      "date": "2026-08-05",
-      "days_away": 33,
-      "eps_est": 0.4
-    },
-    {
-      "ticker": "SGHC",
-      "date": "2026-08-05",
-      "days_away": 33,
-      "eps_est": 0.21
-    },
-    {
-      "ticker": "VRDN",
-      "date": "2026-08-06",
-      "days_away": 34,
-      "eps_est": null
-    },
-    {
-      "ticker": "SEZL",
-      "date": "2026-08-06",
-      "days_away": 34,
-      "eps_est": 1.01
-    },
-    {
-      "ticker": "PBR",
-      "date": "2026-08-06",
-      "days_away": 34,
-      "eps_est": null
-    },
-    {
-      "ticker": "CON",
-      "date": "2026-08-06",
-      "days_away": 34,
-      "eps_est": 0.42
-    },
-    {
-      "ticker": "GMED",
-      "date": "2026-08-06",
-      "days_away": 34,
-      "eps_est": 1.1
-    },
-    {
-      "ticker": "UUUU",
-      "date": "2026-08-06",
-      "days_away": 34,
-      "eps_est": null
-    },
-    {
-      "ticker": "KTOS",
-      "date": "2026-08-06",
-      "days_away": 34,
-      "eps_est": 0.14
-    },
-    {
-      "ticker": "NTES",
-      "date": "2026-08-13",
-      "days_away": 41,
-      "eps_est": 15.65
-    },
-    {
-      "ticker": "GFI",
-      "date": "2026-08-25",
-      "days_away": 53,
-      "eps_est": 1.22
-    },
-    {
-      "ticker": "ESTC",
-      "date": "2026-08-27",
-      "days_away": 55,
-      "eps_est": 0.58
-    },
-    {
-      "ticker": "AVAV",
-      "date": "2026-09-02",
-      "days_away": 61,
-      "eps_est": 0.34
+      "ticker": "WFC",
+      "date": "Jul 14",
+      "days": 10
     }
   ],
   "overlap": [],
@@ -21716,28 +21504,33 @@
   ],
   "bond_signals": {
     "yield_curve": {
-      "two_year": 4.13,
-      "ten_year": 4.372,
-      "spread": 0.242,
-      "date": "2026-07-03",
-      "assessment": "Flat \u2014 caution"
+      "two_year": 4.17,
+      "ten_year": 4.48,
+      "spread": 0.31,
+      "spread_1mo_ago": 0.42,
+      "spread_change": -0.11,
+      "date": "2026-07-01",
+      "assessment": "Flat \u2014 neutral"
     },
     "credit_spreads": {
-      "current_bps": 292.0,
-      "date": "2026-07-03",
-      "assessment": "Tight (292bps) \u2014 bullish"
+      "current_bps": 275.0,
+      "raw_value": 2.75,
+      "prev_value": 2.75,
+      "change": 0.0,
+      "date": "2026-07-02",
+      "assessment": "Tight (275bps) \u2014 bullish"
     },
     "ten_year": {
-      "current": 4.372,
-      "prev": 4.372,
-      "change_bps": 0.0,
-      "date": "2026-07-03",
-      "assessment": "Elevated \u2014 bearish"
+      "current": 4.48,
+      "prev": 4.47,
+      "change_bps": 1.0,
+      "date": "2026-07-01",
+      "assessment": "Stable \u2014 neutral"
     },
     "scores": {
-      "yield_curve": 1,
+      "yield_curve": 0,
       "credit_spreads": 1,
-      "ten_year_level": -1
+      "ten_year_level": 0
     },
     "combined_score": 1
   },
@@ -23050,7 +22843,7 @@
     {
       "portfolio": "Momentum Growth",
       "action": "BUY",
-      "ticker": "CRS",
+      "ticker": "RSI",
       "score": 12,
       "reason": "Score 12 \u2014 new position (top 10)",
       "est_allocation": 12000
@@ -23058,7 +22851,7 @@
     {
       "portfolio": "Momentum Growth",
       "action": "BUY",
-      "ticker": "ARGX",
+      "ticker": "VSXY",
       "score": 12,
       "reason": "Score 12 \u2014 new position (top 10)",
       "est_allocation": 1432
@@ -24237,12 +24030,5 @@
       "executed": true
     }
   ],
-  "priceRefreshedAt": "2026-07-03T19:03:43.616388Z",
-  "rates": {
-    "fed_funds": "4.25\u20134.50%",
-    "ten_year": 4.372,
-    "two_year": 4.13,
-    "yield_spread": 0.242,
-    "inverted": false
-  }
+  "priceRefreshedAt": "2026-07-03T21:33:29.268559Z"
 }
