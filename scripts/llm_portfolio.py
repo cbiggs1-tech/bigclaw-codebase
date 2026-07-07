@@ -1195,6 +1195,18 @@ def main():
 
         # Execute
         exec_results = validate_and_execute(trades, state, total_value, secrets, dry_run=args.dry_run)
+        # Create trailing stops immediately for any just-bought positions, so a new position is
+        # never briefly flagged UNPROTECTED in the gap before the 15-min stop_check cron picks it
+        # up (mirrors the rule-based trader's post-trade RULE 5.25).
+        if not args.dry_run and any(t.get('action') == 'buy' and isinstance(r, dict) and r.get('filled_qty')
+                                    for t, r in exec_results):
+            try:
+                sys.path.insert(0, str(Path.home() / "bigclaw-ai" / "scripts"))
+                from trailing_stop_manager import initialize_stops
+                initialize_stops()
+                log("post-trade: initialized trailing stops for new positions")
+            except Exception as e:
+                log(f"post-trade trailing-stop init failed: {e}", "WARN")
         executed = sum(1 for _, r in exec_results if r.get("filled_qty"))
         skipped = sum(1 for _, r in exec_results if "skipped" in r or "error" in r)
         log(f"Executed: {executed}  skipped/errored: {skipped}")

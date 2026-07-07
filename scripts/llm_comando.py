@@ -171,13 +171,33 @@ def get_portfolio_state():
     }
 
 def get_peer_returns():
-    """Returns dict of {portfolio_name: totalReturn_pct} for all OTHER active portfolios.
-       Read from dashboard portfolios.json so we get the same numbers the user sees."""
+    """Returns {portfolio_name: return_pct} for peer portfolios measured over COMANDO'S OWN
+    window (since Comando's inception) - apples-to-apples. The rule-based peers have run since
+    ~February, so their since-inception totalReturn is NOT comparable to Comando's ~1-month
+    track record; we baseline every peer to Comando's first daily_snapshot date."""
     try:
-        path = Path.home() / "bigclaw-ai" / "docs" / "data" / "portfolios.json"
-        d = json.loads(path.read_text())
-        return {p['name']: p.get('totalReturn') for p in d.get('portfolios', [])
-                if p['name'] != PORTFOLIO_NAME}
+        conn = sqlite3.connect(DB_PATH, timeout=10)
+        conn.row_factory = sqlite3.Row
+        cid = conn.execute("SELECT id FROM portfolios WHERE name=?", (PORTFOLIO_NAME,)).fetchone()
+        if not cid:
+            conn.close(); return {}
+        start = conn.execute("SELECT MIN(snapshot_date) d FROM daily_snapshots WHERE portfolio_id=?",
+                             (cid['id'],)).fetchone()['d']
+        if not start:
+            conn.close(); return {}
+        out = {}
+        peers = conn.execute("SELECT id, name FROM portfolios WHERE is_active=1 AND name!=? "
+                             "AND name!='Treasury Reserve'", (PORTFOLIO_NAME,)).fetchall()
+        for pr in peers:
+            base = conn.execute("SELECT total_value v FROM daily_snapshots WHERE portfolio_id=? "
+                                "AND snapshot_date<=? ORDER BY snapshot_date DESC LIMIT 1",
+                                (pr['id'], start)).fetchone()
+            cur = conn.execute("SELECT total_value v FROM daily_snapshots WHERE portfolio_id=? "
+                               "ORDER BY snapshot_date DESC LIMIT 1", (pr['id'],)).fetchone()
+            if base and cur and base['v']:
+                out[pr['name']] = (cur['v'] / base['v'] - 1) * 100
+        conn.close()
+        return out
     except Exception as e:
         log(f"Could not read peer returns: {e}", "WARN")
         return {}
@@ -528,7 +548,7 @@ def build_state_context(state, total_value, market, news, journal, peer_returns,
     lines.append(f"\n## BENCHMARKS")
     lines.append(f"  SPY 1d: {spy.get('ret_1d',0):+.2f}%  5d: {spy.get('ret_5d',0):+.2f}%  30d: {spy.get('ret_30d',0):+.2f}%")
     if peer_returns:
-        lines.append(f"\n  Rule-based BigClaw portfolios (totalReturn % since their start):")
+        lines.append(f"\n  Rule-based BigClaw portfolios (return since YOUR inception - SAME window as your cumulative above, so apples-to-apples; their since-Feb totals are NOT shown):")
         for name, ret in peer_returns.items():
             mark = ""
             if ret is not None:
@@ -1622,6 +1642,18 @@ def main():
 
         # Execute
         exec_results = validate_and_execute(trades, state, total_value, secrets, dry_run=args.dry_run)
+        # Create trailing stops immediately for any just-bought positions, so a new position is
+        # never briefly flagged UNPROTECTED in the gap before the 15-min stop_check cron picks it
+        # up (mirrors the rule-based trader's post-trade RULE 5.25).
+        if not args.dry_run and any(t.get('action') == 'buy' and isinstance(r, dict) and r.get('filled_qty')
+                                    for t, r in exec_results):
+            try:
+                sys.path.insert(0, str(Path.home() / "bigclaw-ai" / "scripts"))
+                from trailing_stop_manager import initialize_stops
+                initialize_stops()
+                log("post-trade: initialized trailing stops for new positions")
+            except Exception as e:
+                log(f"post-trade trailing-stop init failed: {e}", "WARN")
         executed = sum(1 for _, r in exec_results if r.get("filled_qty"))
         skipped = sum(1 for _, r in exec_results if "skipped" in r or "error" in r)
         log(f"Executed: {executed}  skipped/errored: {skipped}")
