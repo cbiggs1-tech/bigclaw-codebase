@@ -1549,6 +1549,47 @@ def main():
 MISMATCH_FLAG_PATH = Path.home() / "bigclaw-ai" / "logs" / "ALPACA_MISMATCH.flag"
 
 
+def verify_account_synced(halt_threshold=5):
+    """PRE-TRADE GUARD (2026-07-07, after Alpaca wiped paper-account positions). Before any
+    trading, confirm the live Alpaca account still holds what the DB thinks it holds. If many
+    DB-held tickers are MISSING at Alpaca (the signature of an Alpaca-side account reset), set
+    the global MISMATCH kill-switch and return False so callers HALT instead of selling into a
+    phantom book (which opens unintended shorts). Tolerates small per-position fill lag; does
+    NOT auto-clear the flag (resuming is manual); fails OPEN on a transient check error."""
+    try:
+        if MISMATCH_FLAG_PATH.exists():
+            return False  # already halted
+        client = get_trading_client()
+        apos = {}
+        for p in client.get_all_positions():
+            apos[from_alpaca(p.symbol)] = float(p.qty)
+        conn = db_conn(); c = conn.cursor()
+        c.execute("SELECT ticker, SUM(shares) FROM holdings WHERE shares != 0 GROUP BY ticker")
+        dbsum = dict(c.fetchall())
+        conn.close()
+        held = [t for t, sh in dbsum.items() if sh]
+        missing = [t for t in held if abs(apos.get(t, 0)) < 0.5]
+        if len(missing) >= halt_threshold:
+            reason = ("PRE-TRADE GUARD: %d/%d DB positions missing at Alpaca (e.g. %s) - likely an "
+                      "Alpaca account reset/liquidation. Trading auto-halted; reconcile before clearing "
+                      "this flag." % (len(missing), len(held), sorted(missing)[:8]))
+            MISMATCH_FLAG_PATH.parent.mkdir(parents=True, exist_ok=True)
+            MISMATCH_FLAG_PATH.write_text(json.dumps({"ts": now_et().isoformat(), "reason": reason}, indent=2))
+            logger.error("PRE-TRADE GUARD TRIPPED: %d/%d DB positions missing at Alpaca. Kill-switch set." % (len(missing), len(held)))
+            try:
+                sec = load_secrets()
+                from slack_sdk import WebClient
+                WebClient(token=sec["SLACK_BOT_TOKEN"]).chat_postMessage(
+                    channel="D0ADHLUJ400", text=":rotating_light: *PRE-TRADE GUARD HALT* - " + reason)
+            except Exception:
+                pass
+            return False
+        return True
+    except Exception as e:
+        logger.warning("verify_account_synced check failed (allowing trade): %s" % e)
+        return True
+
+
 def _post_slack_simple(text):
     """Best-effort Slack post for guard messages. Never raises."""
     try:
@@ -1635,6 +1676,8 @@ def _run_main(args):
     # MISMATCH GUARD (self-healing): if a prior run wrote the flag, re-verify
     # against live Alpaca before refusing to trade. Stale flags from already-
     # resolved mismatches now clear themselves instead of silently halting.
+    if not args.dry_run and not args.status:
+        verify_account_synced()
     if MISMATCH_FLAG_PATH.exists() and not args.dry_run and not args.status:
         try:
             _guard_client = get_trading_client()

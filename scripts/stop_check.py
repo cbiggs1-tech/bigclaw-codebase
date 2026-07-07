@@ -173,6 +173,17 @@ def main():
     if not args.force and not is_market_open():
         return  # Silent exit outside market hours
 
+    # Pre-trade guard (2026-07-07 Alpaca-reset protection): halt if the live account is
+    # desynced from the DB, so stop sells don't fill into a phantom book and open shorts.
+    try:
+        sys.path.insert(0, str(Path.home() / "bigclaw-ai" / "scripts"))
+        from autonomous_trader import verify_account_synced, MISMATCH_FLAG_PATH
+        if not args.dry_run and (not verify_account_synced() or MISMATCH_FLAG_PATH.exists()):
+            logger.error("PRE-TRADE GUARD / mismatch flag set - skipping stop_check (no trading).")
+            return
+    except Exception as _e:
+        logger.warning("pre-trade guard check failed: %s" % _e)
+
     # Defer to autonomous_trader if its currently running. The trader does
     # its own trailing-stop check at Step 1; running both concurrently can
     # double-sell positions (Alpaca fills both, going short). May 18 2026

@@ -275,7 +275,8 @@ def build_outcome(origin_date, ticker, shares, entry_price, current, days_held,
 def execute_close(ticker, shares, reason_str, pid, dry_run, secrets):
     """Submit SELL via Alpaca; record via canonical record_trade. Returns result dict."""
     sys.path.insert(0, str(Path.home() / "bigclaw-ai" / "scripts"))
-    from autonomous_trader import get_trading_client, MISMATCH_FLAG_PATH
+    from autonomous_trader import get_trading_client, MISMATCH_FLAG_PATH, verify_account_synced
+    verify_account_synced()  # pre-trade guard: set kill-switch if Alpaca is desynced from the DB
     from order_fill import wait_for_fill
     from trade_recorder import record_trade
     from alpaca.trading.requests import MarketOrderRequest

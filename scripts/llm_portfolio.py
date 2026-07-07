@@ -634,7 +634,8 @@ def validate_and_execute(trades, state, total_value, secrets, dry_run=False):
     """Validate each trade; execute via Alpaca + record_trade if not dry_run.
        Returns list of (trade, result_dict)."""
     sys.path.insert(0, str(Path.home() / "bigclaw-ai" / "scripts"))
-    from autonomous_trader import get_trading_client, MISMATCH_FLAG_PATH
+    from autonomous_trader import get_trading_client, MISMATCH_FLAG_PATH, verify_account_synced
+    verify_account_synced()  # pre-trade guard: set kill-switch if Alpaca is desynced from the DB
     from order_fill import wait_for_fill, clamp_sell_to_long
     from trade_recorder import record_trade
     from alpaca.trading.requests import MarketOrderRequest, GetAssetsRequest

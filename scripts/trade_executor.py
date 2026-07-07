@@ -685,6 +685,19 @@ def main():
         client = get_trading_client()
         verify_paper(client)
 
+        # Pre-trade guard (2026-07-07 Alpaca-reset protection): refuse to trade if the
+        # live Alpaca account is desynced from the DB.
+        if not args.dry_run:
+            try:
+                import sys as _sys, os as _os
+                _sys.path.insert(0, _os.path.expanduser("~/bigclaw-ai/scripts"))
+                from autonomous_trader import verify_account_synced, MISMATCH_FLAG_PATH
+                if not verify_account_synced() or MISMATCH_FLAG_PATH.exists():
+                    print("PRE-TRADE GUARD / mismatch flag set - refusing to trade (Alpaca desynced from DB).")
+                    return
+            except Exception as _e:
+                print("pre-trade guard check failed: %s" % _e)
+
         from alpaca.trading.enums import OrderSide
 
         if args.signals:
