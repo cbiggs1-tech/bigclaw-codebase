@@ -48,9 +48,10 @@ PORTFOLIO_NAME = "LLM-Comando"
 DEFAULT_CHANNEL = "D0ADHLUJ400"
 MODEL_BULL = "claude-sonnet-4-6"
 MODEL_BEAR = "claude-sonnet-4-6"
-MODEL_JUDGE = "claude-opus-4-8"  # A/B: Opus on Comando, Sonnet on ETF Focus
+MODEL_JUDGE = "claude-fable-5"        # A/B TEST 2026-07-09: Fable 5 LIVE (revert to claude-opus-4-8 after)
+MODEL_JUDGE_SHADOW = "claude-opus-4-8"  # shadow judge for the A/B (logged, not executed)
 MAX_TOKENS_DEBATE = 6000     # bull / bear each (new mandatory Bear priced-in test runs longer; truncated at 3000 on 2026-06-17)
-MAX_TOKENS_JUDGE = 8000     # Opus 4.8 + adaptive thinking needs headroom (thinking blocks count toward output)
+MAX_TOKENS_JUDGE = 16000     # Opus 4.8 + adaptive thinking needs headroom (thinking blocks count toward output)
 LLM_TIMEOUT = 120.0
 
 # Safety rails (Curtis's minimum)
@@ -1015,6 +1016,7 @@ levels relative to the entry you're about to take, not the historical price you 
 MODEL_PRICING = {
     "claude-sonnet-4-6": (3.0, 15.0),
     "claude-opus-4-8":   (5.0, 25.0),
+    "claude-fable-5":    (5.0, 25.0),   # ESTIMATE - confirm Fable 5 pricing
     "claude-opus-4-7":   (5.0, 25.0),
     "claude-opus-4-6":   (5.0, 25.0),
     "claude-haiku-4-5":  (1.0, 5.0),
@@ -1033,7 +1035,16 @@ def call_agent(client, system, user_message, model, max_tokens, agent_name, thin
     }
     if thinking is not None:
         kwargs["thinking"] = thinking
-    resp = client.messages.create(**kwargs)
+    resp = None; _last = None
+    for _attempt in range(3):
+        try:
+            resp = client.messages.create(**kwargs); break
+        except (anthropic.APITimeoutError, anthropic.APIConnectionError) as _e:
+            _last = _e
+            log(f"  {agent_name}: {type(_e).__name__} (attempt {_attempt+1}/3) - retrying", "WARN")
+            time.sleep(3 * (_attempt + 1))
+    if resp is None:
+        raise _last
     dt = time.time() - t0
     # Extract text — adaptive thinking returns thinking blocks before text;
     # we only want the text content for the prompt-following output.
@@ -1666,6 +1677,35 @@ def main():
         executed = sum(1 for _, r in exec_results if r.get("filled_qty"))
         skipped = sum(1 for _, r in exec_results if "skipped" in r or "error" in r)
         log(f"Executed: {executed}  skipped/errored: {skipped}")
+
+        # --- JUDGE A/B SHADOW (2026-07-09): run Opus 4.8 on the SAME input, log vs live Fable 5. Non-executing. ---
+        if not args.dry_run:
+            try:
+                _sh_text, _sh_cost, _sh_dt = call_agent(anthropic_client, JUDGE_SYSTEM, judge_msg,
+                                                         MODEL_JUDGE_SHADOW, MAX_TOKENS_JUDGE, "judge_shadow",
+                                                         thinking={"type": "adaptive"})
+                try:
+                    _sh_out = parse_judge_json(_sh_text); _sh_json_ok = True
+                except Exception:
+                    _sh_out = {}; _sh_json_ok = False
+                _summ = lambda o: [f"{t.get('action')}:{t.get('ticker')}:{t.get('shares')}" for t in (o.get('trades') or [])]
+                _rec = {
+                    "ts": datetime.datetime.now(datetime.timezone.utc).isoformat(), "cycle": args.cycle,
+                    "live": {"model": MODEL_JUDGE, "trades": _summ(judge_out), "n": len(trades),
+                             "latency_s": round(judge_dt, 1), "cost": round(judge_cost, 4), "json_ok": True},
+                    "shadow": {"model": MODEL_JUDGE_SHADOW, "trades": _summ(_sh_out), "n": len(_sh_out.get('trades') or []),
+                               "latency_s": round(_sh_dt, 1), "cost": round(_sh_cost, 4), "json_ok": _sh_json_ok},
+                    "live_reflection": (judge_out.get('reflection') or '')[:500],
+                    "shadow_reflection": (_sh_out.get('reflection') or '')[:500],
+                    "shadow_raw": _sh_text[:4000],
+                }
+                _abdir = Path.home() / "bigclaw-ai" / "data" / "judge_ab"; _abdir.mkdir(parents=True, exist_ok=True)
+                with (_abdir / f"{today_iso}.jsonl").open("a") as _f:
+                    _f.write(json.dumps(_rec) + "\n")
+                log(f"JUDGE A/B: live(Fable) {len(trades)}tr {judge_dt:.1f}s ${judge_cost:.4f} | "
+                    f"shadow(Opus) {_rec['shadow']['n']}tr {_sh_dt:.1f}s ${_sh_cost:.4f} json_ok={_sh_json_ok}")
+            except Exception as _e:
+                log(f"shadow judge A/B failed (non-fatal): {_e}", "WARN")
 
         # Record what we SAW but did NOT buy, for the refusal scorecard (live runs only)
         if not args.dry_run:
