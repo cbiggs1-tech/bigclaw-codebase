@@ -601,8 +601,10 @@ def run_decision_engine():
 
         # Save signals to file for website
         SIGNALS_FILE.parent.mkdir(parents=True, exist_ok=True)
-        with open(SIGNALS_FILE, "w") as f:
+        _tmp = SIGNALS_FILE.parent / (SIGNALS_FILE.name + f".tmp.{os.getpid()}")
+        with open(_tmp, "w") as f:
             json.dump(data, f, indent=2, default=str)
+        os.replace(_tmp, SIGNALS_FILE)
         logger.info(f"Signals saved to {SIGNALS_FILE}")
 
         return data

@@ -271,6 +271,9 @@ A lightweight crontab job (`stop_check.py` every 15 min during market hours) run
 The database (SQLite) is deliberately simple and self-contained. Everything that matters is here; nothing is hidden in external services. All portfolio state lives in `src/portfolios.db`.
 
 All scripts connect with WAL (Write-Ahead Logging) journal mode and a 30-second busy timeout. WAL allows concurrent readers and writers without "database is locked" errors — critical because cron jobs (stop_check, price_refresh) overlap with the autonomous trader during market hours. Every sqlite3.connect call across all 15+ scripts enforces PRAGMA journal_mode=WAL and PRAGMA busy_timeout=30000.
+
+**Schema is the committed source of truth (reconciled 2026-07-09).** The `CREATE TABLE` statements in `src/portfolio.py` `init_database()` are authoritative and now match the live `portfolios.db` exactly, so a fresh clone rebuilds a correct database from scratch with no manual `ALTER`s. (Previously `portfolios.purchase_status`, `holdings.target_price/target_set_at/target_source`, and `transactions.order_id/is_correction` existed only in the live DB — a from-scratch rebuild would have crashed on the first query. Found in the Grok codebase review.) All JSON handoff files (`signals.json` and dashboard exports) are written atomically via temp-file + `os.replace` across every writer, including the autonomous trader, so an overlapping reader can never observe a torn file.
+
 ### 4.1 Tables
 
 ```
@@ -280,11 +283,12 @@ portfolios
 
 holdings
   id, portfolio_id, ticker, shares, avg_cost, rationale,
-  first_bought_at, last_bought_at
+  first_bought_at, last_bought_at,
+  target_price, target_set_at, target_source
 
 transactions
   id, portfolio_id, ticker, action (buy/sell), shares, price,
-  total_value, rationale, executed_at
+  total_value, rationale, executed_at, order_id, is_correction
 
 daily_snapshots
   id, portfolio_id, snapshot_date, total_value, cash,

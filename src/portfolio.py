@@ -12,7 +12,7 @@ import sqlite3
 import logging
 from datetime import datetime
 import sys as _sys
-_sys.path.insert(0, "/home/cbiggs90/bigclaw-ai/scripts")
+_sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "scripts"))
 from trade_recorder import record_trade
 
 from typing import Optional
@@ -54,7 +54,8 @@ def init_database():
             current_cash REAL NOT NULL DEFAULT 100000,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             report_channel TEXT,
-            is_active INTEGER DEFAULT 1
+            is_active INTEGER DEFAULT 1,
+            purchase_status TEXT DEFAULT 'active'
         )
     """)
 
@@ -69,6 +70,9 @@ def init_database():
             first_bought_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             last_bought_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             rationale TEXT,
+            target_price REAL,
+            target_set_at TIMESTAMP,
+            target_source TEXT,
             FOREIGN KEY (portfolio_id) REFERENCES portfolios(id),
             UNIQUE(portfolio_id, ticker)
         )
@@ -86,6 +90,8 @@ def init_database():
             total_value REAL NOT NULL,
             rationale TEXT,
             executed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            order_id TEXT,
+            is_correction INTEGER DEFAULT 0,
             FOREIGN KEY (portfolio_id) REFERENCES portfolios(id)
         )
     """)
