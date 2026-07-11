@@ -48,7 +48,7 @@ PORTFOLIO_NAME = "LLM-Comando"
 DEFAULT_CHANNEL = "D0ADHLUJ400"
 MODEL_BULL = "claude-sonnet-4-6"
 MODEL_BEAR = "claude-sonnet-4-6"
-MODEL_JUDGE = "claude-fable-5"        # A/B TEST 2026-07-09: Fable 5 LIVE (revert to claude-opus-4-8 after)
+MODEL_JUDGE = "claude-opus-4-8"        # A/B concluded 2026-07-10: Fable 5 timed out 3x and killed the morning cycle; reverted to reliable Opus
 MODEL_JUDGE_SHADOW = "claude-opus-4-8"  # shadow judge for the A/B (logged, not executed)
 MAX_TOKENS_DEBATE = 6000     # bull / bear each (new mandatory Bear priced-in test runs longer; truncated at 3000 on 2026-06-17)
 MAX_TOKENS_JUDGE = 16000     # Opus 4.8 + adaptive thinking needs headroom (thinking blocks count toward output)
@@ -1678,8 +1678,8 @@ def main():
         skipped = sum(1 for _, r in exec_results if "skipped" in r or "error" in r)
         log(f"Executed: {executed}  skipped/errored: {skipped}")
 
-        # --- JUDGE A/B SHADOW (2026-07-09): run Opus 4.8 on the SAME input, log vs live Fable 5. Non-executing. ---
-        if not args.dry_run:
+        # --- JUDGE A/B SHADOW: concluded 2026-07-10 (Fable reverted to Opus after a timeout-killed cycle); disabled. ---
+        if False:
             try:
                 _sh_text, _sh_cost, _sh_dt = call_agent(anthropic_client, JUDGE_SYSTEM, judge_msg,
                                                          MODEL_JUDGE_SHADOW, MAX_TOKENS_JUDGE, "judge_shadow",
