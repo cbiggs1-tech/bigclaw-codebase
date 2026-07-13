@@ -160,7 +160,7 @@ def get_portfolio_state():
         conn.close()
         raise RuntimeError(f"Portfolio {PORTFOLIO_NAME!r} not in DB. Run setup first.")
     holdings = conn.execute(
-        "SELECT ticker, shares, avg_cost, first_bought_at FROM holdings "
+        "SELECT ticker, shares, avg_cost, first_bought_at, rationale, target_price, target_source FROM holdings "
         "WHERE portfolio_id=? AND shares>0 ORDER BY ticker", (pf['id'],)
     ).fetchall()
     conn.close()
@@ -633,6 +633,7 @@ def build_state_context(state, total_value, market, news, journal, peer_returns,
                 "ticker": t, "held": held, "snap": snap, "news_n": news_n,
                 "shares": h.get("shares"), "entry": h.get("avg_cost"),
                 "unr_pct": h.get("unrealized_pl_pct"), "latest": latest,
+                "entry_thesis": h.get("rationale"), "target": h.get("target_price"), "bought": h.get("first_bought_at"),
             })
         # Sort: held first (so they're always visible at top regardless of news count),
         # then by news mention count desc, then by 1d return desc
@@ -665,6 +666,10 @@ def build_state_context(state, total_value, market, news, journal, peer_returns,
             if unr_marker:
                 line += unr_marker
             lines.append(line)
+            if r["held"] and (r.get("entry_thesis") or r.get("target")):
+                _tgt = f"orig target ${r['target']:.0f}" if r.get("target") else "no target set"
+                _since = f" since {r['bought'][:10]}" if r.get("bought") else ""
+                lines.append(f"          └ WHY BOUGHT{_since} ({_tgt}) — re-verify vs today: {(r.get('entry_thesis') or '')[:170]}")
 
     if news.get('per_ticker'):
         lines.append(f"\n## NEWS FOR HELD/RECENT TICKERS (Alpaca/Benzinga, last 2 days):")
@@ -889,6 +894,8 @@ That conviction test IS the entire exit rule. Holding time is irrelevant: a trad
 buy is held; a trade you would no longer enter is sold. Quick exits still happen on their own,
 because a spent momentum move is one you would no longer buy - but the trigger is ALWAYS conviction,
 never a timer, and you NEVER churn out of a name you would still buy today.
+
+RE-VERIFY EACH HOLDING'S ENTRY THESIS EVERY SESSION - IT IS A TIME-STAMPED HYPOTHESIS, NOT A STANDING FACT. Each holding is shown to you with WHY IT WAS BOUGHT (its entry thesis, original target, entry date). That reason was true only at the hour you bought - a catalyst like a same-day PT raise may have lived only a few hours. It is NOT a reason to keep holding; it is the BASELINE you measure change against. Re-test every holding's thesis against TODAY's news and price and classify it: STRENGTHENED (fresh confirming catalysts / new higher targets / momentum continuing -> hold or ADD), INTACT (still developing toward target, nothing changed it -> hold), WEAKENED/BROKEN (contradicting news, lowered estimates, thesis invalidated -> EXIT), or SPENT/STALE (the original catalyst is now priced-in or faded and NOTHING NEW replaced it -> it no longer earns its place, redeploy). You NEVER hold on the strength of the entry reason alone once it is old: a few-hour catalyst cannot justify a multi-day or multi-week hold - by then the position must be re-justified by CURRENT evidence, the entry thesis serving only as the yardstick for 'stronger or weaker than when I bought.' (Bought at $150 on two $250 targets, now $200 three weeks later: fresh $300 targets and still running = STRENGTHENED, hold/add through the old target; brokerages cutting to $180 = WEAKENED, sell early; no new news and the move stalled = SPENT, redeploy.) EVERY STOCK EARNS ITS EXISTENCE EVERY SESSION - held or not, it competes fresh against the whole board, and holding period is an OUTPUT of that competition, never a target.
 
 BUT OVERNIGHT AND WEEKEND HOLDS ARE NOT FREE - AND BANKING A GAIN IS CONTROL, FINALITY, AND LOSS PREVENTION. A gain is not yours until you take it; an unrealized gain is a loan the market can call back overnight on a headline you cannot trade against. Holding a position past the close buys you NOTHING but full exposure to the overnight/weekend gap - and that exposure is UNPROTECTED: your trailing stops and the intraday mechanical exits do NOT run while the market is closed, so a gap-down blows straight through the level where a stop would have saved you. A gain held overnight therefore carries strictly MORE risk than the same gain held intraday; banking it converts unprotected exposure into a locked, final gain. So the conviction test has a SECOND half for any position sitting on a real gain: even if you would still buy it, ask whether the OVERNIGHT risk is worth holding for the last few points versus BANKING the gain now and RE-ENTERING next session if the setup still holds. Banking a solid gain ahead of quantifiable overnight risk and re-buying tomorrow is NOT the churn error - it is loss prevention that keeps your conviction (sell high into the close, re-enter, capture the give-back). The churn error is trimming a WORKING position for NO reason in a CALM tape; it is NOT protecting a real gain ahead of real risk. Taking a gain - even a partial one, even short of target - has a finality and control that riding it overnight does not. And selling a name you still believe has room to run is CORRECT when overnight risk is elevated, EVEN IF it opens higher and runs further tomorrow - do NOT regret that. Re-judge it fresh next session against the SAME criteria, and if it is still a good buy, buy it back. The overnight up-move you occasionally forgo is a deliberate, ACCEPTED loss-prevention cost you pay to eliminate the unprotected overnight gap risk - missing some upside is not the mistake; taking an unprotected overnight loss you could have banked is.
 

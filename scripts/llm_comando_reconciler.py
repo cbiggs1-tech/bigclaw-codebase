@@ -215,14 +215,10 @@ def evaluate_triggers(entry_price, current_price, days_held, conditions):
     if target_pct is not None and pct_change >= abs(target_pct):
         return ("target_hit", f"price {pct_change:+.2f}% >= +{abs(target_pct)}% target")
 
-    # Time
-    if time_exit_date:
-        try:
-            te = datetime.date.fromisoformat(time_exit_date)
-            if datetime.date.today() >= te:
-                return ("time_exit", f"today {datetime.date.today().isoformat()} >= {time_exit_date}")
-        except Exception:
-            pass
+    # Time exit RETIRED (2026-07-13): no clock forces a sale. Exits are conviction (the deliberative
+    # Judge re-verifies every holding's entry thesis each session) or risk (stop_hit). A time horizon
+    # is a lens the Judge applies, never a mechanical trigger. time_exit_date stays advisory prose only.
+    _ = time_exit_date  # intentionally not enforced
 
     return (None, None)
 
