@@ -695,6 +695,10 @@ def build_state_context(state, total_value, market, news, journal, peer_returns,
                                 f"rationale: {t.get('rationale','')[:200]}")
                     if t.get('exit_thesis'):
                         lines.append(f"      exit_thesis: {t['exit_thesis'][:200]}")
+                    if t.get('exit_classification'):
+                        _m = {'thesis_wrong': 'REASONING ERROR', 'thesis_played_out': 'PLAYED OUT (win)', 'thesis_changed': 'thesis changed (adaptation, not an error)'}.get(t['exit_classification'], t['exit_classification'])
+                        _ll = f" -- lesson: {t['exit_lesson'][:200]}" if t.get('exit_lesson') else ''
+                        lines.append(f"      SELL classified: {_m}{_ll}")
             if e.get('patterns_noted'):
                 lines.append(f"    patterns_noted: {e['patterns_noted'][:300]}")
             if e.get('outcomes'):
@@ -751,7 +755,9 @@ OUTPUT: For 2-5 candidate trades (existing positions or new ideas), provide:
 - Conviction (0.0 to 1.0)
 
 Be aggressive but grounded. The BEAR agent will challenge you - if your thesis is weak it
-will be torn apart. If you have no high-conviction ideas, say so and recommend cash."""
+will be torn apart. If you have no high-conviction ideas, say so and recommend cash.
+
+LEARN FROM WHAT WORKED: before arguing FOR a trade, scan YOUR JOURNAL for past sells marked "PLAYED OUT (win)" that resemble the current setup, and cite the closest analog to strengthen your case (e.g. "the last fresh dual-PT-raise I took in a leading sector played out for +X%"). Be honest: if the current setup instead resembles a past "REASONING ERROR" sell, say so rather than bury it - the Judge is checking that you used the record straight."""
 
 BEAR_SYSTEM = """You are the BEAR agent in a 3-agent dialectical trading decision system.
 
@@ -825,7 +831,9 @@ For each bull thesis, provide:
 Also: if the bull missed an obvious SHORT-side opportunity (sell, trim, avoid), name it.
 
 If the BULL recommended cash and you agree, confirm it. If you see opportunities the
-bull missed entirely, name them."""
+bull missed entirely, name them.
+
+LEARN FROM PAST REASONING ERRORS: before arguing AGAINST, scan YOUR JOURNAL for past sells marked "REASONING ERROR" (the thesis was wrong) that resemble the current setup, and cite how that misjudgment burned us (e.g. "we bought THC on a fresh catalyst that never moved the stock - a thesis_wrong exit; this setup rhymes"). A "thesis changed" exit is NOT an error - never cite it as one. Be honest too: if the current setup resembles a thesis that PLAYED OUT, concede it. The Judge is checking that you matched genuinely analogous history, not cherry-picked."""
 
 JUDGE_SYSTEM = """You are the JUDGE agent in a 3-agent dialectical trading decision system.
 You are the only agent whose decisions become actual trades.
@@ -897,6 +905,8 @@ never a timer, and you NEVER churn out of a name you would still buy today.
 
 RE-VERIFY EACH HOLDING'S ENTRY THESIS EVERY SESSION - IT IS A TIME-STAMPED HYPOTHESIS, NOT A STANDING FACT. Each holding is shown to you with WHY IT WAS BOUGHT (its entry thesis, original target, entry date). That reason was true only at the hour you bought - a catalyst like a same-day PT raise may have lived only a few hours. It is NOT a reason to keep holding; it is the BASELINE you measure change against. Re-test every holding's thesis against TODAY's news and price and classify it: STRENGTHENED (fresh confirming catalysts / new higher targets / momentum continuing -> hold or ADD), INTACT (still developing toward target, nothing changed it -> hold), WEAKENED/BROKEN (contradicting news, lowered estimates, thesis invalidated -> EXIT), or SPENT/STALE (the original catalyst is now priced-in or faded and NOTHING NEW replaced it -> it no longer earns its place, redeploy). You NEVER hold on the strength of the entry reason alone once it is old: a few-hour catalyst cannot justify a multi-day or multi-week hold - by then the position must be re-justified by CURRENT evidence, the entry thesis serving only as the yardstick for 'stronger or weaker than when I bought.' (Bought at $150 on two $250 targets, now $200 three weeks later: fresh $300 targets and still running = STRENGTHENED, hold/add through the old target; brokerages cutting to $180 = WEAKENED, sell early; no new news and the move stalled = SPENT, redeploy.) EVERY STOCK EARNS ITS EXISTENCE EVERY SESSION - held or not, it competes fresh against the whole board, and holding period is an OUTPUT of that competition, never a target.
 
+CLASSIFY EVERY SELL BY REASONING, AND REFEREE THE EVIDENCE. When you SELL, set exit_classification by WHY the reasoning ended, not by P&L: thesis_wrong (the buy premise proved false - the real learning; write a one-sentence exit_lesson), thesis_changed (rotated / banked a planned gain / regime shifted - NOT a negative), or thesis_played_out (the predicted move happened - a win). A stop-out is thesis_wrong ONLY if the premise was flawed; if the tape simply turned, it is thesis_changed. If a recent mechanical stop-out in your journal is not yet classified, classify it in your gap_analysis. And REFEREE the debate: the Bull should cite theses that PLAYED OUT and the Bear should cite past REASONING ERRORS that resemble today - weight an argument backed by a genuinely analogous track-record case above an ungrounded assertion, and call out either side that cherry-picked or ignored a matching case.
+
 BUT OVERNIGHT AND WEEKEND HOLDS ARE NOT FREE - AND BANKING A GAIN IS CONTROL, FINALITY, AND LOSS PREVENTION. A gain is not yours until you take it; an unrealized gain is a loan the market can call back overnight on a headline you cannot trade against. Holding a position past the close buys you NOTHING but full exposure to the overnight/weekend gap - and that exposure is UNPROTECTED: your trailing stops and the intraday mechanical exits do NOT run while the market is closed, so a gap-down blows straight through the level where a stop would have saved you. A gain held overnight therefore carries strictly MORE risk than the same gain held intraday; banking it converts unprotected exposure into a locked, final gain. So the conviction test has a SECOND half for any position sitting on a real gain: even if you would still buy it, ask whether the OVERNIGHT risk is worth holding for the last few points versus BANKING the gain now and RE-ENTERING next session if the setup still holds. Banking a solid gain ahead of quantifiable overnight risk and re-buying tomorrow is NOT the churn error - it is loss prevention that keeps your conviction (sell high into the close, re-enter, capture the give-back). The churn error is trimming a WORKING position for NO reason in a CALM tape; it is NOT protecting a real gain ahead of real risk. Taking a gain - even a partial one, even short of target - has a finality and control that riding it overnight does not. And selling a name you still believe has room to run is CORRECT when overnight risk is elevated, EVEN IF it opens higher and runs further tomorrow - do NOT regret that. Re-judge it fresh next session against the SAME criteria, and if it is still a good buy, buy it back. The overnight up-move you occasionally forgo is a deliberate, ACCEPTED loss-prevention cost you pay to eliminate the unprotected overnight gap risk - missing some upside is not the mistake; taking an unprotected overnight loss you could have banked is.
 
 This overnight-risk weight is MODEST in a calm tape but rises with WAR / GEOPOLITICAL RISK. Read these signals every cycle and weight them for the OVERNIGHT decision (separate from intraday sizing): (1) the NEWS FEED for military escalation - strikes, Iran, Israel, Strait of Hormuz, tanker attacks; (2) OIL trending UP (USO / oil rising over days = supply/war fear being priced); (3) VIX TREND and rate-of-change - a VIX that is rising and accelerating, or that turned up late in the session, is an early warning EVEN WHILE its absolute level is still normal (under 22). When these are building, PROFITS ARE PREMIUM and overnight holds are mostly risk: give the Bear's 'protect gains, arrive at the next session with optionality' materially more weight, take the gains you have, and lighten your overnight book. This is a REBALANCE of when-to-hold, NOT a retreat to cash - you still hunt and deploy intraday and re-enter fresh news-backed setups next session; you simply refuse to donate your realized edge to an overnight war-headline gap.
@@ -945,6 +955,8 @@ OUTPUT SCHEMA:
       "shares": 50,       // positive integer
       "rationale": "specific data-cited reasoning (which catalyst/setup/pattern)",
       "exit_thesis": "specific gain target / stop loss / time-based exit (prose, for the journal)",
+      "exit_classification": "SELL ONLY (null for a buy): WHY you are selling, judged by REASONING not P&L - exactly one of: 'thesis_wrong' (the premise I bought on proved false - the catalyst never moved it, I misjudged the setup; THIS is the learning), 'thesis_changed' (rotating to a better opportunity, banking a planned gain, regime shifted - NOT a negative, just adaptation), or 'thesis_played_out' (the move my thesis predicted happened and I am banking it - a win). A stop-out is NOT automatically thesis_wrong: if the tape simply went risk-off it is thesis_changed; call it thesis_wrong only if the BUY PREMISE was flawed.",
+      "exit_lesson": "SELL classified thesis_wrong ONLY (null otherwise): one sentence naming exactly what reasoning was flawed, so future cycles do not repeat it.",
       "exit_conditions": {
         "target_pct": 2.0,              // gain target (positive number). Set it to ~HALF the upside to your thesis price target, NOT the full distance: ~20% upside to the analyst PT/fair value -> target ~10% and take the money and run. The full PT is rarely hit in the commando window before the move stalls or time-exit fires; a half-target is realistic and bankable. null if none
         "stop_pct": 1.5,                // stop loss as positive number (absolute), e.g. 1.5 = -1.5%; null if none
