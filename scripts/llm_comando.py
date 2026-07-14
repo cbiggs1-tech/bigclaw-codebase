@@ -59,6 +59,7 @@ CATASTROPHIC_DRAWDOWN_FLOOR = 50_000.0   # USD - freeze if portfolio drops below
 
 LOCK_FILE = Path("/tmp/llm_comando.lock")
 FAILURE_FLAG = Path.home() / "bigclaw-ai" / "logs" / "LLM_COMANDO_FAILED.flag"
+DRY_RUN = False  # set from args.dry_run in main(); guards live-flag + markdown writes
 DRAWDOWN_FLAG = Path.home() / "bigclaw-ai" / "logs" / "LLM_COMANDO_DRAWDOWN_FREEZE.flag"
 LLM_LOG = Path.home() / "bigclaw-ai" / "logs" / "llm_calls.jsonl"
 JOURNAL = Path.home() / "bigclaw-ai" / "data" / "llm_comando_journal.jsonl"
@@ -96,6 +97,9 @@ def log(msg, level="INFO"):
     print(f"[{datetime.datetime.now(datetime.timezone.utc).isoformat()}] {level} {msg}")
 
 def write_failure_flag(reason):
+    if DRY_RUN:
+        log(f"[dry-run] would have written failure flag: {reason}", "WARN")
+        return
     try:
         FAILURE_FLAG.parent.mkdir(parents=True, exist_ok=True)
         FAILURE_FLAG.write_text(json.dumps({
@@ -1548,6 +1552,8 @@ def main():
                     help="Run agents but produce strategy doc only - no trade decisions")
     ap.add_argument("--channel", default=DEFAULT_CHANNEL)
     args = ap.parse_args()
+    global DRY_RUN
+    DRY_RUN = args.dry_run
 
     acquire_lock()
     try:
@@ -1792,8 +1798,11 @@ def main():
         else:
             log(f"DRY RUN — skipping trigger persistence ({len(judge_out.get('intraday_triggers', []) or [])} triggers would have been written)")
 
-        # Human-readable per-cycle Markdown for Curtis to browse
-        try:
+        # Human-readable per-cycle Markdown for Curtis to browse (skip in dry-run - would clobber the real file)
+        if args.dry_run:
+            log("DRY RUN - skipping decision markdown write (would overwrite the real cycle's file)")
+        else:
+          try:
             save_decision_markdown(today_iso, total_value, state, market, news, peer_returns,
                                     bull_text, bear_text, judge_out, exec_results,
                                     cost_total, cycle_duration,
@@ -1802,7 +1811,7 @@ def main():
                                     judge_dt=round(judge_dt, 1) if judge_dt else None,
                                     cycle_name=args.cycle)
             log(f"Decision Markdown written to {DECISIONS_DIR}/{today_iso}-{args.cycle}.md")
-        except Exception as e:
+          except Exception as e:
             log(f"Decision Markdown write failed: {e}", "WARN")
 
         # Slack summary
