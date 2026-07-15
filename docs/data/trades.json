@@ -3,6 +3,17 @@
     {
       "date": "Jul 15",
       "portfolio": "LLM-Comando",
+      "action": "BUY",
+      "ticker": "KTOS",
+      "shares": 90.0,
+      "price": 50.04,
+      "total": 4503.6,
+      "rationale": "RECONCILE: manual cover buy of the unintended -90 KTOS short (Curtis-authorized)",
+      "executed_at": "2026-07-15 16:11:00"
+    },
+    {
+      "date": "Jul 15",
+      "portfolio": "LLM-Comando",
       "action": "SELL",
       "ticker": "AMD",
       "shares": 50.0,
@@ -43,6 +54,17 @@
       "total": 4748.4,
       "rationale": "LLM-WATCHER: KTOS at $53.46 (+7.83% from $49.58 cost basis) has hit and exceeded the +6% half-target trigger I set this morning. Per commando doctrine, sell half to bank realized gain (~$350 on 90 shares). U.S.-Iran conflict news (CNBC) supports remaining defense exposure but catalyst is 1 day stale and the move",
       "executed_at": "2026-07-15 13:46:45"
+    },
+    {
+      "date": "Jul 15",
+      "portfolio": "LLM-Comando",
+      "action": "SELL",
+      "ticker": "KTOS",
+      "shares": 180.0,
+      "price": 53.82,
+      "total": 9687.6,
+      "rationale": "RECONCILE: 08:36 target-exit sold 180 @53.82 at Alpaca but fill-record errored (order-not-found); never recorded -> caused the -90 short",
+      "executed_at": "2026-07-15 13:36:00"
     },
     {
       "date": "Jul 14",
@@ -1123,5 +1145,5 @@
       "executed_at": "2026-07-08 13:36:35"
     }
   ],
-  "lastUpdate": "2026-07-15T19:11:54.384458+00:00"
+  "lastUpdate": "2026-07-15T21:41:23.359498+00:00"
 }
