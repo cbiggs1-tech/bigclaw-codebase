@@ -1570,6 +1570,24 @@ def verify_account_synced(halt_threshold=5):
         dbsum = dict(c.fetchall())
         conn.close()
         held = [t for t, sh in dbsum.items() if sh]
+        # Sign-flip guard (2026-07-15): any SHORT at Alpaca is unexpected (BigClaw is long-only;
+        # inverse ETFs are held LONG). A single-ticker long->short flip slips past the missing-count
+        # check (KTOS incident) - halt on any negative position.
+        shorts = {t: q for t, q in apos.items() if q < -0.5}
+        if shorts:
+            reason = ("PRE-TRADE GUARD: unexpected SHORT position(s) at Alpaca %s - BigClaw is long-only. "
+                      "Trading auto-halted; flatten/reconcile before clearing this flag." % shorts)
+            MISMATCH_FLAG_PATH.parent.mkdir(parents=True, exist_ok=True)
+            MISMATCH_FLAG_PATH.write_text(json.dumps({"ts": now_et().isoformat(), "reason": reason}, indent=2))
+            logger.error("PRE-TRADE GUARD TRIPPED: unexpected short(s) %s. Kill-switch set." % shorts)
+            try:
+                sec = load_secrets()
+                from slack_sdk import WebClient
+                WebClient(token=sec["SLACK_BOT_TOKEN"]).chat_postMessage(
+                    channel="D0ADHLUJ400", text=":rotating_light: *PRE-TRADE GUARD HALT* - " + reason)
+            except Exception:
+                pass
+            return False
         missing = [t for t in held if abs(apos.get(t, 0)) < 0.5]
         if len(missing) >= halt_threshold:
             reason = ("PRE-TRADE GUARD: %d/%d DB positions missing at Alpaca (e.g. %s) - likely an "

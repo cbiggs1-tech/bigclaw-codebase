@@ -539,6 +539,10 @@ def check_mechanical_exits(dry_run, secrets, channel):
     from trade_recorder import record_trade
     from alpaca.trading.requests import MarketOrderRequest
     from alpaca.trading.enums import OrderSide, TimeInForce
+    import json as _json, datetime as _dt
+    _CDFILE = Path.home() / "bigclaw-ai" / "data" / "llm_comando_exit_cooldown.json"; _CDMIN = 30
+    try: _cd = _json.loads(_CDFILE.read_text()) if _CDFILE.exists() else {}
+    except Exception: _cd = {}
 
     if MISMATCH_FLAG_PATH.exists():
         log("mechanical exits: mismatch flag set — skipping", "WARN")
@@ -577,6 +581,10 @@ def check_mechanical_exits(dry_run, secrets, channel):
         if trigger is None:
             continue
         log(f"  MECHANICAL EXIT {tk}: {reason} (entry ${entry:.2f} -> ${current:.2f})")
+        _lf = _cd.get(tk)
+        if _lf and (_dt.datetime.now(_dt.timezone.utc) - _dt.datetime.fromisoformat(_lf)).total_seconds() < _CDMIN*60:
+            log(f"  exit {tk}: {_CDMIN}m exit-cooldown active since last fire — skip", "WARN")
+            continue
         if dry_run:
             slack_lines.append(f"  - [DRY] {tk}: {trigger} - {reason}")
             continue
@@ -599,6 +607,9 @@ def check_mechanical_exits(dry_run, secrets, channel):
         value = filled_qty * filled_price
         record_trade(pid, PORTFOLIO_NAME, tk, "sell", filled_qty, filled_price, value,
                      f"LLM-WATCHER-EXIT: {reason}", order_id=str(order.id))
+        _cd[tk] = _dt.datetime.now(_dt.timezone.utc).isoformat()
+        try: _CDFILE.write_text(_json.dumps(_cd))
+        except Exception: pass
         exec_result = {"filled_qty": filled_qty, "filled_price": filled_price,
                        "value": value, "order_id": str(order.id)}
         outcome = recon.build_outcome(origin_date, tk, filled_qty, entry, current, days_held,
