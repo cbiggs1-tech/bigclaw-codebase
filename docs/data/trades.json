@@ -1,6 +1,39 @@
 {
   "trades": [
     {
+      "date": "Jul 16",
+      "portfolio": "Nuclear Renaissance",
+      "action": "SELL",
+      "ticker": "OKLO",
+      "shares": 208.0,
+      "price": 42.74,
+      "total": 8889.92,
+      "rationale": "Trailing stop triggered: $42.72 <= $43.93 (HWM $49.92, -14.4%)",
+      "executed_at": "2026-07-16 14:00:21"
+    },
+    {
+      "date": "Jul 16",
+      "portfolio": "Momentum Growth",
+      "action": "SELL",
+      "ticker": "ANET",
+      "shares": 72.0,
+      "price": 166.118333,
+      "total": 11960.519976,
+      "rationale": "Trailing stop triggered: $166.21 <= $170.21 (HWM $189.12, -12.1%)",
+      "executed_at": "2026-07-16 14:00:20"
+    },
+    {
+      "date": "Jul 16",
+      "portfolio": "LLM-Comando",
+      "action": "SELL",
+      "ticker": "MS",
+      "shares": 40.0,
+      "price": 220.7,
+      "total": 8828.0,
+      "rationale": "LLM-WATCHER-EXIT: price -3.41% <= -3.0% stop",
+      "executed_at": "2026-07-16 13:50:09"
+    },
+    {
       "date": "Jul 15",
       "portfolio": "LLM-Comando",
       "action": "BUY",
@@ -738,5 +771,5 @@
       "executed_at": "2026-07-09 13:35:39"
     }
   ],
-  "lastUpdate": "2026-07-16T11:33:12.922715+00:00"
+  "lastUpdate": "2026-07-16T14:12:31.957527+00:00"
 }
