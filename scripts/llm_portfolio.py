@@ -61,6 +61,15 @@ FAILURE_FLAG = Path.home() / "bigclaw-ai" / "logs" / "LLM_PORTFOLIO_FAILED.flag"
 DRAWDOWN_FLAG = Path.home() / "bigclaw-ai" / "logs" / "LLM_PORTFOLIO_DRAWDOWN_FREEZE.flag"
 LLM_LOG = Path.home() / "bigclaw-ai" / "logs" / "llm_calls.jsonl"
 JOURNAL = Path.home() / "bigclaw-ai" / "data" / "llm_journal.jsonl"
+
+# Durable, curated lessons from analyzing our own trades (extension risk, opportunity-cost
+# exit, etc.) — shared with LLM-Comando. Injected into the data feed as INFORMATION, not
+# rules; the Bull/Bear/Judge weigh it and decide. Guarded so a missing module never breaks a cycle.
+try:
+    from llm_lessons import render_lessons
+except Exception:
+    def render_lessons():
+        return ""
 OUTPUT_JSON = Path.home() / "bigclaw-ai" / "docs" / "data" / "llm_portfolio.json"
 DECISIONS_DIR = Path.home() / "bigclaw-ai" / "data" / "llm_decisions"
 DB_PATH = Path.home() / "bigclaw-ai" / "src" / "portfolios.db"
@@ -307,6 +316,8 @@ def build_state_context(state, total_value, market, news, journal, peer_returns,
             if ret is not None:
                 mark = "  <-- BEATING you" if ret > (total_value / state['starting_cash'] - 1) * 100 else ""
             lines.append(f"    {name:<25s} {ret:>+6.2f}%{mark}" if ret is not None else f"    {name:<25s}  n/a")
+
+    lines.append("\n" + render_lessons())
 
     lines.append(f"\n## SECTOR ETF PERFORMANCE (1d / 5d / 30d):")
     for t in SECTOR_ETFS:

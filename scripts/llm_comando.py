@@ -63,6 +63,15 @@ DRY_RUN = False  # set from args.dry_run in main(); guards live-flag + markdown 
 DRAWDOWN_FLAG = Path.home() / "bigclaw-ai" / "logs" / "LLM_COMANDO_DRAWDOWN_FREEZE.flag"
 LLM_LOG = Path.home() / "bigclaw-ai" / "logs" / "llm_calls.jsonl"
 JOURNAL = Path.home() / "bigclaw-ai" / "data" / "llm_comando_journal.jsonl"
+
+# Durable, curated lessons from analyzing our own trades (extension risk, opportunity-cost
+# exit, etc.) — shared with LLM-ETF Focus. Injected into the data feed as INFORMATION, not
+# rules; the Bull/Bear/Judge weigh it and decide. Guarded so a missing module never breaks a cycle.
+try:
+    from llm_lessons import render_lessons
+except Exception:
+    def render_lessons():
+        return ""
 PASSED = Path.home() / "bigclaw-ai" / "data" / "llm_comando_passed.jsonl"  # candidates seen-but-not-bought (refusal scorecard)
 PEAKS = Path.home() / "bigclaw-ai" / "data" / "llm_comando_position_peaks.json"  # per-position high-water mark (hold scorecard)
 OUTPUT_JSON = Path.home() / "bigclaw-ai" / "docs" / "data" / "llm_comando_portfolio.json"
@@ -216,7 +225,7 @@ def get_candidate_snapshot(tickers):
     if not tickers:
         return {}
     try:
-        hist = yf.download(list(tickers), period='3mo', progress=False, threads=True)['Close']
+        hist = yf.download(list(tickers), period='1y', progress=False, threads=True)['Close']  # 1y: enough for 200d MA + RSI
     except Exception as e:
         log(f"candidate_snapshot fetch failed: {e}", "WARN")
         return {}
@@ -224,6 +233,23 @@ def get_candidate_snapshot(tickers):
         try:
             if len(series) < n + 1: return None
             return (float(series.iloc[-1]) / float(series.iloc[-n-1]) - 1) * 100
+        except Exception:
+            return None
+    def _rsi14(series):
+        try:
+            import numpy as np
+            d = np.diff(series.values[-15:].astype(float))
+            up = float(d[d > 0].sum()); dn = float(-d[d < 0].sum())
+            if dn == 0: return 100.0
+            return round(100 - 100 / (1 + up / dn), 1)
+        except Exception:
+            return None
+    def _ext200(series):
+        try:
+            import numpy as np
+            if len(series) < 200: return None
+            sma = float(np.mean(series.values[-200:].astype(float)))
+            return round((float(series.iloc[-1]) / sma - 1) * 100, 1) if sma > 0 else None
         except Exception:
             return None
     out = {}
@@ -239,6 +265,8 @@ def get_candidate_snapshot(tickers):
                         'ret_1d': _ret(v, 1),
                         'ret_5d': _ret(v, 5),
                         'ret_30d': _ret(v, 30),
+                        'rsi14': _rsi14(v),
+                        'ext200': _ext200(v),
                     }
                 except Exception:
                     pass
@@ -251,6 +279,8 @@ def get_candidate_snapshot(tickers):
                         'ret_1d': _ret(v, 1),
                         'ret_5d': _ret(v, 5),
                         'ret_30d': _ret(v, 30),
+                        'rsi14': _rsi14(v),
+                        'ext200': _ext200(v),
                     }
             except Exception:
                 pass
@@ -611,6 +641,8 @@ def build_state_context(state, total_value, market, news, journal, peer_returns,
     if refusal_scorecard:
         lines.append(refusal_scorecard)
 
+    lines.append("\n" + render_lessons())
+
     if candidate_snapshot:
         # CANDIDATE STRENGTH RANKING: the "compete" view. Held positions ranked
         # against fresh news-mentioned candidates by news intensity (24h count)
@@ -652,6 +684,7 @@ def build_state_context(state, total_value, market, news, journal, peer_returns,
         lines.append("  - Held position with low news intensity vs candidate with high intensity = rotation signal")
         lines.append("  - Held position dragging vs candidates rallying today = consider rotating to capture better short-term move")
         lines.append("  - Your goal is short-term gains; a thesis you bought 2 hours ago can weaken if news shifts")
+        lines.append("  - A ⚠extended flag = the name has already run far above its 200d MA and/or is overbought; per LESSONS, that is a mean-reversion RISK, not a green light to chase")
         lines.append("")
         lines.append("  ★=held   ticker     shares  entry      current   1d      5d      30d     news#  latest_headline")
         for r in rows[:40]:  # cap at 40 to keep context manageable
@@ -669,6 +702,13 @@ def build_state_context(state, total_value, market, news, journal, peer_returns,
             line = f"  {star} {r['ticker']:<6s}  {shares}    {entry}  {price}  {r1}  {r5}  {r30}  {news_n}    {r['latest'][:55]}"
             if unr_marker:
                 line += unr_marker
+            _ext = snap.get("ext200") if snap else None
+            _rsi = snap.get("rsi14") if snap else None
+            _xf = []
+            if _ext is not None and _ext > 20: _xf.append(f"+{_ext:.0f}%>200dMA")
+            if _rsi is not None and _rsi > 75: _xf.append(f"RSI{_rsi:.0f}")
+            if _xf:
+                line += "  ⚠extended(" + ",".join(_xf) + ")"
             lines.append(line)
             if r["held"] and (r.get("entry_thesis") or r.get("target")):
                 _tgt = f"orig target ${r['target']:.0f}" if r.get("target") else "no target set"
