@@ -124,6 +124,47 @@ def evaluate_target_discipline_sell(pname, ticker, current_price, target_price,
     return False, None
 
 
+# ---------------------------------------------------------------------------
+# ENTRY GATE (anti-extension / anti-overbought) — a mean-reversion filter applied
+# to CANDIDATES ONLY. It never forces a sell of an existing holding, and it is
+# naturally scoped to the 7 rule-based portfolios (the 2 LLM portfolios never
+# reach plan_portfolio). Style-aware: value / mean-reversion styles gate tight;
+# momentum / growth styles gate loose, so we kill only egregious chases (e.g.
+# +40% over the 200d MA at RSI 88) without gutting a momentum mandate. Indicator
+# data (rsi14, pct_above_200ma) is supplied per-ticker by decision_engine.
+# Backtest basis: an ext<+10%/RSI<70 gate flipped our real buys from -1.4% to
+# +1.1% avg return (all portfolios, 2026-04 → 07, n=415). Tune per portfolio.
+#   value:    (max_pct_above_200ma=12, max_rsi14=70)
+#   momentum: (max_pct_above_200ma=25, max_rsi14=80)
+# ---------------------------------------------------------------------------
+ENTRY_GATE = {
+    "Value Picks":             (12, 70),
+    "Income Dividends":        (12, 70),
+    "Growth Value":            (15, 72),
+    "Innovation Fund":         (25, 80),
+    "Momentum Growth":         (25, 80),
+    "Nuclear Renaissance":     (25, 80),
+    "AI Defense & Autonomous": (25, 80),
+}
+
+
+def passes_entry_gate(pname, rsi14, pct_above_200ma):
+    """Veto an over-extended / overbought CANDIDATE buy (mean-reversion filter).
+    Vetoes only on indicators that are present — a missing indicator never blocks
+    a buy. Returns {"pass": bool, "reason": str|None}. Scoped to the 7 rule-based
+    portfolios; an unknown pname (e.g. an LLM portfolio) has no gate and always
+    passes, so this can never touch LLM-Comando / LLM-ETF Focus."""
+    limits = ENTRY_GATE.get(pname)
+    if not limits:
+        return {"pass": True, "reason": None}
+    max_ext, max_rsi = limits
+    if pct_above_200ma is not None and pct_above_200ma > max_ext:
+        return {"pass": False, "reason": f"extended {pct_above_200ma:.0f}% > {max_ext}% over 200d MA"}
+    if rsi14 is not None and rsi14 > max_rsi:
+        return {"pass": False, "reason": f"overbought RSI {rsi14:.0f} > {max_rsi}"}
+    return {"pass": True, "reason": None}
+
+
 MAX_HOLDINGS = 10            # Max positions per portfolio
 MIN_HOLDINGS = 7             # Min positions per portfolio (triggers swap/add)
 MAX_POSITION_PCT = 0.20      # Max 20% of portfolio value in any one stock (monthly rebalance only)
@@ -834,6 +875,14 @@ def plan_portfolio(pid, pname, starting, signal_map, portfolio_signals, universe
         gate_info = signal_map.get(ticker, {}).get("info")
         gate_result = passes_style_gate(ticker, pname, gate_info)
         if not gate_result["pass"]:
+            continue
+        # Entry gate — anti-extension / overbought (candidates only, style-aware).
+        # Does NOT touch existing holdings (scored in the loop above) — we never
+        # force-sell an extended position, we just decline to open a new chase.
+        _sig = signal_map.get(ticker, {})
+        entry_gate = passes_entry_gate(pname, _sig.get("rsi14"), _sig.get("pct_above_200ma"))
+        if not entry_gate["pass"]:
+            logger.info(f"{pname}: ENTRY-GATE veto {ticker} — {entry_gate['reason']}")
             continue
         all_scored[ticker] = {"ticker": ticker, "score": score, "held": False,
                               "shares": 0, "avg_cost": 0}

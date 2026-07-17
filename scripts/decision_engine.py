@@ -1051,11 +1051,29 @@ def score_ticker(ticker, market_data, prices, bond_combined, bond_weight, style_
     else:
         label = "🔴 SELL / TRIM"
 
+    # Raw indicators for the entry gate (mean-reversion / anti-chasing filter,
+    # consumed by autonomous_trader.passes_entry_gate). Computed from the same
+    # close series; None when history is too short to be meaningful.
+    try:
+        rsi14 = float(RSIIndicator(close, window=14).rsi().iloc[-1])
+    except Exception:
+        rsi14 = None
+    try:
+        if len(close) >= 200:
+            _sma200 = float(SMAIndicator(close, window=200).sma_indicator().iloc[-1])
+            pct_above_200ma = ((float(close.iloc[-1]) - _sma200) / _sma200 * 100) if _sma200 > 0 else None
+        else:
+            pct_above_200ma = None
+    except Exception:
+        pct_above_200ma = None
+
     result_entry = {
         "ticker": ticker, "score": score, "signals": all_signals,
         "reasons": reasons, "label": label,
         "price": float(close.iloc[-1]),
         "sector": info.get("sector", ""),
+        "rsi14": rsi14,
+        "pct_above_200ma": pct_above_200ma,
         "info": info,  # Passed through for style gate checks (avoids re-fetching yfinance)
     }
     if vo_score > 0:
@@ -1449,7 +1467,8 @@ def format_json(data):
     signals_out = []
     for r in data["signals"]:
         entry = {"ticker": r["ticker"], "score": r["score"], "label": r["label"],
-                 "reasons": r["reasons"], "price": r.get("price")}
+                 "reasons": r["reasons"], "price": r.get("price"),
+                 "rsi14": r.get("rsi14"), "pct_above_200ma": r.get("pct_above_200ma")}
         if "value_override" in r:
             entry["value_override"] = r["value_override"]
         signals_out.append(entry)
