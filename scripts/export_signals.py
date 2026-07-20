@@ -123,7 +123,20 @@ def run_script(cmd, output_file, label):
         if result.returncode != 0:
             print(f"  ⚠ {label} failed (exit {result.returncode})", file=sys.stderr)
             if result.stderr:
-                print(f"  stderr: {result.stderr[:500]}", file=sys.stderr)
+                # A real Python traceback is printed LAST, right before exit — the
+                # first 500 chars were pure noise (yfinance 404/delisted spam), which
+                # buried every previous crash's true cause. Show the tail instead, and
+                # persist the FULL stderr so a truncated console capture can never lose it.
+                print(f"  stderr (tail): {result.stderr[-2000:]}", file=sys.stderr)
+                try:
+                    err_dir = os.path.join(SCRIPTS_DIR, "..", "logs")
+                    os.makedirs(err_dir, exist_ok=True)
+                    err_path = os.path.join(err_dir, f"{label.lower().replace(' ', '_')}_last_error.log")
+                    with open(err_path, "w") as ef:
+                        ef.write(result.stderr)
+                    print(f"  full stderr saved -> {err_path}", file=sys.stderr)
+                except Exception:
+                    pass
             return False
 
         stdout = result.stdout.strip()
