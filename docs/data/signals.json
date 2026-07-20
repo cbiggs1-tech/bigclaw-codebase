@@ -23484,12 +23484,6 @@
   },
   "earnings": [
     {
-      "ticker": "SYF",
-      "date": "2026-07-21",
-      "days_away": 1,
-      "eps_est": 2.13
-    },
-    {
       "ticker": "CB",
       "date": "2026-07-21",
       "days_away": 1,
@@ -23506,6 +23500,12 @@
       "date": "2026-07-21",
       "days_away": 1,
       "eps_est": 0.52
+    },
+    {
+      "ticker": "SYF",
+      "date": "2026-07-21",
+      "days_away": 1,
+      "eps_est": 2.13
     },
     {
       "ticker": "TNL",
@@ -23556,16 +23556,16 @@
       "eps_est": 0.4
     },
     {
-      "ticker": "LHX",
-      "date": "2026-07-29",
-      "days_away": 9,
-      "eps_est": 2.83
-    },
-    {
       "ticker": "GD",
       "date": "2026-07-29",
       "days_away": 9,
       "eps_est": 3.97
+    },
+    {
+      "ticker": "RSI",
+      "date": "2026-07-29",
+      "days_away": 9,
+      "eps_est": 0.15
     },
     {
       "ticker": "ETR",
@@ -23574,10 +23574,16 @@
       "eps_est": 1.06
     },
     {
-      "ticker": "RSI",
+      "ticker": "LHX",
       "date": "2026-07-29",
       "days_away": 9,
-      "eps_est": 0.15
+      "eps_est": 2.83
+    },
+    {
+      "ticker": "NBIX",
+      "date": "2026-07-30",
+      "days_away": 10,
+      "eps_est": 1.93
     },
     {
       "ticker": "AEP",
@@ -23590,12 +23596,6 @@
       "date": "2026-07-30",
       "days_away": 10,
       "eps_est": 11.85
-    },
-    {
-      "ticker": "NBIX",
-      "date": "2026-07-30",
-      "days_away": 10,
-      "eps_est": 1.93
     },
     {
       "ticker": "AU",
@@ -23628,34 +23628,10 @@
       "eps_est": 1.31
     },
     {
-      "ticker": "CPRX",
+      "ticker": "HLNE",
       "date": "2026-08-05",
       "days_away": 16,
-      "eps_est": 0.74
-    },
-    {
-      "ticker": "VVV",
-      "date": "2026-08-05",
-      "days_away": 16,
-      "eps_est": 0.5
-    },
-    {
-      "ticker": "PODD",
-      "date": "2026-08-05",
-      "days_away": 16,
-      "eps_est": 1.45
-    },
-    {
-      "ticker": "MIRM",
-      "date": "2026-08-05",
-      "days_away": 16,
-      "eps_est": null
-    },
-    {
-      "ticker": "CAI",
-      "date": "2026-08-05",
-      "days_away": 16,
-      "eps_est": 0.01
+      "eps_est": 1.62
     },
     {
       "ticker": "SGHC",
@@ -23670,16 +23646,40 @@
       "eps_est": 5.7
     },
     {
-      "ticker": "HLNE",
+      "ticker": "CPRX",
       "date": "2026-08-05",
       "days_away": 16,
-      "eps_est": 1.62
+      "eps_est": 0.74
+    },
+    {
+      "ticker": "VVV",
+      "date": "2026-08-05",
+      "days_away": 16,
+      "eps_est": 0.5
+    },
+    {
+      "ticker": "MIRM",
+      "date": "2026-08-05",
+      "days_away": 16,
+      "eps_est": null
+    },
+    {
+      "ticker": "PODD",
+      "date": "2026-08-05",
+      "days_away": 16,
+      "eps_est": 1.45
     },
     {
       "ticker": "SHOP",
       "date": "2026-08-05",
       "days_away": 16,
       "eps_est": 0.4
+    },
+    {
+      "ticker": "CAI",
+      "date": "2026-08-05",
+      "days_away": 16,
+      "eps_est": 0.01
     },
     {
       "ticker": "GILD",
@@ -23694,10 +23694,10 @@
       "eps_est": 1.25
     },
     {
-      "ticker": "PBR",
+      "ticker": "TEAM",
       "date": "2026-08-06",
       "days_away": 17,
-      "eps_est": null
+      "eps_est": 1.5
     },
     {
       "ticker": "GMED",
@@ -23706,10 +23706,10 @@
       "eps_est": 1.1
     },
     {
-      "ticker": "TEAM",
+      "ticker": "PBR",
       "date": "2026-08-06",
       "days_away": 17,
-      "eps_est": 1.5
+      "eps_est": null
     },
     {
       "ticker": "VST",
@@ -23784,9 +23784,9 @@
   ],
   "bond_signals": {
     "yield_curve": {
-      "two_year": 4.33,
+      "two_year": 4.328,
       "ten_year": 4.598,
-      "spread": 0.268,
+      "spread": 0.27,
       "date": "2026-07-20",
       "assessment": "Flat \u2014 caution"
     },
@@ -25500,12 +25500,21 @@
       "est_allocation": 12000
     },
     {
+      "portfolio": "LLM-ETF Focus",
+      "action": "ADD",
+      "ticker": "XLE",
+      "score": 6,
+      "reason": "Score 6 \u2014 add to position",
+      "est_allocation": 7075,
+      "executed": true
+    },
+    {
       "portfolio": "Nuclear Renaissance",
       "action": "ADD",
       "ticker": "ETR",
       "score": 4,
       "reason": "Score 4 \u2014 add to position",
-      "est_allocation": 2019
+      "est_allocation": 2054
     },
     {
       "portfolio": "Nuclear Renaissance",
@@ -25513,7 +25522,7 @@
       "ticker": "CEG",
       "score": 4,
       "reason": "Score 4 \u2014 new position (top 10)",
-      "est_allocation": 4350
+      "est_allocation": 4315
     },
     {
       "portfolio": "AI Defense & Autonomous",
@@ -25525,6 +25534,28 @@
     }
   ],
   "executed_this_week": [
+    {
+      "portfolio": "LLM-Comando",
+      "action": "BUY",
+      "ticker": "LYV",
+      "shares": 100,
+      "price": 181.52,
+      "total": 18152.0,
+      "reason": "LLM-DIALECTIC: Cleanest deployable un-chased catalyst insulated from the overnig",
+      "date": "2026-07-20",
+      "executed": true
+    },
+    {
+      "portfolio": "LLM-ETF Focus",
+      "action": "BUY",
+      "ticker": "XLE",
+      "shares": 85,
+      "price": 58.05,
+      "total": 4934.25,
+      "reason": "LLM-DIALECTIC: Multi-source geopolitical supply catalyst firing simultaneously: ",
+      "date": "2026-07-20",
+      "executed": true
+    },
     {
       "portfolio": "LLM-Comando",
       "action": "BUY",
@@ -26322,8 +26353,8 @@
   "rates": {
     "fed_funds": "4.25\u20134.50%",
     "ten_year": 4.598,
-    "two_year": 4.33,
-    "yield_spread": 0.268,
+    "two_year": 4.328,
+    "yield_spread": 0.27,
     "inverted": false
   }
 }
