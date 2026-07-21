@@ -1160,7 +1160,7 @@ function loadTrades() {
         </tr></thead><tbody>`;
         trades.forEach(t => {
             const actionClass = (t.action || '').toUpperCase() === 'BUY' ? 'trade-action-buy' : 'trade-action-sell';
-            const shortName = (t.portfolio || '').replace('AI Defense & Autonomous', 'AI Defense').replace('Nuclear Renaissance', 'Nuclear').replace('Momentum Growth', 'Momentum').replace('Income Dividends', 'Income').replace('Innovation Fund', 'Innovation').replace('Growth Value', 'Growth').replace('Value Picks', 'Value');
+            const shortName = (t.portfolio || '').replace('AI Defense & Autonomous', 'AI Defense').replace('Nuclear Renaissance', 'Nuclear').replace('Momentum Growth', 'Momentum').replace('Income Dividends', 'Income').replace('Innovation Fund', 'Innovation').replace('Growth Value', 'Growth').replace('Value Picks', 'Value').replace('LLM-Comando', 'Comando').replace('LLM-ETF Focus', 'ETF Focus');
             html += `<tr>
                 <td>${t.date || ''}</td>
                 <td style="font-size:0.75rem;opacity:0.8">${shortName}</td>

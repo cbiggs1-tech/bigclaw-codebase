@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """
-Flatten KILL portfolios at market OPEN, then is_active=0.
-KEEP books are never sold.
+Flatten KILL portfolios at market OPEN, record sells in DB, then is_active=0.
+KEEP books are never sold (only kill-book share quantities).
 
 Usage:
   source ~/.env_secrets
   python3 flatten_kill_portfolios.py --dry-run
   python3 flatten_kill_portfolios.py --execute
+  python3 flatten_kill_portfolios.py --wait-open --execute   # block until open
+  python3 flatten_kill_portfolios.py --deactivate-only
 """
 from __future__ import annotations
 
@@ -52,11 +54,45 @@ def load_secrets():
     return sec
 
 
+def wait_until_open(client, poll=30):
+    while True:
+        clock = client.get_clock()
+        if clock.is_open:
+            log(f"Market OPEN (ts={clock.timestamp})")
+            return
+        log(f"Waiting for open... next_open={clock.next_open}")
+        time.sleep(poll)
+
+
+def deactivate_flat(conn, dry_run=False):
+    for r in conn.execute(
+        "SELECT id, name FROM portfolios WHERE name IN ({})".format(
+            ",".join("?" * len(KILL))
+        ),
+        tuple(sorted(KILL)),
+    ):
+        still = conn.execute(
+            "SELECT COUNT(*) FROM holdings WHERE portfolio_id=? AND shares!=0",
+            (r["id"],),
+        ).fetchone()[0]
+        if still:
+            log(f"SKIP deactivate {r['name']}: still {still} holdings rows")
+            continue
+        if dry_run:
+            log(f"[dry-run] would is_active=0 {r['name']}")
+        else:
+            conn.execute("UPDATE portfolios SET is_active=0 WHERE id=?", (r["id"],))
+            log(f"DEACTIVATED {r['name']}")
+    if not dry_run:
+        conn.commit()
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--execute", action="store_true")
-    ap.add_argument("--deactivate-only", action="store_true", help="Only set is_active=0 if already flat")
+    ap.add_argument("--deactivate-only", action="store_true")
+    ap.add_argument("--wait-open", action="store_true", help="Poll until market open")
     args = ap.parse_args()
     if not (args.dry_run or args.execute or args.deactivate_only):
         print("Pass --dry-run or --execute or --deactivate-only")
@@ -70,11 +106,17 @@ def main():
     from alpaca.trading.client import TradingClient
     from alpaca.trading.requests import MarketOrderRequest
     from alpaca.trading.enums import OrderSide, TimeInForce
+    from alpaca_symbols import to_alpaca, from_alpaca
+    from order_fill import wait_for_fill
+    from trade_recorder import record_trade
 
     client = TradingClient(sec["ALPACA_API_KEY"], sec["ALPACA_SECRET_KEY"], paper=True)
+    if args.wait_open:
+        wait_until_open(client)
+
     clock = client.get_clock()
     if args.execute and not clock.is_open:
-        log(f"ABORT: market closed (next open {clock.next_open}). Use --dry-run or wait.")
+        log(f"ABORT: market closed (next open {clock.next_open}). Use --wait-open or --dry-run.")
         return 1
 
     conn = sqlite3.connect(str(DB), timeout=30)
@@ -82,90 +124,156 @@ def main():
     conn.execute("PRAGMA busy_timeout=30000")
     conn.row_factory = sqlite3.Row
 
+    if args.deactivate_only:
+        deactivate_flat(conn, dry_run=args.dry_run)
+        conn.close()
+        return 0
+
+    # Per kill-portfolio positions
     rows = conn.execute(
         """
-        SELECT p.id, p.name, h.ticker, h.shares, h.avg_cost
+        SELECT p.id, p.name, h.ticker, h.shares
         FROM portfolios p
-        LEFT JOIN holdings h ON h.portfolio_id = p.id AND h.shares != 0
+        JOIN holdings h ON h.portfolio_id = p.id AND h.shares != 0
         WHERE p.name IN ({})
         ORDER BY p.name, h.ticker
-        """.format(",".join("?" * len(KILL))),
+        """.format(
+            ",".join("?" * len(KILL))
+        ),
         tuple(sorted(KILL)),
     ).fetchall()
 
-    by_pid = {}
-    for r in rows:
-        by_pid.setdefault(r["id"], {"name": r["name"], "positions": []})
-        if r["ticker"] and r["shares"]:
-            by_pid[r["id"]]["positions"].append(
-                {"ticker": r["ticker"], "shares": float(r["shares"])}
-            )
+    positions = [
+        {
+            "pid": r["id"],
+            "name": r["name"],
+            "ticker": r["ticker"],
+            "shares": float(r["shares"]),
+        }
+        for r in rows
+    ]
+    log(f"Kill positions to flatten: {len(positions)}")
+    for p in positions:
+        log(f"  {p['name']}: {p['ticker']} x {p['shares']}")
 
-    log(f"Kill portfolios: {sorted(KILL)}")
-    for pid, info in by_pid.items():
-        log(f"  {info['name']}: {len(info['positions'])} positions")
+    # Aggregate qty by ticker for Alpaca (account-level), track per-portfolio allocation
+    by_ticker = {}
+    for p in positions:
+        by_ticker.setdefault(p["ticker"], []).append(p)
 
-    if args.deactivate_only or (args.execute and all(not i["positions"] for i in by_pid.values())):
-        for pid, info in by_pid.items():
-            still = conn.execute(
-                "SELECT COUNT(*) FROM holdings WHERE portfolio_id=? AND shares!=0", (pid,)
-            ).fetchone()[0]
-            if still:
-                log(f"SKIP deactivate {info['name']}: still {still} holdings")
-                continue
-            if args.dry_run:
-                log(f"[dry-run] would is_active=0 {info['name']}")
-            else:
-                conn.execute("UPDATE portfolios SET is_active=0 WHERE id=?", (pid,))
-                log(f"DEACTIVATED {info['name']}")
-        conn.commit()
-        conn.close()
-        return 0
-
-    # Account-level Alpaca: sum shares to sell per ticker = sum across KILL books only.
-    # KEEP books may share a ticker (e.g. NBIX) — sell only the kill-book quantity.
-    sell_by_ticker = {}
-    for pid, info in by_pid.items():
-        for pos in info["positions"]:
-            t = pos["ticker"]
-            sell_by_ticker[t] = sell_by_ticker.get(t, 0.0) + float(pos["shares"])
-
-    log(f"Sell quantities (kill books only): {json.dumps(sell_by_ticker, sort_keys=True)}")
+    sell_plan = {}
+    for t, plist in by_ticker.items():
+        sell_plan[t] = sum(x["shares"] for x in plist)
+    log(f"Alpaca sell plan: {json.dumps({k: v for k, v in sorted(sell_plan.items())})}")
 
     if args.dry_run:
         log("[dry-run] no orders")
+        deactivate_flat(conn, dry_run=True)
         conn.close()
         return 0
 
-    from alpaca_symbols import to_alpaca, from_alpaca
-    from trade_recorder import record_trade
-
     apos = {from_alpaca(p.symbol): float(p.qty) for p in client.get_all_positions()}
-    for t, want in sorted(sell_by_ticker.items()):
+    fills = {}  # ticker -> (filled_qty, filled_price)
+
+    for t, want in sorted(sell_plan.items()):
         aq = apos.get(t, 0.0)
-        sell_qty = min(aq, want) if aq > 0 else 0.0
-        # integer shares for market orders
-        sell_qty = int(sell_qty)
+        sell_qty = int(min(aq, want)) if aq > 0 else 0
         if sell_qty <= 0:
-            log(f"SKIP {t}: nothing to sell aq={aq} want={want}")
+            log(f"SKIP {t}: aq={aq} want={want}")
             continue
-        sym = to_alpaca(t)
         try:
-            order = MarketOrderRequest(
-                symbol=sym,
+            req = MarketOrderRequest(
+                symbol=to_alpaca(t),
                 qty=sell_qty,
                 side=OrderSide.SELL,
                 time_in_force=TimeInForce.DAY,
             )
-            o = client.submit_order(order)
-            log(f"SELL submitted {t} qty={sell_qty} order={o.id}")
-            time.sleep(2.0)
+            order = client.submit_order(req)
+            fq, fp = wait_for_fill(
+                client, order, sell_qty, None, ticker=t, pname="KILL-FLATTEN", side="SELL"
+            )
+            fills[t] = (float(fq), float(fp) if fp else 0.0)
+            log(f"FILLED SELL {t} qty={fq} @ {fp} order={order.id}")
+            time.sleep(0.8)
         except Exception as e:
             log(f"SELL FAIL {t}: {e}")
 
-    log("Orders submitted. After fills: reconcile kill portfolio holdings to 0, then --deactivate-only.")
-    log("Recommend: run accounting reconcile or zero kill holdings via dedicated follow-up.")
+    # Record each kill-portfolio leg proportional to its shares
+    for t, plist in by_ticker.items():
+        if t not in fills:
+            log(f"No fill for {t} — DB not updated for this ticker")
+            continue
+        fq, fp = fills[t]
+        total_want = sum(x["shares"] for x in plist) or 1.0
+        remaining = fq
+        for i, p in enumerate(plist):
+            # allocate filled qty across portfolios
+            if i == len(plist) - 1:
+                leg = remaining
+            else:
+                leg = int(round(fq * (p["shares"] / total_want)))
+                remaining -= leg
+            if leg <= 0:
+                continue
+            val = leg * fp
+            try:
+                ok = record_trade(
+                    p["pid"],
+                    p["name"],
+                    t,
+                    "sell",
+                    leg,
+                    fp,
+                    val,
+                    "4-sleeve cutover flatten 2026-07-21",
+                    order_id=None,
+                )
+                log(f"DB record_trade {p['name']} SELL {t} x{leg} @ {fp} ok={ok}")
+            except Exception as e:
+                log(f"DB record FAIL {p['name']} {t}: {e}")
+
+    # Zero any residual fractional kill holdings if flat at Alpaca for kill-only
+    deactivate_flat(conn, dry_run=False)
+
+    # Force-zero remaining kill holdings if shares still >0 but we intended full exit
+    for p in positions:
+        row = conn.execute(
+            "SELECT shares FROM holdings WHERE portfolio_id=? AND ticker=?",
+            (p["pid"], p["ticker"]),
+        ).fetchone()
+        if row and float(row[0] or 0) != 0:
+            # only force if ticker fully gone from our sell plan fill
+            if p["ticker"] in fills and fills[p["ticker"]][0] > 0:
+                log(
+                    f"WARN residual {p['name']} {p['ticker']} shares={row[0]} after fill — check reconcile"
+                )
+
+    still_active_with_pos = conn.execute(
+        """
+        SELECT p.name, COUNT(*) n FROM portfolios p
+        JOIN holdings h ON h.portfolio_id=p.id AND h.shares!=0
+        WHERE p.name IN ({}) GROUP BY p.name
+        """.format(
+            ",".join("?" * len(KILL))
+        ),
+        tuple(sorted(KILL)),
+    ).fetchall()
+    if still_active_with_pos:
+        log(f"REMAINING kill holdings: {list(still_active_with_pos)}")
+        log("Re-run --execute later or manual fix; NOT force-deleting holdings.")
+    else:
+        log("All kill books flat — deactivating")
+        for name in KILL:
+            conn.execute(
+                "UPDATE portfolios SET is_active=0 WHERE name=?", (name,)
+            )
+            log(f"DEACTIVATED {name}")
+        conn.commit()
+
+    # always try deactivate for any already flat
+    deactivate_flat(conn, dry_run=False)
     conn.close()
+    log("Flatten pass complete.")
     return 0
 
 
