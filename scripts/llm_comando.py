@@ -313,42 +313,27 @@ def get_market_snapshot():
 
 
 def discover_news_makers(secrets, top_n=30, hours_back=24):
-    """Pull general Benzinga/Alpaca news (no symbol filter) and rank tickers
-    by mention count over the last `hours_back` hours. Returns top_n most-
-    mentioned tickers — "what the market is talking about today" — which is
-    the right discovery surface for an LLM that reasons on citable catalysts.
-    Filters out broad-market ETFs and non-stock symbols."""
-    from alpaca.data.historical.news import NewsClient
-    from alpaca.data.requests import NewsRequest
-    from collections import Counter
-    client = NewsClient(api_key=secrets['ALPACA_API_KEY'],
-                        secret_key=secrets['ALPACA_SECRET_KEY'])
-    start = datetime.datetime.now(datetime.UTC) - datetime.timedelta(hours=hours_back)
-    items = []
+    """Recency-weighted discovery (not raw 24h mention volume).
+    Fresher headlines rank higher so cycles see today's story, not yesterday's noise.
+    Falls back to empty dict on failure."""
     try:
-        next_token = None
-        for _ in range(5):  # up to 5 pages * 50 = 250 items
-            req = NewsRequest(start=start, limit=50)
-            if next_token:
-                req.page_token = next_token
-            r = client.get_news(req)
-            if hasattr(r, 'data') and isinstance(r.data, dict):
-                for v in r.data.values():
-                    items.extend(v if isinstance(v, list) else [v])
-            next_token = getattr(r, 'next_page_token', None)
-            if not next_token:
-                break
+        import llm_comando_news as _n
+        counts, detail, n_items = _n.discover_news_makers_weighted(
+            secrets, top_n=top_n, hours_back=hours_back
+        )
+        if detail:
+            top10 = detail[:10]
+            log(
+                f"  news_makers scan (recency-weighted): {n_items} items, "
+                f"{len(detail)} tickers | top: "
+                + ", ".join(f"{d['ticker']}(m={d['mentions']},s={d['score']})" for d in top10)
+            )
+        else:
+            log(f"  news_makers scan (recency-weighted): {n_items} items, 0 tickers", "WARN")
+        return counts
     except Exception as e:
-        log(f"news_makers discovery failed: {e}", "WARN")
-        return []
-    # Reuse the module-level ETF_BLACKLIST (Comando is single-stock — ETFs are wasted slots)
-    cnt = Counter()
-    for item in items:
-        for sym in (getattr(item, 'symbols', None) or []):
-            if sym and 1 < len(sym) <= 5 and sym.isalpha() and sym not in ETF_BLACKLIST:
-                cnt[sym] += 1
-    log(f"  news_makers scan: {len(items)} items, {len(cnt)} unique tickers mentioned")
-    return dict(cnt.most_common(top_n))
+        log(f"news_makers weighted failed ({e}); empty discovery", "WARN")
+        return {}
 
 
 def get_news(tickers, secrets):
@@ -682,6 +667,15 @@ def build_state_context(state, total_value, market, news, journal, peer_returns,
         lines.append(refusal_scorecard)
 
     lines.append("\n" + render_lessons())
+
+    # EVENT CALENDAR (earnings / FOMC) — study before print when possible
+    try:
+        import llm_comando_news as _ncal
+        _held = [h['ticker'] for h in state.get('holdings') or []]
+        _watch = list((news_maker_counts or {}).keys())[:15]
+        lines.append('\n' + _ncal.upcoming_events_block(_held, _watch))
+    except Exception as _ce:
+        lines.append(f'\n## EVENT CALENDAR\n  unavailable: {_ce}')
 
     if candidate_snapshot:
         # CANDIDATE STRENGTH RANKING: the "compete" view. Held positions ranked

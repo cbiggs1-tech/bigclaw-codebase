@@ -662,11 +662,20 @@ def main():
             log(f"mechanical exit check error: {e}", "WARN")
 
         state = load_state()
-        if not state.get("triggers"):
-            return  # nothing armed
+        # Event-driven holdings scan runs even when no Judge triggers are armed.
         if state["fires_today"] >= state.get("max_fires", MAX_FIRES_PER_DAY):
             log(f"daily fire budget exhausted ({state['fires_today']}/{state.get('max_fires')})")
             return
+        # Also respect shared radar/event daily budget
+        try:
+            import llm_comando_news as _nb
+            _rem, _ = _nb.event_fire_budget()
+            if _rem <= 0:
+                log("shared event fire budget exhausted — skip LLM fires")
+                # still allow mechanical exits only (already ran above)
+                return
+        except Exception:
+            pass
 
         # PRE-FLIGHT: invalidate sell-intent price triggers referencing positions we no longer hold.
         # Catches the case where an earlier trigger fire (or the morning script or manual action)
@@ -680,8 +689,6 @@ def main():
         n_armed = sum(1 for t in state['triggers'] if t.get('status') in ('armed', 'retrying'))
         log(f"Watcher poll - {n_armed} triggers armed ({len(state['triggers'])} total), "
             f"{state['fires_today']}/{state.get('max_fires')} fires used today")
-        if n_armed == 0:
-            return
 
         # Refresh news once per poll (deduped via last_news_check timestamp)
         now_iso = datetime.datetime.now(datetime.timezone.utc).isoformat()
@@ -690,6 +697,59 @@ def main():
 
         # Evaluate each armed trigger
         fired = []
+
+        # HOLDINGS THESIS-BREAK: new Alpaca news on a held ticker -> synthetic fire (no pre-armed trigger required)
+        try:
+            import llm_comando_news as _nh
+            _rem2, _fst = _nh.event_fire_budget()
+            if _rem2 > 0:
+                _, _holds2 = get_portfolio_state()
+                _held2 = {h["ticker"].upper() for h in _holds2}
+                _start2 = None
+                if state.get("last_news_check"):
+                    _start2 = _nh._parse_iso(state.get("last_news_check"))
+                if _start2 is None:
+                    _start2 = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(minutes=15)
+                _items2 = _nh.fetch_alpaca_news(secrets, start=_start2, limit_pages=2)
+                _seen = set(state.get("seen_news_ids") or [])
+                _new_h = []
+                for _it in _items2:
+                    _iid = _it.get("id") or (_it.get("time", "") + _it.get("headline", "")[:50])
+                    if _iid in _seen:
+                        continue
+                    _seen.add(_iid)
+                    for _sym in _it.get("symbols") or []:
+                        if _sym in _held2:
+                            _new_h.append((_sym, _it))
+                state["seen_news_ids"] = list(_seen)[-800:]
+                # group by ticker
+                _byh = {}
+                for _sym, _it in _new_h:
+                    _byh.setdefault(_sym, []).append(_it)
+                for _sym, _its in _byh.items():
+                    fired.append({
+                        "trigger": {
+                            "id": f"holdnews_{_sym}",
+                            "type": "news",
+                            "keywords": [_sym],
+                            "action_intent": (
+                                f"Re-verify WHY-BOUGHT thesis for {_sym} on this news. "
+                                f"SELL if thesis breaking/spent; hold if intact/strengthened; "
+                                f"optional add only if thesis strongly reinforced and not extended."
+                            ),
+                            "status": "armed",
+                        },
+                        "evidence": f"{len(_its)} new headline(s) on held {_sym}",
+                        "matched_news": [
+                            {"source": x.get("source"), "headline": x.get("headline"), "summary": x.get("summary")}
+                            for x in _its[:3]
+                        ],
+                    })
+                if _byh:
+                    log(f"  holdings news fires: {list(_byh.keys())}")
+        except Exception as _hne:
+            log(f"holdings news scan: {_hne}", "WARN")
+
         for trig in state["triggers"]:
             st = trig.get("status")
             if st not in ("armed", "retrying"): continue
