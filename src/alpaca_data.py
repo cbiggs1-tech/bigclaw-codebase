@@ -250,9 +250,40 @@ def get_daily_bars(tickers, start, end):
     parts = [f for f in (alpaca_frame, yf_frame) if f is not None]
     if not parts:
         return None
-    prices = pd.concat(parts, axis=1) if len(parts) > 1 else parts[0]
 
-    # Normalize index to tz-naive normalized dates to match yfinance
+    # Normalize EACH frame's index to tz-naive normalized dates BEFORE concat. Alpaca
+    # bars come back tz-AWARE (UTC); the yfinance fallback is tz-NAIVE. Concatenating the
+    # two along axis=1 makes pandas compare tz-aware vs tz-naive timestamps while aligning
+    # the row index, raising "Cannot compare tz-naive and tz-aware timestamps". This only
+    # surfaces when BOTH sources contribute (some tickers fell to the yfinance fallback) —
+    # which is why it began failing once the candidate universe grew. Apply the SAME
+    # tz_convert(None).normalize() the code already trusted, but per-part, before the merge.
+    def _naive_daily_index(df):
+        try:
+            idx = pd.to_datetime(df.index)
+            if getattr(idx, "tz", None) is not None:
+                idx = idx.tz_convert(None)
+            df = df.copy()
+            df.index = idx.normalize()
+        except Exception:
+            pass
+        return df
+    parts = [_naive_daily_index(p) for p in parts]
+
+    try:
+        prices = pd.concat(parts, axis=1) if len(parts) > 1 else parts[0]
+    except Exception as e:
+        # Never let a price-frame merge crash the whole decision engine. Degrade to the
+        # single largest source so fetch_market_data can still proceed (and if that leaves
+        # it empty, returning None triggers its own yfinance bulk-download fallback).
+        logger.warning(f"get_daily_bars concat failed ({e}); using the largest single source")
+        parts.sort(key=lambda p: getattr(p, "shape", (0, 0))[1], reverse=True)
+        prices = parts[0] if parts else None
+        if prices is None:
+            return None
+
+    # Defensive final pass: the parts are already tz-naive normalized, but re-apply in case
+    # a single-part path slipped through, then sort chronologically.
     try:
         idx = pd.to_datetime(prices.index)
         if getattr(idx, "tz", None) is not None:
