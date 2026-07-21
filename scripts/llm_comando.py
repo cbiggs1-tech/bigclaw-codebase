@@ -72,7 +72,8 @@ try:
 except Exception:
     def render_lessons():
         return ""
-PASSED = Path.home() / "bigclaw-ai" / "data" / "llm_comando_passed.jsonl"  # candidates seen-but-not-bought (refusal scorecard)
+PASSED = Path.home() / "bigclaw-ai" / "data" / "llm_comando_passed.jsonl"
+ENTRY_FEATURES = Path.home() / "bigclaw-ai" / "data" / "llm_comando_entry_features.jsonl"  # candidates seen-but-not-bought (refusal scorecard)
 PEAKS = Path.home() / "bigclaw-ai" / "data" / "llm_comando_position_peaks.json"  # per-position high-water mark (hold scorecard)
 OUTPUT_JSON = Path.home() / "bigclaw-ai" / "docs" / "data" / "llm_comando_portfolio.json"
 DECISIONS_DIR = Path.home() / "bigclaw-ai" / "data" / "llm_comando_decisions"
@@ -438,6 +439,45 @@ def compute_portfolio_value(state, market):
 
 
 # ---------- prompt builders ----------
+
+def log_entry_features(ticker, fill_price, shares, cycle_name, candidate_snapshot=None, thesis=None):
+    """C1: record chase/extension features at entry for recursive learning (not a veto)."""
+    try:
+        snap = (candidate_snapshot or {}).get(ticker) or {}
+        rec = {
+            "ts": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            "cycle": cycle_name,
+            "ticker": ticker,
+            "fill_price": float(fill_price) if fill_price is not None else None,
+            "shares": float(shares) if shares is not None else None,
+            "pct_from_prior_close": snap.get("ret_1d"),
+            "pct_5d": snap.get("ret_5d"),
+            "pct_30d": snap.get("ret_30d"),
+            "rsi14": snap.get("rsi14"),
+            "pct_above_200ma": snap.get("pct_above_200ma"),
+            "extended_flag": bool(snap.get("extended") or snap.get("overbought")),
+            "thesis": (thesis or "")[:300],
+        }
+        # crude chase score 0-3
+        score = 0
+        r1 = rec.get("pct_from_prior_close")
+        if r1 is not None and float(r1) > 3:
+            score += 1
+        if r1 is not None and float(r1) > 8:
+            score += 1
+        ext = rec.get("pct_above_200ma")
+        if ext is not None and float(ext) > 25:
+            score += 1
+        rsi = rec.get("rsi14")
+        if rsi is not None and float(rsi) > 75:
+            score += 1
+        rec["chase_score"] = score
+        ENTRY_FEATURES.parent.mkdir(parents=True, exist_ok=True)
+        with open(ENTRY_FEATURES, "a") as f:
+            f.write(json.dumps(rec) + "\n")
+    except Exception as e:
+        log(f"entry-features log failed: {e}", "WARN")
+
 def log_passed_candidates(today_iso, cycle, candidate_snapshot, bought, held):
     """Record candidates SEEN this cycle but NOT bought (and not already held), with
     their price, so future cycles can score the real opportunity cost of refusals."""
@@ -499,7 +539,7 @@ def build_refusal_scorecard(current_snapshot=None, lookback_days=7):
         out.append(f"  Of {len(rows)} names you saw and PASSED ON, {up} ({up*100//len(rows)}%) are UP since; median move {med:+.1f}%.")
         out.append("  Biggest misses (you passed, it ran): " + ", ".join(f"{t} {rr:+.1f}% (passed {d[5:]})" for t, d, rr in rows[:6]))
         if len(rows) >= 5 and up / len(rows) >= 0.6 and med >= 1.0:
-            out.append("  >> Most names you passed kept RISING - your bar is likely TOO HIGH and cash is bleeding while real setups run. Lower the bar: deploy into fresh, news-backed names instead of waiting for a perfect not-yet-moved catalyst that does not exist.")
+            out.append("  >> Many names you passed rose. SPLIT the lesson: (a) extended moonshots you skipped = GOOD discipline; (b) non-extended, thesis-worthy names that worked without you = missed study. Do NOT lower the bar into chases just because something went up.")
         return "\n".join(out)
     except Exception as e:
         log(f"refusal-scorecard failed: {e}", "WARN")
@@ -684,7 +724,7 @@ def build_state_context(state, total_value, market, news, journal, peer_returns,
         lines.append("  - Held position with low news intensity vs candidate with high intensity = rotation signal")
         lines.append("  - Held position dragging vs candidates rallying today = consider rotating to capture better short-term move")
         lines.append("  - Your goal is short-term gains; a thesis you bought 2 hours ago can weaken if news shifts")
-        lines.append("  - A ⚠extended flag = the name has already run far above its 200d MA and/or is overbought; per LESSONS, that is a mean-reversion RISK, not a green light to chase")
+        lines.append("  - A ⚠extended flag = elevated extension/RSI — a RISK LENS for today, not a permanent ban. If today's narrative is leadership/momentum and the thesis still has room, you may still act; if the thesis is late/spent, stand down.")
         lines.append("")
         lines.append("  ★=held   ticker     shares  entry      current   1d      5d      30d     news#  latest_headline")
         for r in rows[:40]:  # cap at 40 to keep context manageable
@@ -801,7 +841,7 @@ OUTPUT: For 2-5 candidate trades (existing positions or new ideas), provide:
 Be aggressive but grounded. The BEAR agent will challenge you - if your thesis is weak it
 will be torn apart. If you have no high-conviction ideas, say so and recommend cash.
 
-LEARN FROM WHAT WORKED: before arguing FOR a trade, scan YOUR JOURNAL for past sells marked "PLAYED OUT (win)" that resemble the current setup, and cite the closest analog to strengthen your case (e.g. "the last fresh dual-PT-raise I took in a leading sector played out for +X%"). Be honest: if the current setup instead resembles a past "REASONING ERROR" sell, say so rather than bury it - the Judge is checking that you used the record straight."""
+JOURNAL IS ANALOGY, NOT LAW: past wins/losses are evidence under a prior market narrative. Yesterday's failure may win TODAY if conditions differ. Cite an analog only if the *same* narrative regime applies; never refuse a fit-for-today thesis because a frozen template ('only dual PT-raises') used to work. Study THIS stock under TODAY's tape."""
 
 BEAR_SYSTEM = """You are the BEAR agent in a 3-agent dialectical trading decision system.
 
@@ -877,10 +917,20 @@ Also: if the bull missed an obvious SHORT-side opportunity (sell, trim, avoid), 
 If the BULL recommended cash and you agree, confirm it. If you see opportunities the
 bull missed entirely, name them.
 
-LEARN FROM PAST REASONING ERRORS: before arguing AGAINST, scan YOUR JOURNAL for past sells marked "REASONING ERROR" (the thesis was wrong) that resemble the current setup, and cite how that misjudgment burned us (e.g. "we bought THC on a fresh catalyst that never moved the stock - a thesis_wrong exit; this setup rhymes"). A "thesis changed" exit is NOT an error - never cite it as one. Be honest too: if the current setup resembles a thesis that PLAYED OUT, concede it. The Judge is checking that you matched genuinely analogous history, not cherry-picked."""
+JOURNAL IS ANALOGY, NOT LAW: cite a past REASONING ERROR only when the *same failure mode* is present under *today's* narrative. Do not veto an entire sector or style forever because one trade failed last week. If history is not analogous, say so and argue from today's facts only."""
 
 JUDGE_SYSTEM = """You are the JUDGE agent in a 3-agent dialectical trading decision system.
 You are the only agent whose decisions become actual trades.
+
+NORTH STAR (operator law — overrides accumulated template habits):
+- Figure out how to WIN THIS SESSION. Each market day is different. Yesterday's failure may win today.
+- You are NOT a second rule-based portfolio. Python handles cash/long-only/no-ETF rails only.
+- METHOD: study the stock; weigh Bull and Bear; decide from TODAY's market narrative and conditions.
+- STYLE: day-trader speed with investor sense — every buy needs a real thesis that fits (or consciously fades) today's story, plus clear falsifiers.
+- EXIT: sell when the BUY THESIS starts to break (WEAKENED/BROKEN/SPENT). That is primary. Stops are safety rails, not the strategy. Do not sell just because a clock or a frozen checklist says so.
+- Journal and LESSONS are LENSES / analogies under prior regimes — never permanent bans on sectors or setups.
+- If you are in the "wrong group of stocks" for today's leadership, that is a thesis-competition problem to solve now — not an excuse and not a permanent identity as a defensive book.
+
 
 You have read:
 1. Today's full data feed (portfolio, market, news, your journal)
@@ -955,7 +1005,7 @@ BUT OVERNIGHT AND WEEKEND HOLDS ARE NOT FREE - AND BANKING A GAIN IS CONTROL, FI
 
 This overnight-risk weight is MODEST in a calm tape but rises with WAR / GEOPOLITICAL RISK. Read these signals every cycle and weight them for the OVERNIGHT decision (separate from intraday sizing): (1) the NEWS FEED for military escalation - strikes, Iran, Israel, Strait of Hormuz, tanker attacks; (2) OIL trending UP (USO / oil rising over days = supply/war fear being priced); (3) VIX TREND and rate-of-change - a VIX that is rising and accelerating, or that turned up late in the session, is an early warning EVEN WHILE its absolute level is still normal (under 22). When these are building, PROFITS ARE PREMIUM and overnight holds are mostly risk: give the Bear's 'protect gains, arrive at the next session with optionality' materially more weight, take the gains you have, and lighten your overnight book. This is a REBALANCE of when-to-hold, NOT a retreat to cash - you still hunt and deploy intraday and re-enter fresh news-backed setups next session; you simply refuse to donate your realized edge to an overnight war-headline gap.
 
-THE BURDEN OF PROOF IS ON HOLDING OVERNIGHT, NOT ON SELLING - this is Comando short-window style. The DEFAULT into the close is to BANK your green and stand down overnight; carrying a position through the night requires a COMPELLING, specific reason, not just 'I still like the name.' In your last cycle of the day, read the CLOSING TAPE and decide:
+OVERNIGHT RISK IS A LENS, NOT A STANDING ORDER TO GO TO CASH. On a clear risk-on close with leadership intact, holding winners overnight can be correct. On war/oil/risk-off closes, banking is wise. THE BURDEN OF PROOF IS ON HOLDING OVERNIGHT when risk signals are elevated - Comando short-window style. The DEFAULT into the close is to BANK your green and stand down overnight; carrying a position through the night requires a COMPELLING, specific reason, not just 'I still like the name.' In your last cycle of the day, read the CLOSING TAPE and decide:
 - COMPELLING TO HOLD: the market is ACCELERATING higher into the close with the regime clearly RISK-ON - SPY pushing up late, offense leading defense (XLY > XLP), credit firm (HY >= IG), VIX flat or falling, and your name riding fresh, still-live momentum. Strong risk-on momentum into the bell has follow-through energy, so an overnight hold can be justified there.
 - LEAN TO EXIT: the market closes FLAT or TRENDING DOWN, or the risk profile is shifting to RISK-OFF - SPY fading or red into the close, defense leading (XLP > XLY), credit softening, VIX turning up, or oil/war signals building. Here give SERIOUS consideration to exiting the positions MOST EXPOSED to an overnight gap: your highest-beta names, your biggest unrealized gains (the most to give back), and anything most sensitive to the risk-off driver (e.g. tech / chips / high-multiple names in a war-and-oil tape). Bank those into the close and re-enter next session if they still qualify. When the tape is ambiguous, default to banking - the burden is on the reason to HOLD.
 
@@ -1266,6 +1316,16 @@ def validate_and_execute(trades, state, total_value, secrets, dry_run=False):
                 f"LLM-DIALECTIC: {tr.get('rationale','')[:300]}",
                 order_id=str(order.id), target_price=_tgt_price, target_source=_tgt_src,
             )
+            if action == 'buy' and filled_qty:
+                try:
+                    log_entry_features(
+                        ticker, filled_price, filled_qty,
+                        (state or {}).get('_cycle_name'),
+                        (state or {}).get('_candidate_snapshot'),
+                        tr.get('rationale') or tr.get('thesis'),
+                    )
+                except Exception as _ef:
+                    log(f'entry feature hook: {_ef}', 'WARN')
             results.append((tr, {
                 "filled_qty": filled_qty, "filled_price": filled_price,
                 "value": actual_value, "order_id": str(order.id), "db_ok": ok,
@@ -1726,6 +1786,8 @@ def main():
         log(f"Judge decided {len(trades)} trades")
 
         # Execute
+        state['_cycle_name'] = cycle_name
+        state['_candidate_snapshot'] = candidate_snapshot
         exec_results = validate_and_execute(trades, state, total_value, secrets, dry_run=args.dry_run)
         # Create trailing stops immediately for any just-bought positions, so a new position is
         # never briefly flagged UNPROTECTED in the gap before the 15-min stop_check cron picks it

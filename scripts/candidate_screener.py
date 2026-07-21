@@ -40,6 +40,13 @@ log = logging.getLogger("screener")
 
 DB_PATH = os.path.expanduser("~/bigclaw-ai/src/portfolios.db")
 UNIVERSES_PATH = os.path.expanduser("~/.openclaw/workspace/config/portfolio_universes.json")
+
+# 4-sleeve KEEP rule books only (2026-07-21)
+MAX_CANDIDATES = {
+    "Innovation Fund": 40,
+    "Momentum Growth": 80,
+    "AI Defense & Autonomous": 25,
+}
 # (Removed MAX_CANDIDATES_PER_PORTFOLIO cap May 2026 — gates are the screening
 # method, not gates+alphabetic-truncation. Decision engine handles top-N.)
 FINVIZ_DELAY = 1.0  # seconds between finviz requests to avoid rate limiting
@@ -282,9 +289,10 @@ def screen_portfolio(portfolio_name, current_holdings):
 
     log.info(f"  {portfolio_name}: {len(candidates)} pass gates ({gate_blocked} blocked, {gate_ai_allowed} AI-allowed)")
 
-    # No cap: gates are the screening method. The decision engine scores all
-    # candidates and selects top N for trading. Truncating here introduced an
-    # alphabetic bias (sorted() + [:N] = alphabetically first N).
+    # Cap candidates per portfolio (4-sleeve cutover 2026-07-21).
+    cap = MAX_CANDIDATES.get(portfolio_name)
+    if cap is not None and len(candidates) > cap:
+        candidates = candidates[:cap]
 
     return candidates
 
@@ -303,14 +311,20 @@ def update_universes(portfolio_name, new_candidates, current_holdings, universes
     # Remove any that are now holdings (promoted from candidate)
     merged = [t for t in merged if t not in set(held_tickers)]
 
-    # No cap on merged universe: union of old + new gate-passers, deduplicated.
-    # Each Saturday's screen contributes whatever it finds; the decision engine
-    # scores everything and picks the top 10 to actually hold per portfolio.
-
+    cap = MAX_CANDIDATES.get(portfolio_name, 40)
+    held_set = set(held_tickers)
+    ordered = []
+    seen = set()
+    for tk in list(held_tickers) + sorted(new_tickers) + sorted(old_candidates):
+        if tk not in seen:
+            seen.add(tk)
+            ordered.append(tk)
+    full = ordered[:cap]
     universes[portfolio_name] = {
         "holdings": held_tickers,
-        "candidates": merged,
+        "candidates": full,
     }
+    merged = full
 
     added = new_tickers - old_candidates
     removed = old_candidates - set(merged)
@@ -329,7 +343,8 @@ def main():
     current_holdings = get_current_holdings()
     universes = load_current_universes()
 
-    portfolios = [args.portfolio] if args.portfolio else list(PORTFOLIO_SCREENS.keys())
+    _active = [k for k in PORTFOLIO_SCREENS if k in MAX_CANDIDATES]
+    portfolios = [args.portfolio] if args.portfolio else _active
 
     summary = []
     total_new = 0

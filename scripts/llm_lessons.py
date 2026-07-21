@@ -2,7 +2,7 @@
 """Durable, curated lessons distilled from analyzing BigClaw's OWN real trades. Injected into the
 Bull/Bear/Judge data feed of BOTH LLM portfolios (Comando + ETF Focus) every cycle.
 
-These are LENSES, NOT RULES — the LLM still decides everything. This is the "benefit of what we've
+These are LENSES, NOT RULES — the LLM still decides everything. Session-local: yesterday failure may win today; never treat these as permanent sector bans. This is the "benefit of what we've
 learned" seed for the recursive learning loop: the journal accumulates each portfolio's OWN outcomes
 over time; this seeds the worldview they reason from. Add distilled, evidence-backed findings here as
 they are proven — keep it a TIGHT worldview, not a dumping ground."""
