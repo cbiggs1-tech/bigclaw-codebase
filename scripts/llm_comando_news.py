@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Shared news utilities for LLM-Comando (cycles, watcher, radar).
+"""Shared news utilities for LLM-Commando (cycles, watcher, radar).
 
 Goals:
   - Cursor-based "what's NEW since last poll" (not only 24h volume dump)
@@ -31,7 +31,7 @@ ETF_BLACKLIST = {
     "SH", "PSQ", "DOG", "RWM", "ITA", "PPA", "EWC",
 }
 
-MAX_EVENT_FIRES_PER_DAY = 10  # radar + watcher focused LLM calls combined
+MAX_EVENT_FIRES_PER_DAY = 100  # radar + watcher; ~\.02-0.03/fire — raise freely if edge appears
 
 
 def _now_utc():

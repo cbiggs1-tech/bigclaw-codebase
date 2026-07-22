@@ -38,12 +38,12 @@ import feedparser
 import yfinance as yf
 from slack_sdk import WebClient
 
-PORTFOLIO_NAME = "LLM-Comando"
+PORTFOLIO_NAME = "LLM-Commando"
 DEFAULT_CHANNEL = "D0ADHLUJ400"
 MODEL = "claude-sonnet-4-6"
 MAX_TOKENS = 3000
 LLM_TIMEOUT = 90.0
-MAX_FIRES_PER_DAY = 6
+MAX_FIRES_PER_DAY = 100
 EXEC_RETRY_CAP = 3  # re-attempt a decided-but-unfilled trade on later polls, up to this many times
 
 PENDING_STATE = Path.home() / "bigclaw-ai" / "data" / "llm_comando_pending_triggers.json"
@@ -55,7 +55,7 @@ LOCK_FILE = Path("/tmp/llm_comando_watcher.lock")
 DB_PATH = Path.home() / "bigclaw-ai" / "src" / "portfolios.db"
 
 
-# ---------- ETF blacklist (LLM-Comando is single-stock by mandate) ----------
+# ---------- ETF blacklist (LLM-Commando is single-stock by mandate) ----------
 ETF_BLACKLIST = {
     # Broad index
     'SPY', 'QQQ', 'DIA', 'VOO', 'VTI', 'VEA', 'VWO',
@@ -478,10 +478,10 @@ def execute_trades(trades, pf_id, dry_run, secrets):
             results.append((tr, {"skipped": f"ticker not found: {ticker}"}))
             continue
 
-        # HARD ENFORCEMENT: LLM-Comando is single-stock by mandate. Reject any ETF buy.
+        # HARD ENFORCEMENT: LLM-Commando is single-stock by mandate. Reject any ETF buy.
         if action == 'buy' and ticker in ETF_BLACKLIST:
-            log(f"REJECTED ETF buy: {ticker} (LLM-Comando is single-stock only)", "WARN")
-            results.append((tr, {"skipped": f"ETF rejected: {ticker} (LLM-Comando is single-stock only)"}))
+            log(f"REJECTED ETF buy: {ticker} (LLM-Commando is single-stock only)", "WARN")
+            results.append((tr, {"skipped": f"ETF rejected: {ticker} (LLM-Commando is single-stock only)"}))
             continue
         if action == "sell":
             if shares > holdings.get(ticker, 0):
@@ -893,7 +893,7 @@ def main():
 
         # Slack
         try:
-            msg = f"⚡ *LLM-Comando — Intraday Trigger Fire*\n"
+            msg = f"⚡ *LLM-Commando — Intraday Trigger Fire*\n"
             msg += f"_{state['fires_today']}/{state.get('max_fires')} fires used today, cost ${cost:.4f}_\n\n"
             msg += "\n".join(slack_lines)
             if response.get("patterns_noted"):

@@ -35,7 +35,7 @@ import anthropic
 import yfinance as yf
 from slack_sdk import WebClient
 
-PORTFOLIO_NAME = "LLM-Comando"
+PORTFOLIO_NAME = "LLM-Commando"
 DEFAULT_CHANNEL = "D0ADHLUJ400"
 MODEL_EXTRACTOR = "claude-sonnet-4-6"
 LOCK_FILE = Path("/tmp/llm_comando_reconciler.lock")

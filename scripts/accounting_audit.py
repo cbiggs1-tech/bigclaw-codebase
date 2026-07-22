@@ -76,16 +76,34 @@ def audit_invariant_2(alpaca_client):
 
     conn = _conn(); conn.row_factory = sqlite3.Row
     db_rows = conn.execute(
-        "SELECT ticker, SUM(shares) AS total FROM holdings GROUP BY ticker"
+        """
+        SELECT h.ticker, SUM(h.shares) AS total
+        FROM holdings h
+        JOIN portfolios p ON h.portfolio_id = p.id
+        WHERE p.is_active = 1 AND ABS(h.shares) > 0.0001
+        GROUP BY h.ticker
+        """
     ).fetchall()
     conn.close()
     db = {r["ticker"]: float(r["total"]) for r in db_rows}
 
+    # Critical drifts: active-DB positions disagree with Alpaca (or unexpected shorts).
+    # Alpaca orphans (position with no active-DB row) are flatten leftovers — warn only.
     drifts = []
-    for ticker in set(db) | set(alpaca):
-        d = db.get(ticker, 0.0); a = alpaca.get(ticker, 0.0)
+    for ticker, d in db.items():
+        a = alpaca.get(ticker, 0.0)
         if abs(d - a) > 0.001:
-            drifts.append({"ticker": ticker, "db": d, "alpaca": a, "diff": d - a})
+            drifts.append({"ticker": ticker, "db": d, "alpaca": a, "diff": d - a, "class": "active"})
+    for ticker, a in alpaca.items():
+        if a < -0.5 and ticker not in db:
+            drifts.append({"ticker": ticker, "db": 0.0, "alpaca": a, "diff": -a, "class": "short"})
+    orphans = [
+        {"ticker": t, "db": 0.0, "alpaca": a, "diff": -a, "class": "orphan"}
+        for t, a in alpaca.items()
+        if a >= 0.5 and abs(db.get(t, 0.0)) < 0.001
+    ]
+    # Stash orphans on function attribute for run_audit reporting (no halt)
+    audit_invariant_2._orphans = orphans
     return drifts
 
 
@@ -168,12 +186,17 @@ def run_audit(post_to_slack=True):
         marker = "  OK " if r["ok"] else "  X  "
         lines.append(f"{marker}{r['portfolio']:<28s} shadow=${r['shadow_cash']:>11,.2f}  derived=${r['derived_cash']:>11,.2f}  diff=${r['diff']:>+10,.2f}")
     lines.append("")
-    lines.append("Invariant 2 — DB shares match Alpaca shares:")
+    lines.append("Invariant 2 — active-DB shares match Alpaca shares:")
     if inv2_ok:
-        lines.append("  OK  no share mismatches")
+        lines.append("  OK  no active share mismatches")
     else:
         for d in inv2:
             lines.append(f"  X   {d['ticker']:<8s} db={d['db']:>6.0f}  alpaca={d['alpaca']:>6.0f}  diff={d['diff']:>+6.0f}")
+    orphans = getattr(audit_invariant_2, "_orphans", []) or []
+    if orphans:
+        lines.append("  WARN Alpaca orphans (not in active DB — no halt):")
+        for d in orphans:
+            lines.append(f"       {d['ticker']:<8s} alpaca={d['alpaca']:>6.0f}")
     lines.append("")
     lines.append("Invariant 3 — Aggregate cash matches Alpaca account:")
     marker = "  OK " if inv3["ok"] else "  X  "

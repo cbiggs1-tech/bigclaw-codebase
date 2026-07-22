@@ -153,7 +153,7 @@ def passes_entry_gate(pname, rsi14, pct_above_200ma):
     Vetoes only on indicators that are present — a missing indicator never blocks
     a buy. Returns {"pass": bool, "reason": str|None}. Scoped to the 7 rule-based
     portfolios; an unknown pname (e.g. an LLM portfolio) has no gate and always
-    passes, so this can never touch LLM-Comando / LLM-ETF Focus."""
+    passes, so this can never touch LLM-Commando / LLM-ETF Focus."""
     limits = ENTRY_GATE.get(pname)
     if not limits:
         return {"pass": True, "reason": None}
@@ -1600,60 +1600,155 @@ def main():
 MISMATCH_FLAG_PATH = Path.home() / "bigclaw-ai" / "logs" / "ALPACA_MISMATCH.flag"
 
 
-def verify_account_synced(halt_threshold=5):
-    """PRE-TRADE GUARD (2026-07-07, after Alpaca wiped paper-account positions). Before any
-    trading, confirm the live Alpaca account still holds what the DB thinks it holds. If many
-    DB-held tickers are MISSING at Alpaca (the signature of an Alpaca-side account reset), set
-    the global MISMATCH kill-switch and return False so callers HALT instead of selling into a
-    phantom book (which opens unintended shorts). Tolerates small per-position fill lag; does
-    NOT auto-clear the flag (resuming is manual); fails OPEN on a transient check error."""
-    try:
-        if MISMATCH_FLAG_PATH.exists():
-            return False  # already halted
-        client = get_trading_client()
-        apos = {}
-        for p in client.get_all_positions():
-            apos[from_alpaca(p.symbol)] = float(p.qty)
-        conn = db_conn(); c = conn.cursor()
-        c.execute("SELECT ticker, SUM(shares) FROM holdings WHERE shares != 0 GROUP BY ticker")
-        dbsum = dict(c.fetchall())
+def _active_db_share_map(conn=None):
+    """Per-ticker share totals for ACTIVE portfolios only (paper account truth scope)."""
+    own = conn is None
+    if own:
+        conn = db_conn()
+    c = conn.cursor()
+    c.execute(
+        """
+        SELECT h.ticker, SUM(h.shares) AS total
+        FROM holdings h
+        JOIN portfolios p ON h.portfolio_id = p.id
+        WHERE p.is_active = 1 AND ABS(h.shares) > 0.0001
+        GROUP BY h.ticker
+        """
+    )
+    out = {row[0]: float(row[1]) for row in c.fetchall()}
+    if own:
         conn.close()
-        held = [t for t, sh in dbsum.items() if sh]
-        # Sign-flip guard (2026-07-15): any SHORT at Alpaca is unexpected (BigClaw is long-only;
-        # inverse ETFs are held LONG). A single-ticker long->short flip slips past the missing-count
-        # check (KTOS incident) - halt on any negative position.
-        shorts = {t: q for t, q in apos.items() if q < -0.5}
-        if shorts:
-            reason = ("PRE-TRADE GUARD: unexpected SHORT position(s) at Alpaca %s - BigClaw is long-only. "
-                      "Trading auto-halted; flatten/reconcile before clearing this flag." % shorts)
-            MISMATCH_FLAG_PATH.parent.mkdir(parents=True, exist_ok=True)
-            MISMATCH_FLAG_PATH.write_text(json.dumps({"ts": now_et().isoformat(), "reason": reason}, indent=2))
-            logger.error("PRE-TRADE GUARD TRIPPED: unexpected short(s) %s. Kill-switch set." % shorts)
-            try:
-                sec = load_secrets()
-                from slack_sdk import WebClient
-                WebClient(token=sec["SLACK_BOT_TOKEN"]).chat_postMessage(
-                    channel="D0ADHLUJ400", text=":rotating_light: *PRE-TRADE GUARD HALT* - " + reason)
-            except Exception:
-                pass
-            return False
-        missing = [t for t in held if abs(apos.get(t, 0)) < 0.5]
-        if len(missing) >= halt_threshold:
-            reason = ("PRE-TRADE GUARD: %d/%d DB positions missing at Alpaca (e.g. %s) - likely an "
-                      "Alpaca account reset/liquidation. Trading auto-halted; reconcile before clearing "
-                      "this flag." % (len(missing), len(held), sorted(missing)[:8]))
-            MISMATCH_FLAG_PATH.parent.mkdir(parents=True, exist_ok=True)
-            MISMATCH_FLAG_PATH.write_text(json.dumps({"ts": now_et().isoformat(), "reason": reason}, indent=2))
-            logger.error("PRE-TRADE GUARD TRIPPED: %d/%d DB positions missing at Alpaca. Kill-switch set." % (len(missing), len(held)))
-            try:
-                sec = load_secrets()
-                from slack_sdk import WebClient
-                WebClient(token=sec["SLACK_BOT_TOKEN"]).chat_postMessage(
-                    channel="D0ADHLUJ400", text=":rotating_light: *PRE-TRADE GUARD HALT* - " + reason)
-            except Exception:
-                pass
-            return False
-        return True
+    return out
+
+
+def _alpaca_qty_map(client=None):
+    if client is None:
+        client = get_trading_client()
+    apos = {}
+    for p in client.get_all_positions():
+        apos[from_alpaca(p.symbol)] = float(p.qty)
+    return apos, client
+
+
+def _write_mismatch_flag(reason, extra=None):
+    payload = {"ts": now_et().isoformat(), "reason": reason}
+    if extra is not None:
+        payload["detail"] = extra
+    MISMATCH_FLAG_PATH.parent.mkdir(parents=True, exist_ok=True)
+    MISMATCH_FLAG_PATH.write_text(json.dumps(payload, indent=2))
+
+
+def _clear_mismatch_flag(reason="self-heal"):
+    if not MISMATCH_FLAG_PATH.exists():
+        return False
+    try:
+        MISMATCH_FLAG_PATH.unlink()
+    except FileNotFoundError:
+        return False
+    logger.info("Mismatch flag cleared (%s)", reason)
+    return True
+
+
+def _halt_conditions(apos, dbsum, halt_threshold=5):
+    """Return (ok: bool, reason: str|None, meta: dict). Active-DB scope only.
+
+    Halt when:
+      - any unexpected SHORT at Alpaca (long-only system)
+      - >= halt_threshold active-DB tickers effectively missing at Alpaca
+        (signature of paper account reset / mass liquidation)
+
+    Do NOT halt on Alpaca orphans (positions with no active-DB row) — those are
+    flatten leftovers and must not freeze the whole book.
+    """
+    shorts = {t: q for t, q in apos.items() if q < -0.5}
+    if shorts:
+        return False, (
+            "PRE-TRADE GUARD: unexpected SHORT position(s) at Alpaca %s - BigClaw is long-only. "
+            "Trading auto-halted; flatten/reconcile before clearing this flag." % shorts
+        ), {"shorts": shorts}
+
+    held = [t for t, sh in dbsum.items() if abs(sh) >= 0.5]
+    missing = [t for t in held if abs(apos.get(t, 0)) < 0.5]
+    # Severe under-holds: DB long but Alpaca has far fewer shares (partial wipe)
+    under = []
+    for t, dbq in dbsum.items():
+        if dbq < 0.5:
+            continue
+        aq = apos.get(t, 0.0)
+        if aq < -0.5:
+            continue  # counted as short
+        if aq + 0.5 < dbq and (dbq - aq) > max(2.0, 0.05 * dbq):
+            # only count as "missing-class" if nearly gone
+            if aq < 0.5:
+                if t not in missing:
+                    missing.append(t)
+            else:
+                under.append({"ticker": t, "db": dbq, "alpaca": aq})
+
+    orphans = sorted(t for t, q in apos.items() if q >= 0.5 and abs(dbsum.get(t, 0)) < 0.5)
+
+    meta = {
+        "missing": sorted(missing),
+        "under": under,
+        "orphans": orphans,
+        "held_n": len(held),
+        "active_tickers": len(held),
+    }
+
+    if len(missing) >= halt_threshold:
+        return False, (
+            "PRE-TRADE GUARD: %d/%d ACTIVE-DB positions missing at Alpaca (e.g. %s) - likely an "
+            "Alpaca account reset/liquidation. Trading auto-halted; reconcile before clearing "
+            "this flag." % (len(missing), len(held), sorted(missing)[:8])
+        ), meta
+
+    return True, None, meta
+
+
+def verify_account_synced(halt_threshold=5):
+    """PRE/POST shared guard. Active portfolios only. Self-heals stale flags.
+
+    Returns True if trading is allowed. Sets kill-switch on real desync.
+    Clears kill-switch when halt conditions no longer apply (so Commando/radar/
+    stop_check all self-heal, not only the daily autonomous_trader cron).
+    Fails OPEN on transient check errors (log + allow).
+    """
+    try:
+        apos, client = _alpaca_qty_map()
+        dbsum = _active_db_share_map()
+        ok, reason, meta = _halt_conditions(apos, dbsum, halt_threshold=halt_threshold)
+
+        if meta.get("orphans"):
+            logger.warning(
+                "Alpaca orphan position(s) not in active DB (warn only, not a halt): %s",
+                meta["orphans"],
+            )
+
+        if ok:
+            if MISMATCH_FLAG_PATH.exists():
+                _clear_mismatch_flag("halt conditions cleared — active DB matches Alpaca")
+                try:
+                    _post_slack_simple(
+                        ":white_check_mark: *BigClaw self-healed* — ALPACA_MISMATCH flag cleared. "
+                        "Active portfolios match Alpaca (orphans ignored: %s)."
+                        % (meta.get("orphans") or "none")
+                    )
+                except Exception:
+                    pass
+            return True
+
+        # Not ok — ensure flag present with current reason
+        _write_mismatch_flag(reason, extra=meta)
+        logger.error("PRE-TRADE GUARD TRIPPED: %s", reason)
+        try:
+            sec = load_secrets()
+            from slack_sdk import WebClient
+            WebClient(token=sec["SLACK_BOT_TOKEN"]).chat_postMessage(
+                channel="D0ADHLUJ400", text=":rotating_light: *PRE-TRADE GUARD HALT* - " + reason
+            )
+        except Exception:
+            pass
+        return False
     except Exception as e:
         logger.warning("verify_account_synced check failed (allowing trade): %s" % e)
         return True
@@ -1686,34 +1781,87 @@ def _post_slack_simple(text):
 
 
 def _live_mismatch_check(client):
-    """Compare DB total shares vs Alpaca positions per ticker.
+    """Active-DB vs Alpaca share diffs that matter for trading safety.
 
-    Returns list of {ticker, db, alpaca, diff} for entries that differ by
-    more than 0.5 shares. Empty list means clean. Used by the startup
-    guard to decide whether a stale flag can be self-cleared.
+    Returns list of critical rows only:
+      - active DB long missing/short at Alpaca
+      - unexpected Alpaca shorts
+    Alpaca orphans (extra positions not in active DB) are logged but omitted
+    so they cannot pin the global halt forever after a sleeve flatten.
     """
     positions = retry(lambda: client.get_all_positions(), attempts=3, delay=5,
                       label="alpaca.guard_check")
     alpaca_map = {from_alpaca(p.symbol): float(p.qty) for p in positions}
+    db_map = _active_db_share_map()
 
-    conn = db_conn()
-    c = conn.cursor()
-    c.execute("""
-        SELECT h.ticker, SUM(h.shares) AS total
-        FROM holdings h JOIN portfolios p ON h.portfolio_id = p.id
-        WHERE p.is_active = 1 AND h.shares > 0
-        GROUP BY h.ticker
-    """)
-    db_map = {row[0]: float(row[1]) for row in c.fetchall()}
-    conn.close()
-
-    all_tickers = set(db_map) | set(alpaca_map)
     out = []
-    for t in sorted(all_tickers):
-        d, a = db_map.get(t, 0.0), alpaca_map.get(t, 0.0)
+    # shorts always critical
+    for t, a in alpaca_map.items():
+        if a < -0.5:
+            out.append({"ticker": t, "db": db_map.get(t, 0.0), "alpaca": a, "diff": a - db_map.get(t, 0.0),
+                        "class": "short"})
+    # active DB positions that disagree materially with Alpaca
+    for t, d in db_map.items():
+        a = alpaca_map.get(t, 0.0)
+        if a < -0.5:
+            continue  # already counted
         if abs(a - d) > 0.5:
-            out.append({"ticker": t, "db": d, "alpaca": a, "diff": a - d})
+            # ignore pure orphans handled separately; here t is in DB
+            out.append({"ticker": t, "db": d, "alpaca": a, "diff": a - d, "class": "active_mismatch"})
+
+    orphans = sorted(t for t, a in alpaca_map.items() if a >= 0.5 and abs(db_map.get(t, 0)) < 0.5)
+    if orphans:
+        logger.warning("Live check: Alpaca orphan(s) ignored for halt decisions: %s", orphans)
+
     return out
+
+
+def post_trade_verify_or_flag(client=None, context="post_trade", halt_threshold=5):
+    """AFTER buys/sells: re-check active books vs Alpaca. Set or clear flag.
+
+    Call from every execute path (autonomous_trader, llm_comando, stop_check, etc.).
+    Returns (ok: bool, remaining: list).
+    """
+    try:
+        if client is None:
+            client = get_trading_client()
+        apos, _ = _alpaca_qty_map(client)
+        dbsum = _active_db_share_map()
+        ok, reason, meta = _halt_conditions(apos, dbsum, halt_threshold=halt_threshold)
+        remaining = _live_mismatch_check(client)
+
+        if meta.get("orphans"):
+            logger.warning("[%s] Alpaca orphans (warn only): %s", context, meta["orphans"])
+
+        if ok and not remaining:
+            if MISMATCH_FLAG_PATH.exists():
+                _clear_mismatch_flag("%s clean" % context)
+            logger.info("[%s] active DB matches Alpaca", context)
+            return True, []
+
+        if remaining:
+            # Critical drift on active holdings after a trade
+            critical = [m for m in remaining if m.get("class") in ("short", "active_mismatch")]
+            if critical:
+                reason = reason or (
+                    "POST-TRADE GUARD: %d active-position mismatch(es) after %s (e.g. %s)"
+                    % (len(critical), context, [c["ticker"] for c in critical[:8]])
+                )
+                _write_mismatch_flag(reason, extra={"remaining": critical, "meta": meta})
+                logger.error("[%s] %s", context, reason)
+                try:
+                    _post_slack_simple(":rotating_light: *POST-TRADE GUARD* - " + reason)
+                except Exception:
+                    pass
+                return False, critical
+
+        if ok:
+            return True, remaining
+        _write_mismatch_flag(reason, extra=meta)
+        return False, remaining
+    except Exception as e:
+        logger.warning("post_trade_verify_or_flag failed (not blocking): %s", e)
+        return True, []
 
 
 def _run_main(args):

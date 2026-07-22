@@ -22,7 +22,7 @@ Autonomous **paper-trading** investment research system on a Raspberry Pi.
   6. Nuclear Renaissance (domain expertise)
   7. AI Defense & Autonomous
   8. **LLM-ETF Focus** (dialectic; ETF-tilted control)
-  9. **LLM-Comando** (dialectic; single-stock only)
+  9. **LLM-Commando** (dialectic; single-stock only)
 - **Treasury Reserve retired** (May 2026, `is_active=0`). Idle cash stays cash — **no SGOV sweep**.
 - Dashboard: https://bigclaw.grandpapa.net  
 - Code review remote: https://github.com/cbiggs1-tech/bigclaw-codebase  
@@ -32,7 +32,7 @@ Autonomous **paper-trading** investment research system on a Raspberry Pi.
 | Layer | Portfolios | Who decides | Python role |
 |-------|------------|-------------|-------------|
 | **Rule-based** | 1–7 | Deterministic: style gates + 20-dim scores + best-in-class top-10 + trailing stops + **entry gate** | Full strategy |
-| **LLM dialectic** | 8–9 | Bull → Bear → **Judge** (Comando Judge = Opus 4.8) | Info + safety rails only; **no Python sell strategy** |
+| **LLM dialectic** | 8–9 | Bull → Bear → **Judge** (Commando Judge = Opus 4.8) | Info + safety rails only; **no Python sell strategy** |
 
 Do **not** blend these. Hard IPS gates on the 7; principles/lenses for the Judge on the 2.
 
@@ -153,7 +153,7 @@ GitHub tree includes `docs/data/charts/CON.json`. **`CON` is a reserved Windows 
 ### Python's job
 - Information at the right time: news, prices, macro regime, journal, lessons, peer scoreboard  
 - Execute cleanly: Alpaca + `record_trade`  
-- Safety rails only: cash isolation, market hours, ticker validation, ETF blacklist (Comando), schema validation, catastrophic freeze at ~50% drawdown, mismatch/short guards  
+- Safety rails only: cash isolation, market hours, ticker validation, ETF blacklist (Commando), schema validation, catastrophic freeze at ~50% drawdown, mismatch/short guards  
 
 ### Python's job is NOT
 - Strategy sells, hold timers, profit targets, or thesis vetoes as hard code  
@@ -170,11 +170,11 @@ GitHub tree includes `docs/data/charts/CON.json`. **`CON` is a reserved Windows 
 - Money-market / cash = zero-alpha baseline (paper cash earns 0; real-world inflation context used in prompts)  
 - Grade process at decision time, not by lucky P&L  
 - Exit by **would-I-buy-now / opportunity cost**, not a clock  
-- Comando overnight: burden of proof on **holding** green into the close in risk-off / war tape; bank + re-enter next day is not churn  
+- Commando overnight: burden of proof on **holding** green into the close in risk-off / war tape; bank + re-enter next day is not churn  
 
 ### Soft vs hard experiment (July 17)
 - Same extension finding: **hard veto** on 7, **LESSONS info** on 2 via `llm_lessons.py`  
-- Do not “fix” the experiment by bolting hard extension gates onto Comando without explicit direction  
+- Do not “fix” the experiment by bolting hard extension gates onto Commando without explicit direction  
 
 ### Known pending (as of 2026-07-21 worklog)
 - ETF Focus evidence-dialectic mirror (sell classification + Bull/Bear analogs)  
@@ -193,7 +193,7 @@ GitHub tree includes `docs/data/charts/CON.json`. **`CON` is a reserved Windows 
 - Briefings already migrated off broken OpenClaw exec-approval crons where needed — prefer **native system crontab** for shell reliability  
 
 ### Model notes (runtime vs coding)
-- Live bot: Sonnet/OpenRouter/Gemini for cost; Comando **Judge = Opus 4.8** (Fable failed reliability)  
+- Live bot: Sonnet/OpenRouter/Gemini for cost; Commando **Judge = Opus 4.8** (Fable failed reliability)  
 - Coding agent is now **Grok 4.5** — apply full rigor on live money path; do not cargo-cult Claude `/model opus` commands  
 - Prefer dry-run + compile + targeted tests before deploy on trading path  
 
@@ -254,7 +254,7 @@ System crontab is the reliable backbone. High-level:
 - `refresh_all.sh` / price refresh + dashboard  
 - **`autonomous_trader.py` ~10:00** (single trader trigger; OpenClaw duplicates disabled)  
 - `stop_check.py` every ~15 min  
-- LLM cycles + 5-min watchers (Comando) / slower ETF watcher  
+- LLM cycles + 5-min watchers (Commando) / slower ETF watcher  
 - Saturday candidate screener  
 
 `SHELL=/bin/bash` required in crontab (`source` fails under dash).
@@ -272,7 +272,7 @@ Evidence so far: short-term single-stock edge from free public data is weak; all
 3. LLM dialectic experiment (soft vs hard governance)  
 4. Possible **collaborative analyst** product direction (human-in-the-loop Judge, not pure auto-timing)
 
-Do not “optimize” by turning Comando into a second rule bot unless Curtis redirects.
+Do not “optimize” by turning Commando into a second rule bot unless Curtis redirects.
 
 ---
 

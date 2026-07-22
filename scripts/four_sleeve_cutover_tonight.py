@@ -2,7 +2,7 @@
 """
 BigClaw 4-sleeve cutover (market-closed safe steps).
 
-KEEP: Innovation Fund, Momentum Growth, AI Defense & Autonomous, LLM-Comando
+KEEP: Innovation Fund, Momentum Growth, AI Defense & Autonomous, LLM-Commando
 KILL (flatten at next open): Value Picks, Growth Value, Income Dividends,
      Nuclear Renaissance, LLM-ETF Focus
 
@@ -147,7 +147,7 @@ def main():
         "created": ts,
         "kill_portfolios": sorted(KILL),
         "keep_rule": sorted(KEEP_RULE),
-        "keep_llm": ["LLM-Comando"],
+        "keep_llm": ["LLM-Commando"],
         "note": "Run flatten_kill_portfolios.py at next market open, then deactivate.",
     }
 

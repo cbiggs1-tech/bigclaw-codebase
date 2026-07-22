@@ -107,7 +107,7 @@ def main():
         'Innovation Fund': '#f87171',
         'Momentum Growth': '#fb923c',
         'AI Defense & Autonomous': '#22d3ee',
-        'LLM-Comando': '#a78bfa',
+        'LLM-Commando': '#a78bfa',
         # retired (kept for color stability if re-activated):
         'Value Picks': '#4ade80',
         'Growth Value': '#60a5fa',

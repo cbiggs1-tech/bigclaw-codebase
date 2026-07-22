@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Durable, curated lessons distilled from analyzing BigClaw's OWN real trades. Injected into the
-Bull/Bear/Judge data feed of BOTH LLM portfolios (Comando + ETF Focus) every cycle.
+Bull/Bear/Judge data feed of BOTH LLM portfolios (Commando + ETF Focus) every cycle.
 
 These are LENSES, NOT RULES — the LLM still decides everything. Session-local: yesterday failure may win today; never treat these as permanent sector bans. This is the "benefit of what we've
 learned" seed for the recursive learning loop: the journal accumulates each portfolio's OWN outcomes
@@ -27,4 +27,11 @@ def render_lessons():
         "   failure. Do not hold a played-out name while a stronger one is available.\n"
         "4. A LIVE CATALYST IS THE EDGE; PRICE ALONE IS A BANDWAGON. A name moving on price with no news behind\n"
         "   it is a crowd, not a thesis. (Already your doctrine — the data reinforces it.)\n"
+        "5. THREATENED TARIFFS / POLITICAL HEADLINES ARE NOT ENACTED POLICY. 07-21: Judge skipped a\n"
+        "   real GM Q2 beat+raise on a same-day Canada tariff THREAT. Leaders threaten tariffs for\n"
+        "   headlines constantly — theater until IN FORCE or company already booking the cost.\n"
+        "   Prefer real reported numbers. Only enacted policy can veto a clean earnings thesis.\n"
+        "6. DAY-2 CHASE AFTER THE RUN IS NOT EDGE. Rehash of yesterday earnings after multi-day pop\n"
+        "   with no new fact = chase. Act near the primary print or stand down. Late radar buys on\n"
+        "   recycled news compound extension risk (lesson 1).\n"
     )

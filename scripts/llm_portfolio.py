@@ -63,7 +63,7 @@ LLM_LOG = Path.home() / "bigclaw-ai" / "logs" / "llm_calls.jsonl"
 JOURNAL = Path.home() / "bigclaw-ai" / "data" / "llm_journal.jsonl"
 
 # Durable, curated lessons from analyzing our own trades (extension risk, opportunity-cost
-# exit, etc.) — shared with LLM-Comando. Injected into the data feed as INFORMATION, not
+# exit, etc.) — shared with LLM-Commando. Injected into the data feed as INFORMATION, not
 # rules; the Bull/Bear/Judge weigh it and decide. Guarded so a missing module never breaks a cycle.
 try:
     from llm_lessons import render_lessons
@@ -645,8 +645,9 @@ def validate_and_execute(trades, state, total_value, secrets, dry_run=False):
     """Validate each trade; execute via Alpaca + record_trade if not dry_run.
        Returns list of (trade, result_dict)."""
     sys.path.insert(0, str(Path.home() / "bigclaw-ai" / "scripts"))
-    from autonomous_trader import get_trading_client, MISMATCH_FLAG_PATH, verify_account_synced
-    verify_account_synced()  # pre-trade guard: set kill-switch if Alpaca is desynced from the DB
+    from autonomous_trader import get_trading_client, MISMATCH_FLAG_PATH, verify_account_synced, post_trade_verify_or_flag
+    # PRE-TRADE: active books only; self-heals stale flags
+    verify_account_synced()
     from order_fill import wait_for_fill, clamp_sell_to_long
     from trade_recorder import record_trade
     from alpaca.trading.requests import MarketOrderRequest, GetAssetsRequest

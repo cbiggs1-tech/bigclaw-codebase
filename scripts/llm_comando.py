@@ -44,7 +44,7 @@ import yfinance as yf
 from slack_sdk import WebClient
 
 # ---------- constants ----------
-PORTFOLIO_NAME = "LLM-Comando"
+PORTFOLIO_NAME = "LLM-Commando"
 DEFAULT_CHANNEL = "D0ADHLUJ400"
 MODEL_BULL = "claude-sonnet-4-6"
 MODEL_BEAR = "claude-sonnet-4-6"
@@ -58,7 +58,8 @@ MAX_TOKENS_DEBATE = 6000     # bull / bear each (new mandatory Bear priced-in te
 MAX_TOKENS_JUDGE = 16000     # Opus 4.8 + adaptive thinking needs headroom (thinking blocks count toward output)
 MAX_TOKENS_SHADOW_JUDGE = 12000
 LLM_TIMEOUT = 120.0
-SHADOW_OR_TIMEOUT = 180.0   # OpenRouter can be slower; non-fatal if it times out
+SHADOW_OR_TIMEOUT = 180.0   # per OpenRouter HTTP call (sec); up to 3 attempts
+SHADOW_WALL_BUDGET_S = 600.0  # soft cap whole shadow dialectic (~10 min); abort rest if exceeded
 
 # Safety rails (Curtis's minimum)
 CATASTROPHIC_DRAWDOWN_FLOOR = 50_000.0   # USD - freeze if portfolio drops below
@@ -91,7 +92,7 @@ MACRO_ETFS  = ['SPY', 'TLT', 'UUP', 'GLD', 'USO']
 REGIME_TICKERS = ['^VIX', 'HYG', 'LQD', '^TNX', 'IWM']  # vol / HY credit / IG credit / 10y yield / small-cap breadth - macro regime tells
 
 
-# ---------- ETF blacklist (LLM-Comando is single-stock by mandate) ----------
+# ---------- ETF blacklist (LLM-Commando is single-stock by mandate) ----------
 ETF_BLACKLIST = {
     # Broad index
     'SPY', 'QQQ', 'DIA', 'VOO', 'VTI', 'VEA', 'VWO',
@@ -193,9 +194,9 @@ def get_portfolio_state():
 
 def get_peer_returns():
     """Returns {portfolio_name: return_pct} for peer portfolios measured over COMANDO'S OWN
-    window (since Comando's inception) - apples-to-apples. The rule-based peers have run since
-    ~February, so their since-inception totalReturn is NOT comparable to Comando's ~1-month
-    track record; we baseline every peer to Comando's first daily_snapshot date."""
+    window (since Commando's inception) - apples-to-apples. The rule-based peers have run since
+    ~February, so their since-inception totalReturn is NOT comparable to Commando's ~1-month
+    track record; we baseline every peer to Commando's first daily_snapshot date."""
     try:
         conn = sqlite3.connect(DB_PATH, timeout=10)
         conn.row_factory = sqlite3.Row
@@ -809,10 +810,42 @@ reject-test). Cash is NOT a safe default: in this ~4% inflation environment, wit
 idle account cash, sitting in cash is a guaranteed real loss of ~4%/year. So each cycle you MUST
 surface the single best deployable setup you can find among the candidates, ranked, each with its
 reward-to-risk - and you must NOT pre-reject a name just because it already reacted to its news (a
-live catalyst always moves the stock first; that is normal, and a fresh catalyst with room left to
-run is exactly what you are hunting). Only if you genuinely cannot find ANY name whose expected edge
+live catalyst always moves the stock first; that is normal ONLY in the FRESH session of a primary
+catalyst — do NOT pitch day-2+ rehashes after a multi-day run as 'continuation'; that is a chase).
+Prefer real company prints (earnings, formal guidance) over political threat headlines when ranking
+ideas. Only if you genuinely cannot find ANY name whose expected edge
 beats a guaranteed real cash loss do you conclude "cash beats everything today" - and then you must
 name precisely what would have to change for you to deploy.
+
+
+THREAT vs REAL (operator law — non-negotiable):
+- REAL company catalysts (reported earnings beats/misses, formal guidance raises/cuts,
+  signed M&A, actual upgrades with PTs in the feed) OUTRANK political theater.
+- Tariff / trade / political headlines: classify EXPLICITLY before they can veto a thesis:
+    THREAT / THEATER (ignore for veto; at most a risk note): "threatens", "considering",
+    "could impose", "may announce", "talks of", tweet/speech without a signed order or
+    effective date, recurring headline threats that never become law. Leaders threaten
+    tariffs for headlines constantly — that is NOT a reason to skip a real earnings print.
+    ENACTED / IN FORCE (relevant): signed executive order or statute, customs/duty rate
+    already effective, company states it is ALREADY absorbing the cost in results/guidance,
+    implementation date that has PASSED with evidence in the feed.
+- Do NOT invent an "enacted" tariff. If the feed only shows threat language, treat it as
+  noise. If both a real earnings beat AND an enacted tariff hit the same name, weigh both;
+  a pure threat never cancels a clean beat+raise on its own.
+
+
+NO-CHASE / LATE ENTRY (operator law):
+- Do NOT buy a name that has already completed the obvious move on a STALE catalyst.
+- FRESH session of a primary catalyst (earnings just out this morning, upgrade minutes ago)
+  with a normal 1–5% reaction can still have room — that is not automatically a chase.
+- CHASE (stand down / do not buy):
+    * Catalyst is from a PRIOR session (or rehashed summary of yesterday's earnings) AND
+      the stock is already up hard over 1–3 days with no NEW incremental news in the feed.
+    * You are arriving hours/days after the open gap with only "continuation" as the thesis.
+    * Price is extended (large multi-day gain, parabolic vs sector) and the only news is a
+      re-tell of the same already-traded event.
+- Prefer: act near the real print when the numbers are still the live driver; pass when
+  you are buying someone else's winner after the run.
 
 ANTI-CHEATING:
 - Your training data ends January 2026. Today is provided in the data. Trust ONLY the data feed.
@@ -885,12 +918,22 @@ ALREADY-PRICED-IN test and state the result explicitly:
       worth (e.g. a +15% parabolic pop on a minor or procedural item) or the catalyst is genuinely
       SPENT (a one-day event with nothing left to play out). "It moved 3% on real fresh news" is a
       continuation setup, not a disqualification.
-  (3) DURABILITY - Is the driver durable or reflexive? Catalysts that depend on an unstable
-      situation holding (war-scene oil spikes, headline-driven macro moves) can reverse on
-      the next headline. Do NOT extrapolate a fluid situation forward; discount it.
-A thesis whose move has plausibly OVERSHOT its catalyst, or that rests on a spent or purely
-reflexive driver, has a DISQUALIFYING weakness. But a fresh, strong catalyst that still has room to
-run is a BUY, not a chase - do not reject it merely because the stock has already reacted.
+  (3) DURABILITY - Is the driver durable or reflexive? Enacted policy and reported company
+      numbers are durable. Threatened tariffs, tweets, and war-scene oil spikes that reverse
+      on the next headline are reflexive — discount them; do NOT treat a THREAT as if it were
+      already law.
+  (4) THREAT vs ENACTED (mandatory label on any tariff/trade/political counter):
+      If your counter-case is a tariff/political headline, you MUST say THREAT or ENACTED
+      with feed evidence. THREAT alone is NOT a disqualifying bear case against a real
+      earnings beat/raise. ENACTED costs that the company already books can be disqualifying.
+  (5) CHASE / LATE - Reject buys that are day-2+ rehashes of a prior-session catalyst after
+      a large multi-day run with no new incremental fact. That IS a chase. Do NOT call a
+      fresh same-session earnings reaction a chase merely because the stock already printed
+      a normal 1–5% move — but DO call chase when the primary print is old and the stock
+      already ran.
+A thesis whose move has plausibly OVERSHOT its catalyst, or that rests on a spent or pure-threat
+driver, has a DISQUALIFYING weakness. A fresh real print still has room in its first session is
+NOT automatically a chase. A late entry after the run on recycled news IS a chase — reject it.
 
 ANTI-CHEATING:
 - Your training data ends January 2026. Today is provided in the data. Trust ONLY the data feed.
@@ -927,6 +970,14 @@ NORTH STAR (operator law — overrides accumulated template habits):
 - You are NOT a second rule-based portfolio. Python handles cash/long-only/no-ETF rails only.
 - METHOD: study the stock; weigh Bull and Bear; decide from TODAY's market narrative and conditions.
 - STYLE: day-trader speed with investor sense — every buy needs a real thesis that fits (or consciously fades) today's story, plus clear falsifiers.
+- REAL > THEATER: reported earnings / formal guidance / signed deals beat threatened tariffs and political headlines. Only ENACTED policy (in force, company already booking it) can veto or resize a real print — not a threat.
+- NO CHASE: do not buy day-2+ rehashes after the multi-day run; act near the real print or stand down. Recycled 'continuation' after +high-single-digit multi-day moves is a chase.
+- COLD EDGE (not passivity): Your constraints remove HUMAN pathologies (FOMO chase after the run,
+  fear-veto of real prints on political theater, revenge trading, narrative attachment). They do NOT
+  mean trade less or hug cash. Most of the tape is human — overreact to threats, chase green candles,
+  freeze on clean numbers next to scary headlines. Exploit that: act early and sized on REAL facts
+  while humans dither; stand down when humans are late and crowded; fade crowded theater when the
+  numbers disagree. Sophistication = selective aggression, not fewer trades.
 - EXIT: sell when the BUY THESIS starts to break (WEAKENED/BROKEN/SPENT). That is primary. Stops are safety rails, not the strategy. Do not sell just because a clock or a frozen checklist says so.
 - Journal and LESSONS are LENSES / analogies under prior regimes — never permanent bans on sectors or setups.
 - If you are in the "wrong group of stocks" for today's leadership, that is a thesis-competition problem to solve now — not an excuse and not a permanent identity as a defensive book.
@@ -971,7 +1022,7 @@ change your behavior. Don't just keep doing what didn't work.
 YOUR GOAL: Beat SPY and beat the 7 rule-based BigClaw portfolios over the next weeks BY PICKING INDIVIDUAL STOCKS.
 
 STRICT STOCK PREFERENCE — NEVER DEFAULT TO ETFs:
-This portfolio is the LLM-Comando experiment: individual-stock theses ONLY. ETFs (any ticker starting
+This portfolio is the LLM-Commando experiment: individual-stock theses ONLY. ETFs (any ticker starting
 with X- or factor ETFs like MTUM/QUAL/USMV/IWM) must NOT appear in your trades unless you have an
 extraordinary explicit hedging rationale. If the Bear successfully argued for a specific stock within
 an ETF basket, take that specific stock. If you find yourself reaching for an ETF, hold cash and watch
@@ -983,7 +1034,7 @@ peer-return block every cycle - when a dumb rule-based bot is beating you, that 
 only job, and the usual cause is that you sat in cash while it was deployed. Risk-adjusted return is
 the measure (a small gain for huge risk is still bad), but a money-market parking posture that risks
 nothing generates ZERO alpha and is the surest failure of all - a thing whose best move is cash is
-not an investor. Comando doctrine - the commando raid: find the real catalyst that still has ROOM TO
+not an investor. Commando doctrine - the commando raid: find the real catalyst that still has ROOM TO
 RUN with a reward-to-risk asymmetry you can state, hit it decisively, take the defined gain, get out.
 You are an alpha HUNTER, not a goalie. CASH IS AMMUNITION, NOT A FORTRESS - unused, it is wasted. A commando who never fires his ammunition captures nothing; you deploy it to PLUNDER the market's cash and grow your war chest, and that captured profit becomes more ammunition for the next raid. Hoarding ammo is not winning the war - it is sitting out of it.
 
@@ -1005,7 +1056,7 @@ BUT OVERNIGHT AND WEEKEND HOLDS ARE NOT FREE - AND BANKING A GAIN IS CONTROL, FI
 
 This overnight-risk weight is MODEST in a calm tape but rises with WAR / GEOPOLITICAL RISK. Read these signals every cycle and weight them for the OVERNIGHT decision (separate from intraday sizing): (1) the NEWS FEED for military escalation - strikes, Iran, Israel, Strait of Hormuz, tanker attacks; (2) OIL trending UP (USO / oil rising over days = supply/war fear being priced); (3) VIX TREND and rate-of-change - a VIX that is rising and accelerating, or that turned up late in the session, is an early warning EVEN WHILE its absolute level is still normal (under 22). When these are building, PROFITS ARE PREMIUM and overnight holds are mostly risk: give the Bear's 'protect gains, arrive at the next session with optionality' materially more weight, take the gains you have, and lighten your overnight book. This is a REBALANCE of when-to-hold, NOT a retreat to cash - you still hunt and deploy intraday and re-enter fresh news-backed setups next session; you simply refuse to donate your realized edge to an overnight war-headline gap.
 
-OVERNIGHT RISK IS A LENS, NOT A STANDING ORDER TO GO TO CASH. On a clear risk-on close with leadership intact, holding winners overnight can be correct. On war/oil/risk-off closes, banking is wise. THE BURDEN OF PROOF IS ON HOLDING OVERNIGHT when risk signals are elevated - Comando short-window style. The DEFAULT into the close is to BANK your green and stand down overnight; carrying a position through the night requires a COMPELLING, specific reason, not just 'I still like the name.' In your last cycle of the day, read the CLOSING TAPE and decide:
+OVERNIGHT RISK IS A LENS, NOT A STANDING ORDER TO GO TO CASH. On a clear risk-on close with leadership intact, holding winners overnight can be correct. On war/oil/risk-off closes, banking is wise. THE BURDEN OF PROOF IS ON HOLDING OVERNIGHT when risk signals are elevated - Commando short-window style. The DEFAULT into the close is to BANK your green and stand down overnight; carrying a position through the night requires a COMPELLING, specific reason, not just 'I still like the name.' In your last cycle of the day, read the CLOSING TAPE and decide:
 - COMPELLING TO HOLD: the market is ACCELERATING higher into the close with the regime clearly RISK-ON - SPY pushing up late, offense leading defense (XLY > XLP), credit firm (HY >= IG), VIX flat or falling, and your name riding fresh, still-live momentum. Strong risk-on momentum into the bell has follow-through energy, so an overnight hold can be justified there.
 - LEAN TO EXIT: the market closes FLAT or TRENDING DOWN, or the risk profile is shifting to RISK-OFF - SPY fading or red into the close, defense leading (XLP > XLY), credit softening, VIX turning up, or oil/war signals building. Here give SERIOUS consideration to exiting the positions MOST EXPOSED to an overnight gap: your highest-beta names, your biggest unrealized gains (the most to give back), and anything most sensitive to the risk-off driver (e.g. tech / chips / high-multiple names in a war-and-oil tape). Bank those into the close and re-enter next session if they still qualify. When the tape is ambiguous, default to banking - the burden is on the reason to HOLD.
 
@@ -1028,9 +1079,9 @@ embarrassed to end a green day in cash. The discipline is NOT "trade less"; it i
 that exists, and take it decisively." (Never manufacture a fake edge - a real, citable,
 still-playing-out catalyst with room to run is still required for every entry; the hunt is for
 genuine catalysts, pursued harder, not for noise. Cut losing trades fast; do not churn out of a
-trade you would still buy. Short-window Comando style, NOT buy-and-hold.)
+trade you would still buy. Short-window Commando style, NOT buy-and-hold.)
 
-NEWS-DRIVEN DISCOVERY: your candidates are the NEWS-MAKERS - the names being talked about in the last 24h - plus your held positions and watchlist. Every entry MUST rest on a citable, still-playing-out news catalyst. A stock moving on price action alone with no news behind it is a bandwagon, not a thesis - do NOT chase it, no matter how strong the chart looks. Run the news-makers through gap-analysis - but the test is ROOM TO RUN, not "did it already move" (a live catalyst always moves the stock first; that is normal continuation, not a reason to pass). If the news set is genuinely thin and every name is negative-expectancy, cash is acceptable for that one cycle - but remember cash is a guaranteed ~4%/year real loss, so "nothing to do" is a HIGH bar you must clear, not an easy default. Do not manufacture a trade from pure price momentum with no news - but do not refuse a fresh news-backed setup just because the stock already reacted.
+NEWS-DRIVEN DISCOVERY: your candidates are the NEWS-MAKERS - the names being talked about in the last 24h - plus your held positions and watchlist. Every entry MUST rest on a citable, still-playing-out news catalyst. A stock moving on price action alone with no news behind it is a bandwagon, not a thesis - do NOT chase it, no matter how strong the chart looks. Run the news-makers through gap-analysis with TWO filters: (1) THREAT vs ENACTED on any tariff/political headline — threats do not cancel real earnings; (2) FRESH vs LATE — same-session reaction to a primary print can still have room; day-2+ rehash after a large multi-day run is a CHASE (pass). If the news set is genuinely thin and every name is negative-expectancy or already chased, cash is acceptable for that one cycle. Do not manufacture a trade from pure price momentum with no news. Do not skip a same-session earnings beat solely because the stock already moved 2–5%, and do not buy yesterday's winner solely because it is still green.
 
 VOLATILITY REGIME (judge VIX by its ABSOLUTE level, calibrated to the last year of data - not by the percentage it moved): over the past 252 trading days VIX averaged ~18 with a median of 17 and a 75th percentile of 19, and forward SPY returns from a VIX of 18-21 were actually POSITIVE with drop odds at the ~11% base rate. So the high teens up to ~21 are NORMAL for this tape - do NOT throttle down or favor cash there, and a rising VIX that is still under 22 is NOT a reason to size down INTRADAY (but see the OVERNIGHT-RISK rule: a rising/accelerating VIX and war signals DO raise the bar for holding positions OVERNIGHT - the intraday aggression dial and the overnight-hold dial are separate decisions). The empirical THRESHOLD OF CONCERN is VIX 22: that is where the probability of a >3% SPY drop in the next 10 days jumps to ~40% (about 4x the base rate). Bands: under ~22 = NORMAL, trade and size normally (a VIX of 18-21 is the default day-trader environment, not a warning); 22-25 = ELEVATED (the real concern threshold) - modestly size down, tighten stops, raise the conviction bar; 25-30 = HIGH - go defensive and size down meaningfully; above ~30 = EXTREME (hit only once last year) - favor cash. Let the absolute level dial your aggression - and every position still needs its own news-backed catalyst.
 
@@ -1040,7 +1091,7 @@ OUTPUT SCHEMA:
 {
   "reflection": "what your journal shows about your past performance AND, bluntly: are you BEATING SPY and the rule-based bots right now? If you are trailing while holding cash, your caution is the FAILURE to fix - not an edge to keep. State what you will change to generate more alpha, not how your refusals avoided losses. A streak of refusals that leaves you in cash and behind the benchmark is the opposite of success.",
   "market_read": "your read of next 1-5 days",
-  "gap_analysis": "what BOTH the Bull and Bear missed that affects today's decision. For each proposed entry, explicitly: is there still ROOM TO RUN or has the move plausibly overshot the catalyst (note: a stock reacting to fresh news is normal and often continues - 'it already moved' alone is NOT priced-in)? is the driver durable or reflexive? what would make this wrong that neither side named? This is your primary value-add - do not leave it shallow.",
+  "gap_analysis": "what BOTH the Bull and Bear missed that affects today's decision. For each proposed entry, explicitly: is there still ROOM TO RUN or is this a CHASE (stale catalyst + already ran)? For any tariff/political veto used by Bear, label THREAT vs ENACTED — threats are not priced-in risk that cancel earnings. is the driver durable or reflexive? what would make this wrong that neither side named? This is your primary value-add - do not leave it shallow.",
   "addresses_bear_case": "specific paragraph addressing the strongest bear counter-arguments",
   "trades": [
     {
@@ -1194,7 +1245,7 @@ def call_openrouter_agent(secrets, system, user_message, model, max_tokens, agen
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json",
         "HTTP-Referer": "https://bigclaw.grandpapa.net",
-        "X-Title": "BigClaw Comando Shadow",
+        "X-Title": "BigClaw Commando Shadow",
     }
     messages = []
     if system:
@@ -1218,7 +1269,9 @@ def call_openrouter_agent(secrets, system, user_message, model, max_tokens, agen
             break
         except Exception as e:
             last_err = e
-            log(f"  {agent_name}: OpenRouter {type(e).__name__} (attempt {attempt+1}/3) - {e}", "WARN")
+            log(f"  {agent_name}: OpenRouter {type(e).__name__} (attempt {attempt+1}/3, timeout={to}s) - {e}", "WARN")
+            if "timeout" in type(e).__name__.lower() or "Timeout" in type(e).__name__:
+                log(f"  {agent_name}: OpenRouter TIMEOUT — this is the primary shadow risk", "WARN")
             time.sleep(3 * (attempt + 1))
     if resp is None:
         raise last_err
@@ -1257,6 +1310,8 @@ def run_shadow_dialectic(secrets, state_ctx, live_summary, cycle_name, today_iso
         sh_bull, sh_bull_cost, sh_bull_dt = call_openrouter_agent(
             secrets, BULL_SYSTEM, bull_msg, SHADOW_OR_BULL, MAX_TOKENS_DEBATE, "shadow_bull"
         )
+        if time.time() - t_shadow0 > SHADOW_WALL_BUDGET_S:
+            raise TimeoutError("shadow wall budget exceeded after bull")
         bear_msg = (
             state_ctx
             + "\n\n## BULL AGENT'S CASE (your target to challenge):\n\n"
@@ -1266,6 +1321,8 @@ def run_shadow_dialectic(secrets, state_ctx, live_summary, cycle_name, today_iso
         sh_bear, sh_bear_cost, sh_bear_dt = call_openrouter_agent(
             secrets, BEAR_SYSTEM, bear_msg, SHADOW_OR_BEAR, MAX_TOKENS_DEBATE, "shadow_bear"
         )
+        if time.time() - t_shadow0 > SHADOW_WALL_BUDGET_S:
+            raise TimeoutError("shadow wall budget exceeded after bear")
         judge_msg = (
             state_ctx
             + "\n\n## BULL AGENT'S CASE:\n\n"
@@ -1316,6 +1373,8 @@ def run_shadow_dialectic(secrets, state_ctx, live_summary, cycle_name, today_iso
                 "judge_cost": round(sh_judge_cost, 4),
                 "cost_total": round(sh_bull_cost + sh_bear_cost + sh_judge_cost, 4),
                 "duration_s": round(time.time() - t_shadow0, 1),
+                "or_timeout_s": SHADOW_OR_TIMEOUT,
+                "wall_budget_s": SHADOW_WALL_BUDGET_S,
                 "json_ok": sh_json_ok,
                 "trades": _summ(sh_out),
                 "n": len(sh_trades),
@@ -1357,16 +1416,20 @@ def validate_and_execute(trades, state, total_value, secrets, dry_run=False):
     """Validate each trade; execute via Alpaca + record_trade if not dry_run.
        Returns list of (trade, result_dict)."""
     sys.path.insert(0, str(Path.home() / "bigclaw-ai" / "scripts"))
-    from autonomous_trader import get_trading_client, MISMATCH_FLAG_PATH, verify_account_synced
-    verify_account_synced()  # pre-trade guard: set kill-switch if Alpaca is desynced from the DB
+    from autonomous_trader import (
+        get_trading_client,
+        MISMATCH_FLAG_PATH,
+        verify_account_synced,
+        post_trade_verify_or_flag,
+    )
+    # PRE-TRADE: active books vs Alpaca; self-heals stale flags
+    if not verify_account_synced() or MISMATCH_FLAG_PATH.exists():
+        log("Alpaca mismatch flag set - skipping trade execution this cycle", "WARN")
+        return [(t, {"skipped": "global mismatch flag"}) for t in trades]
     from order_fill import wait_for_fill, clamp_sell_to_long
     from trade_recorder import record_trade
     from alpaca.trading.requests import MarketOrderRequest, GetAssetsRequest
     from alpaca.trading.enums import OrderSide, TimeInForce, AssetStatus
-
-    if MISMATCH_FLAG_PATH.exists():
-        log("Alpaca mismatch flag set - skipping trade execution this cycle", "WARN")
-        return [(t, {"skipped": "global mismatch flag"}) for t in trades]
 
     client = get_trading_client()
     # Market hours check
@@ -1415,10 +1478,10 @@ def validate_and_execute(trades, state, total_value, secrets, dry_run=False):
             results.append((tr, {"skipped": f"ticker not found: {ticker} ({e})"}))
             continue
 
-        # HARD ENFORCEMENT: LLM-Comando is single-stock by mandate. Reject any ETF buy.
+        # HARD ENFORCEMENT: LLM-Commando is single-stock by mandate. Reject any ETF buy.
         if action == 'buy' and ticker in ETF_BLACKLIST:
-            log(f"REJECTED ETF buy: {ticker} (LLM-Comando is single-stock only)", "WARN")
-            results.append((tr, {"skipped": f"ETF rejected: {ticker} (LLM-Comando is single-stock only)"}))
+            log(f"REJECTED ETF buy: {ticker} (LLM-Commando is single-stock only)", "WARN")
+            results.append((tr, {"skipped": f"ETF rejected: {ticker} (LLM-Commando is single-stock only)"}))
             continue
 
         # SELL: must hold enough; credit estimated proceeds to running cash
@@ -1500,6 +1563,11 @@ def validate_and_execute(trades, state, total_value, secrets, dry_run=False):
             log(f"Trade execution error {action} {shares} {ticker}: {e}", "ERROR")
             results.append((tr, {"error": str(e)}))
 
+    # POST-TRADE: active DB vs Alpaca after fills (sets/clears mismatch flag)
+    try:
+        post_trade_verify_or_flag(client, context="llm_comando")
+    except Exception as _e:
+        log(f"post_trade_verify_or_flag: {_e}", "WARN")
     return results
 
 
@@ -1528,7 +1596,7 @@ def save_decision_markdown(today_iso, total_value, state, market, news, peer_ret
     spy = market.get('SPY', {})
 
     lines = [
-        f"# LLM-Comando — {today_iso}" + (f" — {cycle_name.upper()} cycle" if cycle_name else ""),
+        f"# LLM-Commando — {today_iso}" + (f" — {cycle_name.upper()} cycle" if cycle_name else ""),
         "",
         f"**Portfolio value:** ${total_value:,.2f}  |  **Cash:** ${state['current_cash']:,.2f}  "
         f"|  **Cumulative return:** {cum:+.2f}%",
@@ -1694,7 +1762,7 @@ def save_decision_markdown(today_iso, total_value, state, market, news, peer_ret
     # Maintain index README.md
     files = sorted([f for f in DECISIONS_DIR.glob("*.md") if f.name != "README.md"], reverse=True)
     idx = [
-        "# LLM-Comando — Decision Journal",
+        "# LLM-Commando — Decision Journal",
         "",
         "Per-cycle reasoning from the 3-Sonnet dialectic (Bull / Bear / Judge).",
         "Browse a day to see the full argument the LLMs made.",
@@ -1876,7 +1944,7 @@ def main():
         if journal:
             recent_watch = journal[-1].get('watchlist', [])[:15] if isinstance(journal[-1].get('watchlist'), list) else []
 
-        # LLM-Comando discovery: top news-mentioned tickers in the last 24h.
+        # LLM-Commando discovery: top news-mentioned tickers in the last 24h.
         # The LLM reasons on citable catalysts — rank candidates by news volume,
         # not price movement (Curtis 2026-06-11: "News is information. A stock
         # moving with no news, the LLM can't sort out logically anyway").
@@ -1978,6 +2046,9 @@ def main():
 
         # --- SHADOW DIALECTIC (OpenRouter): Sonnet Bull + Sonnet Bear + Grok 4.5 Judge ---
         # Runs AFTER live execute so paper trades are never delayed. Never submits orders.
+        # CRITICAL: drop main lock BEFORE shadow so radar/watcher can trade while OpenRouter runs
+        # (shadow can take many minutes with retries — must not block event-driven path).
+        release_lock()
         if SHADOW_DIALECTIC_ENABLED and not args.observe_only:
             _live_summ = {
                 "provider": "anthropic",
@@ -2080,7 +2151,7 @@ def main():
             log(f"Decision Markdown write failed: {e}", "WARN")
 
         # Slack summary
-        slack_text = (f"🎯 *LLM-Comando* — {today_iso}\n"
+        slack_text = (f"🎯 *LLM-Commando* — {today_iso}\n"
                       f"Portfolio: ${total_value:,.2f} ({(total_value/state['starting_cash']-1)*100:+.2f}% from start)  "
                       f"Cash: ${state['current_cash']:,.2f}\n"
                       f"Trades decided: {len(trades)}  Executed: {executed}  Skipped: {skipped}\n"
