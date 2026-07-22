@@ -48,11 +48,17 @@ PORTFOLIO_NAME = "LLM-Comando"
 DEFAULT_CHANNEL = "D0ADHLUJ400"
 MODEL_BULL = "claude-sonnet-4-6"
 MODEL_BEAR = "claude-sonnet-4-6"
-MODEL_JUDGE = "claude-opus-4-8"        # A/B concluded 2026-07-10: Fable 5 timed out 3x and killed the morning cycle; reverted to reliable Opus
-MODEL_JUDGE_SHADOW = "claude-opus-4-8"  # shadow judge for the A/B (logged, not executed)
+MODEL_JUDGE = "claude-opus-4-8"        # LIVE via Anthropic until shadow graduates
+# Shadow dialectic via OpenRouter (logged only — never executes trades)
+SHADOW_DIALECTIC_ENABLED = True
+SHADOW_OR_BULL = "anthropic/claude-sonnet-4.6"
+SHADOW_OR_BEAR = "anthropic/claude-sonnet-4.6"
+SHADOW_OR_JUDGE = "x-ai/grok-4.5"
 MAX_TOKENS_DEBATE = 6000     # bull / bear each (new mandatory Bear priced-in test runs longer; truncated at 3000 on 2026-06-17)
 MAX_TOKENS_JUDGE = 16000     # Opus 4.8 + adaptive thinking needs headroom (thinking blocks count toward output)
+MAX_TOKENS_SHADOW_JUDGE = 12000
 LLM_TIMEOUT = 120.0
+SHADOW_OR_TIMEOUT = 180.0   # OpenRouter can be slower; non-fatal if it times out
 
 # Safety rails (Curtis's minimum)
 CATASTROPHIC_DRAWDOWN_FLOOR = 50_000.0   # USD - freeze if portfolio drops below
@@ -1122,6 +1128,8 @@ levels relative to the entry you're about to take, not the historical price you 
 # Per-million-token pricing by model id. Update when models change.
 MODEL_PRICING = {
     "claude-sonnet-4-6": (3.0, 15.0),
+    "anthropic/claude-sonnet-4.6": (3.0, 15.0),
+    "x-ai/grok-4.5": (3.0, 15.0),  # approximate; OpenRouter bills actual
     "claude-opus-4-8":   (5.0, 25.0),
     "claude-fable-5":    (5.0, 25.0),   # ESTIMATE - confirm Fable 5 pricing
     "claude-opus-4-7":   (5.0, 25.0),
@@ -1170,6 +1178,170 @@ def call_agent(client, system, user_message, model, max_tokens, agent_name, thin
     log_llm_call(agent_name, model, in_tok, out_tok, cost, dt)
     log(f"  {agent_name}: in={in_tok} out={out_tok} cost=${cost:.4f} t={dt:.1f}s")
     return text, cost, dt
+
+
+
+def call_openrouter_agent(secrets, system, user_message, model, max_tokens, agent_name,
+                          temperature=0.3, timeout=None):
+    """One agent call via OpenRouter (shadow dialectic). Non-streaming.
+    Returns (text, cost_usd, duration_s). Raises on hard failure after retries."""
+    import requests
+    api_key = secrets.get("OPENROUTER_API_KEY") or os.environ.get("OPENROUTER_API_KEY")
+    if not api_key:
+        raise RuntimeError("OPENROUTER_API_KEY not set — cannot run shadow dialectic")
+    url = "https://openrouter.ai/api/v1/chat/completions"
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://bigclaw.grandpapa.net",
+        "X-Title": "BigClaw Comando Shadow",
+    }
+    messages = []
+    if system:
+        messages.append({"role": "system", "content": system})
+    messages.append({"role": "user", "content": user_message})
+    payload = {
+        "model": model,
+        "messages": messages,
+        "max_tokens": max_tokens,
+        "temperature": temperature,
+    }
+    t0 = time.time()
+    resp = None
+    last_err = None
+    to = timeout if timeout is not None else SHADOW_OR_TIMEOUT
+    for attempt in range(3):
+        try:
+            r = requests.post(url, headers=headers, json=payload, timeout=to)
+            r.raise_for_status()
+            resp = r.json()
+            break
+        except Exception as e:
+            last_err = e
+            log(f"  {agent_name}: OpenRouter {type(e).__name__} (attempt {attempt+1}/3) - {e}", "WARN")
+            time.sleep(3 * (attempt + 1))
+    if resp is None:
+        raise last_err
+    dt = time.time() - t0
+    try:
+        text = resp["choices"][0]["message"]["content"] or ""
+    except Exception:
+        text = ""
+        log(f"  {agent_name}: unexpected OR response shape", "WARN")
+    usage = resp.get("usage") or {}
+    in_tok = int(usage.get("prompt_tokens") or usage.get("input_tokens") or 0)
+    out_tok = int(usage.get("completion_tokens") or usage.get("output_tokens") or 0)
+    in_rate, out_rate = MODEL_PRICING.get(model, (3.0, 15.0))
+    cost = (in_tok * in_rate + out_tok * out_rate) / 1_000_000
+    if usage.get("total_cost") is not None:
+        try:
+            cost = float(usage["total_cost"])
+        except Exception:
+            pass
+    log_llm_call(agent_name, model, in_tok, out_tok, cost, dt)
+    log(f"  {agent_name}: in={in_tok} out={out_tok} cost=${cost:.4f} t={dt:.1f}s model={model}")
+    return text, cost, dt
+
+
+def run_shadow_dialectic(secrets, state_ctx, live_summary, cycle_name, today_iso):
+    """Full shadow Bull/Bear/Judge via OpenRouter. Never executes trades."""
+    if not SHADOW_DIALECTIC_ENABLED:
+        return
+    t_shadow0 = time.time()
+    try:
+        log("SHADOW dialectic starting (OR Sonnet/Sonnet/Grok-4.5) — no trades")
+        bull_msg = (
+            state_ctx
+            + "\n\n## YOUR TASK:\nAs the BULL agent, write your case. Use the schema in your system prompt."
+        )
+        sh_bull, sh_bull_cost, sh_bull_dt = call_openrouter_agent(
+            secrets, BULL_SYSTEM, bull_msg, SHADOW_OR_BULL, MAX_TOKENS_DEBATE, "shadow_bull"
+        )
+        bear_msg = (
+            state_ctx
+            + "\n\n## BULL AGENT'S CASE (your target to challenge):\n\n"
+            + sh_bull
+            + "\n\n## YOUR TASK:\nAs the BEAR agent, challenge each bull thesis. Use the schema in your system prompt."
+        )
+        sh_bear, sh_bear_cost, sh_bear_dt = call_openrouter_agent(
+            secrets, BEAR_SYSTEM, bear_msg, SHADOW_OR_BEAR, MAX_TOKENS_DEBATE, "shadow_bear"
+        )
+        judge_msg = (
+            state_ctx
+            + "\n\n## BULL AGENT'S CASE:\n\n"
+            + sh_bull
+            + "\n\n## BEAR AGENT'S COUNTER-CASE:\n\n"
+            + sh_bear
+            + "\n\n## YOUR TASK:\nAs the JUDGE, decide today's trades. Output strict JSON per schema in system prompt."
+        )
+        sh_judge, sh_judge_cost, sh_judge_dt = call_openrouter_agent(
+            secrets,
+            JUDGE_SYSTEM,
+            judge_msg,
+            SHADOW_OR_JUDGE,
+            MAX_TOKENS_SHADOW_JUDGE,
+            "shadow_judge",
+            temperature=0.2,
+        )
+        try:
+            sh_out = parse_judge_json(sh_judge)
+            sh_json_ok = True
+        except Exception as e:
+            sh_out = {}
+            sh_json_ok = False
+            log(f"SHADOW judge JSON parse failed: {e}", "WARN")
+        sh_trades = sh_out.get("trades") or []
+
+        def _summ(o):
+            return [
+                f"{t.get('action')}:{t.get('ticker')}:{t.get('shares')}"
+                for t in (o.get("trades") or [])
+            ]
+
+        rec = {
+            "ts": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            "cycle": cycle_name,
+            "date": today_iso,
+            "live": live_summary,
+            "shadow": {
+                "provider": "openrouter",
+                "bull_model": SHADOW_OR_BULL,
+                "bear_model": SHADOW_OR_BEAR,
+                "judge_model": SHADOW_OR_JUDGE,
+                "bull_latency_s": round(sh_bull_dt, 1),
+                "bear_latency_s": round(sh_bear_dt, 1),
+                "judge_latency_s": round(sh_judge_dt, 1),
+                "bull_cost": round(sh_bull_cost, 4),
+                "bear_cost": round(sh_bear_cost, 4),
+                "judge_cost": round(sh_judge_cost, 4),
+                "cost_total": round(sh_bull_cost + sh_bear_cost + sh_judge_cost, 4),
+                "duration_s": round(time.time() - t_shadow0, 1),
+                "json_ok": sh_json_ok,
+                "trades": _summ(sh_out),
+                "n": len(sh_trades),
+                "reflection": (sh_out.get("reflection") or "")[:600],
+                "gap_analysis": (sh_out.get("gap_analysis") or "")[:600],
+                "market_read": (sh_out.get("market_read") or "")[:400],
+            },
+            "shadow_judge_raw": (sh_judge or "")[:5000],
+            "executes": False,
+            "note": "Shadow only — Anthropic live path still owns trades",
+        }
+        abdir = Path.home() / "bigclaw-ai" / "data" / "dialectic_shadow"
+        abdir.mkdir(parents=True, exist_ok=True)
+        with (abdir / f"{today_iso}.jsonl").open("a") as f:
+            f.write(json.dumps(rec) + "\n")
+        jab = Path.home() / "bigclaw-ai" / "data" / "judge_ab"
+        jab.mkdir(parents=True, exist_ok=True)
+        with (jab / f"{today_iso}_openrouter_shadow.jsonl").open("a") as f:
+            f.write(json.dumps(rec) + "\n")
+        log(
+            f"SHADOW done: {rec['shadow']['n']}tr json_ok={sh_json_ok} "
+            f"${rec['shadow']['cost_total']:.4f} {rec['shadow']['duration_s']:.0f}s | "
+            f"live n={live_summary.get('n')} shadow={rec['shadow']['trades']}"
+        )
+    except Exception as e:
+        log(f"SHADOW dialectic failed (non-fatal): {e}", "WARN")
 
 
 def parse_judge_json(text):
@@ -1644,10 +1816,15 @@ def main():
                          "midday=11:30 re-evaluation, afternoon=14:30 pre-close lock")
     ap.add_argument("--observe-only", action="store_true",
                     help="Run agents but produce strategy doc only - no trade decisions")
+    ap.add_argument("--no-shadow", action="store_true",
+                    help="Skip OpenRouter shadow dialectic (Sonnet/Sonnet/Grok)")
     ap.add_argument("--channel", default=DEFAULT_CHANNEL)
     args = ap.parse_args()
     global DRY_RUN
     DRY_RUN = args.dry_run
+    global SHADOW_DIALECTIC_ENABLED
+    if getattr(args, 'no_shadow', False):
+        SHADOW_DIALECTIC_ENABLED = False
 
     acquire_lock()
     try:
@@ -1799,34 +1976,26 @@ def main():
         skipped = sum(1 for _, r in exec_results if "skipped" in r or "error" in r)
         log(f"Executed: {executed}  skipped/errored: {skipped}")
 
-        # --- JUDGE A/B SHADOW: concluded 2026-07-10 (Fable reverted to Opus after a timeout-killed cycle); disabled. ---
-        if False:
+        # --- SHADOW DIALECTIC (OpenRouter): Sonnet Bull + Sonnet Bear + Grok 4.5 Judge ---
+        # Runs AFTER live execute so paper trades are never delayed. Never submits orders.
+        if SHADOW_DIALECTIC_ENABLED and not args.observe_only:
+            _live_summ = {
+                "provider": "anthropic",
+                "bull_model": MODEL_BULL,
+                "bear_model": MODEL_BEAR,
+                "judge_model": MODEL_JUDGE,
+                "trades": [f"{t.get('action')}:{t.get('ticker')}:{t.get('shares')}" for t in trades],
+                "n": len(trades),
+                "latency_s": round(judge_dt, 1),
+                "cost_total": round(cost_total, 4),
+                "json_ok": True,
+                "reflection": (judge_out.get("reflection") or "")[:500],
+            }
             try:
-                _sh_text, _sh_cost, _sh_dt = call_agent(anthropic_client, JUDGE_SYSTEM, judge_msg,
-                                                         MODEL_JUDGE_SHADOW, MAX_TOKENS_JUDGE, "judge_shadow",
-                                                         thinking={"type": "adaptive"})
-                try:
-                    _sh_out = parse_judge_json(_sh_text); _sh_json_ok = True
-                except Exception:
-                    _sh_out = {}; _sh_json_ok = False
-                _summ = lambda o: [f"{t.get('action')}:{t.get('ticker')}:{t.get('shares')}" for t in (o.get('trades') or [])]
-                _rec = {
-                    "ts": datetime.datetime.now(datetime.timezone.utc).isoformat(), "cycle": args.cycle,
-                    "live": {"model": MODEL_JUDGE, "trades": _summ(judge_out), "n": len(trades),
-                             "latency_s": round(judge_dt, 1), "cost": round(judge_cost, 4), "json_ok": True},
-                    "shadow": {"model": MODEL_JUDGE_SHADOW, "trades": _summ(_sh_out), "n": len(_sh_out.get('trades') or []),
-                               "latency_s": round(_sh_dt, 1), "cost": round(_sh_cost, 4), "json_ok": _sh_json_ok},
-                    "live_reflection": (judge_out.get('reflection') or '')[:500],
-                    "shadow_reflection": (_sh_out.get('reflection') or '')[:500],
-                    "shadow_raw": _sh_text[:4000],
-                }
-                _abdir = Path.home() / "bigclaw-ai" / "data" / "judge_ab"; _abdir.mkdir(parents=True, exist_ok=True)
-                with (_abdir / f"{today_iso}.jsonl").open("a") as _f:
-                    _f.write(json.dumps(_rec) + "\n")
-                log(f"JUDGE A/B: live(Fable) {len(trades)}tr {judge_dt:.1f}s ${judge_cost:.4f} | "
-                    f"shadow(Opus) {_rec['shadow']['n']}tr {_sh_dt:.1f}s ${_sh_cost:.4f} json_ok={_sh_json_ok}")
+                run_shadow_dialectic(secrets, state_ctx, _live_summ, args.cycle, today_iso)
             except Exception as _e:
-                log(f"shadow judge A/B failed (non-fatal): {_e}", "WARN")
+                log(f"SHADOW dialectic wrapper failed (non-fatal): {_e}", "WARN")
+
 
         # Record what we SAW but did NOT buy, for the refusal scorecard (live runs only)
         if not args.dry_run:
