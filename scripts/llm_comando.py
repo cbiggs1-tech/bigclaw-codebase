@@ -2025,7 +2025,7 @@ def main():
         log(f"Judge decided {len(trades)} trades")
 
         # Execute
-        state['_cycle_name'] = cycle_name
+        state['_cycle_name'] = args.cycle  # fix NameError (was bare cycle_name)
         state['_candidate_snapshot'] = candidate_snapshot
         exec_results = validate_and_execute(trades, state, total_value, secrets, dry_run=args.dry_run)
         # Create trailing stops immediately for any just-bought positions, so a new position is
