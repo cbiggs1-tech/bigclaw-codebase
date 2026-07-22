@@ -40,7 +40,7 @@ from slack_sdk import WebClient
 
 PORTFOLIO_NAME = "LLM-ETF Focus"
 DEFAULT_CHANNEL = "D0ADHLUJ400"
-MODEL = "claude-sonnet-4-6"
+MODEL = "anthropic/claude-sonnet-4.6"
 MAX_TOKENS = 3000
 LLM_TIMEOUT = 90.0
 MAX_FIRES_PER_DAY = 6
@@ -381,17 +381,14 @@ def fire_llm_response(fired_triggers, journal_tail, secrets, pf_state, market_sn
     lines.append("Decide for each fired trigger above. Output strict JSON per the schema in your system prompt.")
 
     user_msg = "\n".join(lines)
-    client = anthropic.Anthropic(api_key=secrets["ANTHROPIC_API_KEY"], timeout=LLM_TIMEOUT)
-    t0 = time.time()
-    resp = client.messages.create(
-        model=MODEL, max_tokens=MAX_TOKENS,
-        system=TRIGGER_SYSTEM,
-        messages=[{"role": "user", "content": user_msg}],
+    import sys
+    from pathlib import Path as _P
+    sys.path.insert(0, str(_P.home() / "bigclaw-ai" / "scripts"))
+    from or_llm import call_openrouter
+    text, cost, dt, in_tok, out_tok = call_openrouter(
+        prompt=user_msg, system=TRIGGER_SYSTEM, model=MODEL, max_tokens=MAX_TOKENS,
+        agent="llm_portfolio_trigger", timeout=LLM_TIMEOUT, secrets=secrets,
     )
-    dt = time.time() - t0
-    text = resp.content[0].text
-    in_tok, out_tok = resp.usage.input_tokens, resp.usage.output_tokens
-    cost = (in_tok * 3.0 + out_tok * 15.0) / 1_000_000
     log_llm("trigger_response", in_tok, out_tok, cost, dt)
     log(f"  LLM response: in={in_tok} out={out_tok} cost=${cost:.4f} t={dt:.1f}s")
     m = re.search(r'\{[\s\S]*\}', text)
@@ -609,7 +606,7 @@ def main():
     acquire_lock()
     try:
         secrets = load_secrets()
-        for k in ("ANTHROPIC_API_KEY", "ALPACA_API_KEY", "ALPACA_SECRET_KEY", "SLACK_BOT_TOKEN"):
+        for k in ("OPENROUTER_API_KEY", "ALPACA_API_KEY", "ALPACA_SECRET_KEY", "SLACK_BOT_TOKEN"):
             if k not in secrets:
                 write_failure_flag(f"missing secret: {k}")
                 sys.exit(1)

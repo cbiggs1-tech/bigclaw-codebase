@@ -27,13 +27,12 @@ from pathlib import Path
 import warnings
 warnings.filterwarnings("ignore")
 
-import anthropic
 import feedparser
 import yfinance as yf
 from slack_sdk import WebClient
 
 DEFAULT_CHANNEL = "D0ADHLUJ400"
-MODEL = "claude-sonnet-4-6"
+MODEL = "anthropic/claude-sonnet-4.6"  # OpenRouter
 MAX_TOKENS = 4000
 LLM_TIMEOUT_SECONDS = 120.0
 LOCK_FILE = Path("/tmp/sector_rotation.lock")
@@ -284,21 +283,22 @@ def build_prompt(holdings, tickers, hist, news_per_ticker, cnbc_items, reuters_i
 
 # ---------- LLM ----------
 def call_llm(prompt, secrets):
-    client = anthropic.Anthropic(api_key=secrets['ANTHROPIC_API_KEY'],
-                                 timeout=LLM_TIMEOUT_SECONDS)
-    t0 = time.time()
-    resp = client.messages.create(
-        model=MODEL, max_tokens=MAX_TOKENS,
+    import sys
+    sys.path.insert(0, str(Path.home() / "bigclaw-ai" / "scripts"))
+    from or_llm import call_openrouter
+    text, cost, dt, in_tok, out_tok = call_openrouter(
+        prompt=prompt,
         system=SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": prompt}],
+        model=MODEL,
+        max_tokens=MAX_TOKENS,
+        timeout=LLM_TIMEOUT_SECONDS,
+        secrets=secrets,
+        agent="sector_rotation",
     )
-    dt = time.time() - t0
-    text = resp.content[0].text
-    in_tok, out_tok = resp.usage.input_tokens, resp.usage.output_tokens
-    cost = (in_tok * 3.0 + out_tok * 15.0) / 1_000_000
     log_llm_call(MODEL, in_tok, out_tok, cost, dt)
     log(f"LLM ok: in={in_tok} out={out_tok} cost=${cost:.4f} t={dt:.1f}s")
     return text, cost
+
 
 
 # ---------- output ----------
@@ -338,7 +338,7 @@ def main():
     try:
         log("Sector rotation report — starting")
         secrets = load_secrets()
-        for k in ("ANTHROPIC_API_KEY", "ALPACA_API_KEY", "ALPACA_SECRET_KEY", "SLACK_BOT_TOKEN"):
+        for k in ("OPENROUTER_API_KEY", "ALPACA_API_KEY", "ALPACA_SECRET_KEY", "SLACK_BOT_TOKEN"):
             if k not in secrets:
                 write_failure_flag(f"missing secret: {k}")
                 sys.exit(1)

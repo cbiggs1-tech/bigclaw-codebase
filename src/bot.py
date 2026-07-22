@@ -41,11 +41,12 @@ BOT_NAME = "BigClaw AI"
 # Claude/Anthropic Integration with Tool Use
 # ────────────────────────────────────────────────
 
-ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
+OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
+ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")  # optional legacy
 anthropic_client = None
 agent = None
 
-if ANTHROPIC_API_KEY:
+if OPENROUTER_API_KEY or ANTHROPIC_API_KEY:
     try:
         import anthropic
         from agent import BigClawAgent
@@ -53,7 +54,16 @@ if ANTHROPIC_API_KEY:
         # DISABLED: trading now handled by autonomous_trader.py (openclaw cron)
         # from scheduler import init_scheduler
 
-        anthropic_client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+        if OPENROUTER_API_KEY:
+            # OpenRouter Anthropic-compatible API (usage-billed via OR, not Claude sub)
+            anthropic_client = anthropic.Anthropic(
+                api_key=OPENROUTER_API_KEY,
+                base_url="https://openrouter.ai/api",
+            )
+            print("BigClaw agent: OpenRouter (Anthropic-compatible)")
+        else:
+            anthropic_client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+            print("BigClaw agent: direct Anthropic API (legacy)")
         agent = BigClawAgent(anthropic_client)
         memory = get_memory()
 
@@ -72,7 +82,7 @@ if ANTHROPIC_API_KEY:
         memory = None
         trading_scheduler = None
 else:
-    print("NOTE: ANTHROPIC_API_KEY not set. Bot will use echo mode.")
+    print("NOTE: OPENROUTER_API_KEY (or ANTHROPIC_API_KEY) not set. Bot will use echo mode.")
     memory = None
     trading_scheduler = None
 

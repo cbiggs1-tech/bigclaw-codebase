@@ -18,12 +18,11 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-import anthropic
 from slack_sdk import WebClient
 
 DATA_FILE = Path("/tmp/bigclaw_morning_data.txt")
 DEFAULT_CHANNEL = "D0ADHLUJ400"
-MODEL = "claude-opus-4-6"
+MODEL = "anthropic/claude-sonnet-4.6"  # OpenRouter
 MAX_TOKENS = 4000
 LLM_TIMEOUT_SECONDS = 120.0
 STALE_DATA_HOURS = 2
@@ -140,33 +139,26 @@ def log_llm_call(prompt_tokens, completion_tokens, cost, duration_s):
 
 
 def call_llm(data_text):
-    api_key = os.environ.get("ANTHROPIC_API_KEY")
-    if not api_key:
-        raise RuntimeError("ANTHROPIC_API_KEY not in environment")
-    client = anthropic.Anthropic(api_key=api_key, timeout=LLM_TIMEOUT_SECONDS)
+    import sys
+    sys.path.insert(0, str(Path.home() / "bigclaw-ai" / "scripts"))
+    from or_llm import call_openrouter
     today = datetime.now().strftime("%A, %B %d, %Y")
     prompt = PROMPT.format(data=data_text, today=today)
-    start = time.time()
-    resp = client.messages.create(
+    text, cost, duration, in_tok, out_tok = call_openrouter(
+        prompt=prompt,
+        system="",
         model=MODEL,
         max_tokens=MAX_TOKENS,
-        messages=[{"role": "user", "content": prompt}],
+        timeout=LLM_TIMEOUT_SECONDS,
+        agent="morning_briefing",
     )
-    duration = time.time() - start
-    if not resp.content or not resp.content[0].text:
-        raise RuntimeError("LLM returned empty content")
-    text = resp.content[0].text
-    cost = (resp.usage.input_tokens / 1_000_000) * 15 + (
-        resp.usage.output_tokens / 1_000_000
-    ) * 75
-    log_llm_call(
-        resp.usage.input_tokens, resp.usage.output_tokens, cost, duration
-    )
+    log_llm_call(in_tok, out_tok, cost, duration)
     log(
-        f"LLM ok: in={resp.usage.input_tokens} out={resp.usage.output_tokens} "
-        f"cost=${cost:.4f} t={duration:.1f}s"
+        f"LLM ok: in={in_tok} out={out_tok} "
+        f"cost=${cost:.4f} t={duration:.1f}s model={MODEL}"
     )
     return text
+
 
 
 def post_slack(channel, text):

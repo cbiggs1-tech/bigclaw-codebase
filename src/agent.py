@@ -25,8 +25,8 @@ logger = logging.getLogger(__name__)
 MAX_TOOL_ITERATIONS = 25
 
 # Model configuration
-DEFAULT_MODEL = "claude-sonnet-4-20250514"
-OPUS_MODEL = "claude-opus-4-6"  # Updated to Opus 4.6 (released Feb 5, 2026)
+DEFAULT_MODEL = "anthropic/claude-sonnet-4.6"  # OpenRouter model id
+OPUS_MODEL = "x-ai/grok-4.5"  # deep analysis via OpenRouter (was Claude Opus)
 
 
 class BigClawAgent:
@@ -129,7 +129,7 @@ Remember to include the disclaimer that this is for educational purposes only, n
                 if block.type == "text":
                     strategy_name = get_strategy_name(strategy)
                     header = f"**📊 {strategy_name} Analysis: {ticker}**\n\n"
-                    footer = "\n\n_Analysis powered by Claude Opus 4.5_"
+                    footer = "\n\n_Analysis powered by OpenRouter (Grok Judge path)_"
                     return header + block.text + footer
 
             return "Error: No response from analysis."

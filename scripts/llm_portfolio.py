@@ -46,9 +46,9 @@ from slack_sdk import WebClient
 # ---------- constants ----------
 PORTFOLIO_NAME = "LLM-ETF Focus"
 DEFAULT_CHANNEL = "D0ADHLUJ400"
-MODEL_BULL = "claude-sonnet-4-6"
-MODEL_BEAR = "claude-sonnet-4-6"
-MODEL_JUDGE = "claude-sonnet-4-6"
+MODEL_BULL = "anthropic/claude-sonnet-4.6"
+MODEL_BEAR = "anthropic/claude-sonnet-4.6"
+MODEL_JUDGE = "anthropic/claude-sonnet-4.6"
 MAX_TOKENS_DEBATE = 6000     # bull / bear each (longer with new mandates)
 MAX_TOKENS_JUDGE = 8000     # was 4000; gap_analysis + cycle-positioning fields overflowed it -> JSON truncation/parse fail (2026-06-17)
 LLM_TIMEOUT = 120.0
@@ -615,21 +615,22 @@ market_snapshot, not the price you remember from training."""
 
 
 # ---------- agent call ----------
-def call_agent(client, system, user_message, model, max_tokens, agent_name):
-    t0 = time.time()
-    resp = client.messages.create(
-        model=model, max_tokens=max_tokens,
-        system=system,
-        messages=[{"role": "user", "content": user_message}],
+def call_agent(client, system, user_message, model, max_tokens, agent_name, thinking=None):
+    """OpenRouter path (client arg ignored)."""
+    import sys
+    from pathlib import Path as _P
+    sys.path.insert(0, str(_P.home() / "bigclaw-ai" / "scripts"))
+    from or_llm import call_openrouter
+    if model and "/" not in str(model):
+        model = "anthropic/claude-sonnet-4.6"
+    text, cost, dt, in_tok, out_tok = call_openrouter(
+        prompt=user_message, system=system, model=model, max_tokens=max_tokens,
+        agent=agent_name, timeout=LLM_TIMEOUT,
     )
-    dt = time.time() - t0
-    text = resp.content[0].text
-    in_tok, out_tok = resp.usage.input_tokens, resp.usage.output_tokens
-    # Sonnet 4.6 pricing
-    cost = (in_tok * 3.0 + out_tok * 15.0) / 1_000_000
     log_llm_call(agent_name, model, in_tok, out_tok, cost, dt)
     log(f"  {agent_name}: in={in_tok} out={out_tok} cost=${cost:.4f} t={dt:.1f}s")
     return text, cost, dt
+
 
 
 def parse_judge_json(text):
@@ -1107,7 +1108,7 @@ def main():
     try:
         log(f"LLM portfolio cycle - starting ({args.cycle.upper()})")
         secrets = load_secrets()
-        for k in ("ANTHROPIC_API_KEY", "ALPACA_API_KEY", "ALPACA_SECRET_KEY", "SLACK_BOT_TOKEN"):
+        for k in ("OPENROUTER_API_KEY", "ALPACA_API_KEY", "ALPACA_SECRET_KEY", "SLACK_BOT_TOKEN"):
             if k not in secrets:
                 write_failure_flag(f"missing secret: {k}")
                 sys.exit(1)
@@ -1164,8 +1165,7 @@ def main():
                                          peer_returns, today_iso, cycle_name=args.cycle)
         log(f"State context: {len(state_ctx)} chars")
 
-        anthropic_client = anthropic.Anthropic(api_key=secrets['ANTHROPIC_API_KEY'],
-                                                 timeout=LLM_TIMEOUT)
+        anthropic_client = None  # OpenRouter via call_agent
 
         cycle_start = time.time()
 

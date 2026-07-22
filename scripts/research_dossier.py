@@ -136,67 +136,32 @@ def gather_data(ticker):
     return data
 
 
-def synthesize_dossier(data, anthropic_api_key):
-    """Call Claude to write a structured Markdown dossier from the data."""
+def synthesize_dossier(data, anthropic_api_key=None):
+    """Write structured Markdown dossier via OpenRouter."""
     try:
-        from anthropic import Anthropic
+        from or_llm import call_openrouter, SONNET
     except ImportError:
-        return None, "anthropic package not installed"
-
-    client = Anthropic(api_key=anthropic_api_key)
+        return None, "or_llm not available"
     ticker = data["ticker"]
     company = data.get("company_name", ticker)
     sector = data.get("sector", "")
     industry = data.get("industry", "")
-
-    # Build a concise prompt with all the data
     prompt = f"""Generate a one-page research dossier for {ticker} ({company}, {sector} / {industry}).
 
-This dossier is for a sophisticated investor to decide whether to add this position
-to a model portfolio. Be specific, cite numbers, and call out what is uncertain.
-
-# DATA AVAILABLE
+DATA:
 {json.dumps(data, indent=2, default=str)}
 
-# OUTPUT FORMAT (strict Markdown, no preamble):
-
-## {ticker} — {company}
-**Sector**: {sector} / {industry}  |  **Market cap**: $XB  |  **Generated**: <today>
-
-### Signal Snapshot
-- BigClaw score: <by portfolio if available>
-- Analyst consensus: $X target ({{N}} analysts), {{X%}} upside from ${{current}}
-- Forward EPS revisions: {{X%}} over 90 days ({{up/down/flat}})
-- Forward P/E: {{X.X}} vs trailing {{Y.Y}}
-- Revenue growth: {{X%}} YoY
-- Short interest: {{X%}} of float
-
-### Bull Case (3-4 specific points)
-- Concrete catalysts, growth drivers, competitive moats
-- Reference data points from above where possible
-
-### Bear Case (3-4 specific points)
-- Specific risks: market share loss, regulatory, sector headwinds
-- Reference negative data (short interest, analyst downgrades, etc.)
-
-### Key Unknowns (questions the data cant answer)
-- 3-5 specific questions a domain expert should be asking
-- Things that would change the thesis materially
-
-### Recommendation
-One sentence: Strong buy / Buy / Hold / Wait / Avoid — and why in 15 words or less.
-
-Keep total length ~500-700 words. No fluff. Direct, data-cited prose."""
-
+Output strict Markdown with: Signal Snapshot, Bull Case, Bear Case, Key Unknowns, Recommendation.
+Keep ~500-700 words. Data-cited. No fluff."""
     try:
-        response = client.messages.create(
-            model="claude-sonnet-4-6",
-            max_tokens=2000,
-            messages=[{"role": "user", "content": prompt}],
+        text, _, _, _, _ = call_openrouter(
+            prompt=prompt, model=SONNET, max_tokens=2000, agent="research_dossier"
         )
-        return response.content[0].text, None
+        return text, None
     except Exception as e:
         return None, f"API error: {e}"
+
+
 
 
 def write_dossier(ticker, content):
@@ -217,9 +182,9 @@ def main():
     args = parser.parse_args()
 
     secrets = load_secrets()
-    api_key = secrets.get("ANTHROPIC_API_KEY")
+    api_key = secrets.get("OPENROUTER_API_KEY")
     if not api_key and not args.dry_run:
-        print("ERROR: ANTHROPIC_API_KEY not set in ~/.env_secrets")
+        print("ERROR: OPENROUTER_API_KEY not set in ~/.env_secrets")
         sys.exit(1)
 
     tickers = []

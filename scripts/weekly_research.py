@@ -23,12 +23,11 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-import anthropic
 from slack_sdk import WebClient
 
 RESEARCH_DIR = Path.home() / ".openclaw" / "workspace" / "memory" / "research"
 DEFAULT_CHANNEL = "D0ADHLUJ400"
-MODEL = "claude-opus-4-6"
+MODEL = "anthropic/claude-sonnet-4.6"  # OpenRouter
 MAX_TOKENS = 8000
 LLM_TIMEOUT_SECONDS = 300.0
 LOCK_FILE = Path("/tmp/weekly_research.lock")
@@ -140,33 +139,25 @@ def log_llm_call(prompt_tokens, completion_tokens, cost, duration_s):
 
 
 def call_llm(readme, file_listing):
-    api_key = os.environ.get("ANTHROPIC_API_KEY")
-    if not api_key:
-        raise RuntimeError("ANTHROPIC_API_KEY not in environment")
-    client = anthropic.Anthropic(api_key=api_key, timeout=LLM_TIMEOUT_SECONDS)
+    import sys
+    sys.path.insert(0, str(Path.home() / "bigclaw-ai" / "scripts"))
+    from or_llm import call_openrouter
     user_prompt = USER_PROMPT_TEMPLATE.format(readme=readme, file_listing=file_listing)
-    start = time.time()
-    resp = client.messages.create(
+    text, cost, duration, in_tok, out_tok = call_openrouter(
+        prompt=user_prompt,
+        system=SYSTEM_PROMPT,
         model=MODEL,
         max_tokens=MAX_TOKENS,
-        system=SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": user_prompt}],
+        timeout=LLM_TIMEOUT_SECONDS,
+        agent="weekly_research",
     )
-    duration = time.time() - start
-    if not resp.content or not resp.content[0].text:
-        raise RuntimeError("LLM returned empty content")
-    text = resp.content[0].text
-    cost = (resp.usage.input_tokens / 1_000_000) * 15 + (
-        resp.usage.output_tokens / 1_000_000
-    ) * 75
-    log_llm_call(
-        resp.usage.input_tokens, resp.usage.output_tokens, cost, duration
-    )
+    log_llm_call(in_tok, out_tok, cost, duration)
     log(
-        f"LLM ok: in={resp.usage.input_tokens} out={resp.usage.output_tokens} "
-        f"cost=${cost:.4f} t={duration:.1f}s"
+        f"LLM ok: in={in_tok} out={out_tok} "
+        f"cost=${cost:.4f} t={duration:.1f}s model={MODEL}"
     )
     return text
+
 
 
 def parse_response(text):

@@ -31,13 +31,12 @@ from pathlib import Path
 import warnings
 warnings.filterwarnings("ignore")
 
-import anthropic
 import yfinance as yf
 from slack_sdk import WebClient
 
 PORTFOLIO_NAME = "LLM-Commando"
 DEFAULT_CHANNEL = "D0ADHLUJ400"
-MODEL_EXTRACTOR = "claude-sonnet-4-6"
+MODEL_EXTRACTOR = "anthropic/claude-sonnet-4.6"  # OpenRouter
 LOCK_FILE = Path("/tmp/llm_comando_reconciler.lock")
 FAILURE_FLAG = Path.home() / "bigclaw-ai" / "logs" / "LLM_COMANDO_RECONCILER_FAILED.flag"
 LLM_LOG = Path.home() / "bigclaw-ai" / "logs" / "llm_calls.jsonl"
@@ -177,19 +176,17 @@ Rules:
 
 Output ONLY valid JSON. No prose."""
 
-def extract_conditions(thesis_text, origin_date, anthropic_client):
+def extract_conditions(thesis_text, origin_date, anthropic_client=None):
     """Use LLM to parse prose exit thesis into structured conditions. Returns dict."""
+    import sys
+    sys.path.insert(0, str(Path.home() / "bigclaw-ai" / "scripts"))
+    from or_llm import call_openrouter
     msg = f"Origin date of the trade: {origin_date}\n\nExit thesis prose:\n{thesis_text}\n\nReturn the JSON now."
     t0 = time.time()
-    resp = anthropic_client.messages.create(
-        model=MODEL_EXTRACTOR, max_tokens=300,
-        system=EXTRACT_SYSTEM,
-        messages=[{"role": "user", "content": msg}],
+    text, cost, dt, in_tok, out_tok = call_openrouter(
+        prompt=msg, system=EXTRACT_SYSTEM, model=MODEL_EXTRACTOR, max_tokens=300,
+        agent="exit_extractor",
     )
-    dt = time.time() - t0
-    text = resp.content[0].text
-    in_tok, out_tok = resp.usage.input_tokens, resp.usage.output_tokens
-    cost = (in_tok * 3.0 + out_tok * 15.0) / 1_000_000
     log_llm("exit_extractor", MODEL_EXTRACTOR, in_tok, out_tok, cost, dt)
     m = re.search(r'\{[\s\S]*\}', text)
     if not m:
@@ -327,7 +324,7 @@ def main():
     try:
         log("Reconciler starting")
         secrets = load_secrets()
-        for k in ("ANTHROPIC_API_KEY", "ALPACA_API_KEY", "ALPACA_SECRET_KEY", "SLACK_BOT_TOKEN"):
+        for k in ("OPENROUTER_API_KEY", "ALPACA_API_KEY", "ALPACA_SECRET_KEY", "SLACK_BOT_TOKEN"):
             if k not in secrets:
                 write_failure_flag(f"missing secret: {k}")
                 sys.exit(1)
@@ -351,7 +348,7 @@ def main():
             except Exception as e:
                 log(f"Could not price {t}: {e}", "WARN")
 
-        anthropic_client = anthropic.Anthropic(api_key=secrets['ANTHROPIC_API_KEY'], timeout=60.0)
+        anthropic_client = None  # OpenRouter via extract_conditions; keep name for call sites
 
         actions = []
         closures_for_slack = []

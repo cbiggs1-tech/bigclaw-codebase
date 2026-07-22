@@ -5,14 +5,22 @@ before the 8:30 tape. Untethered from timers/rules; this is a case FOR review, n
 Usage: overnight_case.py [--test] [N]"""
 import os, sys, datetime
 import yfinance as yf
-from anthropic import Anthropic
 
 TEST = "--test" in sys.argv
 N = next((int(a) for a in sys.argv[1:] if a.isdigit()), 3)
 SLACK_CH = "D0ADHLUJ400"
-c = Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 def ask(model, sysp, user, mt=1400):
-    return c.messages.create(model=model, max_tokens=mt, system=sysp, messages=[{"role": "user", "content": user}]).content[0].text.strip()
+    import sys
+    sys.path.insert(0, str(__import__("pathlib").Path.home() / "bigclaw-ai" / "scripts"))
+    from or_llm import call_openrouter
+    # map bare anthropic ids to OpenRouter ids
+    if not model.startswith(('anthropic/', 'x-ai/', 'google/', 'openai/')):
+        if model.startswith('claude-opus'):
+            model = 'x-ai/grok-4.5'
+        elif model.startswith('claude-'):
+            model = 'anthropic/claude-sonnet-4.6'
+    text, _, _, _, _ = call_openrouter(prompt=user, system=sysp, model=model, max_tokens=mt, agent='overnight_case')
+    return text.strip()
 
 SECTORS = {
  "XLK":"Technology","XLF":"Financials","XLE":"Energy","XLV":"Health Care","XLI":"Industrials",
@@ -58,9 +66,9 @@ for t in picks:
     inf=yf.Ticker(t).info; g=lambda k,dd="n/a": inf.get(k,dd)
     news=[n.get("title") or n.get("content",{}).get("title","") for n in (yf.Ticker(t).news or [])[:6]]; news=[x for x in news if x]
     data=f"{t} — {g('longName')} | ${g('currentPrice')} | fwdPE {g('forwardPE')} | mean target ${g('targetMeanPrice')} ({g('recommendationKey')})\nBusiness: {(g('longBusinessSummary') or '')[:500]}\nHeadlines:\n"+"\n".join(f"  - {h}" for h in news)
-    bull=ask("claude-sonnet-4-6",BULL,data)
-    bear=ask("claude-sonnet-4-6",BEAR,data+"\nBULL:\n"+bull)
-    judge=ask("claude-opus-4-8",JUDGE,data+"\nBULL:\n"+bull+"\nBEAR:\n"+bear,mt=800)
+    bull=ask("anthropic/claude-sonnet-4.6",BULL,data)
+    bear=ask("anthropic/claude-sonnet-4.6",BEAR,data+"\nBULL:\n"+bull)
+    judge=ask("x-ai/grok-4.5",JUDGE,data+"\nBULL:\n"+bull+"\nBEAR:\n"+bear,mt=800)
     blocks.append(f"*{t} — {g('longName')}*  (${g('currentPrice')}, target ${g('targetMeanPrice')})\n{judge}\n_Bull:_ {bull[:600]}\n_Bear:_ {bear[:400]}")
     print("  done:", t)
 

@@ -38,7 +38,7 @@ class TradingScheduler:
         """
         self.anthropic_client = anthropic_client
         self.slack_app = slack_app
-        self.model = os.environ.get("CLAUDE_MODEL", "claude-sonnet-4-20250514")
+        self.model = os.environ.get("CLAUDE_MODEL", "anthropic/claude-sonnet-4.6")
         self._running = False
         self._thread = None
 
@@ -488,27 +488,8 @@ Begin."""
             )
 
             if response_text.startswith("ERROR:"):
-                logger.error(f"OpenRouter Sonnet failed: {response_text}")
-                # Fallback to direct Anthropic API
-                import time as _time
-                try:
-                    from llm_logger import log_call as _log_call
-                except ImportError:
-                    _log_call = None
-                _t0 = _time.time()
-                response = self.anthropic_client.messages.create(
-                    model=self.model,
-                    max_tokens=2048,
-                    system=system,
-                    messages=[{"role": "user", "content": analysis_prompt}]
-                )
-                if _log_call:
-                    _log_call("scheduler.anthropic_fallback", response, _time.time() - _t0)
-                response_text = ""
-                for block in response.content:
-                    if block.type == "text":
-                        response_text = block.text
-                        break
+                logger.error(f"OpenRouter Sonnet failed (no Anthropic fallback): {response_text}")
+                return
 
             logger.info(f"Trading analysis complete for {portfolio.name}")
 
