@@ -102,14 +102,18 @@ def main():
     fig.patch.set_facecolor('#1a1a2e')
     ax.set_facecolor('#1a1a2e')
 
+    # Colors for the 4 live sleeves (killed books no longer plotted — is_active=1 only)
     colors = {
-        'Value Picks': '#4ade80',
         'Innovation Fund': '#f87171',
+        'Momentum Growth': '#fb923c',
+        'AI Defense & Autonomous': '#22d3ee',
+        'LLM-Comando': '#a78bfa',
+        # retired (kept for color stability if re-activated):
+        'Value Picks': '#4ade80',
         'Growth Value': '#60a5fa',
         'Nuclear Renaissance': '#facc15',
         'Income Dividends': '#c084fc',
-        'Momentum Growth': '#fb923c',
-        'AI Defense & Autonomous': '#22d3ee',
+        'LLM-ETF Focus': '#94a3b8',
     }
 
     for pid, portfolio in portfolios.items():
