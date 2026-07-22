@@ -40,7 +40,7 @@ from slack_sdk import WebClient
 
 PORTFOLIO_NAME = "LLM-Commando"
 DEFAULT_CHANNEL = "D0ADHLUJ400"
-MODEL = "claude-sonnet-4-6"
+MODEL = "anthropic/claude-sonnet-4.6"  # OpenRouter
 MAX_TOKENS = 3000
 LLM_TIMEOUT = 90.0
 MAX_FIRES_PER_DAY = 100
@@ -341,6 +341,55 @@ OUTPUT — STRICT JSON, NO PROSE:
 If you stand down for all fired triggers, return decisions array with stand_down entries and empty trades."""
 
 
+
+def call_openrouter_chat(secrets, system, user_msg, model, max_tokens, agent_name, timeout=90.0):
+    """OpenRouter chat for radar/watcher. Returns (text, cost, dt, in_tok, out_tok)."""
+    import os
+    import time
+    import requests
+    api_key = secrets.get("OPENROUTER_API_KEY") or os.environ.get("OPENROUTER_API_KEY")
+    if not api_key:
+        raise RuntimeError("OPENROUTER_API_KEY not set")
+    url = "https://openrouter.ai/api/v1/chat/completions"
+    headers = {
+        "Authorization": "Bearer " + api_key,
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://bigclaw.grandpapa.net",
+        "X-Title": "BigClaw Commando",
+    }
+    messages = []
+    if system:
+        messages.append({"role": "system", "content": system})
+    messages.append({"role": "user", "content": user_msg})
+    payload = {
+        "model": model,
+        "messages": messages,
+        "max_tokens": max_tokens,
+        "temperature": 0.3,
+    }
+    t0 = time.time()
+    last = None
+    resp = None
+    for attempt in range(3):
+        try:
+            r = requests.post(url, headers=headers, json=payload, timeout=timeout)
+            r.raise_for_status()
+            resp = r.json()
+            break
+        except Exception as e:
+            last = e
+            time.sleep(2 * (attempt + 1))
+    if resp is None:
+        raise last
+    dt = time.time() - t0
+    text = ((resp.get("choices") or [{}])[0].get("message") or {}).get("content") or ""
+    usage = resp.get("usage") or {}
+    in_tok = int(usage.get("prompt_tokens") or 0)
+    out_tok = int(usage.get("completion_tokens") or 0)
+    cost = (in_tok * 3.0 + out_tok * 15.0) / 1_000_000
+    return text, cost, dt, in_tok, out_tok
+
+
 def fire_llm_response(fired_triggers, journal_tail, secrets, pf_state, market_snapshot, fresh_news):
     pf, holdings = pf_state
     lines = [f"## TIME: {datetime.datetime.now(datetime.timezone.utc).isoformat()}"]
@@ -396,17 +445,9 @@ def fire_llm_response(fired_triggers, journal_tail, secrets, pf_state, market_sn
     lines.append("Decide for each fired trigger above. Output strict JSON per the schema in your system prompt.")
 
     user_msg = "\n".join(lines)
-    client = anthropic.Anthropic(api_key=secrets["ANTHROPIC_API_KEY"], timeout=LLM_TIMEOUT)
-    t0 = time.time()
-    resp = client.messages.create(
-        model=MODEL, max_tokens=MAX_TOKENS,
-        system=TRIGGER_SYSTEM,
-        messages=[{"role": "user", "content": user_msg}],
+    text, cost, dt, in_tok, out_tok = call_openrouter_chat(
+        secrets, TRIGGER_SYSTEM, user_msg, MODEL, MAX_TOKENS, "trigger_response", timeout=LLM_TIMEOUT
     )
-    dt = time.time() - t0
-    text = resp.content[0].text
-    in_tok, out_tok = resp.usage.input_tokens, resp.usage.output_tokens
-    cost = (in_tok * 3.0 + out_tok * 15.0) / 1_000_000
     log_llm("trigger_response", in_tok, out_tok, cost, dt)
     log(f"  LLM response: in={in_tok} out={out_tok} cost=${cost:.4f} t={dt:.1f}s")
     m = re.search(r'\{[\s\S]*\}', text)
@@ -641,7 +682,7 @@ def main():
     acquire_lock()
     try:
         secrets = load_secrets()
-        for k in ("ANTHROPIC_API_KEY", "ALPACA_API_KEY", "ALPACA_SECRET_KEY", "SLACK_BOT_TOKEN"):
+        for k in ("OPENROUTER_API_KEY", "ALPACA_API_KEY", "ALPACA_SECRET_KEY", "SLACK_BOT_TOKEN"):
             if k not in secrets:
                 write_failure_flag(f"missing secret: {k}")
                 sys.exit(1)

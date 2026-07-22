@@ -46,11 +46,12 @@ from slack_sdk import WebClient
 # ---------- constants ----------
 PORTFOLIO_NAME = "LLM-Commando"
 DEFAULT_CHANNEL = "D0ADHLUJ400"
-MODEL_BULL = "claude-sonnet-4-6"
-MODEL_BEAR = "claude-sonnet-4-6"
-MODEL_JUDGE = "claude-opus-4-8"        # LIVE via Anthropic until shadow graduates
+MODEL_BULL = "anthropic/claude-sonnet-4.6"  # OpenRouter LIVE
+MODEL_BEAR = "anthropic/claude-sonnet-4.6"  # OpenRouter LIVE
+MODEL_JUDGE = "x-ai/grok-4.5"               # OpenRouter LIVE (graduated shadow Judge)
+LIVE_PROVIDER = "openrouter"
 # Shadow dialectic via OpenRouter (logged only — never executes trades)
-SHADOW_DIALECTIC_ENABLED = True
+SHADOW_DIALECTIC_ENABLED = False  # dual-path OFF — live IS former shadow stack
 SHADOW_OR_BULL = "anthropic/claude-sonnet-4.6"
 SHADOW_OR_BEAR = "anthropic/claude-sonnet-4.6"
 SHADOW_OR_JUDGE = "x-ai/grok-4.5"
@@ -1234,18 +1235,18 @@ def call_agent(client, system, user_message, model, max_tokens, agent_name, thin
 
 def call_openrouter_agent(secrets, system, user_message, model, max_tokens, agent_name,
                           temperature=0.3, timeout=None):
-    """One agent call via OpenRouter (shadow dialectic). Non-streaming.
+    """One agent call via OpenRouter (LIVE dialectic). Non-streaming.
     Returns (text, cost_usd, duration_s). Raises on hard failure after retries."""
     import requests
     api_key = secrets.get("OPENROUTER_API_KEY") or os.environ.get("OPENROUTER_API_KEY")
     if not api_key:
-        raise RuntimeError("OPENROUTER_API_KEY not set — cannot run shadow dialectic")
+        raise RuntimeError("OPENROUTER_API_KEY not set — required for Commando live")
     url = "https://openrouter.ai/api/v1/chat/completions"
     headers = {
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json",
         "HTTP-Referer": "https://bigclaw.grandpapa.net",
-        "X-Title": "BigClaw Commando Shadow",
+        "X-Title": "BigClaw LLM-Commando",
     }
     messages = []
     if system:
@@ -1302,7 +1303,7 @@ def run_shadow_dialectic(secrets, state_ctx, live_summary, cycle_name, today_iso
         return
     t_shadow0 = time.time()
     try:
-        log("SHADOW dialectic starting (OR Sonnet/Sonnet/Grok-4.5) — no trades")
+        log("SHADOW dialectic starting — optional A/B only")
         bull_msg = (
             state_ctx
             + "\n\n## YOUR TASK:\nAs the BULL agent, write your case. Use the schema in your system prompt."
@@ -1898,7 +1899,7 @@ def main():
     try:
         log(f"LLM portfolio cycle - starting ({args.cycle.upper()})")
         secrets = load_secrets()
-        for k in ("ANTHROPIC_API_KEY", "ALPACA_API_KEY", "ALPACA_SECRET_KEY", "SLACK_BOT_TOKEN"):
+        for k in ("OPENROUTER_API_KEY", "ALPACA_API_KEY", "ALPACA_SECRET_KEY", "SLACK_BOT_TOKEN"):
             if k not in secrets:
                 write_failure_flag(f"missing secret: {k}")
                 sys.exit(1)
@@ -1981,34 +1982,35 @@ def main():
                                          refusal_scorecard=refusal_scorecard, hold_scorecard=hold_scorecard)
         log(f"State context: {len(state_ctx)} chars")
 
-        anthropic_client = anthropic.Anthropic(api_key=secrets['ANTHROPIC_API_KEY'],
-                                                 timeout=LLM_TIMEOUT)
-
+        log(f"LIVE provider={LIVE_PROVIDER} bull={MODEL_BULL} bear={MODEL_BEAR} judge={MODEL_JUDGE}")
         cycle_start = time.time()
 
-        # --- BULL ---
-        log("Calling BULL agent...")
+        # --- BULL (OpenRouter) ---
+        log("Calling BULL agent (OpenRouter)...")
         bull_msg = state_ctx + "\n\n## YOUR TASK:\nAs the BULL agent, write your case. Use the schema in your system prompt."
-        bull_text, bull_cost, bull_dt = call_agent(anthropic_client, BULL_SYSTEM, bull_msg,
-                                            MODEL_BULL, MAX_TOKENS_DEBATE, "bull")
+        bull_text, bull_cost, bull_dt = call_openrouter_agent(
+            secrets, BULL_SYSTEM, bull_msg, MODEL_BULL, MAX_TOKENS_DEBATE, "bull"
+        )
 
-        # --- BEAR ---
-        log("Calling BEAR agent...")
+        # --- BEAR (OpenRouter) ---
+        log("Calling BEAR agent (OpenRouter)...")
         bear_msg = (state_ctx
                     + "\n\n## BULL AGENT'S CASE (your target to challenge):\n\n" + bull_text
                     + "\n\n## YOUR TASK:\nAs the BEAR agent, challenge each bull thesis. Use the schema in your system prompt.")
-        bear_text, bear_cost, bear_dt = call_agent(anthropic_client, BEAR_SYSTEM, bear_msg,
-                                            MODEL_BEAR, MAX_TOKENS_DEBATE, "bear")
+        bear_text, bear_cost, bear_dt = call_openrouter_agent(
+            secrets, BEAR_SYSTEM, bear_msg, MODEL_BEAR, MAX_TOKENS_DEBATE, "bear"
+        )
 
-        # --- JUDGE ---
-        log("Calling JUDGE agent...")
+        # --- JUDGE (OpenRouter Grok-4.5) ---
+        log("Calling JUDGE agent (OpenRouter Grok)...")
         judge_msg = (state_ctx
                      + "\n\n## BULL AGENT'S CASE:\n\n" + bull_text
                      + "\n\n## BEAR AGENT'S COUNTER-CASE:\n\n" + bear_text
                      + "\n\n## YOUR TASK:\nAs the JUDGE, decide today's trades. Output strict JSON per schema in system prompt.")
-        judge_text, judge_cost, judge_dt = call_agent(anthropic_client, JUDGE_SYSTEM, judge_msg,
-                                              MODEL_JUDGE, MAX_TOKENS_JUDGE, "judge",
-                                              thinking={"type": "adaptive"})
+        judge_text, judge_cost, judge_dt = call_openrouter_agent(
+            secrets, JUDGE_SYSTEM, judge_msg, MODEL_JUDGE, MAX_TOKENS_JUDGE, "judge",
+            temperature=0.2, timeout=SHADOW_OR_TIMEOUT,
+        )
 
         cost_total = bull_cost + bear_cost + judge_cost
         cycle_duration = time.time() - cycle_start
@@ -2051,7 +2053,7 @@ def main():
         release_lock()
         if SHADOW_DIALECTIC_ENABLED and not args.observe_only:
             _live_summ = {
-                "provider": "anthropic",
+                "provider": LIVE_PROVIDER,
                 "bull_model": MODEL_BULL,
                 "bear_model": MODEL_BEAR,
                 "judge_model": MODEL_JUDGE,

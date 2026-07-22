@@ -1,17 +1,25 @@
-# Comando shadow dialectic (OpenRouter)
+# Commando LIVE = former OpenRouter shadow (2026-07-22)
 
-**Live (executes trades):** Anthropic Sonnet Bull + Sonnet Bear + Opus Judge  
-**Shadow (log only):** OpenRouter nthropic/claude-sonnet-4.6 Bull + Bear + x-ai/grok-4.5 Judge
+## Live (executes trades)
+| Seat | Model via OpenRouter |
+|------|----------------------|
+| Bull | anthropic/claude-sonnet-4.6 |
+| Bear | anthropic/claude-sonnet-4.6 |
+| Judge | x-ai/grok-4.5 |
 
-## Behavior
-- Runs after live execute each morning/midday/afternoon cycle
-- Never submits Alpaca orders
-- Disable: python3 llm_comando.py --no-shadow or set SHADOW_DIALECTIC_ENABLED = False
+Radar GO + watcher triggers: OpenRouter Sonnet.
 
-## Logs
-- data/dialectic_shadow/YYYY-MM-DD.jsonl
-- data/judge_ab/YYYY-MM-DD_openrouter_shadow.jsonl
-- logs/llm_comando.log lines: SHADOW dialectic starting / SHADOW done
+## Dual shadow path
+**OFF** — no longer run a second dialectic after live (was ~2x cost).
 
-## Goal
-Prove OpenRouter stack is reliable enough to retire Anthropic subscription for Comando sessions.
+## Secrets
+Required: `OPENROUTER_API_KEY` in `~/.env_secrets`  
+Optional: `ANTHROPIC_API_KEY` for Slack bot / Claude Code / legacy scripts only.
+
+## Anthropic subscription
+Commando trading path no longer needs direct Anthropic API billing.
+You may still pay OpenRouter for Claude tokens (usage-based).
+Slack interactive bot (`src/bot.py`) still expects Anthropic if you use it.
+
+## Rollback
+Restore `scripts/llm_comando.py.bak_pre_or_grad` (and radar/watcher same suffix).

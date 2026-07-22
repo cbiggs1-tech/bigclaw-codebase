@@ -48,7 +48,7 @@ import llm_comando_news as newsutil
 
 PORTFOLIO_NAME = "LLM-Commando"
 DEFAULT_CHANNEL = "D0ADHLUJ400"
-MODEL = "claude-sonnet-4-6"  # fast path; full dialectic stays on scheduled cycles
+MODEL = "anthropic/claude-sonnet-4.6"  # OpenRouter live GO
 MAX_TOKENS = 4000
 LLM_TIMEOUT = 90.0
 LOCK_FILE = Path("/tmp/llm_comando.lock")  # shared with deliberative cycle
@@ -618,19 +618,58 @@ def build_user_message(pf, holdings, events, prices, calendar_block, journal):
     return "\n".join(lines)
 
 
-def call_go_agent(secrets, user_msg):
-    client = anthropic.Anthropic(api_key=secrets["ANTHROPIC_API_KEY"], timeout=LLM_TIMEOUT)
+
+def call_openrouter_chat(secrets, system, user_msg, model, max_tokens, agent_name, timeout=90.0):
+    """OpenRouter chat for radar/watcher. Returns (text, cost, dt, in_tok, out_tok)."""
+    import os
+    import time
+    import requests
+    api_key = secrets.get("OPENROUTER_API_KEY") or os.environ.get("OPENROUTER_API_KEY")
+    if not api_key:
+        raise RuntimeError("OPENROUTER_API_KEY not set")
+    url = "https://openrouter.ai/api/v1/chat/completions"
+    headers = {
+        "Authorization": "Bearer " + api_key,
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://bigclaw.grandpapa.net",
+        "X-Title": "BigClaw Commando",
+    }
+    messages = []
+    if system:
+        messages.append({"role": "system", "content": system})
+    messages.append({"role": "user", "content": user_msg})
+    payload = {
+        "model": model,
+        "messages": messages,
+        "max_tokens": max_tokens,
+        "temperature": 0.3,
+    }
     t0 = time.time()
-    resp = client.messages.create(
-        model=MODEL,
-        max_tokens=MAX_TOKENS,
-        system=GO_SYSTEM,
-        messages=[{"role": "user", "content": user_msg}],
-    )
+    last = None
+    resp = None
+    for attempt in range(3):
+        try:
+            r = requests.post(url, headers=headers, json=payload, timeout=timeout)
+            r.raise_for_status()
+            resp = r.json()
+            break
+        except Exception as e:
+            last = e
+            time.sleep(2 * (attempt + 1))
+    if resp is None:
+        raise last
     dt = time.time() - t0
-    text = resp.content[0].text
-    in_tok, out_tok = resp.usage.input_tokens, resp.usage.output_tokens
+    text = ((resp.get("choices") or [{}])[0].get("message") or {}).get("content") or ""
+    usage = resp.get("usage") or {}
+    in_tok = int(usage.get("prompt_tokens") or 0)
+    out_tok = int(usage.get("completion_tokens") or 0)
     cost = (in_tok * 3.0 + out_tok * 15.0) / 1_000_000
+    return text, cost, dt, in_tok, out_tok
+
+def call_go_agent(secrets, user_msg):
+    text, cost, dt, in_tok, out_tok = call_openrouter_chat(
+        secrets, GO_SYSTEM, user_msg, MODEL, MAX_TOKENS, "comando_radar_go", timeout=LLM_TIMEOUT
+    )
     try:
         LLM_LOG.parent.mkdir(parents=True, exist_ok=True)
         with open(LLM_LOG, "a") as f:
@@ -763,7 +802,7 @@ def main():
 
     try:
         secrets = load_secrets()
-        for k in ("ANTHROPIC_API_KEY", "ALPACA_API_KEY", "ALPACA_SECRET_KEY"):
+        for k in ("OPENROUTER_API_KEY", "ALPACA_API_KEY", "ALPACA_SECRET_KEY"):
             if k not in secrets:
                 log(f"missing {k}", "ERROR")
                 return 1
