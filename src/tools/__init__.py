@@ -19,10 +19,8 @@ from .technical import (
     MovingAveragesChartTool,
 )
 from .social import (
-    StocktwitsSentimentTool,
     RedditSentimentTool,
     WallStreetBetsTrendingTool,
-    XSentimentTool,
 )
 from .predictions import (
     PolymarketSearchTool,
@@ -66,11 +64,9 @@ TOOLS: list[BaseTool] = [
     BollingerBandsChartTool(),
     MonteCarloChartTool(),
     MovingAveragesChartTool(),
-    # Social Sentiment
-    StocktwitsSentimentTool(),
+    # Social Sentiment (Stocktwits/X tools unavailable — modules removed)
     RedditSentimentTool(),
     WallStreetBetsTrendingTool(),
-    XSentimentTool(),
     # Prediction Markets
     PolymarketSearchTool(),
     PolymarketTrendingTool(),
