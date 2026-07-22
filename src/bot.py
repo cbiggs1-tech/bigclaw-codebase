@@ -1,6 +1,6 @@
 """BigClaw AI Slack Bot - Main entry point.
 
-A Slack bot powered by Claude with tool-use capabilities for
+A Slack bot powered by OpenRouter (Claude Sonnet / Grok via OR) with tool-use for
 investment research and market analysis.
 """
 
@@ -15,10 +15,27 @@ from dotenv import load_dotenv
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-print("Script started - loading .env...")
+print("Script started - loading environment...")
 
-load_dotenv()
-print("dotenv loaded")
+# Slack agent uses OpenRouter only. Load same secrets trading crons use.
+from pathlib import Path as _P
+_home = _P.home()
+_root = _home / "bigclaw-ai"
+load_dotenv(_root / ".env")
+load_dotenv()  # cwd fallback
+_sec = _home / ".env_secrets"
+if _sec.exists():
+    for _line in _sec.read_text().splitlines():
+        _line = _line.strip()
+        if _line.startswith("export "):
+            _line = _line[7:]
+        if "=" in _line and not _line.startswith("#"):
+            _k, _v = _line.split("=", 1)
+            _k, _v = _k.strip(), _v.strip().strip('"').strip("'")
+            # Prefer values already set; fill missing from secrets
+            if _k and _k not in os.environ:
+                os.environ[_k] = _v
+print("environment loaded (Slack agent = OpenRouter only)")
 
 # Check required environment variables
 required_vars = ["SLACK_BOT_TOKEN", "SLACK_APP_TOKEN", "SLACK_SIGNING_SECRET"]
@@ -38,15 +55,15 @@ app = App(
 BOT_NAME = "BigClaw AI"
 
 # ────────────────────────────────────────────────
-# Claude/Anthropic Integration with Tool Use
+# Slack LLM agent — OpenRouter ONLY
+# Uses Anthropic Python SDK pointed at OpenRouter (billed to OR, not Claude Pro).
 # ────────────────────────────────────────────────
 
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
-ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")  # optional legacy
 anthropic_client = None
 agent = None
 
-if OPENROUTER_API_KEY or ANTHROPIC_API_KEY:
+if OPENROUTER_API_KEY:
     try:
         import anthropic
         from agent import BigClawAgent
@@ -54,24 +71,22 @@ if OPENROUTER_API_KEY or ANTHROPIC_API_KEY:
         # DISABLED: trading now handled by autonomous_trader.py (openclaw cron)
         # from scheduler import init_scheduler
 
-        if OPENROUTER_API_KEY:
-            # OpenRouter Anthropic-compatible API (usage-billed via OR, not Claude sub)
-            anthropic_client = anthropic.Anthropic(
-                api_key=OPENROUTER_API_KEY,
-                base_url="https://openrouter.ai/api",
-            )
-            print("BigClaw agent: OpenRouter (Anthropic-compatible)")
-        else:
-            anthropic_client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
-            print("BigClaw agent: direct Anthropic API (legacy)")
+        anthropic_client = anthropic.Anthropic(
+            api_key=OPENROUTER_API_KEY,
+            base_url="https://openrouter.ai/api",
+            default_headers={
+                "HTTP-Referer": "https://bigclaw.grandpapa.net",
+                "X-Title": "BigClaw Slack Bot",
+            },
+        )
         agent = BigClawAgent(anthropic_client)
         memory = get_memory()
-
-        # Initialize trading scheduler (will be started later)
-        # trading_scheduler = init_scheduler(anthropic_client, app)
         trading_scheduler = None
-
-        print("BigClaw Agent initialized with tool support and conversation memory!")
+        print("BigClaw Agent: OpenRouter ONLY")
+        print(
+            "  default model:",
+            os.environ.get("CLAUDE_MODEL", "anthropic/claude-sonnet-4.6"),
+        )
     except ImportError as e:
         print(f"WARNING: Missing package. Run: pip install anthropic")
         print(f"Details: {e}")
@@ -82,7 +97,8 @@ if OPENROUTER_API_KEY or ANTHROPIC_API_KEY:
         memory = None
         trading_scheduler = None
 else:
-    print("NOTE: OPENROUTER_API_KEY (or ANTHROPIC_API_KEY) not set. Bot will use echo mode.")
+    print("NOTE: OPENROUTER_API_KEY not set. Slack bot will use echo mode.")
+    print("  Set OPENROUTER_API_KEY in ~/bigclaw-ai/.env or ~/.env_secrets, then: sudo systemctl restart bigclaw.service")
     memory = None
     trading_scheduler = None
 
