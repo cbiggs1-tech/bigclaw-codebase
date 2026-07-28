@@ -627,6 +627,42 @@
             .ticker-search input { width: 110px; font-size: 0.8rem; }
         }
     
+        
+        /* ── Live refresh settings modal ── */
+        .refresh-modal-backdrop {
+            display: none; position: fixed; inset: 0; z-index: 500;
+            background: rgba(0,0,0,0.55); align-items: center; justify-content: center;
+        }
+        .refresh-modal-backdrop.open { display: flex; }
+        .refresh-modal {
+            background: var(--bg-card, #161b28); border: 1px solid var(--border-color, #1e2a3a);
+            border-radius: 12px; padding: 1.25rem 1.4rem; width: min(420px, 92vw);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+        }
+        .refresh-modal h3 { font-size: 1rem; margin-bottom: 0.4rem; color: var(--text-primary); }
+        .refresh-modal p { font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 0.85rem; line-height: 1.45; }
+        .refresh-modal label { display: block; font-size: 0.7rem; color: var(--text-muted); margin: 0.55rem 0 0.25rem; }
+        .refresh-modal input {
+            width: 100%; padding: 0.5rem 0.65rem; border-radius: 6px;
+            border: 1px solid var(--border-color); background: var(--bg-primary);
+            color: var(--text-primary); font-size: 0.8rem; font-family: inherit;
+        }
+        .refresh-modal-actions { display: flex; gap: 0.5rem; margin-top: 1rem; justify-content: flex-end; }
+        .refresh-modal-actions button {
+            font-family: inherit; font-size: 0.75rem; font-weight: 600; padding: 0.4rem 0.75rem;
+            border-radius: 6px; cursor: pointer; border: 1px solid var(--border-color);
+            background: var(--bg-elevated); color: var(--text-secondary);
+        }
+        .refresh-modal-actions button.primary {
+            background: var(--gold, #f0b90b); color: #0a0e17; border-color: var(--gold);
+        }
+        .btn-refresh-status {
+            font-size: 0.62rem; color: var(--text-muted); max-width: 9rem;
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+        .btn-refresh-status.ok { color: var(--gain, #00c48c); }
+        .btn-refresh-status.err { color: var(--loss, #ff4757); }
+
         /* ── Manual data refresh ── */
         .topbar-right {
             display: flex; align-items: center; gap: 0.65rem; flex-shrink: 0;
@@ -685,10 +721,12 @@
     
         <div class="topbar-right">
             <span class="header-updated" id="headerTimestamp" title="Data timestamp from last site publish"></span>
-            <button type="button" class="btn-refresh" id="btnRefresh" title="Reload latest published data (does not re-run trading on the Pi)">
+            <span class="btn-refresh-status" id="refreshStatus"></span>
+            <button type="button" class="btn-refresh" id="btnRefresh" title="Live refresh: pull current prices from the Pi, push to the site, then reload">
                 <span class="refresh-icon">↻</span>
                 <span class="refresh-label">Refresh</span>
             </button>
+            <button type="button" class="btn-refresh" id="btnRefreshSettings" title="Live refresh settings (Pi URL + token)">⚙</button>
         </div>
         </div>
 </nav>
@@ -871,6 +909,14 @@ document.addEventListener('DOMContentLoaded', () => {
     loadAll();
     const btn = document.getElementById('btnRefresh');
     if (btn) btn.addEventListener('click', manualRefresh);
+    const gear = document.getElementById('btnRefreshSettings');
+    if (gear) gear.addEventListener('click', openRefreshSettings);
+    const save = document.getElementById('refreshModalSave');
+    if (save) save.addEventListener('click', saveRefreshSettings);
+    const cancel = document.getElementById('refreshModalCancel');
+    if (cancel) cancel.addEventListener('click', closeRefreshSettings);
+    const modal = document.getElementById('refreshModal');
+    if (modal) modal.addEventListener('click', (e) => { if (e.target === modal) closeRefreshSettings(); });
 });
 
 function loadAll() {
@@ -895,14 +941,137 @@ function safeFetch(url) {
         return r.json();
     });
 }
-function manualRefresh() {
-    const btn = document.getElementById('btnRefresh');
-    if (btn) { btn.classList.add('spinning'); btn.disabled = true; }
-    try { loadAll(); } catch (e) { console.error(e); }
-    setTimeout(() => {
-        if (btn) { btn.classList.remove('spinning'); btn.disabled = false; }
-    }, 1500);
+
+/* ── Live Pi refresh (real data, not just Ctrl+F5) ── */
+const REFRESH_LS_URL = 'bc_refresh_api_url';
+const REFRESH_LS_TOKEN = 'bc_refresh_api_token';
+const REFRESH_DEFAULT_URL = 'http://192.168.1.171:8787';
+
+function getRefreshConfig() {
+    return {
+        url: (localStorage.getItem(REFRESH_LS_URL) || REFRESH_DEFAULT_URL).replace(/\/$/, ''),
+        token: localStorage.getItem(REFRESH_LS_TOKEN) || ''
+    };
 }
+function setRefreshStatus(text, cls) {
+    const el = document.getElementById('refreshStatus');
+    if (!el) return;
+    el.textContent = text || '';
+    el.className = 'btn-refresh-status' + (cls ? ' ' + cls : '');
+}
+function openRefreshSettings() {
+    const cfg = getRefreshConfig();
+    const modal = document.getElementById('refreshModal');
+    const url = document.getElementById('refreshApiUrl');
+    const tok = document.getElementById('refreshApiToken');
+    if (url) url.value = cfg.url;
+    if (tok) tok.value = cfg.token;
+    if (modal) { modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false'); }
+}
+function closeRefreshSettings() {
+    const modal = document.getElementById('refreshModal');
+    if (modal) { modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); }
+}
+function saveRefreshSettings() {
+    const url = (document.getElementById('refreshApiUrl').value || '').trim().replace(/\/$/, '');
+    const tok = (document.getElementById('refreshApiToken').value || '').trim();
+    if (url) localStorage.setItem(REFRESH_LS_URL, url);
+    if (tok) localStorage.setItem(REFRESH_LS_TOKEN, tok);
+    closeRefreshSettings();
+    setRefreshStatus('Settings saved', 'ok');
+    setTimeout(() => setRefreshStatus(''), 2500);
+}
+async function pollRefreshStatus(cfg, maxMs) {
+    const start = Date.now();
+    while (Date.now() - start < maxMs) {
+        await new Promise(r => setTimeout(r, 2000));
+        try {
+            const r = await fetch(cfg.url + '/status', {
+                cache: 'no-store',
+                headers: { 'Authorization': 'Bearer ' + cfg.token }
+            });
+            if (!r.ok) continue;
+            const st = await r.json();
+            if (st.state === 'ok') return st;
+            if (st.state === 'error') throw new Error(st.error || st.message || 'refresh failed');
+            setRefreshStatus(st.message || st.state || 'working…');
+        } catch (e) {
+            /* keep polling through transient CDN/network blips */
+        }
+    }
+    throw new Error('Timed out waiting for Pi refresh');
+}
+async function waitForGithubPages(maxMs) {
+    // GitHub Pages / CDN can lag the push by a bit — probe metadata lastUpdateIso change
+    const start = Date.now();
+    let baseline = null;
+    try {
+        const b = await safeFetch('data/metadata.json');
+        baseline = b.lastUpdateIso || b.lastUpdate || null;
+    } catch (e) {}
+    while (Date.now() - start < maxMs) {
+        await new Promise(r => setTimeout(r, 2500));
+        try {
+            const m = await safeFetch('data/metadata.json');
+            const cur = m.lastUpdateIso || m.lastUpdate || null;
+            if (cur && cur !== baseline) return true;
+            if (m.manualRefresh && cur) return true;
+        } catch (e) {}
+    }
+    return false; // still reload — push may have landed without metadata change
+}
+async function manualRefresh() {
+    const btn = document.getElementById('btnRefresh');
+    const cfg = getRefreshConfig();
+    if (btn) { btn.classList.add('spinning'); btn.disabled = true; }
+
+    // No token → settings prompt, then cache-bust only as fallback
+    if (!cfg.token) {
+        setRefreshStatus('Configure ⚙ first', 'err');
+        openRefreshSettings();
+        try { loadAll(); } catch (e) {}
+        if (btn) { btn.classList.remove('spinning'); btn.disabled = false; }
+        return;
+    }
+
+    try {
+        setRefreshStatus('Asking Pi…');
+        const res = await fetch(cfg.url + '/refresh', {
+            method: 'POST',
+            cache: 'no-store',
+            headers: {
+                'Authorization': 'Bearer ' + cfg.token,
+                'Content-Type': 'application/json'
+            },
+            body: '{}'
+        });
+        if (res.status === 401) {
+            setRefreshStatus('Bad token', 'err');
+            openRefreshSettings();
+            throw new Error('unauthorized');
+        }
+        if (!res.ok && res.status !== 202) {
+            throw new Error('HTTP ' + res.status);
+        }
+        setRefreshStatus('Pi refreshing…');
+        await pollRefreshStatus(cfg, 180000);
+        setRefreshStatus('Waiting for site…');
+        await waitForGithubPages(90000);
+        setRefreshStatus('Reloading…', 'ok');
+        loadAll();
+        setTimeout(() => setRefreshStatus('Current', 'ok'), 400);
+        setTimeout(() => setRefreshStatus(''), 4000);
+    } catch (e) {
+        console.error('live refresh failed', e);
+        setRefreshStatus('Pi unreachable — cache only', 'err');
+        // Still re-fetch published JSON so user isn't stuck
+        try { loadAll(); } catch (e2) {}
+        setTimeout(() => setRefreshStatus(''), 6000);
+    } finally {
+        if (btn) { btn.classList.remove('spinning'); btn.disabled = false; }
+    }
+}
+
 
 function fmt$(n) { return '$' + Number(n).toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0}); }
 function fmtPct(n) { return (n >= 0 ? '+' : '') + Number(n).toFixed(2) + '%'; }
@@ -1367,5 +1536,27 @@ function loadTimestamp() {
     closeBtn.addEventListener('click', function() { overlay.classList.remove('visible'); body.innerHTML = ''; });
 })();
 </script>
+
+<!-- Live refresh settings -->
+<div class="refresh-modal-backdrop" id="refreshModal" aria-hidden="true">
+  <div class="refresh-modal" role="dialog" aria-labelledby="refreshModalTitle">
+    <h3 id="refreshModalTitle">Live data refresh</h3>
+    <p>
+      When you click <b>Refresh</b>, the browser asks your Pi to re-pull live prices,
+      push JSON to GitHub Pages, then reloads the page. One-time setup: Pi API URL + token
+      (from the Pi file <code>~/.bigclaw_site_refresh_token</code>).
+      Default URL works on your home LAN.
+    </p>
+    <label for="refreshApiUrl">Pi refresh API base URL</label>
+    <input id="refreshApiUrl" type="text" placeholder="http://192.168.1.171:8787" autocomplete="off" />
+    <label for="refreshApiToken">Bearer token</label>
+    <input id="refreshApiToken" type="password" placeholder="paste token" autocomplete="off" />
+    <div class="refresh-modal-actions">
+      <button type="button" id="refreshModalCancel">Cancel</button>
+      <button type="button" class="primary" id="refreshModalSave">Save</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
