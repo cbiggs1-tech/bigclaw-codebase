@@ -828,17 +828,6 @@
         </div>
     </section>
 
-    <!-- LLM sleeves: Commando + Inverse -->
-    <section id="llm-sleeves">
-        <div class="section-header">
-            <span class="section-title">⚔️ LLM Sleeves</span>
-            <span class="section-subtitle" id="llmSleevesDate">Commando long · Inverse paper shorts</span>
-        </div>
-        <div class="portfolio-grid" id="llmSleevesGrid">
-            <div class="placeholder">Loading Commando / Inverse…</div>
-        </div>
-    </section>
-
 
     <!-- Trading Signals -->
     <section id="signals" class="signals-section">
@@ -935,7 +924,6 @@ function loadAll() {
     loadSignals();
     loadMacro();
     loadPortfolios();
-    loadLlmSleeves();
     loadTrades();
     loadAnalysis();
     loadChart();
@@ -1357,11 +1345,13 @@ function loadPortfolios() {
                     <div class="pf-return ${isGain ? 'gain' : 'loss'}">${fmtPct(p.totalReturn)}${isPending ? ' ⏳' : ''}</div>
                     <div style="font-size:0.7rem;color:${dailyGain ? 'var(--gain)' : 'var(--loss)'};opacity:0.8;margin-top:2px;">${fmtPct(p.dailyReturn || 0)} ${dailyLabel}</div>
                    </div>`;
-            return `<a href="portfolio.html?id=${idx}" class="pf-card ${cardClass}" style="text-decoration:none;color:inherit;display:block;">
+            const isInv = (p.name || '').indexOf('Inverse') >= 0 || p.side === 'short';
+            const border = isInv ? 'border-color:rgba(245,158,11,0.45);' : '';
+            return `<a href="portfolio.html?id=${idx}" class="pf-card ${cardClass}" style="text-decoration:none;color:inherit;display:block;${border}">
                 <div class="pf-top">
                     <div>
                         <div class="pf-name">${p.name}</div>
-                        <div class="pf-style">${p.style || ''}</div>
+                        <div class="pf-style">${p.style || ''}${isInv ? ' · PAPER' : ''}</div>
                     </div>
                     ${returnHtml}
                 </div>
@@ -1411,80 +1401,6 @@ function renderCalendarEvents(data) {
 }
 
 
-// ── LLM sleeves (Commando + Inverse) ──
-function loadLlmSleeves() {
-    const grid = document.getElementById('llmSleevesGrid');
-    if (!grid) return;
-    Promise.all([
-        safeFetch('data/llm_comando_portfolio.json').catch(() => null),
-        safeFetch('data/llm_comando_inverse.json').catch(() => null),
-    ]).then(([cmd, inv]) => {
-        const cards = [];
-        if (cmd && (cmd.portfolio_value != null || cmd.cash != null)) {
-            const tv = Number(cmd.portfolio_value != null ? cmd.portfolio_value : cmd.cash || 0);
-            const start = Number(cmd.starting_cash || 100000);
-            const ret = cmd.cumulative_return_pct != null
-                ? Number(cmd.cumulative_return_pct)
-                : (start ? ((tv - start) / start * 100) : 0);
-            const cash = Number(cmd.cash != null ? cmd.cash : 0);
-            const holds = cmd.holdings || [];
-            const holdLine = holds.length
-                ? holds.slice(0, 8).map(h => {
-                    const t = h.ticker || h.symbol || '';
-                    const sh = h.shares != null ? Math.round(Number(h.shares)) : '';
-                    return t + (sh !== '' ? '×' + sh : '');
-                  }).join(' · ')
-                : (cash >= tv * 0.95 ? 'All cash' : '—');
-            const isGain = ret >= 0;
-            cards.push('<div class="pf-card ' + (isGain ? 'positive' : 'negative') + '" style="display:block;">' +
-                '<div class="pf-top"><div>' +
-                '<div class="pf-name">LLM-Commando</div>' +
-                '<div class="pf-style">Long sleeve · dialectic + radar</div></div>' +
-                '<div class="pf-return ' + (isGain ? 'gain' : 'loss') + '">' + fmtPct(ret) + '</div></div>' +
-                '<div class="pf-value">' + fmt$(tv) + '</div>' +
-                '<div class="pf-basis">cash ' + fmt$(cash) + ' · of ' + fmt$(start) + ' start</div>' +
-                '<div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.5rem;line-height:1.35;">' + holdLine + '</div></div>');
-        }
-        if (inv && inv.name) {
-            const tv = Number(inv.totalValue != null ? inv.totalValue : 0);
-            const start = Number(inv.startingCash || 100000);
-            const ret = inv.totalReturn != null ? Number(inv.totalReturn) : 0;
-            const holds = inv.holdings || [];
-            const holdLine = holds.length
-                ? holds.map(h => {
-                    const u = h.unrealized != null ? Number(h.unrealized) : null;
-                    const uStr = u == null ? '' : (' u' + (u >= 0 ? '+' : '') + u.toFixed(0));
-                    return 'SHORT ' + (h.ticker || '') + '×' + Math.round(Number(h.shares || 0)) + uStr;
-                  }).join(' · ')
-                : 'Flat (no shorts)';
-            const isGain = ret >= 0;
-            const real = inv.realized_pnl != null ? Number(inv.realized_pnl) : 0;
-            const unreal = inv.unrealized_pnl != null ? Number(inv.unrealized_pnl) : 0;
-            cards.push('<div class="pf-card ' + (isGain ? 'positive' : 'negative') + '" style="display:block;border-color:rgba(245,158,11,0.4);">' +
-                '<div class="pf-top"><div>' +
-                '<div class="pf-name">LLM-Inverse-Commando</div>' +
-                '<div class="pf-style">Paper shorts ← Commando buys (no LLM)</div></div>' +
-                '<div class="pf-return ' + (isGain ? 'gain' : 'loss') + '">' + fmtPct(ret) + '</div></div>' +
-                '<div class="pf-value">' + fmt$(tv) + '</div>' +
-                '<div class="pf-basis">realized ' + fmt$(real) + ' · unrealized ' + fmt$(unreal) + ' · of ' + fmt$(start) + ' start</div>' +
-                '<div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.5rem;line-height:1.35;">' + holdLine + '</div></div>');
-        }
-        if (!cards.length) {
-            grid.innerHTML = '<div class="placeholder">No LLM sleeve data yet — appears after next site refresh</div>';
-            return;
-        }
-        grid.innerHTML = cards.join('');
-        const sub = document.getElementById('llmSleevesDate');
-        if (sub && inv && inv.generated_at) {
-            try {
-                const d = new Date(inv.generated_at);
-                sub.textContent = 'Updated ' + d.toLocaleString('en-US', { timeZone: 'America/Chicago' }) + ' CT · paper Inverse';
-            } catch (e) {}
-        }
-    }).catch(() => {
-        grid.innerHTML = '<div class="placeholder">LLM sleeve data unavailable</div>';
-    });
-}
 
 
 // ── Trades ──

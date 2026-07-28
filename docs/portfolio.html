@@ -291,26 +291,28 @@ fetch('data/portfolios.json?_=' + Date.now(), { cache: 'no-store' })
         }
         const p = portfolios[portfolioId];
         const isPending = p.purchaseStatus === 'pending';
+        const isShortBook = p.side === 'short' || (p.name || '').indexOf('Inverse') >= 0 || p.paper === true;
         const holdings = (p.holdings || []).map(h => {
+            const isShort = isShortBook || h.side === 'short';
             const value = h.shares * h.currentPrice;
             const cost = h.shares * h.avgCost;
-            const pnl = value - cost;
-            const pnlPct = cost > 0 ? (pnl / cost * 100) : 0;
-            return { ...h, value, cost, pnl, pnlPct };
+            // Long: mark−cost. Short: entry−mark (profit when price falls).
+            const pnl = isShort ? (h.avgCost - h.currentPrice) * h.shares : (value - cost);
+            const pnlPct = cost > 0
+                ? (isShort ? ((h.avgCost - h.currentPrice) / h.avgCost * 100) : (pnl / cost * 100))
+                : 0;
+            return { ...h, value, cost, pnl, pnlPct, isShort };
         });
 
         const totalInvested = holdings.reduce((s, h) => s + h.cost, 0);
         const holdingsValue = holdings.reduce((s, h) => s + h.value, 0);
-        // CASH: read directly from JSON (the DBs authoritative current_cash).
-        // Falls back to the legacy cost-basis derivation only if cash is missing
-        // (older JSON files before this fix). New behavior: trust the DB.
         const cashRemaining = (typeof p.cash === 'number')
             ? p.cash
             : (p.startingCash || 0) - totalInvested;
-        // Portfolio Value = holdings + cash. With an all-cash portfolio,
-        // holdings sum is $0, so the metric card needs cash added in to
-        // match the header total (which uses p.totalValue from the DB).
-        const totalValue = holdingsValue + cashRemaining;
+        // Long: holdings + cash. Short paper: use exported equity totalValue.
+        const totalValue = isShortBook
+            ? Number(p.totalValue != null ? p.totalValue : (p.startingCash || 0))
+            : (holdingsValue + cashRemaining);
 
         // Sort by weight desc
         holdings.sort((a, b) => b.value - a.value);
@@ -333,16 +335,16 @@ fetch('data/portfolios.json?_=' + Date.now(), { cache: 'no-store' })
             <div class="port-header-top">
                 <div>
                     <div class="port-name">${p.name}</div>
-                    <div class="port-style">${p.style || ''}</div>
-                    <div class="port-created">Created ${p.createdAt}</div>
+                    <div class="port-style">${p.style || ''}${isShortBook ? ' · PAPER (no Alpaca)' : ''}</div>
+                    <div class="port-created">Created ${p.createdAt || '—'}</div>
                 </div>
                 ${returnHtml}
             </div>
             <div class="port-stats">
                 <div><div class="port-stat-label">Starting Cash</div><div class="port-stat-value">${fmt$(p.startingCash)}</div></div>
-                <div><div class="port-stat-label">Total Invested</div><div class="port-stat-value">${fmt$(totalInvested)}</div></div>
-                <div><div class="port-stat-label">Cash Remaining</div><div class="port-stat-value">${fmt$(Math.max(0, cashRemaining))}</div></div>
-                <div><div class="port-stat-label">Holdings</div><div class="port-stat-value">${holdings.length}</div></div>
+                <div><div class="port-stat-label">${isShortBook ? 'Short Notional' : 'Total Invested'}</div><div class="port-stat-value">${fmt$(totalInvested)}</div></div>
+                <div><div class="port-stat-label">${isShortBook ? 'Paper Equity' : 'Cash Remaining'}</div><div class="port-stat-value">${fmt$(isShortBook ? totalValue : Math.max(0, cashRemaining))}</div></div>
+                <div><div class="port-stat-label">${isShortBook ? 'Shorts' : 'Holdings'}</div><div class="port-stat-value">${holdings.length}</div></div>
             </div>
         </div>`;
 
@@ -374,7 +376,7 @@ fetch('data/portfolios.json?_=' + Date.now(), { cache: 'no-store' })
         const pnlLabel = isPending ? 'Target %' : 'P&L ($)';
         const pnlPctLabel = isPending ? 'Weight' : 'P&L (%)';
         html += `<div class="table-wrap">
-            <div class="table-title">${isPending ? 'Planned Holdings' : 'Current Holdings'}</div>
+            <div class="table-title">${isShortBook ? 'Open Short Positions (paper)' : (isPending ? 'Planned Holdings' : 'Current Holdings')}</div>
             <table>
                 <thead><tr>
                     <th>Ticker</th><th>Shares</th><th class="right">Avg Cost</th><th class="right">Price</th>
@@ -388,7 +390,7 @@ fetch('data/portfolios.json?_=' + Date.now(), { cache: 'no-store' })
             const weight = (h.value / holdingsValue * 100).toFixed(1);
             const pnlClass = h.pnl >= 0 ? 'gain' : 'loss';
             html += `<tr>
-                <td class="ticker-cell"><a href="ticker.html?ticker=${encodeURIComponent(h.ticker)}&from=portfolio" class="ticker-link">${h.ticker}</a></td>
+                <td class="ticker-cell"><a href="ticker.html?ticker=${encodeURIComponent(h.ticker)}&from=portfolio" class="ticker-link">${h.isShort ? 'SHORT ' : ''}${h.ticker}</a></td>
                 <td>${h.shares % 1 === 0 ? h.shares : h.shares.toFixed(2)}</td>
                 <td class="right">$${fmtPrice(h.avgCost)}</td>
                 <td class="right">$${fmtPrice(h.currentPrice)}</td>
