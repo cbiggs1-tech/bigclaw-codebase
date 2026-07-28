@@ -948,8 +948,13 @@ const REFRESH_LS_TOKEN = 'bc_refresh_api_token';
 const REFRESH_DEFAULT_URL = 'http://192.168.1.171:8787';
 
 function getRefreshConfig() {
+    // Same-origin when viewing via Pi HTTP host (avoids mixed content + CORS)
+    let defUrl = REFRESH_DEFAULT_URL;
+    if (location.protocol === 'http:' && location.port === '8787') {
+        defUrl = location.origin;
+    }
     return {
-        url: (localStorage.getItem(REFRESH_LS_URL) || REFRESH_DEFAULT_URL).replace(/\/$/, ''),
+        url: (localStorage.getItem(REFRESH_LS_URL) || defUrl).replace(/\/$/, ''),
         token: localStorage.getItem(REFRESH_LS_TOKEN) || ''
     };
 }
@@ -1063,10 +1068,23 @@ async function manualRefresh() {
         setTimeout(() => setRefreshStatus(''), 4000);
     } catch (e) {
         console.error('live refresh failed', e);
-        setRefreshStatus('Pi unreachable — cache only', 'err');
+        const httpsPage = location.protocol === 'https:';
+        const httpApi = (cfg.url || '').startsWith('http://');
+        if (httpsPage && httpApi) {
+            setRefreshStatus('Use Pi HTTP dashboard', 'err');
+            alert(
+                'Live Refresh is blocked by the browser (HTTPS page cannot call HTTP Pi).\n\n' +
+                'Open this instead (same Wi‑Fi as the Pi):\n' +
+                'http://192.168.1.171:8787/dashboard.html\n\n' +
+                'Then ⚙ → paste token → Refresh.'
+            );
+            openRefreshSettings();
+        } else {
+            setRefreshStatus('Pi unreachable — cache only', 'err');
+        }
         // Still re-fetch published JSON so user isn't stuck
         try { loadAll(); } catch (e2) {}
-        setTimeout(() => setRefreshStatus(''), 6000);
+        setTimeout(() => setRefreshStatus(''), 8000);
     } finally {
         if (btn) { btn.classList.remove('spinning'); btn.disabled = false; }
     }
@@ -1542,10 +1560,12 @@ function loadTimestamp() {
   <div class="refresh-modal" role="dialog" aria-labelledby="refreshModalTitle">
     <h3 id="refreshModalTitle">Live data refresh</h3>
     <p>
-      When you click <b>Refresh</b>, the browser asks your Pi to re-pull live prices,
-      push JSON to GitHub Pages, then reloads the page. One-time setup: Pi API URL + token
-      (from the Pi file <code>~/.bigclaw_site_refresh_token</code>).
-      Default URL works on your home LAN.
+      <b>Important:</b> Live Refresh cannot run from the public HTTPS site
+      (<code>https://bigclaw.grandpapa.net</code>) — browsers block HTTPS→HTTP calls.
+      Open the dashboard from the Pi instead:<br>
+      <code>http://192.168.1.171:8787/dashboard.html</code><br><br>
+      Then set API URL to <code>http://192.168.1.171:8787</code> (or leave default)
+      and paste the token from <code>~/.bigclaw_site_refresh_token</code> on the Pi.
     </p>
     <label for="refreshApiUrl">Pi refresh API base URL</label>
     <input id="refreshApiUrl" type="text" placeholder="http://192.168.1.171:8787" autocomplete="off" />
