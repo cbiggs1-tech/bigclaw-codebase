@@ -626,6 +626,41 @@
             .quote-overlay { width: calc(100vw - 20px); right: 10px; height: 360px; }
             .ticker-search input { width: 110px; font-size: 0.8rem; }
         }
+    
+        /* ── Manual data refresh ── */
+        .topbar-right {
+            display: flex; align-items: center; gap: 0.65rem; flex-shrink: 0;
+        }
+        .btn-refresh {
+            display: inline-flex; align-items: center; gap: 0.35rem;
+            background: var(--bg-elevated, #1e2536);
+            border: 1px solid var(--border-color, #1e2a3a);
+            color: var(--text-secondary, #8b95a8);
+            font-family: inherit; font-size: 0.72rem; font-weight: 600;
+            padding: 0.35rem 0.7rem; border-radius: 6px; cursor: pointer;
+            transition: all 0.15s; white-space: nowrap;
+        }
+        .btn-refresh:hover {
+            color: var(--text-primary, #e8edf5);
+            border-color: var(--gold, #f0b90b);
+            background: var(--bg-card-hover, #1c2333);
+        }
+        .btn-refresh:active { transform: scale(0.97); }
+        .btn-refresh.spinning { color: var(--gold, #f0b90b); border-color: var(--gold, #f0b90b); }
+        .btn-refresh.spinning .refresh-icon {
+            display: inline-block;
+            animation: refresh-spin 0.7s linear infinite;
+        }
+        @keyframes refresh-spin { to { transform: rotate(360deg); } }
+        .header-updated {
+            font-size: 0.65rem; color: var(--text-muted, #505a6e); max-width: 11rem;
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+        @media (max-width: 700px) {
+            .header-updated { display: none; }
+            .btn-refresh .refresh-label { display: none; }
+        }
+
     </style>
 </head>
 <body>
@@ -647,7 +682,15 @@
                 <a href="sources.html">Sources</a>
             </div>
         </div>
-    </div>
+    
+        <div class="topbar-right">
+            <span class="header-updated" id="headerTimestamp" title="Data timestamp from last site publish"></span>
+            <button type="button" class="btn-refresh" id="btnRefresh" title="Reload latest published data (does not re-run trading on the Pi)">
+                <span class="refresh-icon">↻</span>
+                <span class="refresh-label">Refresh</span>
+            </button>
+        </div>
+        </div>
 </nav>
 
 <!-- Quote Widget Overlay -->
@@ -826,6 +869,8 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     loadAll();
+    const btn = document.getElementById('btnRefresh');
+    if (btn) btn.addEventListener('click', manualRefresh);
 });
 
 function loadAll() {
@@ -839,8 +884,24 @@ function loadAll() {
     loadEvents();
 }
 
+function cacheBust(url) {
+    const sep = url.indexOf('?') >= 0 ? '&' : '?';
+    return url + sep + '_=' + Date.now();
+}
 function safeFetch(url) {
-    return fetch(url).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); });
+    // Cache-bust so Refresh pulls the latest published JSON, not a stale browser/CDN cache.
+    return fetch(cacheBust(url), { cache: 'no-store' }).then(r => {
+        if (!r.ok) throw new Error(r.status);
+        return r.json();
+    });
+}
+function manualRefresh() {
+    const btn = document.getElementById('btnRefresh');
+    if (btn) { btn.classList.add('spinning'); btn.disabled = true; }
+    try { loadAll(); } catch (e) { console.error(e); }
+    setTimeout(() => {
+        if (btn) { btn.classList.remove('spinning'); btn.disabled = false; }
+    }, 1500);
 }
 
 function fmt$(n) { return '$' + Number(n).toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0}); }
