@@ -1,6 +1,28 @@
 {
   "trades": [
     {
+      "date": "Aug 10",
+      "portfolio": "LLM-Commando",
+      "action": "SELL",
+      "ticker": "RGA",
+      "shares": 14,
+      "price": 245.75,
+      "total": 3440.5,
+      "rationale": "LLM-DIALECTIC: STALL_EXIT / conviction test fail: bought 08-07 on Barclays OW PT",
+      "executed_at": "2026-08-10 14:05:30"
+    },
+    {
+      "date": "Aug 10",
+      "portfolio": "Monkey Dart",
+      "action": "SELL",
+      "ticker": "ARM",
+      "shares": 39,
+      "price": 269.6,
+      "total": 10514.3,
+      "rationale": "Trailing stop triggered: $270.14 <= $270.82 (HWM $285.07, -5.2%)",
+      "executed_at": "2026-08-10 14:00:19"
+    },
+    {
       "date": "Aug 07",
       "portfolio": "LLM-Commando",
       "action": "SELL",
@@ -991,5 +1013,5 @@
       "executed_at": "2026-08-03 14:00:18"
     }
   ],
-  "lastUpdate": "2026-08-10T09:00:15.583179"
+  "lastUpdate": "2026-08-10T09:15:10.060550"
 }
