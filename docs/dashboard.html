@@ -1468,9 +1468,18 @@ function loadAnalysis() {
 function loadChart() {
     const img = new Image();
     img.onload = () => { document.getElementById('perfChart').innerHTML = ''; document.getElementById('perfChart').appendChild(img); };
-    img.onerror = () => { document.getElementById('perfChart').innerHTML = '<div class="placeholder">No chart available</div>'; };
-    img.src = cacheBust('data/performance_chart.png');  // bust browser/CDN PNG cache
+    img.onerror = () => {
+        // Fallback to classic path if versioned asset missing
+        const fallback = new Image();
+        fallback.onload = () => { document.getElementById('perfChart').innerHTML = ''; document.getElementById('perfChart').appendChild(fallback); };
+        fallback.onerror = () => { document.getElementById('perfChart').innerHTML = '<div class="placeholder">No chart available</div>'; };
+        fallback.src = cacheBust('data/performance_chart.png');
+        fallback.alt = 'Portfolio Performance';
+    };
+    // Versioned filename breaks CDN caches that ignore query strings
+    img.src = cacheBust('data/performance_chart_2305e25fa9.png');
     img.alt = 'Portfolio Performance';
+    img.style.maxWidth = '100%';
 }
 
 // ── Timestamp ──
