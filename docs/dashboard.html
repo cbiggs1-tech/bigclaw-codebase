@@ -1470,20 +1470,29 @@ function loadAnalysis() {
 
 // ── Chart ──
 function loadChart() {
-    const img = new Image();
-    img.onload = () => { document.getElementById('perfChart').innerHTML = ''; document.getElementById('perfChart').appendChild(img); };
-    img.onerror = () => {
-        // Fallback to classic path if versioned asset missing
-        const fallback = new Image();
-        fallback.onload = () => { document.getElementById('perfChart').innerHTML = ''; document.getElementById('perfChart').appendChild(fallback); };
-        fallback.onerror = () => { document.getElementById('perfChart').innerHTML = '<div class="placeholder">No chart available</div>'; };
-        fallback.src = cacheBust('data/performance_chart.png');
-        fallback.alt = 'Portfolio Performance';
+    const box = document.getElementById('perfChart');
+    const show = (src) => {
+        const img = new Image();
+        img.onload = () => { box.innerHTML = ''; box.appendChild(img); };
+        img.onerror = () => {
+            if (src.indexOf('performance_chart.png') < 0) {
+                // fall back to classic path
+                show(cacheBust('data/performance_chart.png'));
+            } else {
+                box.innerHTML = '<div class="placeholder">No chart available</div>';
+            }
+        };
+        img.src = src;
+        img.alt = 'Portfolio Performance';
+        img.style.maxWidth = '100%';
     };
-    // Versioned filename breaks CDN caches that ignore query strings
-    img.src = cacheBust('data/performance_chart_2305e25fa9.png');
-    img.alt = 'Portfolio Performance';
-    img.style.maxWidth = '100%';
+    // Prefer versioned asset from chart_version.json so EOD updates don't depend on HTML cache
+    safeFetch('data/chart_version.json')
+        .then(meta => {
+            const file = (meta && meta.file) ? meta.file : 'performance_chart.png';
+            show(cacheBust('data/' + file));
+        })
+        .catch(() => show(cacheBust('data/performance_chart.png')));
 }
 
 // ── Timestamp ──
