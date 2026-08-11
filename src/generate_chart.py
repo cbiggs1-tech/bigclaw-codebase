@@ -102,12 +102,14 @@ def main():
     fig.patch.set_facecolor('#1a1a2e')
     ax.set_facecolor('#1a1a2e')
 
-    # Colors for the 4 live sleeves (killed books no longer plotted — is_active=1 only)
+    # Colors for live sleeves (is_active=1 only; killed books not plotted)
     colors = {
         'Innovation Fund': '#f87171',
         'Momentum Growth': '#fb923c',
         'AI Defense & Autonomous': '#22d3ee',
         'LLM-Commando': '#a78bfa',
+        'Monkey Dart': '#f472b6',  # pink — QQQ random tide sleeve
+        'LLM-Inverse-Commando': '#94a3b8',
         # retired (kept for color stability if re-activated):
         'Value Picks': '#4ade80',
         'Growth Value': '#60a5fa',
@@ -139,7 +141,7 @@ def main():
     if all_dates:
         start = min(all_dates).strftime('%b %d')
         end = max(all_dates).strftime('%b %d, %Y')
-        ax.set_title(f'Portfolio Performance vs S&P 500 ({start} - {end})',
+        ax.set_title(f'Portfolio Performance vs S&P 500 ({start} - {end}) · Monkey Dart live',
                      fontsize=14, fontweight='bold', color='white', pad=15)
 
     ax.axhline(y=0, color='#4a4a6a', linestyle='--', linewidth=1, alpha=0.7)
