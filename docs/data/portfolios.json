@@ -1,5 +1,5 @@
 {
-  "lastUpdate": "2026-09-04T15:45:16.218012Z",
+  "lastUpdate": "2026-09-04T16:00:17.053681Z",
   "portfolios": [
     {
       "name": "Monkey Dart",
@@ -18,28 +18,35 @@
     {
       "name": "LLM-Commando",
       "style": "LLM-Driven Single-Stock Discretionary (3-Sonnet dialectic, stock preference)",
-      "totalValue": 96007.53,
-      "prevTotalValue": 95711.92,
+      "totalValue": 95997.64,
+      "prevTotalValue": 95444.92,
       "startingCash": 100000.0,
-      "cash": 53008.72,
-      "holdingsValue": 42998.81,
-      "totalReturn": -3.99,
-      "dailyReturn": 0.31,
+      "cash": 42846.22,
+      "holdingsValue": 53151.42,
+      "totalReturn": -4.0,
+      "dailyReturn": 0.58,
       "createdAt": "2026-06-10 19:02:20",
       "purchaseStatus": "active",
       "holdings": [
         {
+          "ticker": "DOCU",
+          "shares": 150.0,
+          "avgCost": 67.75,
+          "currentPrice": 68.0,
+          "purchasedAt": "Sep 04, 2026"
+        },
+        {
           "ticker": "META",
           "shares": 40.0,
           "avgCost": 612.49,
-          "currentPrice": 611.39,
+          "currentPrice": 611.71,
           "purchasedAt": "Sep 04, 2026"
         },
         {
           "ticker": "NVDA",
           "shares": 80.0,
           "avgCost": 232.56,
-          "currentPrice": 231.79,
+          "currentPrice": 231.04,
           "purchasedAt": "Sep 04, 2026"
         }
       ]
@@ -47,25 +54,25 @@
     {
       "name": "LLM-Inverse-Commando",
       "style": "Paper shorts \u2190 Commando buy signals (no LLM)",
-      "totalValue": 100481.34,
-      "prevTotalValue": 100481.34,
+      "totalValue": 100567.04,
+      "prevTotalValue": 100567.04,
       "startingCash": 100000.0,
       "cash": 100000.0,
-      "holdingsValue": 47679.88,
-      "totalReturn": 0.48,
+      "holdingsValue": 57756.67,
+      "totalReturn": 0.57,
       "dailyReturn": 0.0,
       "createdAt": "2026-07-28",
       "purchaseStatus": "active",
       "side": "short",
       "paper": true,
       "realized_pnl": 804.03,
-      "unrealized_pnl": -322.7,
+      "unrealized_pnl": -236.99,
       "holdings": [
         {
           "ticker": "NVDA",
           "shares": 149.0,
           "avgCost": 229.32,
-          "currentPrice": 231.82,
+          "currentPrice": 230.91,
           "side": "short",
           "purchasedAt": ""
         },
@@ -73,7 +80,7 @@
           "ticker": "ZS",
           "shares": 9.0,
           "avgCost": 172.4,
-          "currentPrice": 169.27,
+          "currentPrice": 169.36,
           "side": "short",
           "purchasedAt": ""
         },
@@ -81,7 +88,15 @@
           "ticker": "META",
           "shares": 19.0,
           "avgCost": 612.49,
-          "currentPrice": 611.33,
+          "currentPrice": 611.9,
+          "side": "short",
+          "purchasedAt": ""
+        },
+        {
+          "ticker": "DOCU",
+          "shares": 150.0,
+          "avgCost": 67.75,
+          "currentPrice": 68.0,
           "side": "short",
           "purchasedAt": ""
         }
@@ -90,13 +105,13 @@
     {
       "name": "Momentum Growth",
       "style": "Momentum / Aggressive Growth",
-      "totalValue": 98389.21,
+      "totalValue": 98460.16,
       "prevTotalValue": 98596.72,
       "startingCash": 100000.0,
       "cash": 35984.74,
-      "holdingsValue": 62404.47,
-      "totalReturn": -1.61,
-      "dailyReturn": -0.21,
+      "holdingsValue": 62475.42,
+      "totalReturn": -1.54,
+      "dailyReturn": -0.14,
       "createdAt": "2026-02-16 13:12:32",
       "purchaseStatus": "active",
       "holdings": [
@@ -104,7 +119,7 @@
           "ticker": "BBC",
           "shares": 230.0,
           "avgCost": 52.59,
-          "currentPrice": 53.49,
+          "currentPrice": 53.6,
           "purchasedAt": "Aug 10, 2026"
         },
         {
@@ -118,7 +133,7 @@
           "ticker": "HALO",
           "shares": 133.0,
           "avgCost": 78.05,
-          "currentPrice": 110.04,
+          "currentPrice": 110.15,
           "purchasedAt": "Jul 21, 2026"
         },
         {
@@ -132,7 +147,7 @@
           "ticker": "SCHW",
           "shares": 122.0,
           "avgCost": 98.78,
-          "currentPrice": 109.04,
+          "currentPrice": 109.27,
           "purchasedAt": "Jul 06, 2026"
         }
       ]
@@ -140,13 +155,13 @@
     {
       "name": "AI Defense & Autonomous",
       "style": "AI Defense / Autonomous Systems",
-      "totalValue": 102317.08,
+      "totalValue": 102428.52,
       "prevTotalValue": 103117.22,
       "startingCash": 100000.0,
       "cash": 64998.0,
-      "holdingsValue": 37319.08,
-      "totalReturn": 2.32,
-      "dailyReturn": -0.78,
+      "holdingsValue": 37430.52,
+      "totalReturn": 2.43,
+      "dailyReturn": -0.67,
       "createdAt": "2026-02-16",
       "purchaseStatus": "active",
       "holdings": [
@@ -154,21 +169,21 @@
           "ticker": "AXON",
           "shares": 23.0,
           "avgCost": 509.3,
-          "currentPrice": 518.08,
+          "currentPrice": 521.68,
           "purchasedAt": "Sep 02, 2026"
         },
         {
           "ticker": "GD",
           "shares": 35.0,
           "avgCost": 345.84,
-          "currentPrice": 359.69,
+          "currentPrice": 359.98,
           "purchasedAt": "May 11, 2026"
         },
         {
           "ticker": "RTX",
           "shares": 64.0,
           "avgCost": 189.87,
-          "currentPrice": 200.22,
+          "currentPrice": 200.51,
           "purchasedAt": "Jun 17, 2026"
         }
       ]
@@ -176,13 +191,13 @@
     {
       "name": "Innovation Fund",
       "style": "Disruptive Innovation",
-      "totalValue": 120887.08,
+      "totalValue": 120897.43,
       "prevTotalValue": 121492.1,
       "startingCash": 100000.0,
       "cash": 67574.2,
-      "holdingsValue": 53312.88,
-      "totalReturn": 20.89,
-      "dailyReturn": -0.5,
+      "holdingsValue": 53323.23,
+      "totalReturn": 20.9,
+      "dailyReturn": -0.49,
       "createdAt": "2026-02-03 19:30:00",
       "purchaseStatus": "active",
       "holdings": [
@@ -190,28 +205,28 @@
           "ticker": "GMED",
           "shares": 157.0,
           "avgCost": 78.87,
-          "currentPrice": 78.1,
+          "currentPrice": 78.17,
           "purchasedAt": "May 11, 2026"
         },
         {
           "ticker": "PODD",
           "shares": 85.0,
           "avgCost": 151.14,
-          "currentPrice": 147.45,
+          "currentPrice": 147.52,
           "purchasedAt": "May 11, 2026"
         },
         {
           "ticker": "SHOP",
           "shares": 100.0,
           "avgCost": 110.49,
-          "currentPrice": 147.55,
+          "currentPrice": 147.16,
           "purchasedAt": "May 11, 2026"
         },
         {
           "ticker": "WAY",
           "shares": 547.0,
           "avgCost": 20.35,
-          "currentPrice": 25.16,
+          "currentPrice": 25.22,
           "purchasedAt": "May 12, 2026"
         }
       ]
