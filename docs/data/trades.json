@@ -2,6 +2,61 @@
   "trades": [
     {
       "date": "Sep 22",
+      "portfolio": "AI Defense & Autonomous",
+      "action": "SELL",
+      "ticker": "GD",
+      "shares": 35,
+      "price": 345.49,
+      "total": 12092.15,
+      "rationale": "Trailing stop triggered: $345.58 <= $349.12 (HWM $396.73, -12.9%)",
+      "executed_at": "2026-09-22 14:15:14"
+    },
+    {
+      "date": "Sep 22",
+      "portfolio": "LLM-Commando",
+      "action": "SELL",
+      "ticker": "AZO",
+      "shares": 12,
+      "price": 2913.25,
+      "total": 34959.0,
+      "rationale": "LLM-WATCHER-EXIT: price -2.65% <= -1.5% stop",
+      "executed_at": "2026-09-22 14:10:11"
+    },
+    {
+      "date": "Sep 22",
+      "portfolio": "LLM-Commando",
+      "action": "BUY",
+      "ticker": "AZO",
+      "shares": 12,
+      "price": 2996.0,
+      "total": 35952.0,
+      "rationale": "LLM-DIALECTIC: Same-session HARD company print: MARKET_PRIMARY_NOW 0.3h \u2018AutoZon",
+      "executed_at": "2026-09-22 14:06:41"
+    },
+    {
+      "date": "Sep 22",
+      "portfolio": "LLM-Commando",
+      "action": "SELL",
+      "ticker": "MSFT",
+      "shares": 50,
+      "price": 496.7,
+      "total": 24835.0,
+      "rationale": "LLM-DIALECTIC: Thesis re-check FAIL / STALL_EXIT. Bought as \u2018un-run leg\u2019 of AI i",
+      "executed_at": "2026-09-22 14:06:37"
+    },
+    {
+      "date": "Sep 22",
+      "portfolio": "LLM-Commando",
+      "action": "SELL",
+      "ticker": "APO",
+      "shares": 70,
+      "price": 126.31,
+      "total": 8841.37,
+      "rationale": "LLM-DIALECTIC: Thesis re-check FAIL. Original 09-21 capital-deployment catalyst ",
+      "executed_at": "2026-09-22 14:06:35"
+    },
+    {
+      "date": "Sep 22",
       "portfolio": "Momentum Growth",
       "action": "SELL",
       "ticker": "SCHW",
@@ -738,5 +793,5 @@
       "executed_at": "2026-09-15 13:44:26"
     }
   ],
-  "lastUpdate": "2026-09-22T09:00:24.498680"
+  "lastUpdate": "2026-09-22T09:15:19.600723"
 }
