@@ -1,5 +1,5 @@
 {
-  "date": "2026-10-16 10:01",
+  "date": "2026-10-19 10:02",
   "signals": [
     {
       "ticker": "AAAMI",
@@ -520,81 +520,83 @@
     },
     {
       "ticker": "AVAV",
-      "score": 2,
-      "label": "\ud83d\udfe2 BUY / HOLD",
+      "score": 5,
+      "label": "\ud83d\udfe2 STRONG BUY / ADD",
       "reasons": [
+        "RSI 28 oversold",
         "below 50-day SMA",
         "below 200-day SMA",
         "death cross (50<200)",
-        "30d vol 60% of 1y",
-        "3% above 52w low AND falling 30d (falling knife risk)",
-        "trailing SPY by -22% over 60d",
+        "30d vol 60% of 1y (coiled)",
+        "0% above 52w low AND falling 30d (falling knife risk)",
+        "trailing SPY by -27% over 60d",
         "revenue growth 6%",
         "no dividend",
         "ROE -5% (negative)",
         "FCF negative ($-0.0B)",
         "gross margin 26% (thin)",
-        "underperforming XLI by 22.6%",
-        "\u26a1 VALUE OVERRIDE: +3 (43% below target, RSI 31 oversold)"
+        "underperforming XLI by 23.7%",
+        "\u26a1 VALUE OVERRIDE: +4 (45% below target, RSI 28 oversold)"
       ],
-      "price": 123.71,
-      "rsi14": 30.505413341669254,
-      "pct_above_200ma": -36.739671809242324,
+      "price": 119.79,
+      "rsi14": 27.64043370206116,
+      "pct_above_200ma": -38.54958239211357,
       "value_override": {
-        "total_score": 3,
-        "base_score_before": 2.0,
+        "total_score": 4,
+        "base_score_before": 5.0,
         "components": {
           "analyst_target": {
             "score": 2,
-            "reason": "43% below analyst target $216.16"
+            "reason": "45% below analyst target $216.16"
           },
           "rsi_oversold": {
-            "score": 1,
-            "reason": "RSI 31 oversold territory"
+            "score": 2,
+            "reason": "RSI 28 deeply oversold"
           }
         },
-        "summary": "\u26a1 VALUE OVERRIDE: +3 (43% below target, RSI 31 oversold)"
+        "summary": "\u26a1 VALUE OVERRIDE: +4 (45% below target, RSI 28 oversold)"
       }
     },
     {
       "ticker": "AXON",
-      "score": 8,
+      "score": 10,
       "label": "\ud83d\udfe2 STRONG BUY / ADD",
       "reasons": [
+        "RSI 29 oversold",
         "below 50-day SMA",
         "below 200-day SMA",
         "golden cross (50>200)",
-        "30d vol 72% of 1y",
-        "18% above 52w low AND falling 30d (falling knife risk)",
-        "trailing SPY by -24% over 60d",
+        "30d vol 75% of 1y",
+        "9% above 52w low AND falling 30d (falling knife risk)",
+        "trailing SPY by -32% over 60d",
         "earnings growth -18%",
         "revenue growth 35%",
-        "P/E improving (38.7 < 169.2)",
+        "P/E improving (35.9 < 156.9)",
         "no dividend",
         "PEG N/A (negative growth)",
         "ROE 6% (weak)",
         "FCF positive ($0.2B)",
         "gross margin 60% (wide moat)",
-        "underperforming XLI by 9.2%",
-        "\u26a1 VALUE OVERRIDE: +3 (41% below target, RSI 36 oversold)"
+        "underperforming XLI by 14.7%",
+        "\u26a1 VALUE OVERRIDE: +4 (45% below target, RSI 29 oversold)"
       ],
-      "price": 406.79,
-      "rsi14": 35.99263027821101,
-      "pct_above_200ma": -16.774451992940786,
+      "price": 377.78,
+      "rsi14": 29.494714289607884,
+      "pct_above_200ma": -22.545969622081515,
       "value_override": {
-        "total_score": 3,
-        "base_score_before": 7.5,
+        "total_score": 4,
+        "base_score_before": 9.5,
         "components": {
           "analyst_target": {
             "score": 2,
-            "reason": "41% below analyst target $690.68"
+            "reason": "45% below analyst target $690.68"
           },
           "rsi_oversold": {
-            "score": 1,
-            "reason": "RSI 36 oversold territory"
+            "score": 2,
+            "reason": "RSI 29 deeply oversold"
           }
         },
-        "summary": "\u26a1 VALUE OVERRIDE: +3 (41% below target, RSI 36 oversold)"
+        "summary": "\u26a1 VALUE OVERRIDE: +4 (45% below target, RSI 29 oversold)"
       }
     },
     {
@@ -602,27 +604,27 @@
       "score": 2,
       "label": "\ud83d\udfe2 BUY / HOLD",
       "reasons": [
-        "RSI 17 oversold",
+        "RSI 26 oversold",
         "below 50-day SMA",
         "below 200-day SMA",
         "golden cross (50>200)",
-        "trailing SPY by -25% over 60d",
+        "trailing SPY by -23% over 60d",
         "yield 142.0%",
-        "\u26a1 VALUE OVERRIDE: +2 (RSI 17 oversold)"
+        "\u26a1 VALUE OVERRIDE: +2 (RSI 26 oversold)"
       ],
-      "price": 40.3,
-      "rsi14": 17.22926150047502,
-      "pct_above_200ma": -11.542982318473802,
+      "price": 40.41,
+      "rsi14": 26.07052933647803,
+      "pct_above_200ma": -11.332967635765236,
       "value_override": {
         "total_score": 2,
         "base_score_before": 2.0,
         "components": {
           "rsi_oversold": {
             "score": 2,
-            "reason": "RSI 17 deeply oversold"
+            "reason": "RSI 26 deeply oversold"
           }
         },
-        "summary": "\u26a1 VALUE OVERRIDE: +2 (RSI 17 oversold)"
+        "summary": "\u26a1 VALUE OVERRIDE: +2 (RSI 26 oversold)"
       }
     },
     {
@@ -826,7 +828,7 @@
       ],
       "price": 25.01,
       "rsi14": 19.752229381664108,
-      "pct_above_200ma": -0.08948402869879649,
+      "pct_above_200ma": -0.09666775850636507,
       "value_override": {
         "total_score": 2,
         "base_score_before": 2.5,
@@ -904,9 +906,9 @@
         "golden cross (50>200)",
         "no dividend"
       ],
-      "price": 33.35,
-      "rsi14": 42.564395600646165,
-      "pct_above_200ma": 4.512691946098406
+      "price": 32.955,
+      "rsi14": 40.810180055101846,
+      "pct_above_200ma": 3.187525440711403
     },
     {
       "ticker": "GD",
@@ -916,33 +918,32 @@
         "below 50-day SMA",
         "below 200-day SMA",
         "golden cross (50>200)",
-        "30d vol 76% of 1y",
-        "11% above 52w low AND falling 30d (falling knife risk)",
-        "trailing SPY by -15% over 60d",
+        "30d vol 74% of 1y",
+        "10% above 52w low AND falling 30d (falling knife risk)",
+        "trailing SPY by -16% over 60d",
         "earnings growth 13%",
         "revenue growth 8%",
-        "P/E improving (18.3 < 20.7)",
-        "yield 189.0%",
+        "P/E improving (18.4 < 20.9)",
+        "yield 185.0%",
         "ROE 18% (good)",
         "FCF positive ($4.4B)",
         "gross margin 15% (thin)",
         "payout ratio 38% (safe)",
-        "underperforming XLI by 2.1%",
-        "\u26a1 VALUE OVERRIDE: +1 (15% below target)"
+        "\u26a1 VALUE OVERRIDE: +1 (16% below target)"
       ],
-      "price": 343.885,
-      "rsi14": 53.52872106151288,
-      "pct_above_200ma": -2.193468989049756,
+      "price": 341.94,
+      "rsi14": 50.97381808897406,
+      "pct_above_200ma": -2.7627200219533266,
       "value_override": {
         "total_score": 1,
-        "base_score_before": 7.5,
+        "base_score_before": 8.0,
         "components": {
           "analyst_target": {
             "score": 1,
-            "reason": "15% below analyst target $406.78"
+            "reason": "16% below analyst target $406.78"
           }
         },
-        "summary": "\u26a1 VALUE OVERRIDE: +1 (15% below target)"
+        "summary": "\u26a1 VALUE OVERRIDE: +1 (16% below target)"
       }
     },
     {
@@ -975,56 +976,58 @@
         "below 50-day SMA",
         "below 200-day SMA",
         "death cross (50<200)",
-        "30d vol 53% of 1y (coiled)",
+        "30d vol 55% of 1y (coiled)",
         "earnings growth -26%",
         "revenue growth 6%",
-        "P/E improving (14.7 < 20.4)",
+        "P/E improving (14.2 < 19.7)",
         "no dividend",
         "PEG N/A (negative growth)",
-        "FCF yield 5.2% (strong)",
+        "FCF yield 5.4% (strong)",
         "gross margin 69% (wide moat)",
-        "\u26a1 VALUE OVERRIDE: +1 (23% below target)"
+        "\u26a1 VALUE OVERRIDE: +1 (25% below target)"
       ],
-      "price": 77.73,
-      "rsi14": 55.16963360308925,
-      "pct_above_200ma": -7.531298002786661,
+      "price": 76.02,
+      "rsi14": 49.02166265457033,
+      "pct_above_200ma": -9.498922606221502,
       "value_override": {
         "total_score": 1,
         "base_score_before": 8.5,
         "components": {
           "analyst_target": {
             "score": 1,
-            "reason": "23% below analyst target $100.92"
+            "reason": "25% below analyst target $100.92"
           }
         },
-        "summary": "\u26a1 VALUE OVERRIDE: +1 (23% below target)"
+        "summary": "\u26a1 VALUE OVERRIDE: +1 (25% below target)"
       }
     },
     {
       "ticker": "HALO",
-      "score": 9,
+      "score": 10,
       "label": "\ud83d\udfe2 STRONG BUY / ADD",
       "reasons": [
+        "RSI 71 overbought",
         "above 50-day SMA",
         "above 200-day SMA",
         "golden cross (50>200)",
-        "up 72% in 90d (very extended)",
-        "50% above 200d MA (overextended)",
+        "up 73% in 90d (very extended)",
+        "52% above 200d MA (overextended)",
         "forward EPS up +8% in 90d",
-        "beating SPY by 43% over 60d",
+        "beating SPY by 46% over 60d",
         "earnings growth 43%",
         "revenue growth 48%",
-        "P/E improving (11.5 < 35.8)",
+        "P/E improving (11.4 < 35.6)",
         "D/E ratio 1518",
         "no dividend",
         "PEG 0.83 (attractive)",
         "ROE 174% (excellent)",
         "FCF positive ($0.3B)",
-        "gross margin 76% (wide moat)"
+        "gross margin 76% (wide moat)",
+        "outperforming XLV by 6.1%"
       ],
-      "price": 121.12,
-      "rsi14": 69.06423251154169,
-      "pct_above_200ma": 50.259064143574825
+      "price": 122.57,
+      "rsi14": 71.1747061847673,
+      "pct_above_200ma": 51.53168216918893
     },
     {
       "ticker": "HHALO",
@@ -1130,41 +1133,40 @@
       "score": 6,
       "label": "\ud83d\udfe2 STRONG BUY / ADD",
       "reasons": [
-        "MACD bullish crossover",
         "below 50-day SMA",
         "below 200-day SMA",
         "death cross (50<200)",
         "30d vol 47% of 1y (coiled)",
-        "5% above 52w low AND falling 30d (falling knife risk)",
-        "trailing SPY by -18% over 60d",
+        "1% above 52w low AND falling 30d (falling knife risk)",
+        "trailing SPY by -24% over 60d",
         "earnings growth 7%",
         "revenue growth 30%",
-        "P/E improving (37.0 < 242.6)",
+        "P/E improving (35.5 < 232.4)",
         "no dividend",
-        "PEG 32.78 (expensive)",
+        "PEG 31.40 (expensive)",
         "ROE 1% (weak)",
         "FCF negative ($-0.1B)",
         "gross margin 23% (thin)",
-        "underperforming XLI by 13.3%",
-        "\u26a1 VALUE OVERRIDE: +3 (58% below target, RSI 37 oversold)"
+        "underperforming XLI by 16.8%",
+        "\u26a1 VALUE OVERRIDE: +3 (60% below target, RSI 32 oversold)"
       ],
-      "price": 41.17,
-      "rsi14": 37.247008761256765,
-      "pct_above_200ma": -38.73473158126372,
+      "price": 39.55,
+      "rsi14": 31.879512736738036,
+      "pct_above_200ma": -40.98285555684467,
       "value_override": {
         "total_score": 3,
         "base_score_before": 5.5,
         "components": {
           "analyst_target": {
             "score": 2,
-            "reason": "58% below analyst target $98.33"
+            "reason": "60% below analyst target $98.33"
           },
           "rsi_oversold": {
             "score": 1,
-            "reason": "RSI 37 oversold territory"
+            "reason": "RSI 32 oversold territory"
           }
         },
-        "summary": "\u26a1 VALUE OVERRIDE: +3 (58% below target, RSI 37 oversold)"
+        "summary": "\u26a1 VALUE OVERRIDE: +3 (60% below target, RSI 32 oversold)"
       }
     },
     {
@@ -1175,23 +1177,23 @@
         "below 50-day SMA",
         "below 200-day SMA",
         "death cross (50<200)",
-        "30d vol 62% of 1y",
-        "5% above 52w low AND falling 30d (falling knife risk)",
+        "30d vol 69% of 1y",
+        "4% above 52w low AND falling 30d (falling knife risk)",
         "trailing SPY by -23% over 60d",
         "earnings growth 28%",
         "revenue growth 8%",
-        "P/E improving (18.0 < 24.6)",
-        "yield 208.0%",
-        "PEG 0.87 (attractive)",
+        "P/E improving (18.2 < 24.8)",
+        "yield 201.0%",
+        "PEG 0.88 (attractive)",
         "ROE 9% (weak)",
         "FCF positive ($1.6B)",
         "gross margin 25% (thin)",
         "payout ratio 49% (safe)",
         "\u26a1 VALUE OVERRIDE: +1 (23% below target)"
       ],
-      "price": 244.47,
-      "rsi14": 51.90232707705508,
-      "pct_above_200ma": -20.012537814664125,
+      "price": 244.145,
+      "rsi14": 50.675738384067245,
+      "pct_above_200ma": -20.064100638460754,
       "value_override": {
         "total_score": 1,
         "base_score_before": 6.5,
@@ -1239,17 +1241,17 @@
         "revenue growth 10%",
         "P/E improving (16.8 < 20.2)",
         "D/E ratio 234",
-        "yield 270.0%",
+        "yield 261.0%",
         "PEG 0.05 (attractive)",
         "ROE 89% (excellent)",
         "FCF positive ($5.6B)",
         "gross margin 12% (thin)",
         "payout ratio 50% (safe)",
-        "outperforming XLI by 2.7%"
+        "outperforming XLI by 4.4%"
       ],
-      "price": 548.37,
-      "rsi14": 63.63468179301992,
-      "pct_above_200ma": -1.917563766573383
+      "price": 548.895,
+      "rsi14": 62.79958738161706,
+      "pct_above_200ma": -1.891891529586189
     },
     {
       "ticker": "LUNR",
@@ -1259,34 +1261,34 @@
         "below 50-day SMA",
         "below 200-day SMA",
         "death cross (50<200)",
-        "30d vol 67% of 1y",
+        "30d vol 69% of 1y",
         "forward EPS DOWN -277% in 90d (deteriorating)",
-        "trailing SPY by -18% over 60d",
+        "trailing SPY by -22% over 60d",
         "revenue growth 310%",
         "no dividend",
         "ROE -31% (negative)",
         "FCF negative ($-0.1B)",
         "gross margin 16% (thin)",
-        "underperforming XLI by 19.3%",
-        "\u26a1 VALUE OVERRIDE: +3 (61% below target, RSI 33 oversold)"
+        "underperforming XLI by 28.5%",
+        "\u26a1 VALUE OVERRIDE: +3 (62% below target, RSI 32 oversold)"
       ],
-      "price": 11.26,
-      "rsi14": 32.69187508468033,
-      "pct_above_200ma": -44.105722586177585,
+      "price": 10.965,
+      "rsi14": 32.3851576249142,
+      "pct_above_200ma": -45.4927771094519,
       "value_override": {
         "total_score": 3,
         "base_score_before": 0.5,
         "components": {
           "analyst_target": {
             "score": 2,
-            "reason": "61% below analyst target $29.00"
+            "reason": "62% below analyst target $29.00"
           },
           "rsi_oversold": {
             "score": 1,
-            "reason": "RSI 33 oversold territory"
+            "reason": "RSI 32 oversold territory"
           }
         },
-        "summary": "\u26a1 VALUE OVERRIDE: +3 (61% below target, RSI 33 oversold)"
+        "summary": "\u26a1 VALUE OVERRIDE: +3 (62% below target, RSI 32 oversold)"
       }
     },
     {
@@ -1336,7 +1338,7 @@
       ],
       "price": 32.75,
       "rsi14": 70.64362217588547,
-      "pct_above_200ma": 7.870334916803978
+      "pct_above_200ma": 7.803047946022756
     },
     {
       "ticker": "NNVDA",
@@ -1351,30 +1353,29 @@
     },
     {
       "ticker": "NOC",
-      "score": 2,
-      "label": "\ud83d\udfe2 BUY / HOLD",
+      "score": 3,
+      "label": "\ud83d\udfe2 STRONG BUY / ADD",
       "reasons": [
         "below 50-day SMA",
         "below 200-day SMA",
         "death cross (50<200)",
         "earnings growth -6%",
         "revenue growth 5%",
-        "forward P/E (16.7) > trailing (16.1)",
-        "yield 198.0%",
+        "forward P/E (16.8) > trailing (16.3)",
+        "yield 190.0%",
         "PEG N/A (negative growth)",
         "ROE 27% (excellent)",
         "FCF positive ($2.5B)",
         "gross margin 20% (thin)",
         "payout ratio 30% (safe)",
-        "underperforming XLI by 2.5%",
         "\u26a1 VALUE OVERRIDE: +1 (17% below target)"
       ],
-      "price": 514.27,
-      "rsi14": 56.7309904928933,
-      "pct_above_200ma": -12.807166878896872,
+      "price": 511.09,
+      "rsi14": 54.0691085982193,
+      "pct_above_200ma": -13.312036047701195,
       "value_override": {
         "total_score": 1,
-        "base_score_before": 2.5,
+        "base_score_before": 3.0,
         "components": {
           "analyst_target": {
             "score": 1,
@@ -1400,65 +1401,63 @@
       "score": 14,
       "label": "\ud83d\udfe2 STRONG BUY / ADD",
       "reasons": [
-        "MACD bearish crossover",
         "above 50-day SMA",
         "above 200-day SMA",
         "golden cross (50>200)",
         "up 49% in 90d (extended)",
-        "27% above 200d MA (extended)",
-        "30d vol 57% of 1y (coiled)",
+        "28% above 200d MA (extended)",
+        "30d vol 65% of 1y",
         "forward EPS up +12% in 90d",
-        "beating SPY by 54% over 60d",
+        "beating SPY by 44% over 60d",
         "earnings growth 215%",
         "revenue growth 93%",
-        "P/E improving (82.8 < 167.4)",
+        "P/E improving (81.6 < 164.8)",
         "no dividend",
-        "PEG 0.78 (attractive)",
+        "PEG 0.77 (attractive)",
         "ROE 38% (excellent)",
         "FCF positive ($2.2B)",
         "gross margin 85% (wide moat)",
-        "outperforming XLK by 10.9%"
+        "outperforming XLK by 10.6%"
       ],
-      "price": 194.41,
-      "rsi14": 54.50883987949093,
-      "pct_above_200ma": 27.327295858637275
+      "price": 195.03,
+      "rsi14": 54.26522647726491,
+      "pct_above_200ma": 27.696519266440696
     },
     {
       "ticker": "PODD",
-      "score": 6,
+      "score": 8,
       "label": "\ud83d\udfe2 STRONG BUY / ADD",
       "reasons": [
         "above 50-day SMA",
         "below 200-day SMA",
         "death cross (50<200)",
-        "30d vol 72% of 1y",
+        "30d vol 71% of 1y",
         "fresh 50-day MA reclaim",
-        "9% above 52w low AND falling 30d (falling knife risk)",
-        "trailing SPY by -18% over 60d",
+        "trailing SPY by -19% over 60d",
         "earnings growth 329%",
         "revenue growth 24%",
-        "P/E improving (18.3 < 26.5)",
+        "P/E improving (18.2 < 26.4)",
         "no dividend",
         "PEG 0.08 (attractive)",
         "ROE 26% (excellent)",
         "FCF positive ($0.2B)",
         "gross margin 71% (wide moat)",
-        "underperforming XLV by 5.2%",
-        "\u26a1 VALUE OVERRIDE: +1 (15% below target)"
+        "underperforming XLV by 3.9%",
+        "\u26a1 VALUE OVERRIDE: +1 (16% below target)"
       ],
-      "price": 141.66,
-      "rsi14": 56.346021061676666,
-      "pct_above_200ma": -23.734900986867476,
+      "price": 140.68,
+      "rsi14": 54.78447618736133,
+      "pct_above_200ma": -23.967606784761518,
       "value_override": {
         "total_score": 1,
-        "base_score_before": 5.75,
+        "base_score_before": 8.0,
         "components": {
           "analyst_target": {
             "score": 1,
-            "reason": "15% below analyst target $167.17"
+            "reason": "16% below analyst target $167.17"
           }
         },
-        "summary": "\u26a1 VALUE OVERRIDE: +1 (15% below target)"
+        "summary": "\u26a1 VALUE OVERRIDE: +1 (16% below target)"
       }
     },
     {
@@ -1514,35 +1513,35 @@
         "below 50-day SMA",
         "below 200-day SMA",
         "death cross (50<200)",
-        "30d vol 53% of 1y (coiled)",
+        "30d vol 54% of 1y (coiled)",
         "forward EPS DOWN -54% in 90d (deteriorating)",
-        "4% above 52w low AND falling 30d (falling knife risk)",
-        "trailing SPY by -40% over 60d",
+        "1% above 52w low AND falling 30d (falling knife risk)",
+        "trailing SPY by -43% over 60d",
         "revenue growth 527%",
         "no dividend",
         "ROE -34% (negative)",
         "FCF negative ($-0.1B)",
         "gross margin 10% (thin)",
-        "underperforming XLI by 27.7%",
-        "\u26a1 VALUE OVERRIDE: +4 (70% below target, RSI 22 oversold)"
+        "underperforming XLI by 29.8%",
+        "\u26a1 VALUE OVERRIDE: +4 (71% below target, RSI 22 oversold)"
       ],
-      "price": 4.9,
-      "rsi14": 22.238734142981073,
-      "pct_above_200ma": -54.70909838755147,
+      "price": 4.755,
+      "rsi14": 21.891858003853997,
+      "pct_above_200ma": -55.98088339099946,
       "value_override": {
         "total_score": 4,
         "base_score_before": 2.0,
         "components": {
           "analyst_target": {
             "score": 2,
-            "reason": "70% below analyst target $16.50"
+            "reason": "71% below analyst target $16.50"
           },
           "rsi_oversold": {
             "score": 2,
             "reason": "RSI 22 deeply oversold"
           }
         },
-        "summary": "\u26a1 VALUE OVERRIDE: +4 (70% below target, RSI 22 oversold)"
+        "summary": "\u26a1 VALUE OVERRIDE: +4 (71% below target, RSI 22 oversold)"
       }
     },
     {
@@ -1553,33 +1552,33 @@
         "below 50-day SMA",
         "below 200-day SMA",
         "death cross (50<200)",
-        "30d vol 54% of 1y (coiled)",
+        "30d vol 56% of 1y (coiled)",
         "forward EPS up +22% in 90d",
         "revenue growth 90%",
         "no dividend",
         "ROE -18% (negative)",
         "FCF negative ($-0.0B)",
         "gross margin 23% (thin)",
-        "underperforming XLI by 19.0%",
-        "\u26a1 VALUE OVERRIDE: +3 (39% below target, RSI 33 oversold)"
+        "underperforming XLI by 24.5%",
+        "\u26a1 VALUE OVERRIDE: +3 (40% below target, RSI 33 oversold)"
       ],
-      "price": 8.7,
-      "rsi14": 32.60438891882697,
-      "pct_above_200ma": -21.996005657531086,
+      "price": 8.55,
+      "rsi14": 32.93913452673826,
+      "pct_above_200ma": -23.362718427456752,
       "value_override": {
         "total_score": 3,
         "base_score_before": 8.5,
         "components": {
           "analyst_target": {
             "score": 2,
-            "reason": "39% below analyst target $14.28"
+            "reason": "40% below analyst target $14.28"
           },
           "rsi_oversold": {
             "score": 1,
             "reason": "RSI 33 oversold territory"
           }
         },
-        "summary": "\u26a1 VALUE OVERRIDE: +3 (39% below target, RSI 33 oversold)"
+        "summary": "\u26a1 VALUE OVERRIDE: +3 (40% below target, RSI 33 oversold)"
       }
     },
     {
@@ -1628,28 +1627,29 @@
     },
     {
       "ticker": "RTX",
-      "score": 10,
+      "score": 8,
       "label": "\ud83d\udfe2 STRONG BUY / ADD",
       "reasons": [
         "below 50-day SMA",
         "below 200-day SMA",
         "golden cross (50>200)",
-        "30d vol 71% of 1y",
+        "30d vol 76% of 1y",
+        "trailing SPY by -16% over 60d",
         "earnings growth 29%",
         "revenue growth 14%",
-        "P/E improving (24.0 < 33.2)",
-        "yield 156.0%",
+        "P/E improving (24.3 < 33.7)",
+        "yield 151.0%",
         "FCF positive ($9.9B)",
         "gross margin 20% (thin)",
         "payout ratio 49% (safe)",
         "\u26a1 VALUE OVERRIDE: +1 (16% below target)"
       ],
-      "price": 192.38,
-      "rsi14": 53.93019295066951,
-      "pct_above_200ma": -0.8509971592197485,
+      "price": 192.375,
+      "rsi14": 53.33543767983381,
+      "pct_above_200ma": -0.8854873812863765,
       "value_override": {
         "total_score": 1,
-        "base_score_before": 9.5,
+        "base_score_before": 8.5,
         "components": {
           "analyst_target": {
             "score": 1,
@@ -1667,22 +1667,22 @@
         "above 50-day SMA",
         "above 200-day SMA",
         "golden cross (50>200)",
-        "up 64% in 90d (very extended)",
-        "37% above 200d MA (overextended)",
+        "up 56% in 90d (very extended)",
+        "33% above 200d MA (overextended)",
         "fresh 50-day MA reclaim",
-        "beating SPY by 51% over 60d",
+        "beating SPY by 32% over 60d",
         "earnings growth 68%",
         "revenue growth 34%",
-        "P/E improving (72.5 < 120.2)",
+        "P/E improving (69.9 < 116.0)",
         "no dividend",
         "ROE 16% (good)",
         "FCF positive ($1.6B)",
         "gross margin 48% (wide moat)",
-        "outperforming XLK by 39.3%"
+        "outperforming XLK by 29.2%"
       ],
-      "price": 177.12,
-      "rsi14": 69.72283161478443,
-      "pct_above_200ma": 36.52716350596237
+      "price": 172.56,
+      "rsi14": 63.00883686769912,
+      "pct_above_200ma": 32.99173406585656
     },
     {
       "ticker": "SS",
@@ -1791,29 +1791,29 @@
         "below 50-day SMA",
         "below 200-day SMA",
         "death cross (50<200)",
-        "5% above 52w low AND falling 30d (falling knife risk)",
+        "4% above 52w low AND falling 30d (falling knife risk)",
         "trailing SPY by -25% over 60d",
         "earnings growth 5%",
         "revenue growth 3%",
-        "P/E improving (10.5 < 14.2)",
+        "P/E improving (10.5 < 14.3)",
         "yield 11.0%",
         "PEG 2.74 (expensive)",
         "FCF positive ($0.5B)",
         "gross margin 18% (thin)",
         "payout ratio 2% (safe)",
-        "underperforming XLI by 4.0%",
+        "underperforming XLI by 2.8%",
         "\u26a1 VALUE OVERRIDE: +1 (24% below target)"
       ],
-      "price": 76.515,
-      "rsi14": 47.71589282324156,
-      "pct_above_200ma": -13.885517201794217,
+      "price": 75.75,
+      "rsi14": 44.745955088746065,
+      "pct_above_200ma": -14.689341094820128,
       "value_override": {
         "total_score": 1,
         "base_score_before": 5.0,
         "components": {
           "analyst_target": {
             "score": 1,
-            "reason": "24% below analyst target $100.27"
+            "reason": "24% below analyst target $99.47"
           }
         },
         "summary": "\u26a1 VALUE OVERRIDE: +1 (24% below target)"
@@ -1827,32 +1827,32 @@
         "above 50-day SMA",
         "above 200-day SMA",
         "golden cross (50>200)",
-        "up 47% in 90d (extended)",
+        "up 48% in 90d (extended)",
         "fresh 50-day MA reclaim",
-        "beating SPY by 18% over 60d",
         "earnings growth 17%",
         "revenue growth 18%",
-        "P/E improving (15.4 < 41.3)",
+        "P/E improving (14.4 < 38.8)",
         "no dividend",
-        "PEG 2.48 (expensive)",
+        "PEG 2.32 (expensive)",
         "ROE 4% (weak)",
-        "FCF yield 5.7% (strong)",
+        "FCF yield 6.0% (strong)",
         "gross margin 69% (wide moat)",
-        "\u26a1 VALUE OVERRIDE: +1 (19% below target)"
+        "outperforming XLV by 2.1%",
+        "\u26a1 VALUE OVERRIDE: +1 (20% below target)"
       ],
-      "price": 27.61,
-      "rsi14": 61.21787933879962,
-      "pct_above_200ma": 14.69269026223336,
+      "price": 27.28,
+      "rsi14": 58.678439065242266,
+      "pct_above_200ma": 13.456417742537537,
       "value_override": {
         "total_score": 1,
-        "base_score_before": 8.5,
+        "base_score_before": 8.0,
         "components": {
           "analyst_target": {
             "score": 1,
-            "reason": "19% below analyst target $34.00"
+            "reason": "20% below analyst target $34.00"
           }
         },
-        "summary": "\u26a1 VALUE OVERRIDE: +1 (19% below target)"
+        "summary": "\u26a1 VALUE OVERRIDE: +1 (20% below target)"
       }
     },
     {
@@ -1896,21 +1896,21 @@
         "below 50-day SMA",
         "below 200-day SMA",
         "death cross (50<200)",
-        "30d vol 72% of 1y",
+        "30d vol 76% of 1y",
         "forward EPS DOWN -97% in 90d (deteriorating)",
-        "2% above 52w low AND falling 30d (falling knife risk)",
-        "trailing SPY by -28% over 60d",
+        "6% above 52w low AND falling 30d (falling knife risk)",
+        "trailing SPY by -30% over 60d",
         "revenue growth 2627%",
         "D/E ratio 125",
         "no dividend",
         "ROE -46% (negative)",
         "FCF negative ($-1.8B)",
-        "underperforming XLK by 25.1%",
-        "\u26a1 VALUE OVERRIDE: +3 (42% below target, RSI 31 oversold)"
+        "underperforming XLK by 26.3%",
+        "\u26a1 VALUE OVERRIDE: +3 (42% below target, RSI 34 oversold)"
       ],
-      "price": 43.0,
-      "rsi14": 30.998130049402207,
-      "pct_above_200ma": -46.23902940193732,
+      "price": 43.04,
+      "rsi14": 33.5892357963334,
+      "pct_above_200ma": -46.08131148691057,
       "value_override": {
         "total_score": 3,
         "base_score_before": -1.0,
@@ -1921,10 +1921,10 @@
           },
           "rsi_oversold": {
             "score": 1,
-            "reason": "RSI 31 oversold territory"
+            "reason": "RSI 34 oversold territory"
           }
         },
-        "summary": "\u26a1 VALUE OVERRIDE: +3 (42% below target, RSI 31 oversold)"
+        "summary": "\u26a1 VALUE OVERRIDE: +3 (42% below target, RSI 34 oversold)"
       }
     },
     {
@@ -1932,40 +1932,40 @@
       "score": -2,
       "label": "\ud83d\udfe1 WATCH / CAUTION",
       "reasons": [
-        "RSI 24 oversold",
+        "RSI 28 oversold",
         "below 50-day SMA",
         "below 200-day SMA",
         "death cross (50<200)",
-        "30d vol 64% of 1y",
+        "30d vol 66% of 1y",
         "forward EPS DOWN -1891% in 90d (deteriorating)",
-        "0% above 52w low AND falling 30d (falling knife risk)",
-        "trailing SPY by -28% over 60d",
+        "6% above 52w low AND falling 30d (falling knife risk)",
+        "trailing SPY by -26% over 60d",
         "revenue growth -27%",
         "D/E ratio 187",
         "no dividend",
         "ROE -23% (negative)",
         "FCF negative ($-4.2B)",
         "gross margin 69% (wide moat)",
-        "underperforming XLF by 39.5%",
-        "\u26a1 VALUE OVERRIDE: +4 (64% below target, RSI 24 oversold)"
+        "underperforming XLF by 38.6%",
+        "\u26a1 VALUE OVERRIDE: +4 (63% below target, RSI 28 oversold)"
       ],
-      "price": 28.345,
-      "rsi14": 23.684429815764986,
-      "pct_above_200ma": -37.529512043668745,
+      "price": 28.515,
+      "rsi14": 27.637031930615606,
+      "pct_above_200ma": -37.08127966725782,
       "value_override": {
         "total_score": 4,
         "base_score_before": -2.0,
         "components": {
           "analyst_target": {
             "score": 2,
-            "reason": "64% below analyst target $77.81"
+            "reason": "63% below analyst target $77.81"
           },
           "rsi_oversold": {
             "score": 2,
-            "reason": "RSI 24 deeply oversold"
+            "reason": "RSI 28 deeply oversold"
           }
         },
-        "summary": "\u26a1 VALUE OVERRIDE: +4 (64% below target, RSI 24 oversold)"
+        "summary": "\u26a1 VALUE OVERRIDE: +4 (63% below target, RSI 28 oversold)"
       }
     }
   ],
@@ -1988,7 +1988,7 @@
         "label": "\ud83d\udfe2 BUY / HOLD"
       },
       "HALO": {
-        "score": 9,
+        "score": 10,
         "label": "\ud83d\udfe2 STRONG BUY / ADD"
       },
       "NNOV": {
@@ -2002,11 +2002,11 @@
         "label": "\ud83d\udfe1 WATCH / CAUTION"
       },
       "AVAV": {
-        "score": 2,
-        "label": "\ud83d\udfe2 BUY / HOLD"
+        "score": 5,
+        "label": "\ud83d\udfe2 STRONG BUY / ADD"
       },
       "AXON": {
-        "score": 8,
+        "score": 10,
         "label": "\ud83d\udfe2 STRONG BUY / ADD"
       },
       "GD": {
@@ -2034,8 +2034,8 @@
         "label": "\u26aa HOLD"
       },
       "NOC": {
-        "score": 2,
-        "label": "\ud83d\udfe2 BUY / HOLD"
+        "score": 3,
+        "label": "\ud83d\udfe2 STRONG BUY / ADD"
       },
       "PLTR": {
         "score": 14,
@@ -2050,7 +2050,7 @@
         "label": "\ud83d\udfe2 STRONG BUY / ADD"
       },
       "RTX": {
-        "score": 10,
+        "score": 8,
         "label": "\ud83d\udfe2 STRONG BUY / ADD"
       },
       "TXT": {
@@ -2064,7 +2064,7 @@
         "label": "\ud83d\udfe2 STRONG BUY / ADD"
       },
       "PODD": {
-        "score": 6,
+        "score": 8,
         "label": "\ud83d\udfe2 STRONG BUY / ADD"
       },
       "SHOP": {
@@ -2079,34 +2079,64 @@
   },
   "earnings": [
     {
+      "ticker": "AXON",
+      "date": "Nov 03",
+      "days": 14
+    },
+    {
       "ticker": "GD",
       "date": "Oct 30",
+      "days": 10
+    },
+    {
+      "ticker": "HALO",
+      "date": "Nov 02",
       "days": 13
+    },
+    {
+      "ticker": "KTOS",
+      "date": "Nov 03",
+      "days": 14
     },
     {
       "ticker": "LHX",
       "date": "Oct 29",
-      "days": 12
+      "days": 9
     },
     {
       "ticker": "LMT",
       "date": "Oct 22",
-      "days": 5
+      "days": 2
     },
     {
       "ticker": "NOC",
       "date": "Oct 20",
-      "days": 3
+      "days": 0
+    },
+    {
+      "ticker": "PLTR",
+      "date": "Nov 02",
+      "days": 13
     },
     {
       "ticker": "RTX",
       "date": "Oct 20",
-      "days": 3
+      "days": 0
+    },
+    {
+      "ticker": "SHOP",
+      "date": "Nov 03",
+      "days": 14
     },
     {
       "ticker": "TXT",
       "date": "Oct 29",
-      "days": 12
+      "days": 9
+    },
+    {
+      "ticker": "WAY",
+      "date": "Nov 02",
+      "days": 13
     }
   ],
   "overlap": [],
@@ -2114,32 +2144,32 @@
     {
       "ticker": "HALO",
       "portfolio": "Momentum Growth",
-      "pct": 16.329747990682826
+      "pct": 16.5163641772076
     }
   ],
   "bond_signals": {
     "yield_curve": {
-      "two_year": 4.82,
-      "ten_year": 5.19,
-      "spread": 0.37,
-      "spread_1mo_ago": 0.32,
-      "spread_change": 0.05,
-      "date": "2026-10-14",
+      "two_year": 4.77,
+      "ten_year": 5.1,
+      "spread": 0.33,
+      "spread_1mo_ago": 0.33,
+      "spread_change": 0.0,
+      "date": "2026-10-15",
       "assessment": "Flat \u2014 neutral"
     },
     "credit_spreads": {
-      "current_bps": 323.0,
-      "raw_value": 3.23,
+      "current_bps": 331.0,
+      "raw_value": 3.31,
       "prev_value": 2.7,
-      "change": 0.53,
-      "date": "2026-10-15",
-      "assessment": "Tight (323bps) \u2014 bullish"
+      "change": 0.61,
+      "date": "2026-10-16",
+      "assessment": "Tight (331bps) \u2014 bullish"
     },
     "ten_year": {
-      "current": 5.19,
-      "prev": 4.97,
-      "change_bps": 22.0,
-      "date": "2026-10-14",
+      "current": 5.1,
+      "prev": 5.0,
+      "change_bps": 10.0,
+      "date": "2026-10-15",
       "assessment": "High/rising \u2014 bearish"
     },
     "scores": {
@@ -2158,7 +2188,7 @@
         {
           "ticker": "GMED",
           "score": 8,
-          "value": 12203.61,
+          "value": 11935.14,
           "position_size": {
             "category": "full",
             "range": "12-15%"
@@ -2168,7 +2198,7 @@
         {
           "ticker": "WAY",
           "score": 8,
-          "value": 15102.67,
+          "value": 14922.16,
           "position_size": {
             "category": "full",
             "range": "12-15%"
@@ -2178,7 +2208,7 @@
         {
           "ticker": "SHOP",
           "score": 3,
-          "value": 17712.0,
+          "value": 17256.0,
           "position_size": {
             "category": "standard",
             "range": "8-12%"
@@ -2220,8 +2250,8 @@
           "sell": "SHOP",
           "sell_score": 3,
           "buy": "PODD",
-          "buy_score": 6,
-          "score_diff": 3
+          "buy_score": 8,
+          "score_diff": 5
         }
       ]
     },
@@ -2232,8 +2262,8 @@
       "ranked_holdings": [
         {
           "ticker": "HALO",
-          "score": 9,
-          "value": 16108.960000000001,
+          "score": 10,
+          "value": 16301.81,
           "position_size": {
             "category": "full",
             "range": "12-15%"
@@ -2263,7 +2293,7 @@
         {
           "ticker": "FFLG",
           "score": 2,
-          "value": 11805.9,
+          "value": 11666.07,
           "position_size": {
             "category": "starter",
             "range": "5-8%"
@@ -2277,15 +2307,15 @@
           "sell": "FFLG",
           "sell_score": 2,
           "buy": "HALO",
-          "buy_score": 9,
-          "score_diff": 7
+          "buy_score": 10,
+          "score_diff": 8
         },
         {
           "sell": "FFLG",
           "sell_score": 2,
           "buy": "HALO",
-          "buy_score": 9,
-          "score_diff": 7
+          "buy_score": 10,
+          "score_diff": 8
         }
       ]
     },
@@ -2295,9 +2325,9 @@
       "under_limit": true,
       "ranked_holdings": [
         {
-          "ticker": "RTX",
-          "score": 10,
-          "value": 11735.18,
+          "ticker": "GD",
+          "score": 8,
+          "value": 12309.84,
           "position_size": {
             "category": "full",
             "range": "12-15%"
@@ -2305,9 +2335,9 @@
           "label": "\ud83d\udfe2 STRONG BUY / ADD"
         },
         {
-          "ticker": "GD",
+          "ticker": "RTX",
           "score": 8,
-          "value": 12379.86,
+          "value": 11734.875,
           "position_size": {
             "category": "full",
             "range": "12-15%"
@@ -2317,7 +2347,7 @@
         {
           "ticker": "LHX",
           "score": 6,
-          "value": 11734.56,
+          "value": 11718.960000000001,
           "position_size": {
             "category": "full",
             "range": "12-15%"
@@ -2327,7 +2357,7 @@
         {
           "ticker": "TXT",
           "score": 5,
-          "value": 11400.735,
+          "value": 11286.75,
           "position_size": {
             "category": "full",
             "range": "12-15%"
@@ -2336,106 +2366,92 @@
         },
         {
           "ticker": "NOC",
-          "score": 2,
-          "value": 12856.75,
+          "score": 3,
+          "value": 12777.25,
           "position_size": {
-            "category": "starter",
-            "range": "5-8%"
+            "category": "standard",
+            "range": "8-12%"
           },
-          "label": "\ud83d\udfe2 BUY / HOLD"
+          "label": "\ud83d\udfe2 STRONG BUY / ADD"
         }
       ],
       "trim_recommendations": [],
       "swap_recommendations": [
         {
           "sell": "NOC",
-          "sell_score": 2,
+          "sell_score": 3,
           "buy": "PLTR",
           "buy_score": 14,
-          "score_diff": 12
+          "score_diff": 11
         },
         {
           "sell": "NOC",
-          "sell_score": 2,
-          "buy": "RTX",
+          "sell_score": 3,
+          "buy": "AXON",
           "buy_score": 10,
-          "score_diff": 8
+          "score_diff": 7
         },
         {
           "sell": "NOC",
-          "sell_score": 2,
-          "buy": "RTX",
-          "buy_score": 10,
-          "score_diff": 8
-        },
-        {
-          "sell": "NOC",
-          "sell_score": 2,
+          "sell_score": 3,
           "buy": "LMT",
           "buy_score": 10,
-          "score_diff": 8
+          "score_diff": 7
         },
         {
           "sell": "NOC",
-          "sell_score": 2,
+          "sell_score": 3,
           "buy": "GD",
           "buy_score": 8,
-          "score_diff": 6
+          "score_diff": 5
         },
         {
           "sell": "NOC",
-          "sell_score": 2,
+          "sell_score": 3,
+          "buy": "RTX",
+          "buy_score": 8,
+          "score_diff": 5
+        },
+        {
+          "sell": "NOC",
+          "sell_score": 3,
           "buy": "GD",
           "buy_score": 8,
-          "score_diff": 6
+          "score_diff": 5
         },
         {
           "sell": "NOC",
-          "sell_score": 2,
-          "buy": "AXON",
+          "sell_score": 3,
+          "buy": "RTX",
           "buy_score": 8,
-          "score_diff": 6
+          "score_diff": 5
         },
         {
           "sell": "NOC",
-          "sell_score": 2,
+          "sell_score": 3,
           "buy": "RDW",
           "buy_score": 8,
-          "score_diff": 6
+          "score_diff": 5
         },
         {
           "sell": "NOC",
-          "sell_score": 2,
+          "sell_score": 3,
           "buy": "LHX",
           "buy_score": 6,
-          "score_diff": 4
-        },
-        {
-          "sell": "NOC",
-          "sell_score": 2,
-          "buy": "LHX",
-          "buy_score": 6,
-          "score_diff": 4
-        },
-        {
-          "sell": "NOC",
-          "sell_score": 2,
-          "buy": "KTOS",
-          "buy_score": 6,
-          "score_diff": 4
-        },
-        {
-          "sell": "NOC",
-          "sell_score": 2,
-          "buy": "TXT",
-          "buy_score": 5,
           "score_diff": 3
         },
         {
           "sell": "NOC",
-          "sell_score": 2,
-          "buy": "TXT",
-          "buy_score": 5,
+          "sell_score": 3,
+          "buy": "LHX",
+          "buy_score": 6,
+          "score_diff": 3
+        },
+        {
+          "sell": "NOC",
+          "sell_score": 3,
+          "buy": "KTOS",
+          "buy_score": 6,
           "score_diff": 3
         }
       ]
@@ -2458,6 +2474,18 @@
     }
   },
   "executed_this_week": [
+    {
+      "portfolio": "Innovation Fund",
+      "action": "BUY",
+      "ticker": "PODD",
+      "shares": 85,
+      "price": 140.92,
+      "total": 11978.2,
+      "reason": "Top 10 (score 8) \u2014 new position",
+      "date": "2026-10-19",
+      "executed_at": "2026-10-19 15:09:09",
+      "executed": true
+    },
     {
       "portfolio": "AI Defense & Autonomous",
       "action": "SELL",
